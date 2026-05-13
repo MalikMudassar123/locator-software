@@ -125,7 +125,7 @@ export default function RoadSection() {
     <section
       className="relative w-full"
       style={{
-        height: '420px',
+        height: 'clamp(200px, 36vw, 380px)',
         marginTop: '-1px',
         overflow: 'visible',
         zIndex: 100,
@@ -155,7 +155,7 @@ export default function RoadSection() {
       />
 
       {/* Vehicles layer */}
-      <div className="absolute inset-0" style={{ zIndex: 10 }}>
+      <div className="road-vehicles-layer absolute inset-0" style={{ zIndex: 10 }}>
         {vehicles.map((v) => (
           <div key={v.id}>
             <div
@@ -203,8 +203,75 @@ export default function RoadSection() {
         </div>
       </div>
 
+      {/* CTA Buttons */}
+      <div
+        className="absolute"
+        style={{
+          bottom: '38%',
+          left: 'clamp(20px, 4vw, 50px)',
+          zIndex: 50,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+        }}
+      >
+        {/* Get a Quote — filled blue */}
+        <button
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: '#1a84b8',
+            color: '#ffffff',
+            border: 'none',
+            borderRadius: '8px',
+            padding: '10px 20px',
+            fontSize: '13px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            whiteSpace: 'nowrap',
+            boxShadow: '0 2px 10px rgba(26,132,184,0.35)',
+          }}
+        >
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <rect x="1" y="1" width="6" height="6" rx="1" fill="white" />
+            <rect x="9" y="1" width="6" height="6" rx="1" fill="white" />
+            <rect x="1" y="9" width="6" height="6" rx="1" fill="white" />
+            <rect x="9" y="9" width="6" height="6" rx="1" fill="white" />
+          </svg>
+          Get a Quote
+        </button>
+
+        {/* Get a Free Demo — outlined */}
+        <button
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: '#ffffff',
+            color: '#1a6e9a',
+            border: '1.5px solid #c8e4f5',
+            borderRadius: '8px',
+            padding: '10px 20px',
+            fontSize: '13px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            whiteSpace: 'nowrap',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+          }}
+        >
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <rect x="1" y="1" width="6" height="6" rx="1" fill="#1a84b8" />
+            <rect x="9" y="1" width="6" height="6" rx="1" fill="#1a84b8" />
+            <rect x="1" y="9" width="6" height="6" rx="1" fill="#1a84b8" />
+            <rect x="9" y="9" width="6" height="6" rx="1" fill="#1a84b8" />
+          </svg>
+          Get a Free Demo
+        </button>
+      </div>
+
       {/* GPS Icons layer - HIGHEST z-index */}
-      <div className="absolute inset-0" style={{ zIndex: 10000, pointerEvents: 'none' }}>
+      <div className="road-vehicles-layer absolute inset-0" style={{ zIndex: 10000, pointerEvents: 'none' }}>
         {vehicles.map((v, index) => (
           v.pinSize > 0 && (
             <div

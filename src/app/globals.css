@@ -468,48 +468,92 @@ h6 {
    HERO SUNRISE GLOW — warm golden light behind buildings
    ══════════════════════════════════════════════════════ */
 
+/* Primary glow — wide warm base that breathes and drifts */
 .hero-sunrise-glow {
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    ellipse 62% 58% at 50% 100%,
-    rgba(255, 255, 210, 0.95)  0%,
-    rgba(255, 240, 140, 0.78)  8%,
-    rgba(255, 218, 70,  0.55) 22%,
-    rgba(255, 190, 20,  0.30) 40%,
-    rgba(255, 165, 0,   0.12) 58%,
-    transparent                76%
+    ellipse 68% 62% at 50% 100%,
+    rgba(255, 255, 210, 1.00)  0%,
+    rgba(255, 238, 120, 0.88)  9%,
+    rgba(255, 210, 55,  0.62) 24%,
+    rgba(255, 180, 15,  0.34) 44%,
+    rgba(255, 155, 0,   0.14) 62%,
+    transparent                80%
   );
   will-change: transform, opacity;
   backface-visibility: hidden;
-  animation: sunriseGlow 14s ease-in-out infinite;
+  animation: sunriseGlow 12s ease-in-out infinite;
+}
+
+/* Secondary glow — smaller hot core, moves counter to primary */
+.hero-sunrise-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 40% 36% at 50% 100%,
+    rgba(255, 255, 240, 0.90)  0%,
+    rgba(255, 245, 160, 0.60) 18%,
+    rgba(255, 220, 60,  0.25) 40%,
+    transparent                65%
+  );
+  will-change: transform, opacity;
+  animation: sunriseGlowCore 9s ease-in-out infinite;
+  animation-delay: -3s;
 }
 
 @keyframes sunriseGlow {
   0%, 100% {
-    opacity: 0.78;
-    transform: translate3d(  0%,    0%, 0) scale(1.00);
+    opacity: 0.72;
+    transform: translate3d(  0%,   0%, 0) scale(1.00);
   }
-  20% {
-    opacity: 0.90;
-    transform: translate3d(  5%,  -1%, 0) scale(1.04);
+  22% {
+    opacity: 0.95;
+    transform: translate3d( 10%,  -3%, 0) scale(1.10);
   }
-  45% {
+  50% {
     opacity: 1;
-    transform: translate3d(  3%,  -2%, 0) scale(1.07);
+    transform: translate3d(  6%,  -5%, 0) scale(1.18);
   }
-  70% {
-    opacity: 0.86;
-    transform: translate3d( -5%,  -1%, 0) scale(1.03);
-  }
-  85% {
+  74% {
     opacity: 0.82;
-    transform: translate3d( -3%,   0%, 0) scale(1.01);
+    transform: translate3d(-10%,  -2%, 0) scale(1.06);
+  }
+  88% {
+    opacity: 0.76;
+    transform: translate3d( -5%,   0%, 0) scale(1.02);
+  }
+}
+
+@keyframes sunriseGlowCore {
+  0%, 100% {
+    opacity: 0.80;
+    transform: translate3d(  0%,   0%, 0) scale(1.00);
+  }
+  35% {
+    opacity: 1;
+    transform: translate3d( -8%,  -4%, 0) scale(1.14);
+  }
+  68% {
+    opacity: 0.70;
+    transform: translate3d(  9%,  -2%, 0) scale(0.92);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-blob,
   .hero-wave,
-  .hero-sunrise-glow { animation: none !important; }
+  .hero-sunrise-glow,
+  .hero-sunrise-glow::after { animation: none !important; }
+}
+
+/* ══════════════════════════════════════════════════════
+   ROAD SECTION — responsive vehicle scaling
+   ══════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .road-vehicles-layer { transform: scale(0.58); transform-origin: bottom center; }
+}
+@media (min-width: 641px) and (max-width: 900px) {
+  .road-vehicles-layer { transform: scale(0.76); transform-origin: bottom center; }
 }

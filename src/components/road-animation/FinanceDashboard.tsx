@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, MotionValue } from 'framer-motion'
-import { TrendingUp, ArrowUpRight, ArrowDownRight, Check, Clock } from 'lucide-react'
+import { TrendingUp, ArrowUpRight, Check, Clock } from 'lucide-react'
 
 interface FinanceDashboardProps {
   scrollProgress: MotionValue<number>
@@ -14,7 +14,7 @@ const transactions = [
   { id: 4, name: 'Payment from Jane Smith', amount: '+$890.00', status: 'completed', time: '5 hours ago' }
 ]
 
-export default function FinanceDashboard({ scrollProgress }: FinanceDashboardProps) {
+export default function FinanceDashboard({ scrollProgress: _scrollProgress }: FinanceDashboardProps) {
   return (
     <div className="relative w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 p-6 overflow-y-auto">
       {/* Header */}

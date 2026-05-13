@@ -28,7 +28,7 @@ export default function StickyScene({ scrollProgress }: StickySceneProps) {
 
         {/* Right Side - Phone Mockup */}
         <div className="order-1 lg:order-2 flex items-center justify-center">
-          <PhoneMockup scrollProgress={scrollProgress} state={state} />
+          <PhoneMockup scrollProgress={scrollProgress} state={state as import('framer-motion').MotionValue<number>} />
         </div>
       </div>
     </div>

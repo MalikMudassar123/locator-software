@@ -1,15 +1,13 @@
 'use client'
 
-import { motion, MotionValue, useTransform } from 'framer-motion'
+import { motion, MotionValue } from 'framer-motion'
 import { CreditCard, Mail, MapPin, Check } from 'lucide-react'
-import Image from 'next/image'
 
 interface CheckoutUIProps {
   scrollProgress: MotionValue<number>
 }
 
-export default function CheckoutUI({ scrollProgress }: CheckoutUIProps) {
-  const fieldProgress = useTransform(scrollProgress, [0.2, 0.35], [0, 1])
+export default function CheckoutUI({ scrollProgress: _scrollProgress }: CheckoutUIProps) {
 
   return (
     <div className="relative w-full h-full bg-white p-6 overflow-y-auto">

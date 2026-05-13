@@ -12,7 +12,7 @@ interface PhoneMockupProps {
   state: MotionValue<number>
 }
 
-export default function PhoneMockup({ scrollProgress, state }: PhoneMockupProps) {
+export default function PhoneMockup({ scrollProgress, state: _state }: PhoneMockupProps) {
   const rotateX = useTransform(scrollProgress, [0, 1], [5, -5])
   const rotateY = useTransform(scrollProgress, [0, 1], [-5, 5])
   const scale = useTransform(scrollProgress, [0, 0.5, 1], [0.95, 1, 0.95])

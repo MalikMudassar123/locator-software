@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, MotionValue, useTransform } from 'framer-motion'
+import { motion, MotionValue } from 'framer-motion'
 import { CreditCard, Wallet, Shield, Globe, Building2, Database, Workflow, BarChart3 } from 'lucide-react'
 
 interface FloatingCardsProps {
@@ -18,7 +18,7 @@ const cards = [
   { icon: Wallet, label: 'Issuing', color: 'from-pink-500 to-rose-500', x: 75, y: 40 }
 ]
 
-export default function FloatingCards({ scrollProgress }: FloatingCardsProps) {
+export default function FloatingCards({ scrollProgress: _scrollProgress }: FloatingCardsProps) {
   return (
     <div className="relative w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       {/* Connection Lines */}

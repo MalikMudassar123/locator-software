@@ -13,7 +13,7 @@ const cards = [
   { gradient: 'from-pink-600 via-rose-600 to-red-600', delay: 0.2, rotate: 0, z: 10 }
 ]
 
-export default function CardIssuing({ scrollProgress }: CardIssuingProps) {
+export default function CardIssuing({ scrollProgress: _scrollProgress }: CardIssuingProps) {
   return (
     <div className="relative w-full h-full bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6 flex items-center justify-center overflow-hidden">
       {/* Background Glow */}

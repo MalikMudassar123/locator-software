@@ -1,13 +1,13 @@
 'use client'
 
 import { motion, MotionValue } from 'framer-motion'
-import { User, Building2, ShoppingBag, ArrowRight } from 'lucide-react'
+import { User, Building2, ShoppingBag } from 'lucide-react'
 
 interface MarketplaceFlowProps {
   scrollProgress: MotionValue<number>
 }
 
-export default function MarketplaceFlow({ scrollProgress }: MarketplaceFlowProps) {
+export default function MarketplaceFlow({ scrollProgress: _scrollProgress }: MarketplaceFlowProps) {
   return (
     <div className="relative w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex items-center justify-center">
       <div className="relative w-full max-w-sm">

@@ -46,14 +46,6 @@ const content = [
 ]
 
 export default function AnimatedText({ scrollProgress }: AnimatedTextProps) {
-  const activeIndex = useTransform(scrollProgress, (progress) => {
-    if (progress < 0.2) return 0
-    if (progress < 0.4) return 1
-    if (progress < 0.6) return 2
-    if (progress < 0.8) return 3
-    return 4
-  })
-
   return (
     <div className="space-y-6">
       {content.map((item, index) => {

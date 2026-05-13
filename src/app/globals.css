@@ -270,78 +270,118 @@ h6 {
 }
 
 /* ══════════════════════════════════════════════════════
-   HERO — SKY GRADIENT BLOBS  (darker / more visible)
+   HERO — AMBIENT BLOBS
+   Rules that make this work:
+   • Each blob is LARGE (85–115%) so overflow:hidden never
+     fully clips it even at max drift — always in view
+   • border-radius is FIXED per blob (organic shape, no
+     morph) — avoids compositing glitches from dual-prop
+     keyframe interpolation
+   • translate3d forces the GPU compositing layer so the
+     browser never re-rasterises mid-animation
+   • Negative animation-delay staggers blobs across their
+     cycle so they are always in different phase states —
+     no sync, no gap, no empty frame
+   • Cycle lengths are intentionally prime-ish (19,22,25,
+     28,31) so two blobs never re-sync
    ══════════════════════════════════════════════════════ */
 
 .hero-blob {
   position: absolute;
-  border-radius: 50%;
   pointer-events: none;
   will-change: transform;
+  backface-visibility: hidden;
 }
 
+/* Blob A — wide sky-blue wash, covers full top region */
 .hero-blob-a {
-  width: 82%; height: 98%;
-  background: rgba(175, 225, 252, 0.82);
-  filter: blur(86px);
-  top: -30%; left: 4%;
-  animation: heroDriftA 18s ease-in-out infinite;
-}
-.hero-blob-b {
-  width: 56%; height: 62%;
-  background: rgba(245, 205, 65, 0.72);
+  width: 115%; height: 120%;
+  background: rgba(120, 200, 245, 0.58);
   filter: blur(88px);
-  bottom: -18%; left: 22%;
-  animation: heroDriftB 22s ease-in-out infinite;
+  top: -10%; left: -8%;
+  border-radius: 60% 40% 55% 45% / 55% 50% 50% 45%;
+  animation: heroDriftA 22s ease-in-out infinite;
+  animation-delay: -7s;
 }
-.hero-blob-c {
-  width: 76%; height: 88%;
-  background: rgba(45, 182, 228, 0.80);
-  filter: blur(76px);
-  top: -15%; right: -15%;
-  animation: heroDriftC 16s ease-in-out infinite;
-}
-.hero-blob-d {
-  width: 50%; height: 65%;
-  background: rgba(8, 80, 145, 0.80);
-  filter: blur(78px);
-  top: -5%; left: -10%;
-  animation: heroDriftD 24s ease-in-out infinite;
-}
-.hero-blob-e {
-  width: 42%; height: 52%;
-  background: rgba(210, 242, 255, 0.75);
+
+/* Blob B — warm gold, anchored bottom-center */
+.hero-blob-b {
+  width: 88%; height: 84%;
+  background: rgba(250, 195, 45, 0.60);
   filter: blur(92px);
-  top: 10%; left: 30%;
-  animation: heroDriftE 28s ease-in-out infinite;
+  bottom: -10%; left: 6%;
+  border-radius: 50% 50% 58% 42% / 52% 48% 42% 58%;
+  animation: heroDriftB 28s ease-in-out infinite;
+  animation-delay: -14s;
 }
+
+/* Blob C — vivid cyan, covers top-right mass */
+.hero-blob-c {
+  width: 95%; height: 110%;
+  background: rgba(35, 165, 218, 0.62);
+  filter: blur(80px);
+  top: -8%; right: -8%;
+  border-radius: 58% 42% 42% 58% / 48% 55% 45% 52%;
+  animation: heroDriftC 19s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+/* Blob D — deep saturated blue, left anchor */
+.hero-blob-d {
+  width: 68%; height: 88%;
+  background: rgba(15, 100, 165, 0.70);
+  filter: blur(82px);
+  top: 4%; left: -10%;
+  border-radius: 45% 55% 55% 45% / 50% 45% 55% 50%;
+  animation: heroDriftD 31s ease-in-out infinite;
+  animation-delay: -19s;
+}
+
+/* Blob E — pale luminous highlight, drifts through center */
+.hero-blob-e {
+  width: 60%; height: 72%;
+  background: rgba(185, 232, 255, 0.66);
+  filter: blur(90px);
+  top: 10%; left: 28%;
+  border-radius: 52% 48% 45% 55% / 45% 52% 55% 48%;
+  animation: heroDriftE 25s ease-in-out infinite;
+  animation-delay: -11s;
+}
+
+/* ── Keyframes: translate3d only, max ±10% so blobs
+      never leave visible area given their oversized dims ── */
 
 @keyframes heroDriftA {
-  0%, 100% { transform: translate(  0%,  0%); }
-  33%       { transform: translate( 15%,  8%); }
-  66%       { transform: translate(  5%, -8%); }
+  0%, 100% { transform: translate3d(  0%,   0%, 0); }
+  25%       { transform: translate3d(  7%,   5%, 0); }
+  50%       { transform: translate3d(  4%,  -6%, 0); }
+  75%       { transform: translate3d( -4%,   3%, 0); }
 }
+
 @keyframes heroDriftB {
-  0%, 100% { transform: translate(  0%,  0%); }
-  30%       { transform: translate( -8%, -13%); }
-  65%       { transform: translate( 11%,  -8%); }
-  82%       { transform: translate(  3%, -16%); }
+  0%, 100% { transform: translate3d(  0%,   0%, 0); }
+  22%       { transform: translate3d( -5%,  -8%, 0); }
+  52%       { transform: translate3d(  6%,  -5%, 0); }
+  78%       { transform: translate3d(  2%, -10%, 0); }
 }
+
 @keyframes heroDriftC {
-  0%, 100% { transform: translate(  0%,  0%); }
-  28%       { transform: translate(-15%,  6%); }
-  58%       { transform: translate(-26%, -4%); }
-  82%       { transform: translate(-11%, 11%); }
+  0%, 100% { transform: translate3d(  0%,   0%, 0); }
+  30%       { transform: translate3d( -8%,   4%, 0); }
+  62%       { transform: translate3d(-10%,  -2%, 0); }
+  82%       { transform: translate3d( -6%,   6%, 0); }
 }
+
 @keyframes heroDriftD {
-  0%, 100% { transform: translate(  0%,  0%); }
-  40%       { transform: translate( 12%, -10%); }
-  78%       { transform: translate( 20%,  -3%); }
+  0%, 100% { transform: translate3d(  0%,   0%, 0); }
+  38%       { transform: translate3d(  8%,  -6%, 0); }
+  72%       { transform: translate3d( 10%,  -1%, 0); }
 }
+
 @keyframes heroDriftE {
-  0%, 100% { transform: translate(  0%,  0%); }
-  35%       { transform: translate(-10%,  6%); }
-  68%       { transform: translate(  7%, -10%); }
+  0%, 100% { transform: translate3d(  0%,   0%, 0); }
+  32%       { transform: translate3d( -6%,   4%, 0); }
+  66%       { transform: translate3d(  5%,  -6%, 0); }
 }
 
 /* ══════════════════════════════════════════════════════
@@ -357,8 +397,7 @@ h6 {
 .hero-wave {
   position: absolute;
   pointer-events: none;
-  will-change: transform, clip-path;
-  filter: blur(3px);   /* softens polygon corners → smooth wave look */
+  will-change: transform;
 }
 
 /* Wave 1 — bottom-left anchor, zig-zag on RIGHT edge */
@@ -407,42 +446,9 @@ h6 {
     appears to FLOW downward as the wave rotates
 */
 @keyframes heroWave1 {
-  0%, 100% {
-    transform: rotate(-24deg);
-    clip-path: polygon(
-      0% 0%,   75% 0%,
-      83% 10%, 67% 20%,
-      81% 30%, 66% 40%,
-      80% 50%, 65% 60%,
-      79% 70%, 67% 80%,
-      78% 90%, 73% 100%,
-      0% 100%
-    );
-  }
-  33% {
-    transform: rotate(5deg);
-    clip-path: polygon(
-      0% 0%,   75% 0%,
-      67% 10%, 81% 20%,
-      66% 30%, 80% 40%,
-      65% 50%, 79% 60%,
-      66% 70%, 80% 80%,
-      68% 90%, 73% 100%,
-      0% 100%
-    );
-  }
-  66% {
-    transform: rotate(20deg);
-    clip-path: polygon(
-      0% 0%,   77% 0%,
-      70% 10%, 84% 20%,
-      69% 30%, 83% 40%,
-      68% 50%, 82% 60%,
-      68% 70%, 82% 80%,
-      70% 90%, 75% 100%,
-      0% 100%
-    );
-  }
+  0%, 100% { transform: rotate(-24deg); }
+  33%       { transform: rotate(5deg);  }
+  66%       { transform: rotate(20deg); }
 }
 
 /*
@@ -453,45 +459,57 @@ h6 {
     as this wave rotates from top-right
 */
 @keyframes heroWave2 {
+  0%, 100% { transform: rotate(22deg);  }
+  33%       { transform: rotate(5deg);  }
+  66%       { transform: rotate(-18deg); }
+}
+
+/* ══════════════════════════════════════════════════════
+   HERO SUNRISE GLOW — warm golden light behind buildings
+   ══════════════════════════════════════════════════════ */
+
+.hero-sunrise-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 62% 58% at 50% 100%,
+    rgba(255, 255, 210, 0.95)  0%,
+    rgba(255, 240, 140, 0.78)  8%,
+    rgba(255, 218, 70,  0.55) 22%,
+    rgba(255, 190, 20,  0.30) 40%,
+    rgba(255, 165, 0,   0.12) 58%,
+    transparent                76%
+  );
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  animation: sunriseGlow 14s ease-in-out infinite;
+}
+
+@keyframes sunriseGlow {
   0%, 100% {
-    transform: rotate(22deg);
-    clip-path: polygon(
-      100% 0%,  22% 0%,
-      14% 10%, 30% 20%,
-      13% 30%, 29% 40%,
-      12% 50%, 28% 60%,
-      13% 70%, 29% 80%,
-      14% 90%, 22% 100%,
-      100% 100%
-    );
+    opacity: 0.78;
+    transform: translate3d(  0%,    0%, 0) scale(1.00);
   }
-  33% {
-    transform: rotate(5deg);
-    clip-path: polygon(
-      100% 0%,  22% 0%,
-      30% 10%, 14% 20%,
-      29% 30%, 13% 40%,
-      28% 50%, 12% 60%,
-      29% 70%, 14% 80%,
-      28% 90%, 22% 100%,
-      100% 100%
-    );
+  20% {
+    opacity: 0.90;
+    transform: translate3d(  5%,  -1%, 0) scale(1.04);
   }
-  66% {
-    transform: rotate(-18deg);
-    clip-path: polygon(
-      100% 0%,  20% 0%,
-      28% 10%, 12% 20%,
-      27% 30%, 11% 40%,
-      26% 50%, 11% 60%,
-      27% 70%, 12% 80%,
-      26% 90%, 20% 100%,
-      100% 100%
-    );
+  45% {
+    opacity: 1;
+    transform: translate3d(  3%,  -2%, 0) scale(1.07);
+  }
+  70% {
+    opacity: 0.86;
+    transform: translate3d( -5%,  -1%, 0) scale(1.03);
+  }
+  85% {
+    opacity: 0.82;
+    transform: translate3d( -3%,   0%, 0) scale(1.01);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-blob { animation: none !important; }
-  .hero-wave { animation: none !important; filter: none; }
+  .hero-blob,
+  .hero-wave,
+  .hero-sunrise-glow { animation: none !important; }
 }

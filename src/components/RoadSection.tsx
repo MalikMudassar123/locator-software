@@ -163,8 +163,8 @@ export default function RoadSection() {
               style={{ 
                 bottom: v.bottom, 
                 left: v.left,
-                transform: hoveredPin === v.id ? 'translateX(3px) translateY(-1px)' : 'translateX(0) translateY(0)',
-                filter: hoveredPin === v.id ? 'drop-shadow(0 4px 12px rgba(0,0,0,0.2))' : 'drop-shadow(0 2px 6px rgba(0,0,0,0.15))',
+                transform: hoveredPin === v.id ? 'translateY(-3px) scale(1.02)' : 'translateY(0) scale(1)',
+                filter: hoveredPin === v.id ? 'drop-shadow(0 6px 16px rgba(0,0,0,0.25))' : 'drop-shadow(0 2px 6px rgba(0,0,0,0.12))',
               }}
               onMouseEnter={() => setHoveredPin(v.id)}
               onMouseLeave={() => setHoveredPin(null)}
@@ -185,8 +185,8 @@ export default function RoadSection() {
           <div
             className="cursor-pointer transition-all duration-500 ease-out"
             style={{
-              transform: hoveredPin === 'scooter' ? 'translateX(3px) translateY(-1px)' : 'translateX(0) translateY(0)',
-              filter: hoveredPin === 'scooter' ? 'drop-shadow(0 4px 12px rgba(0,0,0,0.2))' : 'drop-shadow(0 2px 6px rgba(0,0,0,0.15))',
+              transform: hoveredPin === 'scooter' ? 'translateY(-3px) scale(1.02)' : 'translateY(0) scale(1)',
+              filter: hoveredPin === 'scooter' ? 'drop-shadow(0 6px 16px rgba(0,0,0,0.25))' : 'drop-shadow(0 2px 6px rgba(0,0,0,0.12))',
             }}
             onMouseEnter={() => setHoveredPin('scooter')}
             onMouseLeave={() => setHoveredPin(null)}
@@ -213,7 +213,7 @@ export default function RoadSection() {
               style={{ 
                 bottom: v.pinBottom, 
                 left: v.pinLeft,
-                animation: `iconEntrance 0.6s ease-out ${index * 0.1}s both, iconPulse 3s ease-in-out ${index * 0.3}s infinite`,
+                animation: `iconEntrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) ${index * 0.08}s both, iconFloat 5s ease-in-out ${1.0 + index * 0.5}s infinite`,
                 pointerEvents: 'auto',
               }}
               onMouseEnter={() => setHoveredPin(v.id)}
@@ -225,7 +225,7 @@ export default function RoadSection() {
                   filter: hoveredPin === v.id 
                     ? 'drop-shadow(0 0 10px rgba(58,174,219,0.9)) drop-shadow(0 0 16px rgba(58,174,219,0.6))' 
                     : 'drop-shadow(0 0 4px rgba(58,174,219,0.3))',
-                  transform: hoveredPin === v.id ? 'scale(1.2) translateY(-3px)' : 'scale(1)',
+                  transform: hoveredPin === v.id ? 'scale(1.18) translateY(-4px)' : 'scale(1)',
                 }}
               >
                 <Image
@@ -244,7 +244,7 @@ export default function RoadSection() {
                     left: '50%',
                     transform: 'translateX(-50%)',
                     marginBottom: '18px',
-                    animation: 'tooltipAppear 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both',
+                    animation: 'tooltipAppear 0.25s cubic-bezier(0.16, 1, 0.3, 1) both',
                     zIndex: 99999,
                     pointerEvents: 'auto',
                   }}
@@ -297,7 +297,7 @@ export default function RoadSection() {
           style={{
             bottom: '78%',
             left: '62%',
-            animation: 'iconEntrance 0.6s ease-out 0.3s both, iconPulse 3s ease-in-out 0.9s infinite',
+            animation: 'iconEntrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both, iconFloat 5s ease-in-out 1.5s infinite',
             pointerEvents: 'auto',
           }}
           onMouseEnter={() => setHoveredPin('scooter')}
@@ -309,7 +309,7 @@ export default function RoadSection() {
               filter: hoveredPin === 'scooter' 
                 ? 'drop-shadow(0 0 10px rgba(58,174,219,0.9)) drop-shadow(0 0 16px rgba(58,174,219,0.6))' 
                 : 'drop-shadow(0 0 4px rgba(58,174,219,0.3))',
-              transform: hoveredPin === 'scooter' ? 'scale(1.2) translateY(-3px)' : 'scale(1)',
+              transform: hoveredPin === 'scooter' ? 'scale(1.18) translateY(-4px)' : 'scale(1)',
             }}
           >
             <Image src="/gps-pin.svg" alt="GPS Pin" width={24} height={24} />
@@ -351,32 +351,34 @@ export default function RoadSection() {
         @keyframes iconEntrance {
           0% {
             opacity: 0;
-            transform: translateY(10px) scale(0.9);
+            transform: translateY(8px) scale(0.88);
+            filter: blur(4px);
           }
-          60% {
+          65% {
             opacity: 1;
-            transform: translateY(-2px) scale(1.05);
+            filter: blur(0px);
           }
           100% {
             opacity: 1;
             transform: translateY(0) scale(1);
+            filter: blur(0px);
           }
         }
 
-        @keyframes iconPulse {
+        @keyframes iconFloat {
           0%, 100% {
-            filter: drop-shadow(0 0 4px rgba(58,174,219,0.3));
+            transform: translateY(0px);
           }
           50% {
-            filter: drop-shadow(0 0 12px rgba(58,174,219,0.6)) drop-shadow(0 0 20px rgba(58,174,219,0.4));
+            transform: translateY(-5px);
           }
         }
 
         @keyframes tooltipAppear {
           0% {
             opacity: 0;
-            transform: translateX(-50%) translateY(12px) scale(0.92);
-            filter: blur(6px);
+            transform: translateX(-50%) translateY(8px) scale(0.94);
+            filter: blur(4px);
           }
           100% {
             opacity: 1;
@@ -389,12 +391,10 @@ export default function RoadSection() {
           0%, 100% {
             opacity: 1;
             transform: scale(1);
-            box-shadow: 0 0 8px rgba(16,185,129,0.7), 0 0 3px rgba(16,185,129,0.9);
           }
           50% {
-            opacity: 0.8;
-            transform: scale(1.1);
-            box-shadow: 0 0 12px rgba(16,185,129,0.9), 0 0 6px rgba(16,185,129,1);
+            opacity: 0.82;
+            transform: scale(1.18);
           }
         }
       `}</style>

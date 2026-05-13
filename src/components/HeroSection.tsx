@@ -46,6 +46,22 @@ export default function HeroSection() {
         <div className="hero-wave hero-wave-2" />
       </div>
 
+      {/* Layer 6 — Warm sunrise / golden-hour glow behind buildings */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '88%',
+          height: '72%',
+          zIndex: 6,
+          pointerEvents: 'none',
+        }}
+      >
+        <div className="hero-sunrise-glow" />
+      </div>
+
       {/* LAYER 8 — Dubai Skyline building — ABOVE glow, NO filter, original colors */}
       <div
         style={{

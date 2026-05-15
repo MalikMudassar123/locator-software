@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 const vehicles = [
   {
@@ -104,22 +104,6 @@ const vehicles = [
 
 export default function RoadSection() {
   const [hoveredPin, setHoveredPin] = useState<string | null>(null)
-
-  // Debug logging
-  console.log('RoadSection rendered, hovered:', hoveredPin)
-
-  useEffect(() => {
-    const section = document.querySelector('section[style*="z-index: 100"]')
-    if (section) {
-      const rect = section.getBoundingClientRect()
-      const styles = window.getComputedStyle(section)
-      console.log('RoadSection position:', {
-        top: rect.top,
-        zIndex: styles.zIndex,
-        position: styles.position,
-      })
-    }
-  }, [])
 
   return (
     <section

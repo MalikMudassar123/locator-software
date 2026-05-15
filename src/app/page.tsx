@@ -1,26 +1,26 @@
 import HeroSection from "@/components/HeroSection";
 import RoadSection from "@/components/RoadSection";
-import RoadAnimationSection from "@/components/road-animation/RoadAnimationSection";
+import ScrollShowcase from "@/components/ScrollShowcase";
 
 export default function Home() {
   return (
     <main
-      className="min-h-screen bg-white overflow-x-hidden relative"
-      style={{ paddingLeft: '50px', paddingRight: '50px' }}
+      className="min-h-screen bg-white relative"
+      style={{ overflowX: 'clip', paddingLeft: '50px', paddingRight: '50px' }}
     >
-      {/* Hero — full-bleed: escape the 50px root padding with negative margins */}
+      {/* Hero — full-bleed */}
       <div style={{ position: 'relative', zIndex: 1, marginLeft: '-50px', marginRight: '-50px' }}>
         <HeroSection />
       </div>
 
-      {/* Road — full-bleed: same negative-margin escape */}
+      {/* Road — full-bleed */}
       <div style={{ position: 'relative', zIndex: 200, marginLeft: '-50px', marginRight: '-50px' }}>
         <RoadSection />
       </div>
 
-      {/* RoadAnimationSection — full-bleed: escape the 50px root padding */}
+      {/* ScrollShowcase — full-bleed, directly after Road */}
       <div style={{ position: 'relative', zIndex: 1, marginLeft: '-50px', marginRight: '-50px' }}>
-        <RoadAnimationSection />
+        <ScrollShowcase />
       </div>
     </main>
   );

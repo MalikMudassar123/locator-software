@@ -104,6 +104,16 @@ const vehicles = [
 
 export default function RoadSection() {
   const [hoveredPin, setHoveredPin] = useState<string | null>(null)
+  const [showAllTooltips, setShowAllTooltips] = useState(true)
+
+  // Hide all tooltips after 3 seconds on initial load
+  useState(() => {
+    const timer = setTimeout(() => {
+      setShowAllTooltips(false)
+    }, 3000)
+    
+    return () => clearTimeout(timer)
+  })
 
   return (
     <section
@@ -287,15 +297,15 @@ export default function RoadSection() {
                 />
               </div>
 
-              {hoveredPin === v.id && (
+              {(hoveredPin === v.id || showAllTooltips) && (
                 <div
                   className="absolute"
                   style={{
                     bottom: '100%',
                     left: '50%',
                     transform: 'translateX(-50%)',
-                    marginBottom: '18px',
-                    animation: 'tooltipAppear 0.25s cubic-bezier(0.16, 1, 0.3, 1) both',
+                    marginBottom: '16px',
+                    animation: 'tooltipAppear 0.35s cubic-bezier(0.16, 1, 0.3, 1) both',
                     zIndex: 99999,
                     pointerEvents: 'auto',
                   }}
@@ -304,37 +314,143 @@ export default function RoadSection() {
                 >
                   <div
                     style={{
-                      minWidth: '260px',
-                      padding: '18px 22px',
-                      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 252, 255, 0.92) 100%)',
-                      backdropFilter: 'blur(24px) saturate(200%)',
-                      WebkitBackdropFilter: 'blur(24px) saturate(200%)',
+                      minWidth: showAllTooltips && hoveredPin !== v.id ? '140px' : '240px',
+                      padding: showAllTooltips && hoveredPin !== v.id ? '10px 14px' : '16px 20px',
+                      background: 'rgba(255, 255, 255, 0.75)',
+                      backdropFilter: 'blur(60px) saturate(150%)',
+                      WebkitBackdropFilter: 'blur(60px) saturate(150%)',
                       borderRadius: '16px',
-                      border: '1.5px solid rgba(58,174,219,0.35)',
+                      border: '1px solid rgba(255, 255, 255, 0.6)',
                       boxShadow: `
-                        0 20px 60px rgba(0,0,0,0.18),
-                        0 8px 20px rgba(58,174,219,0.25),
-                        0 2px 8px rgba(58,174,219,0.15),
-                        inset 0 1px 0 rgba(255,255,255,1),
-                        inset 0 -1px 0 rgba(58,174,219,0.1),
-                        0 0 0 1px rgba(255,255,255,0.6),
-                        0 0 20px rgba(58,174,219,0.15)
+                        0 30px 80px -15px rgba(0, 0, 0, 0.2),
+                        0 10px 40px -10px rgba(58, 174, 219, 0.15),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+                        0 0 0 1px rgba(255, 255, 255, 0.3)
                       `,
                       position: 'relative',
+                      overflow: 'hidden',
+                      transition: 'all 0.3s ease',
                     }}
                   >
-                    <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a6e9a', marginBottom: '10px', letterSpacing: '0.002em', lineHeight: '1.3' }}>
-                      {v.tooltipTitle}
-                    </div>
-                    <div style={{ fontSize: '13px', color: '#3aaed6', marginBottom: '8px', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '7px' }}>
-                      <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', display: 'inline-block', boxShadow: '0 0 8px rgba(16,185,129,0.7), 0 0 3px rgba(16,185,129,0.9)', animation: 'statusPulse 2s ease-in-out infinite' }} />
-                      {v.tooltipDetails}
-                    </div>
-                    <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: 400, display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <span style={{ fontSize: '14px' }}>📍</span>
-                      {v.tooltipLocation}
-                    </div>
-                    <div style={{ position: 'absolute', bottom: '-8px', left: '50%', marginLeft: '-8px', width: '0', height: '0', borderLeft: '8px solid transparent', borderRight: '8px solid transparent', borderTop: '8px solid rgba(255, 255, 255, 0.95)', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.05))' }} />
+                    {/* Compact view for initial load */}
+                    {showAllTooltips && hoveredPin !== v.id ? (
+                      <>
+                        <div style={{ 
+                          fontSize: '12px', 
+                          fontWeight: 700, 
+                          color: '#1e3a5f', 
+                          marginBottom: '6px', 
+                          letterSpacing: '-0.01em', 
+                          lineHeight: '1.2',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                        }}>
+                          {v.tooltipTitle}
+                        </div>
+                        
+                        <div style={{ 
+                          fontSize: '10px', 
+                          color: '#2c7da0', 
+                          fontWeight: 600, 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          gap: '5px',
+                        }}>
+                          <span style={{ 
+                            width: '6px', 
+                            height: '6px', 
+                            borderRadius: '50%', 
+                            background: '#10b981', 
+                            display: 'inline-block', 
+                            boxShadow: '0 0 0 2px rgba(16, 185, 129, 0.2)',
+                            flexShrink: 0,
+                          }} />
+                          <span style={{ whiteSpace: 'nowrap' }}>Active</span>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        {/* Full view for hover */}
+                        <div style={{ 
+                          fontSize: '15px', 
+                          fontWeight: 700, 
+                          color: '#1e3a5f', 
+                          marginBottom: '10px', 
+                          letterSpacing: '-0.02em', 
+                          lineHeight: '1.2',
+                        }}>
+                          {v.tooltipTitle}
+                        </div>
+                        
+                        <div style={{
+                          height: '1px',
+                          background: 'rgba(203, 213, 225, 0.4)',
+                          marginBottom: '10px',
+                        }} />
+                        
+                        <div style={{ 
+                          fontSize: '12px', 
+                          color: '#2c7da0', 
+                          marginBottom: '10px', 
+                          fontWeight: 600, 
+                          display: 'inline-flex', 
+                          alignItems: 'center', 
+                          gap: '7px',
+                          padding: '7px 12px',
+                          background: 'rgba(191, 219, 254, 0.4)',
+                          borderRadius: '50px',
+                          width: '100%',
+                          boxSizing: 'border-box',
+                        }}>
+                          <span style={{ 
+                            width: '7px', 
+                            height: '7px', 
+                            borderRadius: '50%', 
+                            background: '#10b981', 
+                            display: 'inline-block', 
+                            boxShadow: '0 0 0 3px rgba(16, 185, 129, 0.2)',
+                            animation: 'statusPulse 2s ease-in-out infinite',
+                            flexShrink: 0,
+                          }} />
+                          <span style={{ flex: 1 }}>{v.tooltipDetails}</span>
+                        </div>
+                        
+                        <div style={{
+                          height: '1px',
+                          background: 'rgba(203, 213, 225, 0.4)',
+                          marginBottom: '10px',
+                        }} />
+                        
+                        <div style={{ 
+                          fontSize: '12px', 
+                          color: '#64748b', 
+                          fontWeight: 500, 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          gap: '7px',
+                        }}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#ef4444"/>
+                          </svg>
+                          <span>{v.tooltipLocation}</span>
+                        </div>
+                      </>
+                    )}
+                    
+                    {/* Arrow */}
+                    <div style={{ 
+                      position: 'absolute', 
+                      bottom: '-9px', 
+                      left: '50%', 
+                      marginLeft: '-9px', 
+                      width: '0', 
+                      height: '0', 
+                      borderLeft: '9px solid transparent', 
+                      borderRight: '9px solid transparent', 
+                      borderTop: '9px solid rgba(255, 255, 255, 0.75)', 
+                      filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))',
+                    }} />
                   </div>
                 </div>
               )}
@@ -366,32 +482,160 @@ export default function RoadSection() {
             <Image src="/gps-pin.svg" alt="GPS Pin" width={24} height={24} />
           </div>
 
-          {hoveredPin === 'scooter' && (
+          {(hoveredPin === 'scooter' || showAllTooltips) && (
             <div
               className="absolute"
               style={{
                 bottom: '100%',
                 left: '50%',
                 transform: 'translateX(-50%)',
-                marginBottom: '18px',
-                animation: 'tooltipAppear 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both',
+                marginBottom: '16px',
+                animation: 'tooltipAppear 0.35s cubic-bezier(0.16, 1, 0.3, 1) both',
                 zIndex: 99999,
                 pointerEvents: 'auto',
               }}
               onMouseEnter={() => setHoveredPin('scooter')}
               onMouseLeave={() => setHoveredPin(null)}
             >
-              <div style={{ minWidth: '260px', padding: '18px 22px', background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 252, 255, 0.92) 100%)', backdropFilter: 'blur(24px) saturate(200%)', WebkitBackdropFilter: 'blur(24px) saturate(200%)', borderRadius: '16px', border: '1.5px solid rgba(58,174,219,0.35)', boxShadow: `0 20px 60px rgba(0,0,0,0.18), 0 8px 20px rgba(58,174,219,0.25), 0 2px 8px rgba(58,174,219,0.15), inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(58,174,219,0.1), 0 0 0 1px rgba(255,255,255,0.6), 0 0 20px rgba(58,174,219,0.15)`, position: 'relative' }}>
-                <div style={{ fontSize: '16px', fontWeight: 600, color: '#1a6e9a', marginBottom: '10px', letterSpacing: '0.002em', lineHeight: '1.3' }}>Delivery Scooter</div>
-                <div style={{ fontSize: '13px', color: '#3aaed6', marginBottom: '8px', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '7px' }}>
-                  <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', display: 'inline-block', boxShadow: '0 0 8px rgba(16,185,129,0.7), 0 0 3px rgba(16,185,129,0.9)', animation: 'statusPulse 2s ease-in-out infinite' }} />
-                  Real-time tracking • Active
-                </div>
-                <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: 400, display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <span style={{ fontSize: '14px' }}>📍</span>
-                  Downtown Dubai
-                </div>
-                <div style={{ position: 'absolute', bottom: '-8px', left: '50%', marginLeft: '-8px', width: '0', height: '0', borderLeft: '8px solid transparent', borderRight: '8px solid transparent', borderTop: '8px solid rgba(255, 255, 255, 0.95)', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.05))' }} />
+              <div
+                style={{
+                  minWidth: showAllTooltips && hoveredPin !== 'scooter' ? '140px' : '240px',
+                  padding: showAllTooltips && hoveredPin !== 'scooter' ? '10px 14px' : '16px 20px',
+                  background: 'rgba(255, 255, 255, 0.75)',
+                  backdropFilter: 'blur(60px) saturate(150%)',
+                  WebkitBackdropFilter: 'blur(60px) saturate(150%)',
+                  borderRadius: '16px',
+                  border: '1px solid rgba(255, 255, 255, 0.6)',
+                  boxShadow: `
+                    0 30px 80px -15px rgba(0, 0, 0, 0.2),
+                    0 10px 40px -10px rgba(58, 174, 219, 0.15),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+                    0 0 0 1px rgba(255, 255, 255, 0.3)
+                  `,
+                  position: 'relative',
+                  overflow: 'hidden',
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                {/* Compact view for initial load */}
+                {showAllTooltips && hoveredPin !== 'scooter' ? (
+                  <>
+                    <div style={{ 
+                      fontSize: '12px', 
+                      fontWeight: 700, 
+                      color: '#1e3a5f', 
+                      marginBottom: '6px', 
+                      letterSpacing: '-0.01em', 
+                      lineHeight: '1.2',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}>
+                      Delivery Scooter
+                    </div>
+                    
+                    <div style={{ 
+                      fontSize: '10px', 
+                      color: '#2c7da0', 
+                      fontWeight: 600, 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '5px',
+                    }}>
+                      <span style={{ 
+                        width: '6px', 
+                        height: '6px', 
+                        borderRadius: '50%', 
+                        background: '#10b981', 
+                        display: 'inline-block', 
+                        boxShadow: '0 0 0 2px rgba(16, 185, 129, 0.2)',
+                        flexShrink: 0,
+                      }} />
+                      <span style={{ whiteSpace: 'nowrap' }}>Active</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {/* Full view for hover */}
+                    <div style={{ 
+                      fontSize: '15px', 
+                      fontWeight: 700, 
+                      color: '#1e3a5f', 
+                      marginBottom: '10px', 
+                      letterSpacing: '-0.02em', 
+                      lineHeight: '1.2',
+                    }}>
+                      Delivery Scooter
+                    </div>
+                    
+                    <div style={{
+                      height: '1px',
+                      background: 'rgba(203, 213, 225, 0.4)',
+                      marginBottom: '10px',
+                    }} />
+                    
+                    <div style={{ 
+                      fontSize: '12px', 
+                      color: '#2c7da0', 
+                      marginBottom: '10px', 
+                      fontWeight: 600, 
+                      display: 'inline-flex', 
+                      alignItems: 'center', 
+                      gap: '7px',
+                      padding: '7px 12px',
+                      background: 'rgba(191, 219, 254, 0.4)',
+                      borderRadius: '50px',
+                      width: '100%',
+                      boxSizing: 'border-box',
+                    }}>
+                      <span style={{ 
+                        width: '7px', 
+                        height: '7px', 
+                        borderRadius: '50%', 
+                        background: '#10b981', 
+                        display: 'inline-block', 
+                        boxShadow: '0 0 0 3px rgba(16, 185, 129, 0.2)',
+                        animation: 'statusPulse 2s ease-in-out infinite',
+                        flexShrink: 0,
+                      }} />
+                      <span style={{ flex: 1 }}>Real-time tracking • Active</span>
+                    </div>
+                    
+                    <div style={{
+                      height: '1px',
+                      background: 'rgba(203, 213, 225, 0.4)',
+                      marginBottom: '10px',
+                    }} />
+                    
+                    <div style={{ 
+                      fontSize: '12px', 
+                      color: '#64748b', 
+                      fontWeight: 500, 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '7px',
+                    }}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#ef4444"/>
+                      </svg>
+                      <span>Downtown Dubai</span>
+                    </div>
+                  </>
+                )}
+                
+                {/* Arrow */}
+                <div style={{ 
+                  position: 'absolute', 
+                  bottom: '-9px', 
+                  left: '50%', 
+                  marginLeft: '-9px', 
+                  width: '0', 
+                  height: '0', 
+                  borderLeft: '9px solid transparent', 
+                  borderRight: '9px solid transparent', 
+                  borderTop: '9px solid rgba(255, 255, 255, 0.75)', 
+                  filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))',
+                }} />
               </div>
             </div>
           )}
@@ -441,11 +685,11 @@ export default function RoadSection() {
         @keyframes statusPulse {
           0%, 100% {
             opacity: 1;
-            transform: scale(1);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
           }
           50% {
-            opacity: 0.82;
-            transform: scale(1.18);
+            opacity: 0.8;
+            box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.3);
           }
         }
       `}</style>

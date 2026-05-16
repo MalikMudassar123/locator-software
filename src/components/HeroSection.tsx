@@ -205,7 +205,7 @@ export default function HeroSection() {
       <div
         style={{
           position: 'absolute',
-          top: '16%',
+          top: '28%',
           left: 0,
           right: 0,
           textAlign: 'center',
@@ -223,20 +223,8 @@ export default function HeroSection() {
             margin: 0,
           }}
         >
-          Locator live tracking apps and services
+          We help you to manage your <span style={{ fontWeight: 600 }}>Vehicles</span> & <span style={{ fontWeight: 600 }}>Team</span>
         </h1>
-        <p
-          style={{
-            fontSize: 'clamp(20px, 2.2vw, 30px)',
-            fontWeight: 300,
-            color: 'rgba(255,255,255,0.58)',
-            lineHeight: 1.45,
-            letterSpacing: '0.02em',
-            margin: '6px 0 0',
-          }}
-        >
-          enable real - time
-        </p>
       </div>
     </section>
   )

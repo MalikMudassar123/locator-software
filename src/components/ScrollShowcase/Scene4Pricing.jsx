@@ -442,7 +442,7 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
           <div style={{ width:SBW, borderRight:'1px solid #e5e7eb', display:'flex', flexDirection:'column', background:'#fafafa' }}>
             <div style={{ display:'flex', borderBottom:'1px solid #e5e7eb', padding:'5px 4px 0', gap:1 }}>
               {[{l:'13',s:'All',a:true},{l:'2',s:'Moving'},{l:'1',s:'Idle'},{l:'1',s:'Park'},{l:'0',s:'None'}].map(tab=>(
-                <div key={tab.l} style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', padding:'3px 1px 5px', borderBottom:tab.a?'2px solid #3b82f6':'2px solid transparent' }}>
+                <div key={tab.s} style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', padding:'3px 1px 5px', borderBottom:tab.a?'2px solid #3b82f6':'2px solid transparent' }}>
                   <span style={{ fontSize:8.5, fontWeight:700, color:tab.a?'#3b82f6':'#9ca3af' }}>{tab.l}</span>
                   <span style={{ fontSize:5.5, color:tab.a?'#60a5fa':'#d1d5db', textAlign:'center' }}>{tab.s}</span>
                 </div>

@@ -54,13 +54,14 @@ function shuffle(arr) {
   return a;
 }
 
+// Clean L-shaped connectors with smooth 12px rounded corners (premium SaaS style)
 const CONNECTIONS = [
-  'M 57 68 C 57 44 444 44 444 76',                                          // 0: pin-top → route (smooth arch)
-  'M 57 138 C 57 168 90 180 215 180',                                        // 1: pin-bottom → bell (smooth curve)
-  'M 86 310 C 190 310 320 308 332 280',                                      // 2: moon-right → grid (smooth curve)
-  'M 364 280 C 400 280 412 328 408 362 C 404 396 374 416 332 414',          // 3: grid-right → wrench (smooth S-curve)
-  'M 412 76 C 330 76 240 78 215 143',                                        // 4: route-left → bell (smooth curve)
-  'M 54 342 C 54 390 140 414 300 414',                                       // 5: moon-bottom → wrench (smooth curve)
+  'M 92 103 V 88 Q 92 76 104 76 H 412',                          // 0: pin → route (up, then right)
+  'M 92 124 H 203 Q 215 124 215 136 V 143',                       // 1: pin → bell (right, then down)
+  'M 86 310 H 288 Q 300 310 300 298 V 280',                       // 2: moon → grid (right, then up)
+  'M 332 312 V 382',                                              // 3: grid → wrench (clean vertical)
+  'M 444 108 V 163 Q 444 175 432 175 H 247',                      // 4: route → bell (down, then left)
+  'M 54 342 V 402 Q 54 414 66 414 H 300',                         // 5: moon → wrench (down, then right)
 ];
 
 // Icon pairs for each connection
@@ -89,20 +90,20 @@ function GlobalDefs() {
         <linearGradient id="ig_route"  x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#818cf8"/><stop offset="100%" stopColor="#06b6d4"/></linearGradient>
         <linearGradient id="ig_moon"   x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#3730a3"/><stop offset="100%" stopColor="#6d28d9"/></linearGradient>
         <linearGradient id="ig_wrench" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#60a5fa"/><stop offset="100%" stopColor="#2563eb"/></linearGradient>
-        {/* Per-connection gradients — direction-accurate via userSpaceOnUse */}
-        <linearGradient id="s1lg0" x1="57" y1="68" x2="444" y2="76" gradientUnits="userSpaceOnUse">
+        {/* Per-connection gradients — aligned with new L-shape paths */}
+        <linearGradient id="s1lg0" x1="92" y1="103" x2="412" y2="76" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#f472b6"/><stop offset="100%" stopColor="#06b6d4"/>
         </linearGradient>
-        <linearGradient id="s1lg1" x1="57" y1="138" x2="215" y2="175" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s1lg1" x1="92" y1="124" x2="215" y2="143" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#8b5cf6"/><stop offset="100%" stopColor="#3b82f6"/>
         </linearGradient>
-        <linearGradient id="s1lg2" x1="86" y1="310" x2="332" y2="280" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s1lg2" x1="86" y1="310" x2="300" y2="280" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#4c1d95"/><stop offset="100%" stopColor="#6366f1"/>
         </linearGradient>
-        <linearGradient id="s1lg3" x1="364" y1="280" x2="332" y2="414" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s1lg3" x1="332" y1="312" x2="332" y2="382" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#60a5fa"/>
         </linearGradient>
-        <linearGradient id="s1lg4" x1="412" y1="76" x2="215" y2="143" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s1lg4" x1="444" y1="108" x2="247" y2="175" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#818cf8"/><stop offset="100%" stopColor="#06b6d4"/>
         </linearGradient>
         <linearGradient id="s1lg5" x1="54" y1="342" x2="300" y2="414" gradientUnits="userSpaceOnUse">
@@ -186,9 +187,21 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     if (linesRef.current) gsap.set(linesRef.current, { zIndex: 0 });
   };
 
+  // Premium easing curves — smooth, refined motion
+  const EASE_IN  = 'power3.inOut';
+  const EASE_OUT = 'power3.out';
+  const EASE_OFF = 'power2.in';
+
   const resetIconsAndLines = () => {
     gsap.set(activeRefs.current.filter(Boolean), { opacity: 0 });
-    gsap.set(lineRefs.current.filter(Boolean),   { opacity: 0 });
+    lineRefs.current.filter(Boolean).forEach(p => {
+      const len = (() => { try { return p.getTotalLength(); } catch { return 400; } })();
+      gsap.set(p, {
+        opacity: 0,
+        strokeDasharray: `${len} ${len + 1}`,
+        strokeDashoffset: len,
+      });
+    });
   };
 
   const playConnections = () => {
@@ -205,23 +218,26 @@ export default forwardRef(function Scene1Icons(_props, ref) {
       const iconIndices = [...new Set(group.flatMap(ci => PAIRS[ci]))];
       const nextGroup = shuffled[gi + 1] || [];
       const nextIconSet = new Set(nextGroup.flatMap(ci => PAIRS[ci]));
-      const offAt = t + CYCLE - 0.22;
+      const offAt = t + CYCLE - 0.26;
       iconIndices.forEach(idx => {
         const el = activeRefs.current[idx];
-        if (el) tl.to(el, { opacity:1, duration:0.20, ease:'power2.out' }, t);
+        if (el) tl.to(el, { opacity:1, duration:0.32, ease:EASE_OUT }, t);
       });
       group.forEach(ci => {
         const line = lineRefs.current[ci];
-        if (line) tl.to(line, { opacity:1, duration:0.24, ease:'power2.out' }, t + 0.14);
+        if (!line) return;
+        const len = (() => { try { return line.getTotalLength(); } catch { return 400; } })();
+        tl.set(line, { strokeDasharray:`${len} ${len + 1}`, strokeDashoffset:len, opacity:1 }, t + 0.16);
+        tl.to(line, { strokeDashoffset:0, duration:0.55, ease:EASE_IN }, t + 0.16);
       });
       group.forEach(ci => {
         const line = lineRefs.current[ci];
-        if (line) tl.to(line, { opacity:0, duration:0.22, ease:'power1.in' }, offAt);
+        if (line) tl.to(line, { opacity:0, duration:0.30, ease:EASE_OFF }, offAt);
       });
       iconIndices.forEach(idx => {
         if (!nextIconSet.has(idx)) {
           const el = activeRefs.current[idx];
-          if (el) tl.to(el, { opacity:0, duration:0.20 }, offAt);
+          if (el) tl.to(el, { opacity:0, duration:0.28, ease:EASE_OFF }, offAt);
         }
       });
       t += CYCLE;
@@ -261,9 +277,13 @@ export default forwardRef(function Scene1Icons(_props, ref) {
       const elA = activeRefs.current[ia];
       const elB = activeRefs.current[ib];
       const line = lineRefs.current[ci];
-      if (elA) tl.to(elA, { opacity:1, duration:0.18, ease:'power2.out' }, at);
-      if (elB) tl.to(elB, { opacity:1, duration:0.18, ease:'power2.out' }, at);
-      if (line) tl.to(line, { opacity:1, duration:0.24, ease:'power2.out' }, at + 0.12);
+      if (elA) tl.to(elA, { opacity:1, duration:0.28, ease:EASE_OUT }, at);
+      if (elB) tl.to(elB, { opacity:1, duration:0.28, ease:EASE_OUT }, at);
+      if (line) {
+        const len = (() => { try { return line.getTotalLength(); } catch { return 400; } })();
+        tl.set(line, { strokeDasharray:`${len} ${len + 1}`, strokeDashoffset:len, opacity:1 }, at + 0.14);
+        tl.to(line, { strokeDashoffset:0, duration:0.58, ease:EASE_IN }, at + 0.14);
+      }
     });
 
     // Phone outline starts at 0.38s — first connection is still crossing over it
@@ -309,11 +329,14 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     hoverTl.current = gsap.timeline();
     iconIndices.forEach(idx => {
       const el = activeRefs.current[idx];
-      if (el) hoverTl.current.to(el, { opacity:1, duration:0.20, ease:'power2.out' }, 0);
+      if (el) hoverTl.current.to(el, { opacity:1, duration:0.28, ease:EASE_OUT }, 0);
     });
     connIndices.forEach(ci => {
       const line = lineRefs.current[ci];
-      if (line) hoverTl.current.to(line, { opacity:1, duration:0.24, ease:'power2.out' }, 0.10);
+      if (!line) return;
+      const len = (() => { try { return line.getTotalLength(); } catch { return 400; } })();
+      hoverTl.current.set(line, { strokeDasharray:`${len} ${len + 1}`, strokeDashoffset:len, opacity:1 }, 0.10);
+      hoverTl.current.to(line, { strokeDashoffset:0, duration:0.55, ease:EASE_IN }, 0.10);
     });
   };
 
@@ -340,13 +363,20 @@ export default forwardRef(function Scene1Icons(_props, ref) {
       <style>{CSS}</style>
       <GlobalDefs/>
 
-      {/* z=0 — connection lines */}
+      {/* z=0 — connection lines (clean L-shape, premium glow) */}
       <svg ref={linesRef} width={W} height={H} viewBox={`0 0 ${W} ${H}`}
         style={{ position:'absolute', inset:0, zIndex:0, pointerEvents:'none', overflow:'visible' }}>
+        <defs>
+          <filter id="s1line_glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="1.2" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
         {CONNECTIONS.map((d, i) => (
           <path key={i} ref={el => (lineRefs.current[i] = el)} d={d}
-            stroke={`url(#s1lg${i})`} strokeWidth="1.4" fill="none"
-            strokeLinecap="round" strokeLinejoin="round" opacity="0"/>
+            stroke={`url(#s1lg${i})`} strokeWidth="1.6" fill="none"
+            strokeLinecap="round" strokeLinejoin="round" opacity="0"
+            filter="url(#s1line_glow)"/>
         ))}
       </svg>
 

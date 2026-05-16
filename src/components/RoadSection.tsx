@@ -320,16 +320,16 @@ export default function RoadSection() {
                 >
                   <div
                     style={{
-                      width: '200px',
-                      padding: '12px',
-                      background: 'rgba(255, 255, 255, 0.85)',
+                      width: '160px',
+                      padding: '10px 11px',
+                      background: 'rgba(255, 255, 255, 0.88)',
                       backdropFilter: 'blur(60px) saturate(150%)',
                       WebkitBackdropFilter: 'blur(60px) saturate(150%)',
-                      borderRadius: '12px',
+                      borderRadius: '10px',
                       border: '1px solid rgba(255, 255, 255, 0.6)',
                       boxShadow: `
-                        0 30px 80px -15px rgba(0, 0, 0, 0.2),
-                        0 10px 40px -10px rgba(58, 174, 219, 0.15),
+                        0 24px 60px -15px rgba(0, 0, 0, 0.18),
+                        0 8px 28px -10px rgba(58, 174, 219, 0.14),
                         inset 0 1px 0 rgba(255, 255, 255, 0.8),
                         0 0 0 1px rgba(255, 255, 255, 0.3)
                       `,
@@ -343,7 +343,7 @@ export default function RoadSection() {
                       display: 'flex', 
                       alignItems: 'center', 
                       justifyContent: 'space-between',
-                      marginBottom: '6px',
+                      marginBottom: '4px',
                     }}>
                       <div style={{ 
                         display: 'flex', 
@@ -352,18 +352,18 @@ export default function RoadSection() {
                       }}>
                         {/* Avatar */}
                         <div style={{
-                          width: '32px',
-                          height: '32px',
+                          width: '22px',
+                          height: '22px',
                           borderRadius: '50%',
                           background: 'linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           flexShrink: 0,
-                          border: '2px solid rgba(255, 255, 255, 0.8)',
-                          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                          border: '1.5px solid rgba(255, 255, 255, 0.85)',
+                          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.08)',
                         }}>
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="#0ea5e9"/>
                           </svg>
                         </div>
@@ -401,22 +401,22 @@ export default function RoadSection() {
                     <div style={{
                       height: '1px',
                       background: 'rgba(203, 213, 225, 0.3)',
-                      marginBottom: '12px',
+                      marginBottom: '5px',
                     }} />
 
                     {/* Idling Time */}
                     <div style={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
+                      display: 'flex',
+                      alignItems: 'center',
                       justifyContent: 'space-between',
-                      marginBottom: '12px',
+                      marginBottom: '5px',
                     }}>
                       <div style={{ 
                         display: 'flex', 
                         alignItems: 'center', 
                         gap: '8px',
                       }}>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.6 }}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.6 }}>
                           <circle cx="12" cy="12" r="10" stroke="#64748b" strokeWidth="2" fill="none"/>
                           <path d="M12 6v6l4 2" stroke="#64748b" strokeWidth="2" strokeLinecap="round"/>
                         </svg>
@@ -441,7 +441,7 @@ export default function RoadSection() {
                     <div style={{
                       height: '1px',
                       background: 'rgba(203, 213, 225, 0.3)',
-                      marginBottom: '12px',
+                      marginBottom: '5px',
                     }} />
 
                     {/* Fuel Level */}
@@ -455,7 +455,7 @@ export default function RoadSection() {
                         alignItems: 'center', 
                         gap: '8px',
                       }}>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.6 }}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.6 }}>
                           <path d="M3 8h12v10c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V8zm0-2V4c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v2M15 11l4-4v10l-4-4" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
                         </svg>
                         <span style={{ 
@@ -545,16 +545,16 @@ export default function RoadSection() {
             >
               <div
                 style={{
-                  width: '200px',
-                  padding: '12px',
-                  background: 'rgba(255, 255, 255, 0.85)',
+                  width: '150px',
+                  padding: '7px 10px',
+                  background: 'rgba(255, 255, 255, 0.88)',
                   backdropFilter: 'blur(60px) saturate(150%)',
                   WebkitBackdropFilter: 'blur(60px) saturate(150%)',
-                  borderRadius: '12px',
+                  borderRadius: '10px',
                   border: '1px solid rgba(255, 255, 255, 0.6)',
                   boxShadow: `
-                    0 30px 80px -15px rgba(0, 0, 0, 0.2),
-                    0 10px 40px -10px rgba(58, 174, 219, 0.15),
+                    0 24px 60px -15px rgba(0, 0, 0, 0.18),
+                    0 8px 28px -10px rgba(58, 174, 219, 0.14),
                     inset 0 1px 0 rgba(255, 255, 255, 0.8),
                     0 0 0 1px rgba(255, 255, 255, 0.3)
                   `,
@@ -568,7 +568,7 @@ export default function RoadSection() {
                   display: 'flex', 
                   alignItems: 'center', 
                   justifyContent: 'space-between',
-                  marginBottom: '6px',
+                  marginBottom: '4px',
                 }}>
                   <div style={{ 
                     display: 'flex', 
@@ -577,25 +577,25 @@ export default function RoadSection() {
                   }}>
                     {/* Avatar */}
                     <div style={{
-                      width: '32px',
-                      height: '32px',
+                      width: '22px',
+                      height: '22px',
                       borderRadius: '50%',
                       background: 'linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       flexShrink: 0,
-                      border: '2px solid rgba(255, 255, 255, 0.8)',
-                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                      border: '1.5px solid rgba(255, 255, 255, 0.85)',
+                      boxShadow: '0 2px 6px rgba(0, 0, 0, 0.08)',
                     }}>
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="#0ea5e9"/>
                       </svg>
                     </div>
                     <div style={{ 
-                      fontSize: '13px', 
-                      fontWeight: 700, 
-                      color: '#1e3a5f', 
+                      fontSize: '11.5px',
+                      fontWeight: 700,
+                      color: '#1e3a5f',
                       letterSpacing: '-0.01em',
                     }}>
                       Ali Rahman
@@ -614,10 +614,10 @@ export default function RoadSection() {
 
                 {/* Vehicle ID */}
                 <div style={{ 
-                  fontSize: '11px', 
-                  color: '#64748b', 
+                  fontSize: '9px',
+                  color: '#64748b',
                   fontWeight: 500,
-                  marginBottom: '12px',
+                  marginBottom: '5px',
                 }}>
                   ID: SCT7845
                 </div>
@@ -626,36 +626,36 @@ export default function RoadSection() {
                 <div style={{
                   height: '1px',
                   background: 'rgba(203, 213, 225, 0.3)',
-                  marginBottom: '12px',
+                  marginBottom: '5px',
                 }} />
 
                 {/* Idling Time */}
                 <div style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
+                  display: 'flex',
+                  alignItems: 'center',
                   justifyContent: 'space-between',
-                  marginBottom: '12px',
+                  marginBottom: '5px',
                 }}>
                   <div style={{ 
                     display: 'flex', 
                     alignItems: 'center', 
                     gap: '8px',
                   }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.6 }}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.6 }}>
                       <circle cx="12" cy="12" r="10" stroke="#64748b" strokeWidth="2" fill="none"/>
                       <path d="M12 6v6l4 2" stroke="#64748b" strokeWidth="2" strokeLinecap="round"/>
                     </svg>
-                    <span style={{ 
-                      fontSize: '11px', 
-                      color: '#64748b', 
+                    <span style={{
+                      fontSize: '9.5px',
+                      color: '#64748b',
                       fontWeight: 500,
                     }}>
                       Idling Time
                     </span>
                   </div>
-                  <span style={{ 
-                    fontSize: '12px', 
-                    color: '#0ea5e9', 
+                  <span style={{
+                    fontSize: '10.5px',
+                    color: '#0ea5e9',
                     fontWeight: 700,
                   }}>
                     4 mins
@@ -666,7 +666,7 @@ export default function RoadSection() {
                 <div style={{
                   height: '1px',
                   background: 'rgba(203, 213, 225, 0.3)',
-                  marginBottom: '12px',
+                  marginBottom: '5px',
                 }} />
 
                 {/* Fuel Level */}
@@ -680,12 +680,12 @@ export default function RoadSection() {
                     alignItems: 'center', 
                     gap: '8px',
                   }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.6 }}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.6 }}>
                       <path d="M3 8h12v10c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V8zm0-2V4c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v2M15 11l4-4v10l-4-4" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
                     </svg>
-                    <span style={{ 
-                      fontSize: '11px', 
-                      color: '#64748b', 
+                    <span style={{
+                      fontSize: '9.5px',
+                      color: '#64748b',
                       fontWeight: 500,
                     }}>
                       Fuel
@@ -699,9 +699,9 @@ export default function RoadSection() {
                     <svg width="14" height="16" viewBox="0 0 24 24" fill="none">
                       <path d="M3 8h12v10c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V8zm0-2V4c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v2M15 11l4-4v10l-4-4" stroke="#0ea5e9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="#0ea5e9"/>
                     </svg>
-                    <span style={{ 
-                      fontSize: '12px', 
-                      color: '#0ea5e9', 
+                    <span style={{
+                      fontSize: '10.5px',
+                      color: '#0ea5e9',
                       fontWeight: 700,
                     }}>
                       73%

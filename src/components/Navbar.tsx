@@ -16,6 +16,8 @@ const navLinks = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const [ctaHover, setCtaHover] = useState(false)
+  const CTA_LINE_HEIGHT = 22
 
   return (
     <>
@@ -75,21 +77,55 @@ export default function Navbar() {
                   background: '#ffffff',
                   color: '#1a6e9a',
                   border: 'none',
-                  borderRadius: '10px',
-                  padding: '10px 22px',
+                  borderRadius: '12px',
+                  padding: '14px 26px',
                   fontSize: '13px',
                   fontWeight: 600,
                   fontFamily: 'inherit',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
                   letterSpacing: '0.01em',
-                  boxShadow: '0 2px 12px rgba(255,255,255,0.40)',
-                  transition: 'transform 0.25s ease',
+                  boxShadow: ctaHover
+                    ? '0 8px 24px rgba(255,255,255,0.55), 0 2px 8px rgba(26,110,154,0.18)'
+                    : '0 2px 12px rgba(255,255,255,0.40)',
+                  transition: 'box-shadow 0.45s cubic-bezier(0.65, 0, 0.35, 1), transform 0.45s cubic-bezier(0.65, 0, 0.35, 1)',
+                  transform: ctaHover ? 'translateY(-1.5px)' : 'translateY(0)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  lineHeight: 1,
                 }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)' }}
-                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0px)' }}
+                onMouseEnter={() => setCtaHover(true)}
+                onMouseLeave={() => setCtaHover(false)}
               >
-                Get a Quote
+                <span
+                  aria-hidden="true"
+                  style={{
+                    display: 'block',
+                    height: `${CTA_LINE_HEIGHT}px`,
+                    overflow: 'hidden',
+                    position: 'relative',
+                  }}
+                >
+                  <span
+                    style={{
+                      display: 'block',
+                      transition: 'transform 0.55s cubic-bezier(0.65, 0, 0.35, 1)',
+                      transform: ctaHover ? `translateY(-${CTA_LINE_HEIGHT}px)` : 'translateY(0)',
+                      willChange: 'transform',
+                    }}
+                  >
+                    <span style={{ display: 'block', height: `${CTA_LINE_HEIGHT}px`, lineHeight: `${CTA_LINE_HEIGHT}px` }}>
+                      Get a Quote
+                    </span>
+                    <span style={{ display: 'block', height: `${CTA_LINE_HEIGHT}px`, lineHeight: `${CTA_LINE_HEIGHT}px` }}>
+                      Get a Quote
+                    </span>
+                  </span>
+                </span>
+                <span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>
+                  Get a Quote
+                </span>
               </button>
             </div>
 

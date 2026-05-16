@@ -420,7 +420,7 @@ export default forwardRef(function Scene2Wireframe(_props, ref) {
             <div style={{ width:173, borderRight:'1px solid #e5e7eb', display:'flex', flexDirection:'column' }}>
               <div style={{ display:'flex', borderBottom:'1px solid #e5e7eb', padding:'5px 6px 0', gap:2 }}>
                 {[['13','All',true],['2','Moving'],['1','Idle'],['1','Park'],['0','None']].map(([n,l,a])=>(
-                  <div key={n} style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', padding:'3px 2px 5px', borderBottom:`2px solid ${a?'#3b82f6':'transparent'}` }}>
+                  <div key={l} style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', padding:'3px 2px 5px', borderBottom:`2px solid ${a?'#3b82f6':'transparent'}` }}>
                     <span style={{ fontSize:8.5, fontWeight:700, color:a?'#3b82f6':'#9ca3af' }}>{n}</span>
                     <span style={{ fontSize:6, color:a?'#3b82f6':'#9ca3af', textAlign:'center' }}>{l}</span>
                   </div>

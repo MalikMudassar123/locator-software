@@ -430,7 +430,7 @@ export default forwardRef(function Scene3Checkout(_props, ref) {
           <div style={{ width:SBW, borderRight:'1px solid #1e3a5f', display:'flex', flexDirection:'column', background:'#0f172a' }}>
             <div style={{ display:'flex', borderBottom:'1px solid #1e3a5f', padding:'5px 4px 0', gap:1 }}>
               {[{l:'13',s:'All',a:true},{l:'2',s:'Moving'},{l:'1',s:'Idle'},{l:'1',s:'Park'},{l:'0',s:'None'}].map(tab=>(
-                <div key={tab.l} style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', padding:'3px 1px 5px', borderBottom:tab.a?'2px solid #3b82f6':'2px solid transparent' }}>
+                <div key={tab.s} style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', padding:'3px 1px 5px', borderBottom:tab.a?'2px solid #3b82f6':'2px solid transparent' }}>
                   <span style={{ fontSize:8.5, fontWeight:700, color:tab.a?'#3b82f6':'#64748b' }}>{tab.l}</span>
                   <span style={{ fontSize:5.5, color:tab.a?'#60a5fa':'#475569', textAlign:'center' }}>{tab.s}</span>
                 </div>

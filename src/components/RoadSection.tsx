@@ -297,7 +297,7 @@ export default function RoadSection() {
                 />
               </div>
 
-              {(hoveredPin === v.id || showAllTooltips) && (
+              {(hoveredPin === v.id || (showAllTooltips && index % 2 === 0)) && (
                 <div
                   className="absolute"
                   style={{
@@ -482,7 +482,7 @@ export default function RoadSection() {
             <Image src="/gps-pin.svg" alt="GPS Pin" width={24} height={24} />
           </div>
 
-          {(hoveredPin === 'scooter' || showAllTooltips) && (
+          {(hoveredPin === 'scooter' || (showAllTooltips && false)) && (
             <div
               className="absolute"
               style={{

@@ -3,7 +3,7 @@ import { forwardRef, useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 
 const W = 540, H = 490;
-const FX = 22, FY = 18, FW = 490, FH = 450, FR = 13;
+const FX = 72, FY = 18, FW = 416, FH = 450, FR = 13;
 const FX2 = FX + FW, FY2 = FY + FH;
 const SBW = 170;
 const FRAME_PERIM = Math.round(2*(FW-FR*2) + 2*(FH-FR*2) + 2*Math.PI*FR);
@@ -36,20 +36,37 @@ const WIRE = [
 ];
 
 const ICONS = [
-  { id:'cam',    left:0,   top:62,  size:68, layer:'outer'  }, // 0
-  { id:'shield', left:0,   top:280, size:68, layer:'outer'  }, // 1
-  { id:'ai',     left:464, top:50,  size:68, layer:'outer'  }, // 2
-  { id:'play',   left:78,  top:158, size:62, layer:'center' }, // 3
-  { id:'alert',  left:290, top:268, size:62, layer:'center' }, // 4
+  { id:'cam',    left:5,   top:67,  size:58, layer:'outer' }, // 0
+  { id:'shield', left:5,   top:285, size:58, layer:'outer' }, // 1
+  { id:'ai',     left:469, top:55,  size:58, layer:'outer' }, // 2
 ];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 const CONNECTIONS = [
-  'M 34 62 C 34 36 484 36 498 84',                    // 0: cam-top → ai (UP then RIGHT)
-  'M 34 130 L 34 280',                                 // 1: cam-bottom → shield (straight DOWN)
-  'M 68 314 L 290 314 C 321 314 321 301 321 299',     // 2: shield-right → alert (RIGHT then UP)
+  'M 63 96 L 22 96',                                        // 0: cam right → frame left (horizontal)
+  'M 34 67 C 34 40 120 18 220 18',                          // 1: cam top → frame top (arc)
+  'M 63 314 C 40 314 22 314 22 340',                        // 2: shield right → frame left lower (L)
+  'M 469 84 C 512 84 512 55 512 30',                        // 3: ai left → frame right upper (L)
+  'M 34 67 C 34 36 469 36 469 55',                          // 4: cam top → ai top (arc over frame)
 ];
 
-const PAIRS = [[0,2],[0,1],[1,4]];
+const PAIRS = [[0],[0],[1],[2],[0,2]];
+
+const GROUPS = [
+  [4],      // cam→ai arc (both icons activate)
+  [0, 2],   // cam→frame left + shield→frame lower (two lines)
+  [1],      // cam→frame top
+  [3],      // ai→frame right upper
+  [2, 3],   // shield→frame lower + ai→frame right
+];
 
 const CSS = `@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}`;
 
@@ -62,14 +79,20 @@ function GlobalDefs() {
         <linearGradient id="s4ig_ai"     x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#06b6d4"/></linearGradient>
         <linearGradient id="s4ig_play"   x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#3b82f6"/></linearGradient>
         <linearGradient id="s4ig_alert"  x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#f59e0b"/><stop offset="100%" stopColor="#ef4444"/></linearGradient>
-        <linearGradient id="s4lg0" x1="34" y1="62" x2="498" y2="84" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s4lg0" x1="63" y1="96" x2="22" y2="96" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#3b82f6"/>
+        </linearGradient>
+        <linearGradient id="s4lg1" x1="34" y1="67" x2="220" y2="18" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#8b5cf6"/><stop offset="100%" stopColor="#06b6d4"/>
+        </linearGradient>
+        <linearGradient id="s4lg2" x1="63" y1="314" x2="22" y2="340" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#3b82f6"/><stop offset="100%" stopColor="#6366f1"/>
+        </linearGradient>
+        <linearGradient id="s4lg3" x1="469" y1="84" x2="512" y2="30" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#06b6d4"/>
+        </linearGradient>
+        <linearGradient id="s4lg4" x1="34" y1="67" x2="469" y2="55" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#f472b6"/><stop offset="100%" stopColor="#06b6d4"/>
-        </linearGradient>
-        <linearGradient id="s4lg1" x1="34" y1="130" x2="34" y2="280" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#8b5cf6"/><stop offset="100%" stopColor="#3b82f6"/>
-        </linearGradient>
-        <linearGradient id="s4lg2" x1="68" y1="314" x2="321" y2="299" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#4c1d95"/><stop offset="100%" stopColor="#6366f1"/>
         </linearGradient>
         <linearGradient id="s4pg_w" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#06b6d4"/>
@@ -172,6 +195,8 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
   const allTweens    = useRef([]);
   const hoverTl      = useRef(null);
   const isHovered    = useRef(false);
+  const hasRevealed  = useRef(false);
+  const linesRef     = useRef(null);
 
   useLayoutEffect(() => () => allTweens.current.forEach(t => t?.kill()), []);
 
@@ -180,6 +205,8 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     allTweens.current = [];
     hoverTl.current?.kill();
     hoverTl.current = null;
+    hasRevealed.current = false;
+    if (linesRef.current) gsap.set(linesRef.current, { zIndex: 0 });
   };
 
   const resetIconsAndLines = () => {
@@ -187,74 +214,95 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     gsap.set(lineRefs.current.filter(Boolean),   { opacity:0 });
   };
 
+  const playConnections = () => {
+    allTweens.current.forEach(t => t?.kill());
+    allTweens.current = [];
+    resetIconsAndLines();
+    if (linesRef.current) gsap.set(linesRef.current, { zIndex: 0 });
+    const tl = gsap.timeline();
+    allTweens.current.push(tl);
+    const CYCLE = 1.2;
+    const shuffled = shuffle(GROUPS);
+    let t = 0;
+    shuffled.forEach((group, gi) => {
+      const iconIndices = [...new Set(group.flatMap(ci => PAIRS[ci]))];
+      const nextGroup = shuffled[gi + 1] || [];
+      const nextIconSet = new Set(nextGroup.flatMap(ci => PAIRS[ci]));
+      const offAt = t + CYCLE - 0.22;
+      iconIndices.forEach(idx => {
+        const el = activeRefs.current[idx];
+        if (el) tl.to(el, { opacity:1, duration:0.20, ease:'power2.out' }, t);
+      });
+      group.forEach(ci => {
+        const line = lineRefs.current[ci];
+        if (line) tl.to(line, { opacity:1, duration:0.24, ease:'power2.out' }, t + 0.14);
+      });
+      group.forEach(ci => {
+        const line = lineRefs.current[ci];
+        if (line) tl.to(line, { opacity:0, duration:0.22, ease:'power1.in' }, offAt);
+      });
+      iconIndices.forEach(idx => {
+        if (!nextIconSet.has(idx)) {
+          const el = activeRefs.current[idx];
+          if (el) tl.to(el, { opacity:0, duration:0.20 }, offAt);
+        }
+      });
+      t += CYCLE;
+    });
+    tl.add(() => { if (!isHovered.current) playConnections(); }, t + 0.5);
+  };
+
   const play = () => {
     stop();
     resetIconsAndLines();
-    gsap.set(maskRef.current,      { opacity:0 });
-    gsap.set(framePathRef.current, { opacity:0, strokeDashoffset:FRAME_PERIM });
-    gsap.set(shellRef.current,     { opacity:0 });
-    gsap.set(skelRef.current,      { opacity:0 });
-    gsap.set(revealRef.current,    { opacity:0 });
-    gsap.set(rowRefs.current.filter(Boolean), { opacity:0, x:-6 });
-    gsap.set(camRefs.current.filter(Boolean), { opacity:0, scale:0.92 });
+    if (linesRef.current) gsap.set(linesRef.current, { zIndex: 0 });
+    gsap.set(maskRef.current,      { opacity: 0 });
+    gsap.set(framePathRef.current, { opacity: 0, strokeDashoffset: FRAME_PERIM });
+    gsap.set(shellRef.current,     { opacity: 0 });
+    gsap.set(skelRef.current,      { opacity: 0 });
+    gsap.set(revealRef.current,    { opacity: 0 });
+    gsap.set(rowRefs.current.filter(Boolean), { opacity: 0, x: -6 });
+    gsap.set(camRefs.current.filter(Boolean), { opacity: 0, scale: 0.94 });
     wireRefs.current.forEach(el => {
       if (!el) return;
       const len = (() => { try { return el.getTotalLength(); } catch { return 400; } })();
-      gsap.set(el, { strokeDasharray:`${len} ${len+1}`, strokeDashoffset:len, opacity:0 });
+      gsap.set(el, { strokeDasharray: `${len} ${len+1}`, strokeDashoffset: len, opacity: 0 });
     });
 
     const tl = gsap.timeline();
     allTweens.current.push(tl);
 
-    const CYCLE = 1.0;
-    CONNECTIONS.forEach((_, i) => {
-      const at = i * CYCLE;
-      const [ia, ib] = PAIRS[i];
-      const elA = activeRefs.current[ia];
-      const elB = activeRefs.current[ib];
-      const line = lineRefs.current[i];
-      const offAt = at + CYCLE - 0.20;
-      const nextPair = PAIRS[i + 1] || [];
+    // Frame path draws in first
+    tl.to(framePathRef.current, { opacity: 1, duration: 0.10 }, 0);
+    tl.to(framePathRef.current, { strokeDashoffset: 0, duration: 0.82, ease: 'power2.inOut' }, 0.08);
 
-      if (elA) tl.to(elA, { opacity:1, duration:0.18, ease:'power2.out' }, at);
-      if (elB) tl.to(elB, { opacity:1, duration:0.18, ease:'power2.out' }, at);
-      if (line) tl.to(line, { opacity:1, duration:0.22, ease:'power2.out' }, at + 0.14);
-      if (line) tl.to(line, { opacity:0, duration:0.20, ease:'power1.in' }, offAt);
-      if (elA && !nextPair.includes(ia)) tl.to(elA, { opacity:0, duration:0.18 }, offAt);
-      if (elB && !nextPair.includes(ib)) tl.to(elB, { opacity:0, duration:0.18 }, offAt);
-    });
-
-    const frameAt = CONNECTIONS.length * CYCLE + 0.10;
-
-    tl.to(maskRef.current, { opacity:1, duration:0.32, ease:'power2.out' }, frameAt);
-    const centerEls = ICONS.map((ic, i) => ic.layer === 'center' ? activeRefs.current[i] : null).filter(Boolean);
-    if (centerEls.length) tl.to(centerEls, { opacity:0, duration:0.28 }, frameAt);
-    tl.to(framePathRef.current, { opacity:1, duration:0.10 }, frameAt + 0.05);
-    tl.to(framePathRef.current, { strokeDashoffset:0, duration:1.10, ease:'power2.inOut' }, frameAt + 0.12);
-
-    const wireAt = frameAt + 1.15;
+    // Wireframe structure builds progressively
+    const wireAt = 0.26;
     wireRefs.current.forEach((p, i) => {
       if (!p) return;
-      tl.to(p, { opacity:1, strokeDashoffset:0, duration:0.16, ease:'power1.out' }, wireAt + 0.06 + i * 0.04);
+      tl.to(p, { opacity: 1, strokeDashoffset: 0, duration: 0.16, ease: 'power1.out' }, wireAt + 0.04 + i * 0.040);
     });
 
-    const shellAt = wireAt + 0.90;
-    tl.to(maskRef.current,                       { opacity:0, duration:0.30, ease:'power2.in'  }, shellAt);
-    tl.to(shellRef.current,                      { opacity:1, duration:0.38                    }, shellAt - 0.05);
-    tl.to(skelRef.current,                       { opacity:1, duration:0.24                    }, shellAt + 0.06);
-    wireRefs.current.forEach(el => el && tl.to(el, { opacity:0, duration:0.26 }, shellAt + 0.08));
-    tl.to(framePathRef.current,                  { opacity:0, duration:0.28                    }, shellAt + 0.10);
-    tl.to(lineRefs.current.filter(Boolean),      { opacity:0, duration:0.24                    }, shellAt);
-    tl.to(skelRef.current,                       { opacity:0, duration:0.32                    }, shellAt + 0.70);
-    tl.to(revealRef.current,                     { opacity:1, duration:0.36                    }, shellAt + 0.72);
-    tl.to(rowRefs.current.filter(Boolean), { opacity:1, x:0, duration:0.30, ease:'power2.out', stagger:0.05 }, shellAt + 0.82);
-    tl.to(camRefs.current.filter(Boolean), { opacity:1, scale:1, duration:0.38, ease:'power2.out', stagger:0.09 }, shellAt + 1.0);
+    // Shell + skeleton crossfade
+    const shellAt = 1.22;
+    tl.to(maskRef.current,     { opacity: 1, duration: 0.28, ease: 'power2.out' }, shellAt);
+    tl.to(shellRef.current,    { opacity: 1, duration: 0.36 }, shellAt - 0.05);
+    tl.to(skelRef.current,     { opacity: 1, duration: 0.24 }, shellAt + 0.06);
+    wireRefs.current.forEach(el => el && tl.to(el, { opacity: 0, duration: 0.24 }, shellAt + 0.08));
+    tl.to(framePathRef.current, { opacity: 0, duration: 0.28 }, shellAt + 0.10);
+    tl.to(maskRef.current,      { opacity: 0, duration: 0.26, ease: 'power2.in' }, shellAt + 0.36);
 
-    const loopAt = shellAt + 1.0 + 0.38 + 0.27 + 2.0;
-    tl.to(shellRef.current,                   { opacity:0, duration:0.45, ease:'power2.in' }, loopAt);
-    tl.to(revealRef.current,                  { opacity:0, duration:0.35, ease:'power2.in' }, loopAt + 0.05);
-    tl.to(activeRefs.current.filter(Boolean), { opacity:0, duration:0.30, ease:'power2.in' }, loopAt + 0.10);
-    tl.add(() => { if (!isHovered.current) play(); }, loopAt + 0.55);
+    // Real UI reveal
+    tl.to(skelRef.current,     { opacity: 0, duration: 0.30 }, shellAt + 0.64);
+    tl.to(revealRef.current,   { opacity: 1, duration: 0.34 }, shellAt + 0.66);
+    tl.to(rowRefs.current.filter(Boolean), { opacity: 1, x: 0, duration: 0.22, ease: 'power2.out', stagger: 0.04 }, shellAt + 0.76);
+    tl.to(camRefs.current.filter(Boolean), { opacity: 1, scale: 1, duration: 0.28, ease: 'power2.out', stagger: 0.06 }, shellAt + 0.86);
+
+    const loopAt = shellAt + 0.86 + 0.28 + 0.18;
+    tl.add(() => {
+      hasRevealed.current = true;
+      if (!isHovered.current) playConnections();
+    }, loopAt);
   };
 
   const handleHover = (iconIdx) => {
@@ -262,15 +310,18 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     isHovered.current = true;
     allTweens.current.forEach(t => t?.pause?.());
     resetIconsAndLines();
-    const connIdx = PAIRS.findIndex(p => p.includes(iconIdx));
-    if (connIdx < 0) return;
+    const connIndices = PAIRS.reduce((acc, pair, i) => pair.includes(iconIdx) ? [...acc, i] : acc, []);
+    if (connIndices.length === 0) return;
+    const iconIndices = [...new Set(connIndices.flatMap(ci => PAIRS[ci]))];
     hoverTl.current = gsap.timeline();
-    PAIRS[connIdx].forEach(idx => {
+    iconIndices.forEach(idx => {
       const el = activeRefs.current[idx];
       if (el) hoverTl.current.to(el, { opacity:1, duration:0.20, ease:'power2.out' }, 0);
     });
-    const line = lineRefs.current[connIdx];
-    if (line) hoverTl.current.to(line, { opacity:1, duration:0.22, ease:'power2.out' }, 0.10);
+    connIndices.forEach(ci => {
+      const line = lineRefs.current[ci];
+      if (line) hoverTl.current.to(line, { opacity:1, duration:0.24, ease:'power2.out' }, 0.10);
+    });
   };
 
   const handleHoverLeave = () => {
@@ -278,7 +329,11 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     isHovered.current = false;
     hoverTl.current?.kill();
     hoverTl.current = null;
-    play();
+    if (hasRevealed.current) {
+      playConnections();
+    } else {
+      play();
+    }
   };
 
   let rIdx = 0, cIdx = 0;
@@ -295,12 +350,19 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
       <GlobalDefs/>
 
       {/* z=0 — connection lines */}
-      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}
+      <svg ref={linesRef} width={W} height={H} viewBox={`0 0 ${W} ${H}`}
         style={{ position:'absolute', inset:0, zIndex:0, pointerEvents:'none', overflow:'visible' }}>
+        <defs>
+          <filter id="s4lgf" x="-25%" y="-25%" width="150%" height="150%">
+            <feGaussianBlur stdDeviation="2.4" result="glow"/>
+            <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
         {CONNECTIONS.map((d, i) => (
           <path key={i} ref={el=>(lineRefs.current[i]=el)} d={d}
-            stroke={`url(#s4lg${i})`} strokeWidth="1.7" fill="none"
-            strokeLinecap="round" strokeLinejoin="round" opacity="0"/>
+            stroke={`url(#s4lg${i})`} strokeWidth="2.0" fill="none"
+            strokeLinecap="round" strokeLinejoin="round" opacity="0"
+            filter="url(#s4lgf)"/>
         ))}
       </svg>
 
@@ -308,23 +370,24 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}
         style={{ position:'absolute', inset:0, zIndex:2, pointerEvents:'none', overflow:'visible' }}>
         <defs>
-          <filter id="s4pgl" x="-5%" y="-4%" width="110%" height="108%">
-            <feGaussianBlur stdDeviation="1.8" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          <filter id="s4pgl" x="-12%" y="-10%" width="124%" height="120%">
+            <feGaussianBlur stdDeviation="3.0" result="glow"/>
+            <feGaussianBlur in="SourceGraphic" stdDeviation="0.6" result="sharp"/>
+            <feMerge><feMergeNode in="glow"/><feMergeNode in="glow"/><feMergeNode in="sharp"/><feMergeNode in="SourceGraphic"/></feMerge>
           </filter>
-          <filter id="s4bgl" x="-6%" y="-6%" width="112%" height="112%">
-            <feGaussianBlur stdDeviation="0.8" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          <filter id="s4bgl" x="-12%" y="-12%" width="124%" height="124%">
+            <feGaussianBlur stdDeviation="1.8" result="glow"/>
+            <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
           </filter>
         </defs>
         <path ref={framePathRef} d={FRAME_PATH}
-          stroke="url(#s4pg_w)" strokeWidth="1.2" fill="none"
+          stroke="url(#s4pg_w)" strokeWidth="0.9" fill="none"
           strokeLinecap="round" strokeLinejoin="round"
           strokeDasharray={FRAME_PERIM} strokeDashoffset={FRAME_PERIM}
           filter="url(#s4pgl)" opacity="0"/>
         {WIRE.map((d, i) => (
           <path key={i} ref={r=>(wireRefs.current[i]=r)} d={d}
-            stroke="url(#s4pg_w)" strokeWidth="0.7" fill="rgba(59,130,246,0.02)"
+            stroke="url(#s4pg_w)" strokeWidth="0.45" fill="rgba(99,102,241,0.03)"
             strokeLinecap="round" strokeLinejoin="round" opacity="0" filter="url(#s4bgl)"/>
         ))}
       </svg>

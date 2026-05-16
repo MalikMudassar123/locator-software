@@ -1,6 +1,7 @@
 import HeroSection from "@/components/HeroSection";
 import RoadSection from "@/components/RoadSection";
 import ScrollShowcase from "@/components/ScrollShowcase";
+import FeatureSlider from "@/components/FeatureSlider";
 
 export default function Home() {
   return (
@@ -21,6 +22,11 @@ export default function Home() {
       {/* ScrollShowcase — full-bleed, directly after Road */}
       <div style={{ position: 'relative', zIndex: 1, marginLeft: '-50px', marginRight: '-50px' }}>
         <ScrollShowcase />
+      </div>
+
+      {/* FeatureSlider — tab-driven feature showcase */}
+      <div style={{ position: 'relative', zIndex: 1, marginLeft: '-50px', marginRight: '-50px' }}>
+        <FeatureSlider />
       </div>
     </main>
   );

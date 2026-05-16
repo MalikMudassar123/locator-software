@@ -173,6 +173,8 @@ export default forwardRef(function Scene1Icons(_props, ref) {
   const allTweens   = useRef([]);
   const hoverTl     = useRef(null);
   const isHovered   = useRef(false);
+  const hasRevealed = useRef(false);
+  const linesRef    = useRef(null);
 
   useLayoutEffect(() => () => allTweens.current.forEach(t => t?.kill()), []);
 
@@ -181,6 +183,8 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     allTweens.current = [];
     hoverTl.current?.kill();
     hoverTl.current = null;
+    hasRevealed.current = false;
+    if (linesRef.current) gsap.set(linesRef.current, { zIndex: 0 });
   };
 
   const resetIconsAndLines = () => {
@@ -188,9 +192,48 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     gsap.set(lineRefs.current.filter(Boolean),   { opacity: 0 });
   };
 
+  const playConnections = () => {
+    allTweens.current.forEach(t => t?.kill());
+    allTweens.current = [];
+    resetIconsAndLines();
+    if (linesRef.current) gsap.set(linesRef.current, { zIndex: 0 });
+    const tl = gsap.timeline();
+    allTweens.current.push(tl);
+    const CYCLE = 1.2;
+    const shuffled = shuffle(GROUPS);
+    let t = 0;
+    shuffled.forEach((group, gi) => {
+      const iconIndices = [...new Set(group.flatMap(ci => PAIRS[ci]))];
+      const nextGroup = shuffled[gi + 1] || [];
+      const nextIconSet = new Set(nextGroup.flatMap(ci => PAIRS[ci]));
+      const offAt = t + CYCLE - 0.22;
+      iconIndices.forEach(idx => {
+        const el = activeRefs.current[idx];
+        if (el) tl.to(el, { opacity:1, duration:0.20, ease:'power2.out' }, t);
+      });
+      group.forEach(ci => {
+        const line = lineRefs.current[ci];
+        if (line) tl.to(line, { opacity:1, duration:0.24, ease:'power2.out' }, t + 0.14);
+      });
+      group.forEach(ci => {
+        const line = lineRefs.current[ci];
+        if (line) tl.to(line, { opacity:0, duration:0.22, ease:'power1.in' }, offAt);
+      });
+      iconIndices.forEach(idx => {
+        if (!nextIconSet.has(idx)) {
+          const el = activeRefs.current[idx];
+          if (el) tl.to(el, { opacity:0, duration:0.20 }, offAt);
+        }
+      });
+      t += CYCLE;
+    });
+    tl.add(() => { if (!isHovered.current) playConnections(); }, t + 0.5);
+  };
+
   const play = () => {
     stop();
     resetIconsAndLines();
+    if (linesRef.current) gsap.set(linesRef.current, { zIndex: 0 });
     gsap.set(maskRef.current,     { opacity: 0 });
     gsap.set(wireGrpRef.current,  { opacity: 0 });
     gsap.set(phoneOutRef.current, { opacity: 0, strokeDashoffset: PHONE_PERIM });
@@ -206,80 +249,73 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     const tl = gsap.timeline();
     allTweens.current.push(tl);
 
-    // Sequential connection reveal: one pair at a time, 1.0s per cycle
-    const CYCLE = 1.0;
-    CONNECTIONS.forEach((_, i) => {
-      const at = i * CYCLE;
-      const [ia, ib] = PAIRS[i];
+    // 3 lightweight sequential connections — step by step, feel progressive
+    // ci=0 pin→route: arcs above phone     (starts t=0.00)
+    // ci=2 moon→grid: crosses phone body   (starts t=0.65)
+    // ci=4 route→bell: crosses phone top   (starts t=1.05)
+    [
+      { ci:0, at:0.00 },
+      { ci:2, at:0.65 },
+      { ci:4, at:1.05 },
+    ].forEach(({ ci, at }) => {
+      const [ia, ib] = PAIRS[ci];
       const elA = activeRefs.current[ia];
       const elB = activeRefs.current[ib];
-      const line = lineRefs.current[i];
-      const offAt = at + CYCLE - 0.20;
-      const nextPair = PAIRS[i + 1] || [];
-
-      // Activate both icons
+      const line = lineRefs.current[ci];
       if (elA) tl.to(elA, { opacity:1, duration:0.18, ease:'power2.out' }, at);
       if (elB) tl.to(elB, { opacity:1, duration:0.18, ease:'power2.out' }, at);
-      // Line fades in
-      if (line) tl.to(line, { opacity:1, duration:0.22, ease:'power2.out' }, at + 0.14);
-      // Deactivate line
-      if (line) tl.to(line, { opacity:0, duration:0.20, ease:'power1.in' }, offAt);
-      // Deactivate icons only if not shared with next connection
-      if (elA && !nextPair.includes(ia)) tl.to(elA, { opacity:0, duration:0.18 }, offAt);
-      if (elB && !nextPair.includes(ib)) tl.to(elB, { opacity:0, duration:0.18 }, offAt);
+      if (line) tl.to(line, { opacity:1, duration:0.24, ease:'power2.out' }, at + 0.12);
     });
 
-    const phoneAt = CONNECTIONS.length * CYCLE + 0.10;
+    // Phone outline starts at 0.38s — first connection is still crossing over it
+    const phoneAt = 0.38;
+    tl.to(phoneOutRef.current, { opacity:1, duration:0.10 }, phoneAt);
+    tl.to(phoneOutRef.current, { strokeDashoffset:0, duration:1.05, ease:'power2.inOut' }, phoneAt + 0.12);
 
-    // Phase 2 — phone wireframe
-    tl.to(maskRef.current, { opacity:1, duration:0.32, ease:'power2.out' }, phoneAt);
-    const centerEls = ICONS.map((ic, i) => ic.layer === 'center' ? activeRefs.current[i] : null).filter(Boolean);
-    if (centerEls.length) tl.to(centerEls, { opacity:0, duration:0.28 }, phoneAt);
-    tl.to(phoneOutRef.current, { opacity:1, duration:0.10 }, phoneAt + 0.05);
-    tl.to(phoneOutRef.current, { strokeDashoffset:0, duration:1.10, ease:'power2.inOut' }, phoneAt + 0.12);
-
-    const wireAt = phoneAt + 1.15;
+    // Wireframe after phone draw (~1.63s)
+    const wireAt = phoneAt + 0.12 + 1.05 + 0.06;
     tl.to(wireGrpRef.current, { opacity:1, duration:0.08 }, wireAt);
     wireRefs.current.forEach((p, i) => {
       if (!p) return;
-      tl.to(p, { opacity:1, strokeDashoffset:0, duration:0.16, ease:'power1.out' }, wireAt + 0.06 + i * 0.045);
+      tl.to(p, { opacity:1, strokeDashoffset:0, duration:0.14, ease:'power1.out' }, wireAt + 0.04 + i * 0.04);
     });
 
-    // Phase 3 — shell + real UI
-    const shellAt = wireAt + 0.90;
-    tl.to(maskRef.current,     { opacity:0, duration:0.30, ease:'power2.in'  }, shellAt);
+    // Shell phase — connections fade out just before real UI crossfades in
+    const shellAt = wireAt + 0.72;
+    tl.to(lineRefs.current.filter(Boolean),   { opacity:0, duration:0.26 }, shellAt - 0.08);
+    tl.to(activeRefs.current.filter(Boolean), { opacity:0, duration:0.22 }, shellAt - 0.08);
+    tl.to(maskRef.current,     { opacity:1, duration:0.30, ease:'power2.out' }, shellAt);
     tl.to(shellRef.current,    { opacity:1, duration:0.38                    }, shellAt - 0.05);
     tl.to(skelRef.current,     { opacity:1, duration:0.24                    }, shellAt + 0.06);
     tl.to(wireGrpRef.current,  { opacity:0, duration:0.26                    }, shellAt + 0.08);
     tl.to(phoneOutRef.current, { opacity:0, duration:0.28                    }, shellAt + 0.10);
-    tl.to(lineRefs.current.filter(Boolean), { opacity:0, duration:0.24       }, shellAt);
     tl.to(skelRef.current,     { opacity:0, duration:0.32                    }, shellAt + 0.70);
     tl.to(realRef.current,     { opacity:1, duration:0.36                    }, shellAt + 0.72);
 
-    // Hold on real UI for 2s, then fade out shell and loop
+    // Mark revealed; keep frame visible and loop connections over it
+    tl.add(() => { hasRevealed.current = true; }, shellAt + 0.72);
     const loopAt = shellAt + 0.72 + 0.36 + 2.0;
-    tl.to(shellRef.current,  { opacity:0, duration:0.45, ease:'power2.in' }, loopAt);
-    tl.to(realRef.current,   { opacity:0, duration:0.35, ease:'power2.in' }, loopAt + 0.05);
-    tl.add(() => { if (!isHovered.current) play(); }, loopAt + 0.55);
+    tl.add(() => { if (!isHovered.current) playConnections(); }, loopAt);
   };
 
-  // Hover: pause auto-play, highlight hovered icon's first connection
+  // Hover: pause auto-play, highlight ALL connections for the hovered icon
   const handleHover = (iconIdx) => {
     if (isHovered.current) return;
     isHovered.current = true;
     allTweens.current.forEach(t => t?.pause?.());
     resetIconsAndLines();
-
-    const connIdx = PAIRS.findIndex(p => p.includes(iconIdx));
-    if (connIdx < 0) return;
-
+    const connIndices = PAIRS.reduce((acc, pair, i) => pair.includes(iconIdx) ? [...acc, i] : acc, []);
+    if (connIndices.length === 0) return;
+    const iconIndices = [...new Set(connIndices.flatMap(ci => PAIRS[ci]))];
     hoverTl.current = gsap.timeline();
-    PAIRS[connIdx].forEach(idx => {
+    iconIndices.forEach(idx => {
       const el = activeRefs.current[idx];
       if (el) hoverTl.current.to(el, { opacity:1, duration:0.20, ease:'power2.out' }, 0);
     });
-    const line = lineRefs.current[connIdx];
-    if (line) hoverTl.current.to(line, { opacity:1, duration:0.22, ease:'power2.out' }, 0.10);
+    connIndices.forEach(ci => {
+      const line = lineRefs.current[ci];
+      if (line) hoverTl.current.to(line, { opacity:1, duration:0.24, ease:'power2.out' }, 0.10);
+    });
   };
 
   const handleHoverLeave = () => {
@@ -287,7 +323,11 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     isHovered.current = false;
     hoverTl.current?.kill();
     hoverTl.current = null;
-    play(); // restart sequence cleanly
+    if (hasRevealed.current) {
+      playConnections();
+    } else {
+      play();
+    }
   };
 
   return (
@@ -301,13 +341,20 @@ export default forwardRef(function Scene1Icons(_props, ref) {
       <style>{CSS}</style>
       <GlobalDefs/>
 
-      {/* z=0 — connection lines (no dots, clean gradient strokes) */}
-      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}
+      {/* z=0 — connection lines */}
+      <svg ref={linesRef} width={W} height={H} viewBox={`0 0 ${W} ${H}`}
         style={{ position:'absolute', inset:0, zIndex:0, pointerEvents:'none', overflow:'visible' }}>
+        <defs>
+          <filter id="s1lgf" x="-25%" y="-25%" width="150%" height="150%">
+            <feGaussianBlur stdDeviation="2.4" result="glow"/>
+            <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
         {CONNECTIONS.map((d, i) => (
           <path key={i} ref={el => (lineRefs.current[i] = el)} d={d}
-            stroke={`url(#s1lg${i})`} strokeWidth="1.7" fill="none"
-            strokeLinecap="round" strokeLinejoin="round" opacity="0"/>
+            stroke={`url(#s1lg${i})`} strokeWidth="2.0" fill="none"
+            strokeLinecap="round" strokeLinejoin="round" opacity="0"
+            filter="url(#s1lgf)"/>
         ))}
       </svg>
 

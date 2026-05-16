@@ -180,13 +180,12 @@ export default function ScrollShowcase() {
   useLayoutEffect(() => {
     if (typeof window === 'undefined') return;
 
-    wrapperRefs.current.forEach((el, i) => {
+    wrapperRefs.current.forEach((el) => {
       if (!el) return;
-      gsap.set(el, { opacity: i === 0 ? 1 : 0, y: i === 0 ? 0 : 24 });
+      gsap.set(el, { opacity: 0, y: 24 });
     });
-    innerRefs.current[0]?.__play?.();
 
-    let activeIdx = 0;
+    let activeIdx = -1;
 
     const activate = (idx) => {
       if (idx === activeIdx) return;

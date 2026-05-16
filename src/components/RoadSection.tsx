@@ -16,9 +16,10 @@ const vehicles = [
     pinBottom: '95%',
     pinLeft: '15.5%',
     zIndex: 10,
-    tooltipTitle: 'Sedan Vehicle',
-    tooltipDetails: 'Real-time tracking • Active',
-    tooltipLocation: 'Dubai Marina',
+    driverName: 'Ahmed Hassan',
+    vehicleId: 'DRV1024',
+    idlingTime: '3 mins',
+    fuelLevel: '85%',
   },
   {
     id: 'bus',
@@ -32,9 +33,10 @@ const vehicles = [
     pinBottom: '93%',
     pinLeft: '32%',
     zIndex: 10,
-    tooltipTitle: 'Transit Bus',
-    tooltipDetails: 'Real-time tracking • Active',
-    tooltipLocation: 'Sheikh Zayed Road',
+    driverName: 'Mohammed Ali',
+    vehicleId: 'BUS2156',
+    idlingTime: '1 min',
+    fuelLevel: '92%',
   },
   {
     id: 'van',
@@ -48,9 +50,10 @@ const vehicles = [
     pinBottom: '89%',
     pinLeft: '48%',
     zIndex: 10,
-    tooltipTitle: 'Delivery Van',
-    tooltipDetails: 'Real-time tracking • Active',
-    tooltipLocation: 'Business Bay',
+    driverName: 'Khalid Omar',
+    vehicleId: 'VAN3421',
+    idlingTime: '5 mins',
+    fuelLevel: '67%',
   },
   {
     id: 'yacht',
@@ -64,9 +67,10 @@ const vehicles = [
     pinBottom: '103%',
     pinLeft: '59.5%',
     zIndex: 10,
-    tooltipTitle: 'Luxury Yacht',
-    tooltipDetails: 'Real-time tracking • Active',
-    tooltipLocation: 'Dubai Marina',
+    driverName: 'Captain Rashid',
+    vehicleId: 'YCH4892',
+    idlingTime: '0 mins',
+    fuelLevel: '78%',
   },
   {
     id: 'generator',
@@ -80,9 +84,10 @@ const vehicles = [
     pinBottom: '84%',
     pinLeft: '73%',
     zIndex: 10,
-    tooltipTitle: 'Generator Unit',
-    tooltipDetails: 'Real-time tracking • Active',
-    tooltipLocation: 'Industrial Area',
+    driverName: 'Generator Unit',
+    vehicleId: 'GEN5673',
+    idlingTime: '12 mins',
+    fuelLevel: '45%',
   },
   {
     id: 'truck',
@@ -96,9 +101,10 @@ const vehicles = [
     pinBottom: '87%',
     pinLeft: '82%',
     zIndex: 10,
-    tooltipTitle: 'Heavy Truck',
-    tooltipDetails: 'Real-time tracking • Active',
-    tooltipLocation: 'Jebel Ali Port',
+    driverName: 'Saeed Abdullah',
+    vehicleId: 'TRK6789',
+    idlingTime: '2 mins',
+    fuelLevel: '91%',
   },
 ]
 
@@ -304,7 +310,7 @@ export default function RoadSection() {
                     bottom: '100%',
                     left: '50%',
                     transform: 'translateX(-50%)',
-                    marginBottom: '16px',
+                    marginBottom: '12px',
                     animation: 'tooltipAppear 0.35s cubic-bezier(0.16, 1, 0.3, 1) both',
                     zIndex: 99999,
                     pointerEvents: 'auto',
@@ -314,12 +320,12 @@ export default function RoadSection() {
                 >
                   <div
                     style={{
-                      minWidth: showAllTooltips && hoveredPin !== v.id ? '140px' : '240px',
-                      padding: showAllTooltips && hoveredPin !== v.id ? '10px 14px' : '16px 20px',
-                      background: 'rgba(255, 255, 255, 0.75)',
+                      width: '200px',
+                      padding: '12px',
+                      background: 'rgba(255, 255, 255, 0.85)',
                       backdropFilter: 'blur(60px) saturate(150%)',
                       WebkitBackdropFilter: 'blur(60px) saturate(150%)',
-                      borderRadius: '16px',
+                      borderRadius: '12px',
                       border: '1px solid rgba(255, 255, 255, 0.6)',
                       boxShadow: `
                         0 30px 80px -15px rgba(0, 0, 0, 0.2),
@@ -332,123 +338,163 @@ export default function RoadSection() {
                       transition: 'all 0.3s ease',
                     }}
                   >
-                    {/* Compact view for initial load */}
-                    {showAllTooltips && hoveredPin !== v.id ? (
-                      <>
-                        <div style={{ 
-                          fontSize: '12px', 
-                          fontWeight: 700, 
-                          color: '#1e3a5f', 
-                          marginBottom: '6px', 
-                          letterSpacing: '-0.01em', 
-                          lineHeight: '1.2',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                        }}>
-                          {v.tooltipTitle}
-                        </div>
-                        
-                        <div style={{ 
-                          fontSize: '10px', 
-                          color: '#2c7da0', 
-                          fontWeight: 600, 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          gap: '5px',
-                        }}>
-                          <span style={{ 
-                            width: '6px', 
-                            height: '6px', 
-                            borderRadius: '50%', 
-                            background: '#10b981', 
-                            display: 'inline-block', 
-                            boxShadow: '0 0 0 2px rgba(16, 185, 129, 0.2)',
-                            flexShrink: 0,
-                          }} />
-                          <span style={{ whiteSpace: 'nowrap' }}>Active</span>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        {/* Full view for hover */}
-                        <div style={{ 
-                          fontSize: '15px', 
-                          fontWeight: 700, 
-                          color: '#1e3a5f', 
-                          marginBottom: '10px', 
-                          letterSpacing: '-0.02em', 
-                          lineHeight: '1.2',
-                        }}>
-                          {v.tooltipTitle}
-                        </div>
-                        
+                    {/* Header with avatar, driver name and menu */}
+                    <div style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'space-between',
+                      marginBottom: '6px',
+                    }}>
+                      <div style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '8px',
+                      }}>
+                        {/* Avatar */}
                         <div style={{
-                          height: '1px',
-                          background: 'rgba(203, 213, 225, 0.4)',
-                          marginBottom: '10px',
-                        }} />
-                        
-                        <div style={{ 
-                          fontSize: '12px', 
-                          color: '#2c7da0', 
-                          marginBottom: '10px', 
-                          fontWeight: 600, 
-                          display: 'inline-flex', 
-                          alignItems: 'center', 
-                          gap: '7px',
-                          padding: '7px 12px',
-                          background: 'rgba(191, 219, 254, 0.4)',
-                          borderRadius: '50px',
-                          width: '100%',
-                          boxSizing: 'border-box',
+                          width: '32px',
+                          height: '32px',
+                          borderRadius: '50%',
+                          background: 'linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0,
+                          border: '2px solid rgba(255, 255, 255, 0.8)',
+                          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
                         }}>
-                          <span style={{ 
-                            width: '7px', 
-                            height: '7px', 
-                            borderRadius: '50%', 
-                            background: '#10b981', 
-                            display: 'inline-block', 
-                            boxShadow: '0 0 0 3px rgba(16, 185, 129, 0.2)',
-                            animation: 'statusPulse 2s ease-in-out infinite',
-                            flexShrink: 0,
-                          }} />
-                          <span style={{ flex: 1 }}>{v.tooltipDetails}</span>
-                        </div>
-                        
-                        <div style={{
-                          height: '1px',
-                          background: 'rgba(203, 213, 225, 0.4)',
-                          marginBottom: '10px',
-                        }} />
-                        
-                        <div style={{ 
-                          fontSize: '12px', 
-                          color: '#64748b', 
-                          fontWeight: 500, 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          gap: '7px',
-                        }}>
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
-                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#ef4444"/>
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="#0ea5e9"/>
                           </svg>
-                          <span>{v.tooltipLocation}</span>
                         </div>
-                      </>
-                    )}
+                        <div style={{ 
+                          fontSize: '13px', 
+                          fontWeight: 700, 
+                          color: '#1e3a5f', 
+                          letterSpacing: '-0.01em',
+                        }}>
+                          {v.driverName}
+                        </div>
+                      </div>
+                      <div style={{ 
+                        display: 'flex', 
+                        gap: '2px',
+                        opacity: 0.4,
+                      }}>
+                        <div style={{ width: '3px', height: '3px', borderRadius: '50%', background: '#1e3a5f' }} />
+                        <div style={{ width: '3px', height: '3px', borderRadius: '50%', background: '#1e3a5f' }} />
+                        <div style={{ width: '3px', height: '3px', borderRadius: '50%', background: '#1e3a5f' }} />
+                      </div>
+                    </div>
+
+                    {/* Vehicle ID */}
+                    <div style={{ 
+                      fontSize: '11px', 
+                      color: '#64748b', 
+                      fontWeight: 500,
+                      marginBottom: '12px',
+                    }}>
+                      ID: {v.vehicleId}
+                    </div>
+
+                    {/* Divider */}
+                    <div style={{
+                      height: '1px',
+                      background: 'rgba(203, 213, 225, 0.3)',
+                      marginBottom: '12px',
+                    }} />
+
+                    {/* Idling Time */}
+                    <div style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'space-between',
+                      marginBottom: '12px',
+                    }}>
+                      <div style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '8px',
+                      }}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.6 }}>
+                          <circle cx="12" cy="12" r="10" stroke="#64748b" strokeWidth="2" fill="none"/>
+                          <path d="M12 6v6l4 2" stroke="#64748b" strokeWidth="2" strokeLinecap="round"/>
+                        </svg>
+                        <span style={{ 
+                          fontSize: '11px', 
+                          color: '#64748b', 
+                          fontWeight: 500,
+                        }}>
+                          Idling Time
+                        </span>
+                      </div>
+                      <span style={{ 
+                        fontSize: '12px', 
+                        color: '#0ea5e9', 
+                        fontWeight: 700,
+                      }}>
+                        {v.idlingTime}
+                      </span>
+                    </div>
+
+                    {/* Divider */}
+                    <div style={{
+                      height: '1px',
+                      background: 'rgba(203, 213, 225, 0.3)',
+                      marginBottom: '12px',
+                    }} />
+
+                    {/* Fuel Level */}
+                    <div style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'space-between',
+                    }}>
+                      <div style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '8px',
+                      }}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.6 }}>
+                          <path d="M3 8h12v10c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V8zm0-2V4c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v2M15 11l4-4v10l-4-4" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                        </svg>
+                        <span style={{ 
+                          fontSize: '11px', 
+                          color: '#64748b', 
+                          fontWeight: 500,
+                        }}>
+                          Fuel
+                        </span>
+                      </div>
+                      <div style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '5px',
+                      }}>
+                        <svg width="14" height="16" viewBox="0 0 24 24" fill="none">
+                          <path d="M3 8h12v10c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V8zm0-2V4c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v2M15 11l4-4v10l-4-4" stroke="#0ea5e9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="#0ea5e9"/>
+                        </svg>
+                        <span style={{ 
+                          fontSize: '12px', 
+                          color: '#0ea5e9', 
+                          fontWeight: 700,
+                        }}>
+                          {v.fuelLevel}
+                        </span>
+                      </div>
+                    </div>
                     
                     {/* Arrow */}
                     <div style={{ 
                       position: 'absolute', 
-                      bottom: '-9px', 
+                      bottom: '-8px', 
                       left: '50%', 
-                      marginLeft: '-9px', 
+                      marginLeft: '-8px', 
                       width: '0', 
                       height: '0', 
-                      borderLeft: '9px solid transparent', 
-                      borderRight: '9px solid transparent', 
-                      borderTop: '9px solid rgba(255, 255, 255, 0.75)', 
+                      borderLeft: '8px solid transparent', 
+                      borderRight: '8px solid transparent', 
+                      borderTop: '8px solid rgba(255, 255, 255, 0.85)', 
                       filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))',
                     }} />
                   </div>
@@ -482,14 +528,14 @@ export default function RoadSection() {
             <Image src="/gps-pin.svg" alt="GPS Pin" width={24} height={24} />
           </div>
 
-          {(hoveredPin === 'scooter' || (showAllTooltips && false)) && (
+          {hoveredPin === 'scooter' && (
             <div
               className="absolute"
               style={{
                 bottom: '100%',
                 left: '50%',
                 transform: 'translateX(-50%)',
-                marginBottom: '16px',
+                marginBottom: '12px',
                 animation: 'tooltipAppear 0.35s cubic-bezier(0.16, 1, 0.3, 1) both',
                 zIndex: 99999,
                 pointerEvents: 'auto',
@@ -499,12 +545,12 @@ export default function RoadSection() {
             >
               <div
                 style={{
-                  minWidth: showAllTooltips && hoveredPin !== 'scooter' ? '140px' : '240px',
-                  padding: showAllTooltips && hoveredPin !== 'scooter' ? '10px 14px' : '16px 20px',
-                  background: 'rgba(255, 255, 255, 0.75)',
+                  width: '200px',
+                  padding: '12px',
+                  background: 'rgba(255, 255, 255, 0.85)',
                   backdropFilter: 'blur(60px) saturate(150%)',
                   WebkitBackdropFilter: 'blur(60px) saturate(150%)',
-                  borderRadius: '16px',
+                  borderRadius: '12px',
                   border: '1px solid rgba(255, 255, 255, 0.6)',
                   boxShadow: `
                     0 30px 80px -15px rgba(0, 0, 0, 0.2),
@@ -517,123 +563,163 @@ export default function RoadSection() {
                   transition: 'all 0.3s ease',
                 }}
               >
-                {/* Compact view for initial load */}
-                {showAllTooltips && hoveredPin !== 'scooter' ? (
-                  <>
-                    <div style={{ 
-                      fontSize: '12px', 
-                      fontWeight: 700, 
-                      color: '#1e3a5f', 
-                      marginBottom: '6px', 
-                      letterSpacing: '-0.01em', 
-                      lineHeight: '1.2',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}>
-                      Delivery Scooter
-                    </div>
-                    
-                    <div style={{ 
-                      fontSize: '10px', 
-                      color: '#2c7da0', 
-                      fontWeight: 600, 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      gap: '5px',
-                    }}>
-                      <span style={{ 
-                        width: '6px', 
-                        height: '6px', 
-                        borderRadius: '50%', 
-                        background: '#10b981', 
-                        display: 'inline-block', 
-                        boxShadow: '0 0 0 2px rgba(16, 185, 129, 0.2)',
-                        flexShrink: 0,
-                      }} />
-                      <span style={{ whiteSpace: 'nowrap' }}>Active</span>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    {/* Full view for hover */}
-                    <div style={{ 
-                      fontSize: '15px', 
-                      fontWeight: 700, 
-                      color: '#1e3a5f', 
-                      marginBottom: '10px', 
-                      letterSpacing: '-0.02em', 
-                      lineHeight: '1.2',
-                    }}>
-                      Delivery Scooter
-                    </div>
-                    
+                {/* Header with avatar, driver name and menu */}
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'space-between',
+                  marginBottom: '6px',
+                }}>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '8px',
+                  }}>
+                    {/* Avatar */}
                     <div style={{
-                      height: '1px',
-                      background: 'rgba(203, 213, 225, 0.4)',
-                      marginBottom: '10px',
-                    }} />
-                    
-                    <div style={{ 
-                      fontSize: '12px', 
-                      color: '#2c7da0', 
-                      marginBottom: '10px', 
-                      fontWeight: 600, 
-                      display: 'inline-flex', 
-                      alignItems: 'center', 
-                      gap: '7px',
-                      padding: '7px 12px',
-                      background: 'rgba(191, 219, 254, 0.4)',
-                      borderRadius: '50px',
-                      width: '100%',
-                      boxSizing: 'border-box',
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      background: 'linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      border: '2px solid rgba(255, 255, 255, 0.8)',
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
                     }}>
-                      <span style={{ 
-                        width: '7px', 
-                        height: '7px', 
-                        borderRadius: '50%', 
-                        background: '#10b981', 
-                        display: 'inline-block', 
-                        boxShadow: '0 0 0 3px rgba(16, 185, 129, 0.2)',
-                        animation: 'statusPulse 2s ease-in-out infinite',
-                        flexShrink: 0,
-                      }} />
-                      <span style={{ flex: 1 }}>Real-time tracking • Active</span>
-                    </div>
-                    
-                    <div style={{
-                      height: '1px',
-                      background: 'rgba(203, 213, 225, 0.4)',
-                      marginBottom: '10px',
-                    }} />
-                    
-                    <div style={{ 
-                      fontSize: '12px', 
-                      color: '#64748b', 
-                      fontWeight: 500, 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      gap: '7px',
-                    }}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
-                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#ef4444"/>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="#0ea5e9"/>
                       </svg>
-                      <span>Downtown Dubai</span>
                     </div>
-                  </>
-                )}
+                    <div style={{ 
+                      fontSize: '13px', 
+                      fontWeight: 700, 
+                      color: '#1e3a5f', 
+                      letterSpacing: '-0.01em',
+                    }}>
+                      Ali Rahman
+                    </div>
+                  </div>
+                  <div style={{ 
+                    display: 'flex', 
+                    gap: '2px',
+                    opacity: 0.4,
+                  }}>
+                    <div style={{ width: '3px', height: '3px', borderRadius: '50%', background: '#1e3a5f' }} />
+                    <div style={{ width: '3px', height: '3px', borderRadius: '50%', background: '#1e3a5f' }} />
+                    <div style={{ width: '3px', height: '3px', borderRadius: '50%', background: '#1e3a5f' }} />
+                  </div>
+                </div>
+
+                {/* Vehicle ID */}
+                <div style={{ 
+                  fontSize: '11px', 
+                  color: '#64748b', 
+                  fontWeight: 500,
+                  marginBottom: '12px',
+                }}>
+                  ID: SCT7845
+                </div>
+
+                {/* Divider */}
+                <div style={{
+                  height: '1px',
+                  background: 'rgba(203, 213, 225, 0.3)',
+                  marginBottom: '12px',
+                }} />
+
+                {/* Idling Time */}
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'space-between',
+                  marginBottom: '12px',
+                }}>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '8px',
+                  }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.6 }}>
+                      <circle cx="12" cy="12" r="10" stroke="#64748b" strokeWidth="2" fill="none"/>
+                      <path d="M12 6v6l4 2" stroke="#64748b" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                    <span style={{ 
+                      fontSize: '11px', 
+                      color: '#64748b', 
+                      fontWeight: 500,
+                    }}>
+                      Idling Time
+                    </span>
+                  </div>
+                  <span style={{ 
+                    fontSize: '12px', 
+                    color: '#0ea5e9', 
+                    fontWeight: 700,
+                  }}>
+                    4 mins
+                  </span>
+                </div>
+
+                {/* Divider */}
+                <div style={{
+                  height: '1px',
+                  background: 'rgba(203, 213, 225, 0.3)',
+                  marginBottom: '12px',
+                }} />
+
+                {/* Fuel Level */}
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'space-between',
+                }}>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '8px',
+                  }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.6 }}>
+                      <path d="M3 8h12v10c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V8zm0-2V4c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v2M15 11l4-4v10l-4-4" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                    </svg>
+                    <span style={{ 
+                      fontSize: '11px', 
+                      color: '#64748b', 
+                      fontWeight: 500,
+                    }}>
+                      Fuel
+                    </span>
+                  </div>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '5px',
+                  }}>
+                    <svg width="14" height="16" viewBox="0 0 24 24" fill="none">
+                      <path d="M3 8h12v10c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V8zm0-2V4c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v2M15 11l4-4v10l-4-4" stroke="#0ea5e9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="#0ea5e9"/>
+                    </svg>
+                    <span style={{ 
+                      fontSize: '12px', 
+                      color: '#0ea5e9', 
+                      fontWeight: 700,
+                    }}>
+                      73%
+                    </span>
+                  </div>
+                </div>
                 
                 {/* Arrow */}
                 <div style={{ 
                   position: 'absolute', 
-                  bottom: '-9px', 
+                  bottom: '-8px', 
                   left: '50%', 
-                  marginLeft: '-9px', 
+                  marginLeft: '-8px', 
                   width: '0', 
                   height: '0', 
-                  borderLeft: '9px solid transparent', 
-                  borderRight: '9px solid transparent', 
-                  borderTop: '9px solid rgba(255, 255, 255, 0.75)', 
+                  borderLeft: '8px solid transparent', 
+                  borderRight: '8px solid transparent', 
+                  borderTop: '8px solid rgba(255, 255, 255, 0.85)', 
                   filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))',
                 }} />
               </div>

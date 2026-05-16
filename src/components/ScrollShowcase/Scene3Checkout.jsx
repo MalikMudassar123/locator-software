@@ -36,9 +36,9 @@ const WIRE = [
 ];
 
 const ICONS = [
-  { id:'cam',    left:5,   top:67,  size:58, layer:'outer' }, // 0
-  { id:'shield', left:5,   top:285, size:58, layer:'outer' }, // 1
-  { id:'ai',     left:469, top:55,  size:58, layer:'outer' }, // 2
+  { id:'cam',    left:6,   top:68,  size:54, layer:'outer' }, // 0
+  { id:'shield', left:6,   top:286, size:54, layer:'outer' }, // 1
+  { id:'ai',     left:500, top:56,  size:54, layer:'outer' }, // 2
 ];
 
 function shuffle(arr) {
@@ -51,11 +51,11 @@ function shuffle(arr) {
 }
 
 const CONNECTIONS = [
-  'M 63 96 L 22 96',                                        // 0: cam right → frame left (horizontal)
-  'M 34 67 C 34 40 120 18 220 18',                          // 1: cam top → frame top (arc)
-  'M 63 314 C 40 314 22 314 22 340',                        // 2: shield right → frame left lower (L)
-  'M 469 84 C 512 84 512 55 512 30',                        // 3: ai left → frame right upper (L)
-  'M 34 67 C 34 36 469 36 469 55',                          // 4: cam top → ai top (arc over frame)
+  'M 60 95 L 72 95',                                        // 0: cam right → frame left (horizontal)
+  'M 33 68 C 33 40 160 18 250 18',                          // 1: cam top → frame top (arc)
+  'M 60 313 C 66 313 72 320 72 345',                        // 2: shield right → frame left lower (L)
+  'M 500 83 C 492 83 488 70 488 50',                        // 3: ai left → frame right (L-curve)
+  'M 33 68 C 33 36 527 36 527 56',                          // 4: cam top → ai top (arc over frame)
 ];
 
 const PAIRS = [[0],[0],[1],[2],[0,2]];
@@ -79,19 +79,19 @@ function GlobalDefs() {
         <linearGradient id="s3ig_ai"     x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#06b6d4"/></linearGradient>
         <linearGradient id="s3ig_play"   x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#3b82f6"/></linearGradient>
         <linearGradient id="s3ig_alert"  x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#f59e0b"/><stop offset="100%" stopColor="#ef4444"/></linearGradient>
-        <linearGradient id="s3lg0" x1="63" y1="96" x2="22" y2="96" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s3lg0" x1="60" y1="95" x2="72" y2="95" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#3b82f6"/>
         </linearGradient>
-        <linearGradient id="s3lg1" x1="34" y1="67" x2="220" y2="18" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s3lg1" x1="33" y1="68" x2="250" y2="18" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#8b5cf6"/><stop offset="100%" stopColor="#06b6d4"/>
         </linearGradient>
-        <linearGradient id="s3lg2" x1="63" y1="314" x2="22" y2="340" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s3lg2" x1="60" y1="313" x2="72" y2="345" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#3b82f6"/><stop offset="100%" stopColor="#6366f1"/>
         </linearGradient>
-        <linearGradient id="s3lg3" x1="469" y1="84" x2="512" y2="30" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s3lg3" x1="500" y1="83" x2="488" y2="50" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#06b6d4"/>
         </linearGradient>
-        <linearGradient id="s3lg4" x1="34" y1="67" x2="469" y2="55" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s3lg4" x1="33" y1="68" x2="527" y2="56" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#f472b6"/><stop offset="100%" stopColor="#06b6d4"/>
         </linearGradient>
         <linearGradient id="s3pg_w" x1="0" y1="0" x2="1" y2="1">
@@ -162,11 +162,11 @@ function CabinCam({ style = {} }) {
 }
 
 const drivers = [
-  { name:'Driver 1', speed:'Moving - 55.00 KM/Hr', time:'06/01/2026 18:15:48', active:true },
-  { name:'Driver 2', speed:'Moving - 55.00 KM/hr', time:'06/06/2026 18:18:48' },
-  { name:'Driver 3', speed:'Moving - 55.00 KM/hr', time:'06/06/2026 18:18:48' },
-  { name:'Driver 4', speed:'Moving - 55.00 KM/hr', time:'06/06/2026 18:15:48' },
-  { name:'Driver 5', speed:'Moving - 90.00 KM/hr', time:'06/06/2026 15:01:08' },
+  { name:'Driver 1', speed:'Moving - 55.00 KM/Hr', time:'06/01/2026 18:15:48', active:true,  loc:'ENOC Station, Hamdan St 214, Al Quoz' },
+  { name:'Driver 2', speed:'Moving - 55.00 KM/hr', time:'06/06/2026 18:18:48', loc:'Al Madina Supermarket, 22nd St II, Al Kasama' },
+  { name:'Driver 3', speed:'Moving - 55.00 KM/hr', time:'06/06/2026 18:18:48', loc:'RTA Parking Centre, 14th St 221, Deira, Dubai' },
+  { name:'Driver 4', speed:'Moving - 55.00 KM/hr', time:'06/06/2026 18:15:48', loc:'Carrefour Market, Al Wasl Rd 303, Jumeirah' },
+  { name:'Driver 5', speed:'Moving - 90.00 KM/hr', time:'06/06/2026 15:01:08', loc:'Lulu Hypermarket, 6th St 87, Al Barsha' },
 ];
 
 export default forwardRef(function Scene3Checkout(_props, ref) {
@@ -340,17 +340,10 @@ export default forwardRef(function Scene3Checkout(_props, ref) {
       {/* z=0 — connection lines */}
       <svg ref={linesRef} width={W} height={H} viewBox={`0 0 ${W} ${H}`}
         style={{ position:'absolute', inset:0, zIndex:0, pointerEvents:'none', overflow:'visible' }}>
-        <defs>
-          <filter id="s3lgf" x="-25%" y="-25%" width="150%" height="150%">
-            <feGaussianBlur stdDeviation="2.4" result="glow"/>
-            <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
         {CONNECTIONS.map((d, i) => (
           <path key={i} ref={el=>(lineRefs.current[i]=el)} d={d}
-            stroke={`url(#s3lg${i})`} strokeWidth="2.0" fill="none"
-            strokeLinecap="round" strokeLinejoin="round" opacity="0"
-            filter="url(#s3lgf)"/>
+            stroke={`url(#s3lg${i})`} strokeWidth="1.4" fill="none"
+            strokeLinecap="round" strokeLinejoin="round" opacity="0"/>
         ))}
       </svg>
 
@@ -446,13 +439,14 @@ export default forwardRef(function Scene3Checkout(_props, ref) {
             <div style={{ flex:1, overflow:'hidden' }}>
               {drivers.map(d=>(
                 <div key={d.name} ref={el=>(rowRefs.current[rIdx++]=el)}
-                  style={{ padding:'6px 8px', borderBottom:'1px solid #1e3a5f', background:d.active?'#1e3a5f':'transparent', opacity:0, willChange:'opacity,transform' }}>
-                  <div style={{ display:'flex', alignItems:'center', gap:4, marginBottom:2 }}>
+                  style={{ padding:'5px 7px', borderBottom:'1px solid #1e3a5f', background:d.active?'#1e3a5f':'transparent', opacity:0, willChange:'opacity,transform' }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:4, marginBottom:1.5 }}>
                     <div style={{ width:6, height:6, borderRadius:'50%', background:'#22c55e', flexShrink:0 }}/>
-                    <span style={{ fontSize:8, fontWeight:700, color:d.active?'#e2e8f0':'#94a3b8' }}>{d.name}</span>
+                    <span style={{ fontSize:7.5, fontWeight:700, color:d.active?'#e2e8f0':'#94a3b8' }}>{d.name}</span>
                   </div>
-                  <span style={{ fontSize:6.5, color:'#64748b', display:'block', paddingLeft:10 }}>{d.speed}</span>
-                  <span style={{ fontSize:6, color:'#475569', display:'block', paddingLeft:10 }}>{d.time}</span>
+                  <span style={{ fontSize:6, color:'#60a5fa', display:'block', paddingLeft:10, marginBottom:1 }}>{d.speed}</span>
+                  <span style={{ fontSize:5.5, color:'#475569', display:'block', paddingLeft:10, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{d.loc}</span>
+                  <span style={{ fontSize:5, color:'#334155', display:'block', paddingLeft:10 }}>{d.time}</span>
                 </div>
               ))}
             </div>

@@ -54,14 +54,13 @@ function shuffle(arr) {
   return a;
 }
 
-// L-shaped routed paths — all corners smoothly bent, no straight lines
 const CONNECTIONS = [
-  'M 57 68 C 57 44 444 44 444 76',                                             // 0: pin-top → route (UP-RIGHT arc)
-  'M 57 138 L 57 168 C 57 180 70 180 215 180',                                 // 1: pin-bottom → bell (DOWN then RIGHT)
-  'M 86 310 L 300 310 C 332 310 332 294 332 280',                              // 2: moon-right → grid (RIGHT then UP)
-  'M 364 280 L 394 280 C 408 280 408 330 408 362 C 408 396 388 414 332 414',  // 3: grid-right → wrench (RIGHT then DOWN, L-shape)
-  'M 412 76 L 236 76 C 215 76 215 102 215 143',                                // 4: route-left → bell (LEFT then DOWN)
-  'M 54 342 L 54 402 C 54 418 102 414 300 414',                                // 5: moon-bottom → wrench (DOWN then RIGHT)
+  'M 57 68 C 57 44 444 44 444 76',                                          // 0: pin-top → route (smooth arch)
+  'M 57 138 C 57 168 90 180 215 180',                                        // 1: pin-bottom → bell (smooth curve)
+  'M 86 310 C 190 310 320 308 332 280',                                      // 2: moon-right → grid (smooth curve)
+  'M 364 280 C 400 280 412 328 408 362 C 404 396 374 416 332 414',          // 3: grid-right → wrench (smooth S-curve)
+  'M 412 76 C 330 76 240 78 215 143',                                        // 4: route-left → bell (smooth curve)
+  'M 54 342 C 54 390 140 414 300 414',                                       // 5: moon-bottom → wrench (smooth curve)
 ];
 
 // Icon pairs for each connection
@@ -344,17 +343,10 @@ export default forwardRef(function Scene1Icons(_props, ref) {
       {/* z=0 — connection lines */}
       <svg ref={linesRef} width={W} height={H} viewBox={`0 0 ${W} ${H}`}
         style={{ position:'absolute', inset:0, zIndex:0, pointerEvents:'none', overflow:'visible' }}>
-        <defs>
-          <filter id="s1lgf" x="-25%" y="-25%" width="150%" height="150%">
-            <feGaussianBlur stdDeviation="2.4" result="glow"/>
-            <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
         {CONNECTIONS.map((d, i) => (
           <path key={i} ref={el => (lineRefs.current[i] = el)} d={d}
-            stroke={`url(#s1lg${i})`} strokeWidth="2.0" fill="none"
-            strokeLinecap="round" strokeLinejoin="round" opacity="0"
-            filter="url(#s1lgf)"/>
+            stroke={`url(#s1lg${i})`} strokeWidth="1.4" fill="none"
+            strokeLinecap="round" strokeLinejoin="round" opacity="0"/>
         ))}
       </svg>
 

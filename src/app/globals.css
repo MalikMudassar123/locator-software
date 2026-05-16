@@ -556,3 +556,728 @@ h6 {
 @media (min-width: 641px) and (max-width: 900px) {
   .road-vehicles-layer { transform: scale(0.76); transform-origin: bottom center; }
 }
+
+/* ══════════════════════════════════════════════════════
+   HERO CINEMATIC LIGHT — Premium flowing light effect
+   Gold + White + Sky Blue glowing tones moving dynamically
+   in a continuous smooth loop, darker and more visible
+   ══════════════════════════════════════════════════════ */
+
+.hero-cinematic-light {
+  position: absolute;
+  width: 180%;
+  height: 180%;
+  top: -40%;
+  right: -60%;
+  pointer-events: none;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  animation: cinematicLightFlow 24s ease-in-out infinite;
+  filter: blur(65px);
+  opacity: 0.82;
+}
+
+/* Three separate glowing orbs — Gold, White, Sky Blue */
+.hero-cinematic-light::before,
+.hero-cinematic-light::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* Gold glow — largest, darker and more visible */
+.hero-cinematic-light::before {
+  width: 420px;
+  height: 420px;
+  top: 25%;
+  right: 30%;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 215, 80, 0.88) 0%,
+    rgba(255, 200, 70, 0.72) 25%,
+    rgba(255, 185, 50, 0.50) 50%,
+    rgba(255, 170, 30, 0.22) 75%,
+    transparent 100%
+  );
+  animation: goldGlowPulse 10s ease-in-out infinite;
+  filter: blur(48px);
+}
+
+/* White glow — medium, brighter and more prominent */
+.hero-cinematic-light::after {
+  width: 320px;
+  height: 320px;
+  top: 35%;
+  right: 42%;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(255, 255, 255, 0.78) 20%,
+    rgba(245, 250, 255, 0.55) 45%,
+    rgba(230, 240, 255, 0.28) 70%,
+    transparent 100%
+  );
+  animation: whiteGlowPulse 8s ease-in-out infinite;
+  animation-delay: -2s;
+  filter: blur(38px);
+}
+
+/* Sky Blue glow — darker and more saturated */
+.hero-cinematic-light {
+  background: radial-gradient(
+    ellipse 380px 380px at 55% 40%,
+    rgba(135, 206, 250, 0.82) 0%,
+    rgba(110, 185, 235, 0.68) 25%,
+    rgba(85, 165, 215, 0.48) 50%,
+    rgba(60, 145, 195, 0.25) 75%,
+    transparent 100%
+  );
+}
+
+/* Continuous smooth loop — top-right → left-center → down-left → back to top-right */
+@keyframes cinematicLightFlow {
+  0% {
+    transform: translate3d(0%, 0%, 0) scale(1) rotate(0deg);
+    opacity: 0.82;
+  }
+  12% {
+    transform: translate3d(-10%, 8%, 0) scale(1.05) rotate(-4deg);
+    opacity: 0.88;
+  }
+  25% {
+    transform: translate3d(-28%, 18%, 0) scale(1.10) rotate(-8deg);
+    opacity: 0.92;
+  }
+  37% {
+    transform: translate3d(-48%, 28%, 0) scale(1.08) rotate(-10deg);
+    opacity: 0.90;
+  }
+  50% {
+    transform: translate3d(-65%, 42%, 0) scale(1.05) rotate(-8deg);
+    opacity: 0.85;
+  }
+  62% {
+    transform: translate3d(-58%, 28%, 0) scale(1.08) rotate(-4deg);
+    opacity: 0.88;
+  }
+  75% {
+    transform: translate3d(-38%, 15%, 0) scale(1.10) rotate(0deg);
+    opacity: 0.90;
+  }
+  87% {
+    transform: translate3d(-15%, 5%, 0) scale(1.06) rotate(2deg);
+    opacity: 0.86;
+  }
+  100% {
+    transform: translate3d(0%, 0%, 0) scale(1) rotate(0deg);
+    opacity: 0.82;
+  }
+}
+
+/* Gold glow pulse — darker, more visible breathing */
+@keyframes goldGlowPulse {
+  0%, 100% {
+    transform: translate3d(0%, 0%, 0) scale(1);
+    opacity: 0.88;
+  }
+  25% {
+    transform: translate3d(6%, -4%, 0) scale(1.08);
+    opacity: 0.95;
+  }
+  50% {
+    transform: translate3d(12%, -6%, 0) scale(1.12);
+    opacity: 0.90;
+  }
+  75% {
+    transform: translate3d(8%, -2%, 0) scale(1.05);
+    opacity: 0.92;
+  }
+}
+
+/* White glow pulse — brighter, more noticeable */
+@keyframes whiteGlowPulse {
+  0%, 100% {
+    transform: translate3d(0%, 0%, 0) scale(1);
+    opacity: 0.92;
+  }
+  33% {
+    transform: translate3d(-5%, 6%, 0) scale(1.10);
+    opacity: 0.85;
+  }
+  66% {
+    transform: translate3d(-10%, 3%, 0) scale(1.15);
+    opacity: 0.88;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-cinematic-light,
+  .hero-cinematic-light::before,
+  .hero-cinematic-light::after {
+    animation: none !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   HERO STRIPE BEAM — Stripe-inspired diagonal light shaft
+   – Oversized element (200×200%) so rotation never shows edges
+   – Gradient band at ~48-52% of the element = centered diagonal
+   – Slow drift rotation (26s) with opacity breathing
+   ══════════════════════════════════════════════════════ */
+
+.hero-stripe-beam {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  pointer-events: none;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  background: linear-gradient(
+    -28deg,
+    transparent 0%,
+    transparent 34%,
+    rgba(100, 175, 225, 0.04) 40%,
+    rgba(190, 228, 255, 0.07) 45%,
+    rgba(235, 248, 255, 0.11) 48.5%,
+    rgba(255, 255, 255, 0.09) 50%,
+    rgba(190, 228, 255, 0.06) 52.5%,
+    rgba(100, 175, 225, 0.03) 57%,
+    transparent 63%,
+    transparent 100%
+  );
+  animation: stripeBeamDrift 26s ease-in-out infinite;
+}
+
+@keyframes stripeBeamDrift {
+  0%, 100% {
+    transform: translate3d(0%, 0%, 0) rotate(0deg);
+    opacity: 0.90;
+  }
+  28% {
+    transform: translate3d(-4%, 3%, 0) rotate(1.8deg);
+    opacity: 1;
+  }
+  56% {
+    transform: translate3d(2.5%, -2%, 0) rotate(-1.2deg);
+    opacity: 0.92;
+  }
+  82% {
+    transform: translate3d(-1.5%, 1%, 0) rotate(0.6deg);
+    opacity: 0.96;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-stripe-beam {
+    animation: none !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   HERO SILK FLOW — Warm wave band flowing right → left
+   ─ Pink/magenta enters from right, fades through orange,
+     exits as gold/yellow on the left (silk-ribbon shape)
+   ─ Vertical positions are alternated to create the
+     wavy top edge seen in the reference (high–low–high–low)
+   ─ Heavy blur + screen blend = silk-soft glow over the
+     existing hero blue gradient (which is untouched)
+   ══════════════════════════════════════════════════════ */
+
+.hero-silk-right {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  background:
+    /* Sky-blue ribbon — upper-right.
+       White-hot core fades through pale blue into deeper sky blue. */
+    radial-gradient(ellipse 92% 130% at 100% 26%,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(210, 240, 255, 0.85) 12%,
+      rgba(150, 215, 252, 0.65) 28%,
+      rgba(110, 190, 240, 0.38) 45%,
+      rgba(95, 180, 235, 0.18) 58%,
+      transparent 70%),
+    /* Gold ribbon — lower-left.
+       Bright yellow-white core fades through gold into warm amber.
+       Both ellipses share a white highlight at their core so the
+       diagonal overlap zone averages to a clean pale cream — never
+       the muddy desaturated gray you'd get if sky-blue met gold raw. */
+    radial-gradient(ellipse 90% 125% at 0% 110%,
+      rgba(255, 250, 220, 0.95) 0%,
+      rgba(255, 225, 130, 0.85) 12%,
+      rgba(255, 200, 80, 0.65) 28%,
+      rgba(255, 175, 60, 0.38) 45%,
+      rgba(255, 160, 55, 0.18) 58%,
+      transparent 70%);
+  filter: blur(36px);
+  animation: silkRightToLeft 26s ease-in-out infinite;
+}
+
+@keyframes silkRightToLeft {
+  0%, 100% {
+    transform: translate3d(0%, 0%, 0) scale(1);
+    opacity: 0.92;
+  }
+  30% {
+    transform: translate3d(-3%, 2%, 0) scale(1.03);
+    opacity: 1;
+  }
+  60% {
+    transform: translate3d(2%, -1.5%, 0) scale(0.98);
+    opacity: 0.94;
+  }
+  85% {
+    transform: translate3d(-1.5%, 1.5%, 0) scale(1.02);
+    opacity: 0.96;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-silk-right {
+    animation: none !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   HERO SVG BLOB — right-side wave drift
+   scaleX(-1) is baked into every keyframe so the flip
+   is preserved throughout the animation
+   ══════════════════════════════════════════════════════ */
+
+.hero-svg-blob {
+  will-change: transform;
+  backface-visibility: hidden;
+  transform-origin: right center;
+  animation: svgBlobWave 20s ease-in-out infinite;
+}
+
+/*
+  No X translation — scaleX(-1) flips the X axis so any
+  positive translateX would move the blob LEFT on screen.
+  Y movement + scale gives the "air blowing through" feel:
+  the blob swells, lifts, and settles like a sail in wind.
+*/
+@keyframes svgBlobWave {
+  0%, 100% { transform: scaleX(-1) translateY(0px)   scale(1.00); }
+  15%       { transform: scaleX(-1) translateY(-24px) scale(1.07); }
+  35%       { transform: scaleX(-1) translateY(14px)  scale(1.13); }
+  55%       { transform: scaleX(-1) translateY(-18px) scale(1.08); }
+  75%       { transform: scaleX(-1) translateY(20px)  scale(1.04); }
+  90%       { transform: scaleX(-1) translateY(-8px)  scale(1.02); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-svg-blob { animation: none !important; }
+}
+
+/* ══════════════════════════════════════════════════════
+   HERO PINK AURORA — Premium flowing pink/magenta/purple
+   silk-wave layer. Drifts left → right like wind over
+   gossamer silk; two semi-transparent layers at different
+   speeds create depth and organic shape-morphing.
+
+   GPU notes:
+   ─ Only transform + opacity are animated (compositor-only)
+   ─ will-change: transform, opacity promotes each element
+     to its own GPU layer before the first frame
+   ─ mix-blend-mode: screen gives the aurora an ethereal
+     glow over the dark-blue hero gradient (pink over navy
+     resolves to a luminous violet-pink aurora tone)
+   ─ The hero section already has isolation: isolate so all
+     screen blends are self-contained within it
+   ══════════════════════════════════════════════════════ */
+
+/* ── Main aurora body — warm sunlight gold, off-left, drifts right ── */
+.hero-pink-aurora {
+  position: absolute;
+  width: 160%;
+  height: 150%;
+  top: -20%;
+  left: -45%;
+  pointer-events: none;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  border-radius: 62% 38% 58% 42% / 50% 45% 55% 50%;
+  background: radial-gradient(
+    ellipse 62% 55% at 52% 48%,
+    rgba(255, 210, 80,  0.52)  0%,
+    rgba(255, 185, 45,  0.38) 22%,
+    rgba(240, 160, 20,  0.20) 48%,
+    rgba(200, 130, 10,  0.08) 68%,
+    transparent                85%
+  );
+  filter: blur(72px);
+  mix-blend-mode: screen;
+  opacity: 0.82;
+  animation: pinkAuroraFlow 30s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  animation-delay: -10s;
+}
+
+/* Secondary orb — deep sky blue, drifts independently for cool contrast */
+.hero-pink-aurora::before {
+  content: '';
+  position: absolute;
+  inset: 8% 12% 8% 12%;
+  border-radius: 45% 55% 62% 38% / 55% 42% 58% 45%;
+  background: radial-gradient(
+    ellipse 72% 68% at 56% 46%,
+    rgba(20,  130, 210, 0.48)  0%,
+    rgba(15,  105, 185, 0.32) 28%,
+    rgba(10,   80, 158, 0.14) 54%,
+    transparent                76%
+  );
+  filter: blur(48px);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  animation: pinkAuroraBefore 23s ease-in-out infinite;
+  animation-delay: -6s;
+}
+
+/* Tertiary highlight — lighter gold, wide soft halo */
+.hero-pink-aurora::after {
+  content: '';
+  position: absolute;
+  inset: 18% 4% 18% 18%;
+  border-radius: 55% 45% 45% 55% / 48% 55% 45% 52%;
+  background: radial-gradient(
+    ellipse 76% 72% at 44% 54%,
+    rgba(255, 230, 130, 0.40)  0%,
+    rgba(255, 210,  90, 0.24) 26%,
+    rgba(230, 180,  50, 0.10) 52%,
+    transparent                76%
+  );
+  filter: blur(90px);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  animation: pinkAuroraAfter 38s ease-in-out infinite;
+  animation-delay: -18s;
+}
+
+/* ── Secondary layer — deep azure sky, wide spread, slower ── */
+.hero-pink-aurora-secondary {
+  position: absolute;
+  width: 130%;
+  height: 130%;
+  top: 10%;
+  left: -10%;
+  pointer-events: none;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  border-radius: 50% 50% 52% 48% / 52% 50% 50% 48%;
+  background: radial-gradient(
+    ellipse 56% 50% at 44% 56%,
+    rgba(100, 190, 255, 0.28)  0%,
+    rgba(60,  155, 230, 0.16) 32%,
+    rgba(30,  120, 200, 0.06) 60%,
+    transparent                80%
+  );
+  filter: blur(108px);
+  mix-blend-mode: screen;
+  opacity: 0.72;
+  animation: pinkAurora2Flow 42s ease-in-out infinite;
+  animation-delay: -22s;
+}
+
+/* ── Keyframes ── */
+
+/* Main body: slow left → right wind drift */
+@keyframes pinkAuroraFlow {
+  0%, 100% {
+    transform: translate3d(  0%, 5%, 0) scale(1.00);
+    opacity: 0.75;
+  }
+  15% {
+    transform: translate3d(  3%, 1%, 0) scale(1.04);
+    opacity: 0.82;
+  }
+  30% {
+    transform: translate3d(  7%,-3%, 0) scale(1.08);
+    opacity: 0.88;
+  }
+  46% {
+    transform: translate3d( 12%,-5%, 0) scale(1.06);
+    opacity: 0.84;
+  }
+  60% {
+    transform: translate3d( 15%,-2%, 0) scale(1.09);
+    opacity: 0.78;
+  }
+  74% {
+    transform: translate3d( 10%, 2%, 0) scale(1.05);
+    opacity: 0.80;
+  }
+  87% {
+    transform: translate3d(  4%, 5%, 0) scale(1.02);
+    opacity: 0.77;
+  }
+}
+
+/* ::before — independent organic drift, slight counter-phase */
+@keyframes pinkAuroraBefore {
+  0%, 100% {
+    transform: translate3d(  0%,  0%, 0) scale(1.00);
+    opacity: 0.82;
+  }
+  20% {
+    transform: translate3d( -3%,  5%, 0) scale(1.07);
+    opacity: 0.90;
+  }
+  42% {
+    transform: translate3d(  5%,  8%, 0) scale(1.12);
+    opacity: 0.86;
+  }
+  64% {
+    transform: translate3d(  9%,  3%, 0) scale(1.08);
+    opacity: 0.88;
+  }
+  82% {
+    transform: translate3d(  3%, -3%, 0) scale(1.04);
+    opacity: 0.84;
+  }
+}
+
+/* ::after — slowest, drifts diagonally for morphing feel */
+@keyframes pinkAuroraAfter {
+  0%, 100% {
+    transform: translate3d(  0%,  0%, 0) scale(1.00);
+    opacity: 0.72;
+  }
+  26% {
+    transform: translate3d(  6%, -5%, 0) scale(1.10);
+    opacity: 0.80;
+  }
+  52% {
+    transform: translate3d( 12%, -1%, 0) scale(1.14);
+    opacity: 0.76;
+  }
+  78% {
+    transform: translate3d(  5%,  5%, 0) scale(1.06);
+    opacity: 0.78;
+  }
+}
+
+/* Secondary layer — wider arc, sweeps center → right */
+@keyframes pinkAurora2Flow {
+  0%, 100% {
+    transform: translate3d(  4%,  0%, 0) scale(1.00);
+    opacity: 0.62;
+  }
+  22% {
+    transform: translate3d( 10%, -4%, 0) scale(1.06);
+    opacity: 0.70;
+  }
+  46% {
+    transform: translate3d( 16%, -6%, 0) scale(1.10);
+    opacity: 0.68;
+  }
+  68% {
+    transform: translate3d( 11%, -1%, 0) scale(1.07);
+    opacity: 0.65;
+  }
+  86% {
+    transform: translate3d(  6%,  3%, 0) scale(1.03);
+    opacity: 0.63;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-pink-aurora,
+  .hero-pink-aurora::before,
+  .hero-pink-aurora::after,
+  .hero-pink-aurora-secondary {
+    animation: none !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   HERO RIBBON WAVE — teal + purple flowing silk ribbons
+
+   .hrw-teal   : SVG <g> — slow left-to-right undulation
+   .hrw-purple : SVG <g> — independent counter-drift
+   .hrw-teal-line : individual line shimmer (alternating phase)
+   .hrw-orb    : pink convergence orb pulse
+
+   GPU notes:
+   ─ Only transform + opacity are animated
+   ─ will-change: transform on the <g> elements promotes
+     each group to its own compositor layer
+   ─ skewY on the teal group adds silk-wave distortion
+     without triggering layout (SVG transform space)
+   ══════════════════════════════════════════════════════ */
+
+.hrw-teal {
+  will-change: transform;
+  backface-visibility: hidden;
+  /* Centre pivot so the wave undulates symmetrically across the full screen */
+  transform-origin: 50% 50%;
+  animation: hrwTealFlow 20s ease-in-out infinite;
+}
+
+/* Alternating shimmer — odd/even teal lines out of phase */
+.hrw-teal-line:nth-child(odd) {
+  animation: hrwLineShimmer 5s ease-in-out infinite;
+}
+.hrw-teal-line:nth-child(even) {
+  animation: hrwLineShimmer 5s ease-in-out infinite;
+  animation-delay: -2.5s;
+}
+
+/* Full-screen teal wave — slow ocean-like undulation across the entire hero */
+@keyframes hrwTealFlow {
+  0%, 100% {
+    transform: translate3d(  0px,   0px, 0) rotate(0.0deg) skewY( 0.00deg);
+    opacity: 0.90;
+  }
+  18% {
+    transform: translate3d(  6px, -22px, 0) rotate(0.6deg) skewY(-0.80deg);
+    opacity: 0.96;
+  }
+  38% {
+    transform: translate3d( 14px, -14px, 0) rotate(1.1deg) skewY(-1.30deg);
+    opacity: 1.00;
+  }
+  58% {
+    transform: translate3d( 18px,  -4px, 0) rotate(0.9deg) skewY(-0.90deg);
+    opacity: 0.96;
+  }
+  76% {
+    transform: translate3d(  8px,  16px, 0) rotate(0.3deg) skewY( 0.25deg);
+    opacity: 0.92;
+  }
+  90% {
+    transform: translate3d(  2px,   6px, 0) rotate(0.1deg) skewY( 0.05deg);
+    opacity: 0.90;
+  }
+}
+
+
+/* Individual line shimmer — alternating opacity creates ribbon depth */
+@keyframes hrwLineShimmer {
+  0%, 100% { opacity: 1.00; }
+  50%       { opacity: 0.52; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hrw-teal,
+  .hrw-teal-line {
+    animation: none !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   HERO RIBBON SWEEP — diagonal band slightly darker than
+   the hero gradient. Enters from the right, sweeps left,
+   billows in size, and glows from its centre.
+
+   Two pseudo-elements stacked:
+   ::before — dark ribbon body (translucent navy)
+   ::after  — bright inner glow (blurred blue-white core)
+
+   GPU notes:
+   ─ Only transform + opacity animated (compositor-only)
+   ─ scaleY variation in keyframes = organic "billowing"
+   ─ rotate variation = ribbon edge undulation
+   ─ overflow:hidden on the wrapper clips at hero bounds
+   ══════════════════════════════════════════════════════ */
+
+/* Dark ribbon body */
+.hero-ribbon-sweep::before {
+  content: '';
+  position: absolute;
+  top: -80%;
+  left: -100%;
+  width: 300%;
+  height: 260%;
+  pointer-events: none;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  background: linear-gradient(
+    to bottom,
+    transparent               0%,
+    rgba(1,  8, 28, 0.00)     8%,
+    rgba(2, 12, 42, 0.38)    24%,
+    rgba(3, 16, 54, 0.64)    40%,
+    rgba(3, 19, 60, 0.74)    50%,
+    rgba(3, 16, 54, 0.64)    60%,
+    rgba(2, 12, 42, 0.38)    76%,
+    rgba(1,  8, 28, 0.00)    92%,
+    transparent              100%
+  );
+  animation: heroRibbonSweep 13s cubic-bezier(0.15, 0, 0.85, 1) infinite;
+  animation-delay: -2s;
+}
+
+/* Luminous glow core — bright blue light inside the dark band */
+.hero-ribbon-sweep::after {
+  content: '';
+  position: absolute;
+  top: -80%;
+  left: -100%;
+  width: 300%;
+  height: 260%;
+  pointer-events: none;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  background: linear-gradient(
+    to bottom,
+    transparent                0%,
+    transparent               37%,
+    rgba(38, 108, 228, 0.00)  43%,
+    rgba(48, 128, 245, 0.45)  48%,
+    rgba(62, 148, 255, 0.68)  50%,
+    rgba(48, 128, 245, 0.45)  52%,
+    rgba(38, 108, 228, 0.00)  57%,
+    transparent               63%,
+    transparent              100%
+  );
+  filter: blur(10px);
+  animation: heroRibbonSweep 13s cubic-bezier(0.15, 0, 0.85, 1) infinite;
+  animation-delay: -2s;
+}
+
+/* Right → left sweep with billowing scaleY and slight angle variation */
+@keyframes heroRibbonSweep {
+  0% {
+    transform: rotate(-22deg) translateX( 200%) scaleY(1.00);
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+  }
+  20% {
+    transform: rotate(-23deg) translateX( 138%) scaleY(1.55);
+    opacity: 0.92;
+  }
+  42% {
+    transform: rotate(-21deg) translateX(  55%) scaleY(0.72);
+    opacity: 1.00;
+  }
+  63% {
+    transform: rotate(-24deg) translateX( -30%) scaleY(1.38);
+    opacity: 0.96;
+  }
+  84% {
+    transform: rotate(-22deg) translateX(-115%) scaleY(0.86);
+    opacity: 1.00;
+  }
+  95% {
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(-22deg) translateX(-200%) scaleY(1.00);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-ribbon-sweep::before,
+  .hero-ribbon-sweep::after {
+    animation: none !important;
+  }
+}

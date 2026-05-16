@@ -15,6 +15,23 @@ export default function HeroSection() {
         isolation: 'isolate',
       }}
     >
+      {/* Layer 0 — SVG blob background (left-side shape only) */}
+      <img
+        src="/blob-scene-haikei.svg"
+        alt=""
+        aria-hidden="true"
+        className="hero-svg-blob"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: 1,
+          pointerEvents: 'none',
+        }}
+      />
+
       {/* Layer 1 — colour blobs */}
       <div
         style={{
@@ -46,6 +63,71 @@ export default function HeroSection() {
         <div className="hero-wave hero-wave-2" />
       </div>
 
+      {/* Pink Aurora Wave Layer — flowing silk-wave energy behind cinematic layers */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          overflow: 'hidden',
+          zIndex: 2,
+          pointerEvents: 'none',
+        }}
+      >
+        <div className="hero-pink-aurora" />
+        <div className="hero-pink-aurora-secondary" />
+      </div>
+
+      {/* Layer 3 — Cinematic flowing light effect (top-right to center-left) */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          overflow: 'hidden',
+          zIndex: 3,
+          pointerEvents: 'none',
+        }}
+      >
+        <div className="hero-cinematic-light" />
+      </div>
+
+      {/* Layer 4 — Stripe-style diagonal atmospheric beam */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          overflow: 'hidden',
+          zIndex: 4,
+          pointerEvents: 'none',
+        }}
+      >
+        <div className="hero-stripe-beam" />
+      </div>
+
+      {/* Layer 4b — Dark glow ribbon sweeping right to left */}
+      <div
+        className="hero-ribbon-sweep"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          overflow: 'hidden',
+          zIndex: 4,
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* Layer 5 — Silk-ribbon flow (sky-blue/white right to gold left) */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          overflow: 'hidden',
+          zIndex: 5,
+          pointerEvents: 'none',
+        }}
+      >
+        <div className="hero-silk-right" />
+      </div>
+
       {/* Layer 6 — Warm sunrise / golden-hour glow behind buildings */}
       <div
         style={{
@@ -62,7 +144,7 @@ export default function HeroSection() {
         <div className="hero-sunrise-glow" />
       </div>
 
-      {/* LAYER 8 — Dubai Skyline building — ABOVE glow, NO filter, original colors */}
+      {/* LAYER 8 — Dubai Skyline building — with foggy sky blue effect */}
       <div
         style={{
           position: 'absolute',
@@ -85,6 +167,9 @@ export default function HeroSection() {
             height: 'auto',
             objectFit: 'contain',
             objectPosition: 'bottom',
+            filter: 'brightness(0.85) saturate(0.8) hue-rotate(5deg) blur(0.3px)',
+            opacity: 0.88,
+            mixBlendMode: 'luminosity',
           }}
           priority
         />

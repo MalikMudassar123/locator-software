@@ -138,12 +138,12 @@ function ActiveCard({ id, size }) {
 }
 
 const vehicles = [
-  { id:'Ibrahim Sales 31280', time:'09/01/2026 18:15:48', speed:'Moving - 95.00 KM/H', dot:'#22c55e' },
-  { id:'George 00056',        time:'08/31/2026 13:28:43', speed:'Idle',                dot:'#f59e0b' },
-  { id:'Ahmed Tech 49876',    time:'08/31/2026 18:30:54', speed:'Moving - 55.00 KM/H', dot:'#22c55e' },
-  { id:'Jamal Tech 49876',    time:'08/31/2026 13:38:11', speed:'Moving - 36.00 KM/H', dot:'#22c55e' },
-  { id:'David Oman 20378',    time:'08/31/2026 13:58:55', speed:'Stopped',             dot:'#ef4444' },
-  { id:'Thanmal 66621',       time:'08/31/2026 13:58:08', speed:'Stopped',             dot:'#ef4444' },
+  { id:'Ibrahim Sales 31280', time:'09/01/2026 18:15:48', speed:'Moving - 55.00 KM/hr', dot:'#22c55e', loc:'Al Safouih 2, Dubai Knowledge Park, Dubai' },
+  { id:'George 00056',        time:'08/31/2026 13:28:43', speed:'Idle - from 5 minutes',dot:'#f59e0b', loc:'Collins Car Polishing, Hoshi Truck, Al S MaviPlo' },
+  { id:'Ahmed Tech 49876',    time:'08/31/2026 18:30:54', speed:'Stopped - from 20 min',dot:'#ef4444', loc:'Burgundy Ladies Salon, Silo Street, Sharjah' },
+  { id:'Jamal Tech 49876',    time:'08/31/2026 13:38:11', speed:'Moving - 36.00 KM/hr', dot:'#22c55e', loc:'Sharjah Intercont. Hotel, Sharjah Emirate' },
+  { id:'David Oman 20378',    time:'08/31/2026 13:58:55', speed:'Stopped - from 1 hour',dot:'#ef4444', loc:'#1 Jaddan Building, 26876, Sharjah, UAE' },
+  { id:'Thanmal Support 6682',time:'08/31/2026 13:58:08', speed:'Moving - 12.00 KM/hr', dot:'#22c55e', loc:'Near Al Mamzar Beach Park, Dubai' },
 ];
 
 export default forwardRef(function Scene2Wireframe(_props, ref) {
@@ -317,17 +317,10 @@ export default forwardRef(function Scene2Wireframe(_props, ref) {
       {/* z=0 — connection lines */}
       <svg ref={linesRef} width={W} height={H} viewBox={`0 0 ${W} ${H}`}
         style={{ position:'absolute', inset:0, zIndex:0, pointerEvents:'none', overflow:'visible' }}>
-        <defs>
-          <filter id="s2lgf" x="-25%" y="-25%" width="150%" height="150%">
-            <feGaussianBlur stdDeviation="2.4" result="glow"/>
-            <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
         {CONNECTIONS.map((d, i) => (
           <path key={i} ref={el=>(lineRefs.current[i]=el)} d={d}
-            stroke={`url(#s2lg${i})`} strokeWidth="2.0" fill="none"
-            strokeLinecap="round" strokeLinejoin="round" opacity="0"
-            filter="url(#s2lgf)"/>
+            stroke={`url(#s2lg${i})`} strokeWidth="1.4" fill="none"
+            strokeLinecap="round" strokeLinejoin="round" opacity="0"/>
         ))}
       </svg>
 
@@ -400,12 +393,16 @@ export default forwardRef(function Scene2Wireframe(_props, ref) {
                 </div>
               ))}
             </div>
-            <div style={{ flex:1, background:'#a8d4f0' }}>
+            <div style={{ flex:1, background:'#b8d8f0' }}>
               <svg width="100%" height="100%" viewBox="0 0 255 414" style={{ display:'block' }}>
-                <rect width="255" height="414" fill="#a8d4f0"/>
-                <path d="M0 95 Q50 88 120 98 Q175 106 255 92 L255 0 L0 0 Z" fill="#d8e8c8"/>
-                {[[82,48,'#22c55e'],[168,38,'#22c55e'],[50,75,'#f59e0b'],[200,62,'#22c55e'],[114,148,'#22c55e']].map(([cx,cy,col],i)=>(
-                  <g key={i}><circle cx={cx} cy={cy} r="8" fill={col} opacity="0.2"/><circle cx={cx} cy={cy} r="5" fill={col} stroke="white" strokeWidth="1.5"/></g>
+                <rect width="255" height="414" fill="#b8d8f0"/>
+                <rect x="0" y="0" width="255" height="60" fill="#e0d8c8" opacity="0.7"/>
+                <rect x="0" y="60" width="80" height="354" fill="#e0d8c8" opacity="0.7"/>
+                <rect x="175" y="60" width="80" height="354" fill="#e0d8c8" opacity="0.7"/>
+                <rect x="110" y="120" width="34" height="160" rx="4" fill="#d0c8b8" opacity="0.6"/>
+                <path d="M68 340 Q95 290 127 280 Q160 290 187 340 Q160 360 127 362 Q95 360 68 340Z" fill="#d0c8b8" opacity="0.6"/>
+                {[[127,165,'#22c55e'],[82,340,'#22c55e'],[172,340,'#22c55e']].map(([cx,cy,col],i)=>(
+                  <g key={i} opacity="0.7"><circle cx={cx} cy={cy} r="6" fill={col} opacity="0.2"/><circle cx={cx} cy={cy} r="4" fill={col} stroke="white" strokeWidth="1.2"/></g>
                 ))}
               </svg>
             </div>
@@ -432,13 +429,17 @@ export default forwardRef(function Scene2Wireframe(_props, ref) {
               <div style={{ flex:1, overflow:'hidden' }}>
                 {vehicles.map(v=>(
                   <div key={v.id} ref={el=>(rowRefs.current[rowIdx++]=el)}
-                    style={{ padding:'6px 8px', borderBottom:'1px solid #f9fafb', opacity:0, willChange:'opacity,transform' }}>
-                    <div style={{ display:'flex', alignItems:'center', gap:4, marginBottom:2 }}>
-                      <div style={{ width:7, height:7, borderRadius:'50%', background:v.dot, flexShrink:0 }}/>
-                      <span style={{ fontSize:7.5, fontWeight:700, color:'#111827', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', flex:1 }}>{v.id}</span>
+                    style={{ padding:'5px 7px', borderBottom:'1px solid #f3f4f6', opacity:0, willChange:'opacity,transform' }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:4, marginBottom:1.5 }}>
+                      <div style={{ width:6, height:6, borderRadius:'50%', background:v.dot, flexShrink:0 }}/>
+                      <span style={{ fontSize:7, fontWeight:700, color:'#111827', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', flex:1 }}>{v.id}</span>
                     </div>
-                    <span style={{ fontSize:6.5, color:'#6b7280', paddingLeft:11, display:'block' }}>{v.time}</span>
-                    <span style={{ fontSize:6.5, color:'#374151', paddingLeft:11, display:'block' }}>{v.speed}</span>
+                    <div style={{ paddingLeft:10, display:'flex', alignItems:'center', gap:3, marginBottom:1 }}>
+                      <svg width="7" height="7" viewBox="0 0 24 24" fill="none"><rect x="1" y="3" width="15" height="13" rx="2" stroke={v.dot} strokeWidth="2.2"/><path d="M16 8l5-3v10l-5-3V8z" fill={v.dot}/></svg>
+                      <span style={{ fontSize:6, color:v.dot, fontWeight:600 }}>{v.speed}</span>
+                    </div>
+                    <span style={{ fontSize:5.5, color:'#9ca3af', paddingLeft:10, display:'block', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{v.loc}</span>
+                    <span style={{ fontSize:5.5, color:'#d1d5db', paddingLeft:10, display:'block' }}>{v.time}</span>
                   </div>
                 ))}
               </div>
@@ -451,15 +452,34 @@ export default forwardRef(function Scene2Wireframe(_props, ref) {
             </div>
             <div style={{ flex:1, background:'#a8d4f0', position:'relative', overflow:'hidden' }}>
               <svg width="100%" height="100%" viewBox="0 0 255 414" style={{ position:'absolute', inset:0 }}>
-                <rect width="255" height="414" fill="#a8d4f0"/>
-                <path d="M0 95 Q50 88 120 98 Q175 106 255 92 L255 0 L0 0 Z" fill="#d8e8c8"/>
-                {[[82,48,'#22c55e'],[168,38,'#22c55e'],[50,75,'#f59e0b'],[200,62,'#22c55e'],[114,148,'#22c55e']].map(([cx,cy,col],i)=>(
-                  <g key={i}><circle cx={cx} cy={cy} r="8" fill={col} opacity="0.2"/><circle cx={cx} cy={cy} r="5" fill={col} stroke="white" strokeWidth="1.5"/></g>
+                <rect width="255" height="414" fill="#b8d8f0"/>
+                {/* Land areas */}
+                <rect x="0" y="0" width="255" height="60" fill="#e8e0d0"/>
+                <rect x="0" y="60" width="80" height="354" fill="#e8e0d0"/>
+                <rect x="175" y="60" width="80" height="354" fill="#e8e0d0"/>
+                {/* Palm Jumeirah trunk */}
+                <rect x="110" y="120" width="34" height="160" rx="4" fill="#d8d0c0"/>
+                {/* Palm fronds — simplified */}
+                {[[-48,0],[-36,-28],[-20,-42],[0,-50],[20,-42],[36,-28],[48,0]].map(([dx,dy],i)=>(
+                  <ellipse key={i} cx={127+dx} cy={190+dy} rx="14" ry="7"
+                    fill="#d0c8b8" stroke="#c8c0b0" strokeWidth="0.5"
+                    transform={`rotate(${dx/1.2},${127+dx},${190+dy})`}/>
                 ))}
-                <rect x="18" y="86" width="110" height="26" rx="3" fill="rgba(255,255,255,0.92)"/>
-                <circle cx="30" cy="99" r="4" fill="#22c55e"/>
-                <text x="37" y="95" fontSize="6" fill="#374151" fontWeight="700">Ibrahim Sales 31280</text>
-                <text x="37" y="103" fontSize="5.5" fill="#6b7280">Moving - 95.00 KM/hr</text>
+                {/* Crescent island */}
+                <path d="M68 340 Q85 290 100 260 Q127 230 155 260 Q170 290 187 340 Q160 360 127 362 Q95 360 68 340Z" fill="#d8d0c0"/>
+                {/* Roads */}
+                <line x1="127" y1="60" x2="127" y2="120" stroke="#f0ece0" strokeWidth="5"/>
+                <line x1="127" y1="280" x2="127" y2="340" stroke="#f0ece0" strokeWidth="4"/>
+                <line x1="80" y1="200" x2="175" y2="200" stroke="#f0ece0" strokeWidth="3" strokeDasharray="8 4"/>
+                {/* Markers */}
+                {[[127,165,'#22c55e'],[82,340,'#22c55e'],[172,340,'#22c55e'],[127,250,'#f59e0b'],[50,120,'#22c55e']].map(([cx,cy,col],i)=>(
+                  <g key={i}><circle cx={cx} cy={cy} r="7" fill={col} opacity="0.2"/><circle cx={cx} cy={cy} r="4.5" fill={col} stroke="white" strokeWidth="1.2"/></g>
+                ))}
+                {/* Popup */}
+                <rect x="14" y="168" width="115" height="28" rx="3" fill="rgba(255,255,255,0.94)" stroke="#e5e7eb" strokeWidth="0.5"/>
+                <circle cx="26" cy="182" r="4" fill="#22c55e"/>
+                <text x="34" y="178" fontSize="6" fill="#374151" fontWeight="700" fontFamily="sans-serif">Ibrahim Sales 31280</text>
+                <text x="34" y="186" fontSize="5.5" fill="#22c55e" fontFamily="sans-serif">Moving - 55.00 KM/hr</text>
               </svg>
             </div>
           </div>

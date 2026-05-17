@@ -2,6 +2,7 @@ import HeroSection from "@/components/HeroSection";
 import RoadSection from "@/components/RoadSection";
 import ScrollShowcase from "@/components/ScrollShowcase";
 import FeatureSlider from "@/components/FeatureSlider";
+import AnimatedGlobeHero from "@/components/AnimatedGlobeHero";
 
 export default function Home() {
   return (
@@ -27,6 +28,11 @@ export default function Home() {
       {/* FeatureSlider — tab-driven feature showcase */}
       <div style={{ position: 'relative', zIndex: 1, marginLeft: '-50px', marginRight: '-50px' }}>
         <FeatureSlider />
+      </div>
+
+      {/* AnimatedGlobeHero — global network stats section */}
+      <div style={{ position: 'relative', zIndex: 1, marginLeft: '-50px', marginRight: '-50px' }}>
+        <AnimatedGlobeHero />
       </div>
     </main>
   );

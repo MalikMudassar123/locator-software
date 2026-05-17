@@ -28,7 +28,14 @@ export default function Navbar() {
         <div className="h-full flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <span className="text-white font-bold text-xl md:text-2xl tracking-wide">LOCATOR</span>
+            <Image
+              src="/logo.png"
+              alt="Locator"
+              width={120}
+              height={40}
+              style={{ width: 'auto', height: '40px' }}
+              priority
+            />
           </Link>
 
           {/* Nav Links — desktop only */}
@@ -155,7 +162,13 @@ export default function Navbar() {
         >
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
-            <span className="text-white font-bold text-xl tracking-wide">LOCATOR</span>
+            <Image
+              src="/logo.png"
+              alt="Locator"
+              width={100}
+              height={35}
+              style={{ width: 'auto', height: '35px' }}
+            />
             <button
               onClick={() => setOpen(false)}
               className="text-white p-2"

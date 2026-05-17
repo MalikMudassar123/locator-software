@@ -3,8 +3,6 @@
 import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import Scene1Icons     from './Scene1Icons';
-import Scene2Wireframe from './Scene2Wireframe';
-import Scene3Checkout  from './Scene3Checkout';
 import Scene4Pricing   from './Scene4Pricing';
 
 const fleetFeatures = [
@@ -125,21 +123,6 @@ const textSections = [
     features: fleetFeatures,
   },
   {
-    eyebrow: 'Fleet Telematics',
-    headline: 'Improve Fleet Operations with GPS Tracking & Telematics',
-    body: 'Real-time GPS tracking to manage drivers, routes, and road operations with ease.',
-    features: fleetFeatures,
-  },
-  {
-    eyebrow: 'Video Telematics',
-    headline: 'Enhance Fleet Visibility with Video Telematics',
-    body: 'Live HD video insights to monitor drivers, road conditions, and on-road operations with ease.',
-    subHeadline: 'AI-Powered Fleet Dash Cameras & MDVR Safety',
-    subBody: 'Real-time driver monitoring, cargo surveillance, and multi-camera recording for trucks, taxis, buses, and commercial',
-    features: videoFeatures,
-    cols: 2,
-  },
-  {
     eyebrow: 'Video Telematics',
     headline: 'Enhance Fleet Visibility with Video Telematics',
     body: 'Live HD video insights to monitor drivers, road conditions, and on-road operations with ease.',
@@ -150,7 +133,7 @@ const textSections = [
   },
 ];
 
-const SceneComponents = [Scene1Icons, Scene2Wireframe, Scene3Checkout, Scene4Pricing];
+const SceneComponents = [Scene1Icons, Scene4Pricing];
 
 function FeatureCard({ icon, title, desc }) {
   return (

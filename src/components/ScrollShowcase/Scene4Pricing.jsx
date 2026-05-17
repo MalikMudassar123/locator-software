@@ -1,9 +1,11 @@
 'use client';
 import { forwardRef, useLayoutEffect, useRef } from 'react';
+import Image from 'next/image';
 import gsap from 'gsap';
+import BrowserChrome from './BrowserChrome';
 
-const W = 540, H = 490;
-const FX = 72, FY = 18, FW = 416, FH = 450, FR = 13;
+const W = 540, H = 360;
+const FX = 72, FY = 18, FW = 416, FH = 320, FR = 13;
 const FX2 = FX + FW, FY2 = FY + FH;
 const SBW = 170;
 const FRAME_PERIM = Math.round(2*(FW-FR*2) + 2*(FH-FR*2) + 2*Math.PI*FR);
@@ -36,63 +38,47 @@ const WIRE = [
 ];
 
 const ICONS = [
-  { id:'cam',    left:6,   top:68,  size:54, layer:'outer' }, // 0
-  { id:'shield', left:6,   top:286, size:54, layer:'outer' }, // 1
-  { id:'ai',     left:500, top:56,  size:54, layer:'outer' }, // 2
+  { id:'cam',    left:6,   top:60,  size:54, layer:'outer'  }, // 0
+  { id:'shield', left:6,   top:266, size:54, layer:'outer'  }, // 1
+  { id:'ai',     left:480, top:50,  size:54, layer:'outer'  }, // 2
+  { id:'play',   left:160, top:120, size:50, layer:'center' }, // 3 — inside frame
+  { id:'alert',  left:340, top:160, size:50, layer:'center' }, // 4 — inside frame
 ];
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
+// Clean L-shaped connectors with 12px rounded corners (same style as Scene1)
 const CONNECTIONS = [
-  'M 60 95 L 72 95',                                        // 0: cam right → frame left (horizontal)
-  'M 33 68 C 33 40 160 18 250 18',                          // 1: cam top → frame top (arc)
-  'M 60 313 C 66 313 72 320 72 345',                        // 2: shield right → frame left lower (L)
-  'M 500 83 C 492 83 488 70 488 50',                        // 3: ai left → frame right (L-curve)
-  'M 33 68 C 33 36 527 36 527 56',                          // 4: cam top → ai top (arc over frame)
+  'M 60 87 H 173 Q 185 87 185 99 V 120',                       // 0: cam → play (right, down)
+  'M 33 60 V 16 Q 33 4 45 4 H 495 Q 507 4 507 16 V 50',        // 1: cam → ai over top (L overarch)
+  'M 60 293 H 173 Q 185 293 185 281 V 170',                    // 2: shield → play (right, up)
+  'M 480 77 H 377 Q 365 77 365 89 V 160',                      // 3: ai → alert (left, down)
+  'M 210 145 H 328 Q 340 145 340 157 V 175',                   // 4: play → alert (right, down)
 ];
 
-const PAIRS = [[0],[0],[1],[2],[0,2]];
-
-const GROUPS = [
-  [4],      // cam→ai arc (both icons activate)
-  [0, 2],   // cam→frame left + shield→frame lower (two lines)
-  [1],      // cam→frame top
-  [3],      // ai→frame right upper
-  [2, 3],   // shield→frame lower + ai→frame right
-];
-
-const CSS = `@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}`;
+const PAIRS = [[0,3],[0,2],[1,3],[2,4],[3,4]];
 
 function GlobalDefs() {
   return (
-    <svg width="0" height="0" style={{ position:'absolute', overflow:'hidden' }}>
+    <svg width="0" height="0" style={{ position:'absolute' }}>
       <defs>
         <linearGradient id="s4ig_cam"    x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#3b82f6"/></linearGradient>
         <linearGradient id="s4ig_shield" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#3b82f6"/><stop offset="100%" stopColor="#06b6d4"/></linearGradient>
         <linearGradient id="s4ig_ai"     x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#06b6d4"/></linearGradient>
         <linearGradient id="s4ig_play"   x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#3b82f6"/></linearGradient>
         <linearGradient id="s4ig_alert"  x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#f59e0b"/><stop offset="100%" stopColor="#ef4444"/></linearGradient>
-        <linearGradient id="s4lg0" x1="60" y1="95" x2="72" y2="95" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s4lg0" x1="60" y1="87" x2="185" y2="120" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#3b82f6"/>
         </linearGradient>
-        <linearGradient id="s4lg1" x1="33" y1="68" x2="250" y2="18" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#8b5cf6"/><stop offset="100%" stopColor="#06b6d4"/>
+        <linearGradient id="s4lg1" x1="33" y1="60" x2="507" y2="50" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#f472b6"/><stop offset="100%" stopColor="#06b6d4"/>
         </linearGradient>
-        <linearGradient id="s4lg2" x1="60" y1="313" x2="72" y2="345" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s4lg2" x1="60" y1="293" x2="185" y2="170" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#3b82f6"/><stop offset="100%" stopColor="#6366f1"/>
         </linearGradient>
-        <linearGradient id="s4lg3" x1="500" y1="83" x2="488" y2="50" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#06b6d4"/>
+        <linearGradient id="s4lg3" x1="480" y1="77" x2="365" y2="160" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#f59e0b"/>
         </linearGradient>
-        <linearGradient id="s4lg4" x1="33" y1="68" x2="527" y2="56" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#f472b6"/><stop offset="100%" stopColor="#06b6d4"/>
+        <linearGradient id="s4lg4" x1="210" y1="145" x2="340" y2="175" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#8b5cf6"/><stop offset="100%" stopColor="#ef4444"/>
         </linearGradient>
         <linearGradient id="s4pg_w" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#06b6d4"/>
@@ -110,8 +96,8 @@ function InactiveCard({ id, size }) {
     cam:    <svg width={s} height={s} viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="15" height="14" rx="2" stroke={c} strokeWidth="1.5"/><path d="M17 9l5-3v12l-5-3V9z" stroke={c} strokeWidth="1.5" strokeLinejoin="round"/></svg>,
     shield: <svg width={s} height={s} viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke={c} strokeWidth="1.5" strokeLinejoin="round"/><path d="M9 12l2 2 4-4" stroke={c} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>,
     ai:     <svg width={s} height={s} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke={c} strokeWidth="1.5"/><path d="M12 1v3M12 20v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M1 12h3M20 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12" stroke={c} strokeWidth="1.3" strokeLinecap="round"/></svg>,
-    play:   <svg width={s} height={s} viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="15" height="14" rx="2" stroke={c} strokeWidth="1.5"/><path d="M17 9l5-3v12l-5-3V9z" stroke={c} strokeWidth="1.5" strokeLinejoin="round"/><circle cx="9.5" cy="12" r="2.5" stroke={c} strokeWidth="1.2"/></svg>,
-    alert:  <svg width={s} height={s} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke={c} strokeWidth="1.5"/><path d="M12 8v4M12 16h.01" stroke={c} strokeWidth="1.5" strokeLinecap="round"/></svg>,
+    play:   <svg width={s} height={s} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke={c} strokeWidth="1.5"/><polygon points="10,8 10,16 18,12" stroke={c} strokeWidth="1.3" fill="none" strokeLinejoin="round"/></svg>,
+    alert:  <svg width={s} height={s} viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke={c} strokeWidth="1.5" strokeLinejoin="round"/><line x1="12" y1="9" x2="12" y2="13" stroke={c} strokeWidth="1.4" strokeLinecap="round"/><circle cx="12" cy="17" r="0.8" fill={c}/></svg>,
   };
   return (
     <div style={{ width:size, height:size, borderRadius:r, background:'#f8fafc', border:'1.5px solid #e2e8f0', display:'flex', alignItems:'center', justifyContent:'center' }}>
@@ -127,8 +113,8 @@ function ActiveCard({ id, size }) {
     cam:    <svg width={s} height={s} viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="15" height="14" rx="2" fill="url(#s4ig_cam)"/><path d="M17 9l5-3v12l-5-3V9z" fill="url(#s4ig_cam)"/></svg>,
     shield: <svg width={s} height={s} viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="url(#s4ig_shield)"/><path d="M9 12l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
     ai:     <svg width={s} height={s} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" fill="url(#s4ig_ai)"/><path d="M12 1v3M12 20v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M1 12h3M20 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12" stroke="url(#s4ig_ai)" strokeWidth="1.5" strokeLinecap="round"/></svg>,
-    play:   <svg width={s} height={s} viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="15" height="14" rx="2" fill="url(#s4ig_play)"/><path d="M17 9l5-3v12l-5-3V9z" fill="url(#s4ig_play)"/><circle cx="9.5" cy="12" r="2.5" fill="white"/></svg>,
-    alert:  <svg width={s} height={s} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="url(#s4ig_alert)"/><path d="M12 8v4M12 16h.01" stroke="white" strokeWidth="1.5" strokeLinecap="round"/></svg>,
+    play:   <svg width={s} height={s} viewBox="0 0 24 24" fill="none"><defs><linearGradient id="s4p_play" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#3b82f6"/></linearGradient></defs><circle cx="12" cy="12" r="10" fill="url(#s4p_play)"/><polygon points="10,7.5 10,16.5 18.5,12" fill="white"/></svg>,
+    alert:  <svg width={s} height={s} viewBox="0 0 24 24" fill="none"><defs><linearGradient id="s4p_alert" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#f59e0b"/><stop offset="100%" stopColor="#ef4444"/></linearGradient></defs><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" fill="url(#s4p_alert)"/><line x1="12" y1="9" x2="12" y2="14" stroke="white" strokeWidth="2" strokeLinecap="round"/><circle cx="12" cy="17.5" r="1.2" fill="white"/></svg>,
   };
   return (
     <div style={{ width:size, height:size, borderRadius:r, background:'#fff', boxShadow:'0 6px 24px rgba(99,102,241,0.18), 0 2px 8px rgba(0,0,0,0.06)', display:'flex', alignItems:'center', justifyContent:'center' }}>
@@ -137,65 +123,15 @@ function ActiveCard({ id, size }) {
   );
 }
 
-function RoadCam({ sky = '#87ceeb', style = {} }) {
-  return (
-    <svg width="100%" height="100%" viewBox="0 0 120 80" style={{ display:'block', ...style }}>
-      <rect width="120" height="80" fill={sky}/>
-      <path d="M0 45 Q30 36 60 42 Q90 48 120 38 L120 80 L0 80 Z" fill="#a3c47a" opacity="0.5"/>
-      <rect x="0" y="52" width="120" height="28" fill="#7b8fa1"/>
-      <path d="M28 80 L50 46 L70 46 L92 80 Z" fill="#64748b"/>
-      <line x1="60" y1="80" x2="57" y2="58" stroke="white" strokeWidth="1.5" strokeDasharray="3 2"/>
-    </svg>
-  );
-}
-
-function CabinCam({ variant = 1, style = {} }) {
-  if (variant === 2) {
-    return (
-      <svg width="100%" height="100%" viewBox="0 0 120 80" style={{ display:'block', ...style }}>
-        <rect width="120" height="80" fill="#1a2535"/>
-        <path d="M10 30 L30 12 L90 12 L110 30 L110 58 L10 58 Z" fill="#243248" opacity="0.7"/>
-        <ellipse cx="60" cy="72" rx="19" ry="10" fill="#0d1520"/>
-        <circle cx="60" cy="61" r="9" fill="#1a2535"/>
-        <rect x="42" y="58" width="36" height="7" rx="3" fill="#2d3f55"/>
-      </svg>
-    );
-  }
-  return (
-    <svg width="100%" height="100%" viewBox="0 0 120 80" style={{ display:'block', ...style }}>
-      <rect width="120" height="80" fill="#1e293b"/>
-      <path d="M0 52 Q60 32 120 52 L120 80 L0 80 Z" fill="#0f172a"/>
-      <ellipse cx="40" cy="73" rx="15" ry="9" fill="#0f172a"/>
-      <circle cx="40" cy="63" r="7" fill="#1e293b"/>
-      <ellipse cx="80" cy="73" rx="15" ry="9" fill="#0f172a"/>
-      <circle cx="80" cy="63" r="7" fill="#1e293b"/>
-    </svg>
-  );
-}
-
-const drivers = [
-  { name:'Driver 1', speed:'Moving - 55.00 KM/Hr', time:'06/01/2026 18:15:48', active:true,  loc:'ENOC Station, Hamdan St 214, Al Quoz' },
-  { name:'Driver 2', speed:'Moving - 55.00 KM/hr', time:'06/06/2026 18:18:48', loc:'Al Madina Supermarket, 22nd St II, Al Kasama' },
-  { name:'Driver 3', speed:'Moving - 55.00 KM/hr', time:'06/06/2026 18:18:48', loc:'RTA Parking Centre, 14th St 221, Deira' },
-  { name:'Driver 4', speed:'Moving - 55.00 KM/hr', time:'06/06/2026 18:15:48', loc:'Carrefour Market, Al Wasl Rd 303, Jumeirah' },
-  { name:'Driver 5', speed:'Moving - 90.00 KM/hr', time:'06/06/2026 15:01:08', loc:'Lulu Hypermarket, 6th St 87, Al Barsha' },
-];
-
 export default forwardRef(function Scene4Pricing(_props, ref) {
   const activeRefs   = useRef([]);
+  const iconRefs     = useRef([]);
   const lineRefs     = useRef([]);
   const framePathRef = useRef(null);
   const wireRefs     = useRef([]);
-  const maskRef      = useRef(null);
-  const shellRef     = useRef(null);
-  const skelRef      = useRef(null);
-  const revealRef    = useRef(null);
-  const rowRefs      = useRef([]);
-  const camRefs      = useRef([]);
+  const wireGrpRef   = useRef(null);
+  const videoImgRef  = useRef(null);
   const allTweens    = useRef([]);
-  const hoverTl      = useRef(null);
-  const isHovered    = useRef(false);
-  const hasRevealed  = useRef(false);
   const linesRef     = useRef(null);
 
   useLayoutEffect(() => () => allTweens.current.forEach(t => t?.kill()), []);
@@ -203,140 +139,85 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
   const stop = () => {
     allTweens.current.forEach(t => t?.kill());
     allTweens.current = [];
-    hoverTl.current?.kill();
-    hoverTl.current = null;
-    hasRevealed.current = false;
-    if (linesRef.current) gsap.set(linesRef.current, { zIndex: 0 });
   };
 
-  const resetIconsAndLines = () => {
+  const LINE_EASE = 'power2.inOut';
+  const ICON_EASE = 'power3.out';
+  const FADE_EASE = 'power2.in';
+
+  const getLen = (p) => { try { return p.getTotalLength(); } catch { return 400; } };
+
+  const resetAll = () => {
+    gsap.set(iconRefs.current.filter(Boolean),   { opacity:1 });
     gsap.set(activeRefs.current.filter(Boolean), { opacity:0 });
-    gsap.set(lineRefs.current.filter(Boolean),   { opacity:0 });
-  };
-
-  const playConnections = () => {
-    allTweens.current.forEach(t => t?.kill());
-    allTweens.current = [];
-    resetIconsAndLines();
-    if (linesRef.current) gsap.set(linesRef.current, { zIndex: 0 });
-    const tl = gsap.timeline();
-    allTweens.current.push(tl);
-    const CYCLE = 1.2;
-    const shuffled = shuffle(GROUPS);
-    let t = 0;
-    shuffled.forEach((group, gi) => {
-      const iconIndices = [...new Set(group.flatMap(ci => PAIRS[ci]))];
-      const nextGroup = shuffled[gi + 1] || [];
-      const nextIconSet = new Set(nextGroup.flatMap(ci => PAIRS[ci]));
-      const offAt = t + CYCLE - 0.22;
-      iconIndices.forEach(idx => {
-        const el = activeRefs.current[idx];
-        if (el) tl.to(el, { opacity:1, duration:0.20, ease:'power2.out' }, t);
-      });
-      group.forEach(ci => {
-        const line = lineRefs.current[ci];
-        if (line) tl.to(line, { opacity:1, duration:0.24, ease:'power2.out' }, t + 0.14);
-      });
-      group.forEach(ci => {
-        const line = lineRefs.current[ci];
-        if (line) tl.to(line, { opacity:0, duration:0.22, ease:'power1.in' }, offAt);
-      });
-      iconIndices.forEach(idx => {
-        if (!nextIconSet.has(idx)) {
-          const el = activeRefs.current[idx];
-          if (el) tl.to(el, { opacity:0, duration:0.20 }, offAt);
-        }
-      });
-      t += CYCLE;
+    gsap.set(wireGrpRef.current,   { opacity: 0 });
+    gsap.set(framePathRef.current, { opacity: 0, strokeDashoffset: FRAME_PERIM });
+    gsap.set(videoImgRef.current,  { opacity: 0 });
+    lineRefs.current.filter(Boolean).forEach(p => {
+      const len = getLen(p);
+      gsap.set(p, { opacity:0, strokeDasharray:`${len} ${len+1}`, strokeDashoffset:len });
     });
-    tl.add(() => { if (!isHovered.current) playConnections(); }, t + 0.5);
+    wireRefs.current.forEach(el => {
+      if (!el) return;
+      const len = getLen(el);
+      gsap.set(el, { strokeDasharray: `${len} ${len+1}`, strokeDashoffset: len, opacity: 0 });
+    });
   };
 
   const play = () => {
     stop();
-    resetIconsAndLines();
-    if (linesRef.current) gsap.set(linesRef.current, { zIndex: 0 });
-    gsap.set(maskRef.current,      { opacity: 0 });
-    gsap.set(framePathRef.current, { opacity: 0, strokeDashoffset: FRAME_PERIM });
-    gsap.set(shellRef.current,     { opacity: 0 });
-    gsap.set(skelRef.current,      { opacity: 0 });
-    gsap.set(revealRef.current,    { opacity: 0 });
-    gsap.set(rowRefs.current.filter(Boolean), { opacity: 0, x: -6 });
-    gsap.set(camRefs.current.filter(Boolean), { opacity: 0, scale: 0.94 });
-    wireRefs.current.forEach(el => {
-      if (!el) return;
-      const len = (() => { try { return el.getTotalLength(); } catch { return 400; } })();
-      gsap.set(el, { strokeDasharray: `${len} ${len+1}`, strokeDashoffset: len, opacity: 0 });
-    });
+    resetAll();
 
-    const tl = gsap.timeline();
+    const tl = gsap.timeline({ onComplete: () => play() });
     allTweens.current.push(tl);
 
-    // Frame path draws in first
-    tl.to(framePathRef.current, { opacity: 1, duration: 0.10 }, 0);
-    tl.to(framePathRef.current, { strokeDashoffset: 0, duration: 0.82, ease: 'power2.inOut' }, 0.08);
+    // ── PHASE 1: ICON LINES ONLY — no wireframe visible (~3.4s)
+    const CONN_START = 0.20;
+    const CONN_DUR   = 1.30;
+    const STAGGER    = 0.75;
+    const SEQ = [{ ci:1 }, { ci:2 }, { ci:3 }]; // overarch → shield-play → ai-alert (touches all 5 icons)
 
-    // Wireframe structure builds progressively
-    const wireAt = 0.26;
+    SEQ.forEach(({ ci }, idx) => {
+      const at = CONN_START + idx * STAGGER;
+      const iconIdx = PAIRS[ci];
+      iconIdx.forEach(ii => {
+        const el = activeRefs.current[ii];
+        if (el) tl.to(el, { opacity:1, duration:0.40, ease:ICON_EASE }, at);
+      });
+      const line = lineRefs.current[ci];
+      if (line) {
+        const len = getLen(line);
+        tl.set(line, { strokeDasharray:`${len} ${len + 1}`, strokeDashoffset:len, opacity:1 }, at + 0.12);
+        tl.to(line, { strokeDashoffset:0, duration:CONN_DUR, ease:LINE_EASE }, at + 0.12);
+      }
+    });
+
+    const phase1End = CONN_START + (SEQ.length - 1) * STAGGER + 0.12 + CONN_DUR;
+
+    // Lines + active icons + icon outlines fade out COMPLETELY before wireframe starts
+    tl.to(lineRefs.current.filter(Boolean),   { opacity:0, duration:0.50, ease:FADE_EASE }, phase1End + 0.15);
+    tl.to(activeRefs.current.filter(Boolean), { opacity:0, duration:0.45, ease:FADE_EASE }, phase1End + 0.20);
+    tl.to(iconRefs.current.filter(Boolean),   { opacity:0, duration:0.55, ease:FADE_EASE }, phase1End + 0.25);
+
+    // ── PHASE 2: WIREFRAME builds (only after lines fully gone) → video PNG
+    const wireAt = phase1End + 0.80; // safe gap after fade-out completes
+    tl.to(wireGrpRef.current, { opacity:1, duration:0.25 }, wireAt);
     wireRefs.current.forEach((p, i) => {
       if (!p) return;
-      tl.to(p, { opacity: 1, strokeDashoffset: 0, duration: 0.16, ease: 'power1.out' }, wireAt + 0.04 + i * 0.040);
+      tl.to(p, { opacity:1, strokeDashoffset:0, duration:0.32, ease:'power2.out' }, wireAt + 0.04 + i * 0.05);
     });
 
-    // Shell + skeleton crossfade
-    const shellAt = 1.22;
-    tl.to(maskRef.current,     { opacity: 1, duration: 0.28, ease: 'power2.out' }, shellAt);
-    tl.to(shellRef.current,    { opacity: 1, duration: 0.36 }, shellAt - 0.05);
-    tl.to(skelRef.current,     { opacity: 1, duration: 0.24 }, shellAt + 0.06);
-    wireRefs.current.forEach(el => el && tl.to(el, { opacity: 0, duration: 0.24 }, shellAt + 0.08));
-    tl.to(framePathRef.current, { opacity: 0, duration: 0.28 }, shellAt + 0.10);
-    tl.to(maskRef.current,      { opacity: 0, duration: 0.26, ease: 'power2.in' }, shellAt + 0.36);
+    const wireFullAt = wireAt + 0.04 + WIRE.length * 0.05 + 0.32;
+    const pngAt = wireFullAt + 0.15;
+    tl.to(videoImgRef.current, { opacity:1, duration:0.85, ease:'power2.out' }, pngAt);
 
-    // Real UI reveal
-    tl.to(skelRef.current,     { opacity: 0, duration: 0.30 }, shellAt + 0.64);
-    tl.to(revealRef.current,   { opacity: 1, duration: 0.34 }, shellAt + 0.66);
-    tl.to(rowRefs.current.filter(Boolean), { opacity: 1, x: 0, duration: 0.22, ease: 'power2.out', stagger: 0.04 }, shellAt + 0.76);
-    tl.to(camRefs.current.filter(Boolean), { opacity: 1, scale: 1, duration: 0.28, ease: 'power2.out', stagger: 0.06 }, shellAt + 0.86);
+    // Wireframe fades out as video PNG takes over
+    tl.to(wireGrpRef.current, { opacity:0, duration:0.65, ease:FADE_EASE }, pngAt + 0.20);
 
-    const loopAt = shellAt + 0.86 + 0.28 + 0.18;
-    tl.add(() => {
-      hasRevealed.current = true;
-      if (!isHovered.current) playConnections();
-    }, loopAt);
+    // Hold ~4.5s, then fade image before loop restart
+    const holdEnd = pngAt + 0.85 + 4.5;
+    tl.to(videoImgRef.current, { opacity:0, duration:0.60, ease:FADE_EASE }, holdEnd);
   };
-
-  const handleHover = (iconIdx) => {
-    if (isHovered.current) return;
-    isHovered.current = true;
-    allTweens.current.forEach(t => t?.pause?.());
-    resetIconsAndLines();
-    const connIndices = PAIRS.reduce((acc, pair, i) => pair.includes(iconIdx) ? [...acc, i] : acc, []);
-    if (connIndices.length === 0) return;
-    const iconIndices = [...new Set(connIndices.flatMap(ci => PAIRS[ci]))];
-    hoverTl.current = gsap.timeline();
-    iconIndices.forEach(idx => {
-      const el = activeRefs.current[idx];
-      if (el) hoverTl.current.to(el, { opacity:1, duration:0.20, ease:'power2.out' }, 0);
-    });
-    connIndices.forEach(ci => {
-      const line = lineRefs.current[ci];
-      if (line) hoverTl.current.to(line, { opacity:1, duration:0.24, ease:'power2.out' }, 0.10);
-    });
-  };
-
-  const handleHoverLeave = () => {
-    if (!isHovered.current) return;
-    isHovered.current = false;
-    hoverTl.current?.kill();
-    hoverTl.current = null;
-    if (hasRevealed.current) {
-      playConnections();
-    } else {
-      play();
-    }
-  };
-
-  let rIdx = 0, cIdx = 0;
 
   return (
     <div
@@ -346,20 +227,26 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
       }}
       style={{ position:'relative', width:W, maxWidth:'100%', height:H }}
     >
-      <style>{CSS}</style>
       <GlobalDefs/>
 
       {/* z=0 — connection lines */}
       <svg ref={linesRef} width={W} height={H} viewBox={`0 0 ${W} ${H}`}
         style={{ position:'absolute', inset:0, zIndex:0, pointerEvents:'none', overflow:'visible' }}>
+        <defs>
+          <filter id="s4line_glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="1.0" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
         {CONNECTIONS.map((d, i) => (
           <path key={i} ref={el=>(lineRefs.current[i]=el)} d={d}
-            stroke={`url(#s4lg${i})`} strokeWidth="1.4" fill="none"
-            strokeLinecap="round" strokeLinejoin="round" opacity="0"/>
+            stroke={`url(#s4lg${i})`} strokeWidth="1.6" fill="none"
+            strokeLinecap="round" strokeLinejoin="round" opacity="0"
+            filter="url(#s4line_glow)"/>
         ))}
       </svg>
 
-      {/* z=2 — frame outline + wireframe */}
+      {/* z=2 — frame outline + wireframe (persistent) */}
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}
         style={{ position:'absolute', inset:0, zIndex:2, pointerEvents:'none', overflow:'visible' }}>
         <defs>
@@ -369,29 +256,63 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
             <feMerge><feMergeNode in="glow"/><feMergeNode in="glow"/><feMergeNode in="sharp"/><feMergeNode in="SourceGraphic"/></feMerge>
           </filter>
           <filter id="s4bgl" x="-12%" y="-12%" width="124%" height="124%">
-            <feGaussianBlur stdDeviation="1.8" result="glow"/>
+            <feGaussianBlur stdDeviation="1.4" result="glow"/>
             <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
           </filter>
         </defs>
         <path ref={framePathRef} d={FRAME_PATH}
-          stroke="url(#s4pg_w)" strokeWidth="0.9" fill="none"
-          strokeLinecap="round" strokeLinejoin="round"
-          strokeDasharray={FRAME_PERIM} strokeDashoffset={FRAME_PERIM}
-          filter="url(#s4pgl)" opacity="0"/>
-        {WIRE.map((d, i) => (
-          <path key={i} ref={r=>(wireRefs.current[i]=r)} d={d}
-            stroke="url(#s4pg_w)" strokeWidth="0.45" fill="rgba(99,102,241,0.03)"
-            strokeLinecap="round" strokeLinejoin="round" opacity="0" filter="url(#s4bgl)"/>
-        ))}
+          stroke="none" fill="none" opacity="0"/>
+        <g ref={wireGrpRef} opacity="0">
+          {WIRE.map((d, i) => (
+            <path key={i} ref={r=>(wireRefs.current[i]=r)} d={d}
+              stroke="url(#s4pg_w)" strokeWidth="0.55" fill="rgba(99,102,241,0.03)"
+              strokeLinecap="round" strokeLinejoin="round" opacity="0" filter="url(#s4bgl)"/>
+          ))}
+        </g>
       </svg>
 
-      {/* Icons */}
+      {/* z=5 — video dashboard browser window (Mac chrome + image) */}
+      <div
+        ref={videoImgRef}
+        style={{
+          position:'absolute',
+          left:FX, top:FY,
+          width:FW, height:FH,
+          borderRadius:FR,
+          overflow:'hidden',
+          opacity:0,
+          zIndex:5,
+          pointerEvents:'none',
+          willChange:'opacity',
+          boxShadow:'0 18px 50px rgba(15,23,42,0.18), 0 4px 14px rgba(15,23,42,0.08)',
+          background:'#fff',
+          display:'flex',
+          flexDirection:'column',
+        }}
+      >
+        <BrowserChrome />
+        <div style={{ position:'relative', flex:1, background:'#fff' }}>
+          <Image
+            src="/block 1/video teleframe.jpeg"
+            alt="Video telematics dashboard"
+            fill
+            sizes={`${FW}px`}
+            style={{ objectFit:'cover', objectPosition:'center center' }}
+          />
+        </div>
+      </div>
+
+      {/* Icons — outline always visible, active overlay GSAP-driven */}
       {ICONS.map((ic, i) => (
         <div key={ic.id}
-          style={{ position:'absolute', left:ic.left, top:ic.top, width:ic.size, height:ic.size,
-            zIndex:ic.layer === 'center' ? 4 : 7, cursor:'pointer' }}
-          onMouseEnter={() => handleHover(i)}
-          onMouseLeave={handleHoverLeave}
+          ref={el => (iconRefs.current[i] = el)}
+          style={{
+            position:'absolute', left:ic.left, top:ic.top,
+            width:ic.size, height:ic.size,
+            zIndex:ic.layer === 'center' ? 4 : 7,
+            pointerEvents:'none',
+            willChange:'opacity',
+          }}
         >
           <InactiveCard id={ic.id} size={ic.size}/>
           <div ref={el=>(activeRefs.current[i]=el)}
@@ -400,93 +321,6 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
           </div>
         </div>
       ))}
-
-      {/* z=5 mask */}
-      <div ref={maskRef} style={{
-        position:'absolute', left:FX, top:FY, width:FW, height:FH, borderRadius:FR,
-        background:'#f5f7fa', zIndex:5, opacity:0, pointerEvents:'none',
-      }}/>
-
-      {/* z=6 shell — light theme */}
-      <div ref={shellRef} style={{
-        position:'absolute', left:FX, top:FY, width:FW, height:FH, borderRadius:FR,
-        background:'#ffffff', boxShadow:'0 6px 28px rgba(0,0,0,0.08)',
-        overflow:'hidden', opacity:0, zIndex:6,
-      }}>
-        <div style={{ height:34, background:'#f9fafb', borderBottom:'1px solid #e5e7eb', display:'flex', alignItems:'center', padding:'0 12px', gap:6 }}>
-          {[0,1,2].map(i=><div key={i} style={{ width:9, height:9, borderRadius:'50%', background:['#f87171','#fbbf24','#4ade80'][i] }}/>)}
-          <div style={{ flex:1, height:19, borderRadius:4, background:'#f3f4f6', margin:'0 10px', display:'flex', alignItems:'center', justifyContent:'center' }}>
-            <span style={{ fontSize:8.5, color:'#9ca3af' }}>https://pro.mylocatorplus.com/</span>
-          </div>
-        </div>
-
-        <div ref={skelRef} style={{ position:'absolute', inset:'34px 0 0 0', display:'flex', background:'#f8fafc', opacity:0 }}>
-          <div style={{ width:SBW, borderRight:'1px solid #e5e7eb', padding:8, display:'flex', flexDirection:'column', gap:7 }}>
-            {[0,1,2,3,4].map(j=>(
-              <div key={j} style={{ display:'flex', flexDirection:'column', gap:4, paddingBottom:7, borderBottom:'1px solid #f3f4f6' }}>
-                <div style={{ height:7, borderRadius:3, backgroundSize:'200%', animation:`shimmer 1.4s ease-in-out ${j*0.09}s infinite`, background:'linear-gradient(90deg,#e5e7eb 25%,#f3f4f6 50%,#e5e7eb 75%)' }}/>
-                <div style={{ height:6, width:'60%', borderRadius:3, backgroundSize:'200%', animation:`shimmer 1.4s ease-in-out ${j*0.09+0.05}s infinite`, background:'linear-gradient(90deg,#e5e7eb 25%,#f3f4f6 50%,#e5e7eb 75%)' }}/>
-              </div>
-            ))}
-          </div>
-          <div style={{ flex:1, padding:5, display:'grid', gridTemplateColumns:'1fr 1fr', gridTemplateRows:'1fr 1fr', gap:5 }}>
-            {[0,1,2,3].map(j=>(
-              <div key={j} style={{ borderRadius:5, background:'#e5e7eb' }}>
-                <div style={{ padding:'5px 7px', fontSize:7, color:'#9ca3af' }}>Camera Channel-{j+1}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div ref={revealRef} style={{ position:'absolute', inset:'34px 0 0 0', display:'flex', opacity:0 }}>
-          <div style={{ width:SBW, borderRight:'1px solid #e5e7eb', display:'flex', flexDirection:'column', background:'#fafafa' }}>
-            <div style={{ display:'flex', borderBottom:'1px solid #e5e7eb', padding:'5px 4px 0', gap:1 }}>
-              {[{l:'13',s:'All',a:true},{l:'2',s:'Moving'},{l:'1',s:'Idle'},{l:'1',s:'Park'},{l:'0',s:'None'}].map(tab=>(
-                <div key={tab.s} style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', padding:'3px 1px 5px', borderBottom:tab.a?'2px solid #3b82f6':'2px solid transparent' }}>
-                  <span style={{ fontSize:8.5, fontWeight:700, color:tab.a?'#3b82f6':'#9ca3af' }}>{tab.l}</span>
-                  <span style={{ fontSize:5.5, color:tab.a?'#60a5fa':'#d1d5db', textAlign:'center' }}>{tab.s}</span>
-                </div>
-              ))}
-            </div>
-            <div style={{ flex:1, overflow:'hidden' }}>
-              {drivers.map(d=>(
-                <div key={d.name} ref={el=>(rowRefs.current[rIdx++]=el)}
-                  style={{ padding:'5px 7px', borderBottom:'1px solid #f3f4f6', background:d.active?'#eff6ff':'transparent', opacity:0, willChange:'opacity,transform' }}>
-                  <div style={{ display:'flex', alignItems:'center', gap:4, marginBottom:1.5 }}>
-                    <div style={{ width:6, height:6, borderRadius:'50%', background:'#22c55e', flexShrink:0 }}/>
-                    <span style={{ fontSize:7.5, fontWeight:700, color:d.active?'#1d4ed8':'#374151' }}>{d.name}</span>
-                  </div>
-                  <span style={{ fontSize:6, color:'#3b82f6', display:'block', paddingLeft:10, marginBottom:1 }}>{d.speed}</span>
-                  <span style={{ fontSize:5.5, color:'#9ca3af', display:'block', paddingLeft:10, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{d.loc}</span>
-                  <span style={{ fontSize:5, color:'#d1d5db', display:'block', paddingLeft:10 }}>{d.time}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div style={{ flex:1, background:'#f8fafc', padding:5, display:'grid', gridTemplateColumns:'1fr 1fr', gridTemplateRows:'1fr 1fr', gap:5 }}>
-            {[
-              { label:'Camera Channel-1', type:'road', sky:'#87b4d8', v:1 },
-              { label:'Camera Channel-2', type:'road', sky:'#a0c8e8', v:1 },
-              { label:'Camera Channel-3', type:'cabin', v:2 },
-              { label:'Camera Channel-4', type:'cabin', v:1 },
-            ].map((cam, i)=>(
-              <div key={i} ref={el=>(camRefs.current[cIdx++]=el)}
-                style={{ borderRadius:5, background:cam.type==='road'?'#e2f0d9':'#1e293b', overflow:'hidden', position:'relative', border:'1px solid #e5e7eb', opacity:0, willChange:'opacity,transform' }}>
-                <div style={{ position:'absolute', top:4, left:6, right:6, display:'flex', justifyContent:'space-between', zIndex:2 }}>
-                  <span style={{ fontSize:6, color:cam.type==='road'?'rgba(0,0,0,0.5)':'rgba(255,255,255,0.6)', fontWeight:500 }}>{cam.label}</span>
-                  <div style={{ display:'flex', gap:3 }}>
-                    <div style={{ width:5, height:5, borderRadius:'50%', background:'#ef4444' }}/>
-                    <div style={{ width:5, height:5, borderRadius:'50%', background:'#d1d5db' }}/>
-                  </div>
-                </div>
-                {cam.type==='road' && <RoadCam sky={cam.sky} style={{ position:'absolute', inset:0 }}/>}
-                {cam.type==='cabin' && <CabinCam variant={cam.v} style={{ position:'absolute', inset:0 }}/>}
-                <div style={{ position:'absolute', bottom:3, left:5, fontSize:5.5, color:cam.type==='road'?'rgba(0,0,0,0.4)':'rgba(255,255,255,0.45)' }}>07/01/2026 18:15:48</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
     </div>
   );
 });

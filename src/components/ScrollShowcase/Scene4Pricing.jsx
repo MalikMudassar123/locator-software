@@ -4,8 +4,8 @@ import Image from 'next/image';
 import gsap from 'gsap';
 import BrowserChrome from './BrowserChrome';
 
-const W = 540, H = 360;
-const FX = 72, FY = 18, FW = 416, FH = 320, FR = 13;
+const W = 580, H = 400;
+const FX = 48, FY = 18, FW = 500, FH = 355, FR = 13;
 const FX2 = FX + FW, FY2 = FY + FH;
 const SBW = 170;
 const FRAME_PERIM = Math.round(2*(FW-FR*2) + 2*(FH-FR*2) + 2*Math.PI*FR);
@@ -293,11 +293,11 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
         <BrowserChrome />
         <div style={{ position:'relative', flex:1, background:'#fff' }}>
           <Image
-            src="/block 1/video teleframe.jpeg"
+            src="/block 1/video teleframe.png"
             alt="Video telematics dashboard"
             fill
             sizes={`${FW}px`}
-            style={{ objectFit:'cover', objectPosition:'center center' }}
+            style={{ objectFit:'cover', objectPosition:'left top' }}
           />
         </div>
       </div>

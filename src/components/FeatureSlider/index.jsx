@@ -31,7 +31,7 @@ const SLIDES = [
 ];
 
 // ─── SVG wireframe helpers ────────────────────────────────────────────────────
-const vb = { w: 570, h: 390 };
+const vb = { w: 620, h: 440 };
 const r  = (x,y,w,h) => `M${x},${y} L${x+w},${y} L${x+w},${y+h} L${x},${y+h} Z`;
 const l  = (x1,y1,x2,y2) => `M${x1},${y1} L${x2},${y2}`;
 const ci = (cx,cy,rad) => {
@@ -244,7 +244,7 @@ function FullImage({ src, alt }) {
     <div style={{ position:'absolute', inset:0, display:'flex', flexDirection:'column', background:'#fff' }}>
       <BrowserBar/>
       <div style={{ position:'relative', flex:1 }}>
-        <Image src={src} alt={alt} fill style={{ objectFit:'cover', objectPosition:'top' }} sizes="600px"/>
+        <Image src={src} alt={alt} fill style={{ objectFit:'cover', objectPosition:'left top' }} sizes="700px"/>
       </div>
     </div>
   );
@@ -252,54 +252,50 @@ function FullImage({ src, alt }) {
 
 // ─── Task Manager icon-network scene ─────────────────────────────────────────
 
-const TM_CW = 570, TM_CH = 390;
+const TM_CW = 560, TM_CH = 420;
 
-// Icon positions — left spine (IC0 / IC3) share x-center = 70 for perfect vertical
+// Layout (centered, well inside 560×420 canvas — no edge clipping):
 //
-//   [0:task]──────────────────────────[1:crm]
-//      │                                 │
-//      │                            [2:mobile]
-//      │                                 │
-//   [3:team]──[4:clock]────────────[5:done]
+//   [0:task]────────────────────────[1:crm]
+//      │                               │
+//      │                          [2:mobile]
+//      │                               │
+//   [3:team]──[4:clock]──────────[5:done]
 //
+// icon center = left + size/2
 const TM_ICONS = [
-  { id:'task',   left: 38,  top: 42,  size: 64 },  // 0  top-left     center=(70,74)
-  { id:'crm',    left: 450, top: 42,  size: 64 },  // 1  top-right    center=(482,74)
-  { id:'mobile', left: 318, top: 172, size: 64 },  // 2  mid-right    center=(350,204)
-  { id:'team',   left: 40,  top: 290, size: 60 },  // 3  bot-left     center=(70,320)
-  { id:'clock',  left: 210, top: 290, size: 60 },  // 4  bot-center   center=(240,320)
-  { id:'done',   left: 380, top: 290, size: 60 },  // 5  bot-right    center=(410,320)
+  { id:'task',   left:  48, top:  38, size: 64 },  // 0  center=(80,  70)
+  { id:'crm',    left: 408, top:  38, size: 64 },  // 1  center=(440, 70)
+  { id:'mobile', left: 272, top: 160, size: 64 },  // 2  center=(304, 192)
+  { id:'team',   left:  50, top: 298, size: 60 },  // 3  center=(80,  328)
+  { id:'clock',  left: 186, top: 298, size: 60 },  // 4  center=(216, 328)
+  { id:'done',   left: 340, top: 298, size: 60 },  // 5  center=(370, 328)
 ];
 
-// Precise hardcoded L-shaped / straight connection paths (edge-to-edge)
-// All coordinates derived exactly from the icon positions above.
+// Smooth Q-curve paths derived exactly from icon edge midpoints above
 const TM_CONNECTIONS = [
-  'M 102 74 L 450 74',                    // 0: task→crm    horizontal top
-  'M 482 106 L 482 204 L 382 204',        // 1: crm→mobile  down-then-left
-  'M 70 106 L 70 290',                    // 2: task→team   vertical left spine
-  'M 100 320 L 210 320',                  // 3: team→clock  horizontal bottom-L
-  'M 270 320 L 380 320',                  // 4: clock→done  horizontal bottom-R
-  'M 382 204 L 410 204 L 410 290',        // 5: mobile→done right-then-down
-];
-
-// Junction dot coordinates at L-shape pivot points
-const TM_JUNCTIONS = [
-  null,                 // 0: straight — no junction
-  { cx:482, cy:204 },  // 1: crm→mobile corner
-  null,                 // 2: straight — no junction
-  null,                 // 3: straight — no junction
-  null,                 // 4: straight — no junction
-  { cx:410, cy:204 },  // 5: mobile→done corner
+  // 0  task(right=112,70) → crm(left=408,70)   straight horizontal
+  'M 112 70 H 408',
+  // 1  crm(bottom=440,102) → mobile(right=336,192)  down then left, rounded corner
+  'M 440 102 V 174 Q 440 192 422 192 H 336',
+  // 2  task(bottom=80,102) → team(top=80,298)   straight vertical
+  'M 80 102 V 298',
+  // 3  team(right=110,328) → clock(left=186,328)  straight horizontal
+  'M 110 328 H 186',
+  // 4  clock(right=246,328) → done(left=340,328)  straight horizontal
+  'M 246 328 H 340',
+  // 5  mobile(bottom=304,224) → done(top=370,298)  down then right, rounded corner
+  'M 304 224 V 310 Q 304 328 322 328 H 340',
 ];
 
 // Gradient colours per connection
 const TM_GRADS = [
-  { id:'tg0', c1:'#f472b6', c2:'#818cf8' },
-  { id:'tg1', c1:'#818cf8', c2:'#06b6d4' },
-  { id:'tg2', c1:'#8b5cf6', c2:'#4c1d95' },
-  { id:'tg3', c1:'#4c1d95', c2:'#6366f1' },
-  { id:'tg4', c1:'#6366f1', c2:'#60a5fa' },
-  { id:'tg5', c1:'#06b6d4', c2:'#10b981' },
+  { id:'tg0', c1:'#f472b6', c2:'#818cf8', x1:'112', y1:'70',  x2:'408', y2:'70'  },
+  { id:'tg1', c1:'#818cf8', c2:'#06b6d4', x1:'440', y1:'102', x2:'336', y2:'192' },
+  { id:'tg2', c1:'#8b5cf6', c2:'#4c1d95', x1:'80',  y1:'102', x2:'80',  y2:'298' },
+  { id:'tg3', c1:'#4c1d95', c2:'#6366f1', x1:'110', y1:'328', x2:'186', y2:'328' },
+  { id:'tg4', c1:'#6366f1', c2:'#60a5fa', x1:'246', y1:'328', x2:'340', y2:'328' },
+  { id:'tg5', c1:'#06b6d4', c2:'#10b981', x1:'304', y1:'224', x2:'340', y2:'328' },
 ];
 
 // Desktop wireframe overlay
@@ -307,7 +303,7 @@ function rp(x, y, w, h, rr = 0) {
   if (!rr) return `M${x} ${y}H${x+w}V${y+h}H${x}Z`;
   return `M${x+rr} ${y}H${x+w-rr}Q${x+w} ${y} ${x+w} ${y+rr}V${y+h-rr}Q${x+w} ${y+h} ${x+w-rr} ${y+h}H${x+rr}Q${x} ${y+h} ${x} ${y+h-rr}V${y+rr}Q${x} ${y} ${x+rr} ${y}Z`;
 }
-const DT_X = 35, DT_Y = 38, DT_W = 500, DT_H = 314, DT_R = 12;
+const DT_X = 14, DT_Y = 28, DT_W = 532, DT_H = 360, DT_R = 12;
 const DT_WIRE = [
   rp(DT_X+6,   DT_Y+6,   DT_W-12, 22, 4),
   rp(DT_X+6,   DT_Y+34,  88, DT_H-42, 6),
@@ -487,7 +483,6 @@ const SceneTaskManager = forwardRef(function SceneTaskManager(_, ref) {
   const iconRefs   = useRef([]);
   const activeRefs = useRef([]);
   const lineRefs   = useRef([]);
-  const juncRefs   = useRef([]);
   const dtWireGrp  = useRef(null);
   const dtWireRefs = useRef([]);
   const dtImgRef   = useRef(null);
@@ -498,8 +493,8 @@ const SceneTaskManager = forwardRef(function SceneTaskManager(_, ref) {
 
   const resetAll = () => {
     gsap.set(iconRefs.current.filter(Boolean),   { opacity: 1 });
-    gsap.set(activeRefs.current.filter(Boolean), { opacity: 0 });
-    gsap.set(juncRefs.current.filter(Boolean),   { opacity: 0, scale: 0, transformOrigin: 'center' });
+    // start active icons at scale 0.75 so the `to` animation pops them in
+    gsap.set(activeRefs.current.filter(Boolean), { opacity: 0, scale: 0.75, transformOrigin: '50% 50%' });
     lineRefs.current.forEach(p => {
       if (!p) return;
       const L = getLen(p);
@@ -520,62 +515,67 @@ const SceneTaskManager = forwardRef(function SceneTaskManager(_, ref) {
 
     const IE = 'power3.out', LE = 'power2.inOut', FE = 'power2.in';
 
-    // Helper: activate an icon (show coloured state)
-    const showIcon = (tl, i, at, dur = 0.35) => {
-      if (activeRefs.current[i]) tl.to(activeRefs.current[i], { opacity: 1, duration: dur, ease: IE }, at);
+    // pop an icon's active layer in — resetAll already set scale:0.75 opacity:0
+    const showIcon = (tl, i, at) => {
+      const el = activeRefs.current[i];
+      if (!el) return;
+      tl.to(el, { opacity: 1, scale: 1, duration: 0.42, ease: 'back.out(1.7)' }, at);
     };
 
-    // Helper: draw a connection line + optional junction dot
     const drawLine = (tl, ci, at, dur) => {
       const p = lineRefs.current[ci];
       if (!p) return;
       const L = getLen(p);
       tl.set(p, { strokeDasharray: `${L} ${L + 2}`, strokeDashoffset: L, opacity: 1 }, at);
       tl.to(p, { strokeDashoffset: 0, duration: dur, ease: LE }, at);
-      // junction dot appears at the L-corner roughly mid-way
-      const jd = juncRefs.current[ci];
-      if (jd) {
-        const jAt = at + dur * 0.5;
-        tl.to(jd, { opacity: 1, scale: 1, duration: 0.25, ease: 'back.out(1.7)' }, jAt);
-      }
     };
 
     const tl = gsap.timeline({ onComplete: () => play() });
     tweens.current.push(tl);
 
-    // ── Phase 1: build icon network over ~3.5 seconds ─────────────────────────
+    // ── Phase 1: all 6 icons + all 6 connections build over ~4.5 s ───────────
     //
-    // Step A  t=0.10  Icons 0+1 light up → CONN_0 draws (horizontal top)
+    //   [0:task]───────────────────────[1:crm]
+    //      │                               │
+    //      │                          [2:mobile]
+    //      │                               │
+    //   [3:team]──[4:clock]──────────[5:done]
+    //
+    // Each beat: source icon pops → target icon pops → line draws
+    // ~0.75 s between beats → full network at ~4.6 s
+
+    // Beat 1 — task & crm light up, horizontal top line draws
     showIcon(tl, 0, 0.10);
-    showIcon(tl, 1, 0.22);
-    drawLine(tl, 0, 0.38, 0.52);   // done ~0.90
+    showIcon(tl, 1, 0.32);
+    drawLine(tl, 0, 0.50, 0.70);   // done ≈ 1.20
 
-    // Step B  t=0.95  Icon 2 lights up → CONN_1 draws (share→mobile, L-shape)
-    showIcon(tl, 2, 0.95);
-    drawLine(tl, 1, 1.10, 0.58);   // done ~1.68
+    // Beat 2 — mobile pops, crm→mobile L-curve draws
+    showIcon(tl, 2, 1.25);
+    drawLine(tl, 1, 1.48, 0.68);   // done ≈ 2.16
 
-    // Step C  t=1.72  Icon 3 lights up → CONN_2 draws (task→team, vertical)
-    showIcon(tl, 3, 1.72);
-    drawLine(tl, 2, 1.88, 0.52);   // done ~2.40
+    // Beat 3 — team pops, vertical left spine draws
+    showIcon(tl, 3, 2.22);
+    drawLine(tl, 2, 2.45, 0.65);   // done ≈ 3.10
 
-    // Step D  t=2.44  Icons 4+5 light up → CONN_3 + CONN_4 draw simultaneously
-    showIcon(tl, 4, 2.44);
-    showIcon(tl, 5, 2.52);
-    drawLine(tl, 3, 2.62, 0.38);   // team→clock  done ~3.00
-    drawLine(tl, 4, 2.62, 0.38);   // clock→done  done ~3.00 (simultaneous)
+    // Beat 4 — clock pops, team→clock short horizontal draws
+    showIcon(tl, 4, 3.15);
+    drawLine(tl, 3, 3.38, 0.42);   // done ≈ 3.80
 
-    // Step E  t=3.05  CONN_5 draws (mobile→done, L-shape)
-    drawLine(tl, 5, 3.05, 0.48);   // done ~3.53
+    // Beat 5 — done pops, clock→done short horizontal draws
+    showIcon(tl, 5, 3.85);
+    drawLine(tl, 4, 4.08, 0.42);   // done ≈ 4.50
 
-    // ── Brief hold with all connections visible ────────────────────────────────
-    // Phase 1 fully complete at ~3.55s
+    // Beat 6 — mobile→done L-curve closes the network loop
+    drawLine(tl, 5, 4.55, 0.60);   // done ≈ 5.15
 
-    // ── Fade everything out ────────────────────────────────────────────────────
-    const FADE_START = 3.70;
-    tl.to(lineRefs.current.filter(Boolean),   { opacity: 0, duration: 0.50, ease: FE }, FADE_START);
-    tl.to(juncRefs.current.filter(Boolean),   { opacity: 0, duration: 0.40, ease: FE }, FADE_START + 0.05);
-    tl.to(activeRefs.current.filter(Boolean), { opacity: 0, duration: 0.44, ease: FE }, FADE_START + 0.08);
-    tl.to(iconRefs.current.filter(Boolean),   { opacity: 0, duration: 0.55, ease: FE }, FADE_START + 0.14);
+    // ── Hold: all 6 icons + 6 lines fully visible (~1 s) ─────────────────────
+    const PHASE1_END = 5.15;
+
+    // ── Fade everything out ───────────────────────────────────────────────────
+    const FADE_START = PHASE1_END + 0.95;
+    tl.to(lineRefs.current.filter(Boolean),   { opacity: 0, duration: 0.52, ease: FE }, FADE_START);
+    tl.to(activeRefs.current.filter(Boolean), { opacity: 0, scale: 0.75, duration: 0.46, ease: FE }, FADE_START + 0.08);
+    tl.to(iconRefs.current.filter(Boolean),   { opacity: 0, duration: 0.55, ease: FE }, FADE_START + 0.16);
 
     // ── Phase 2: desktop wireframe draws in ───────────────────────────────────
     const WIRE_AT = FADE_START + 1.00;
@@ -602,13 +602,15 @@ const SceneTaskManager = forwardRef(function SceneTaskManager(_, ref) {
 
   return (
     <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center', background:'#fafbff' }}>
-      <div style={{ position:'relative', width:TM_CW, height:TM_CH, maxWidth:'100%' }}>
+      <div style={{ position:'relative', width:TM_CW, height:TM_CH }}>
 
         {/* SVG gradient + filter definitions */}
         <svg width="0" height="0" style={{ position:'absolute', overflow:'hidden' }}>
           <defs>
             {TM_GRADS.map(g => (
-              <linearGradient key={g.id} id={g.id} x1="0%" y1="0%" x2="100%" y2="100%">
+              <linearGradient key={g.id} id={g.id}
+                x1={g.x1} y1={g.y1} x2={g.x2} y2={g.y2}
+                gradientUnits="userSpaceOnUse">
                 <stop offset="0%"   stopColor={g.c1}/>
                 <stop offset="100%" stopColor={g.c2}/>
               </linearGradient>
@@ -617,39 +619,26 @@ const SceneTaskManager = forwardRef(function SceneTaskManager(_, ref) {
               <stop offset="0%"   stopColor="#6366f1"/>
               <stop offset="100%" stopColor="#06b6d4"/>
             </linearGradient>
-            <filter id="tmglow" x="-40%" y="-40%" width="180%" height="180%">
-              <feGaussianBlur stdDeviation="1.2" result="blur"/>
-              <feMerge>
-                <feMergeNode in="blur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
+            <filter id="tmglow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="1.2" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
           </defs>
         </svg>
 
         {/* z=0 — connection lines */}
-        <svg width="100%" height="100%" viewBox={`0 0 ${TM_CW} ${TM_CH}`}
+        <svg width={TM_CW} height={TM_CH} viewBox={`0 0 ${TM_CW} ${TM_CH}`}
           style={{ position:'absolute', inset:0, zIndex:0, pointerEvents:'none', overflow:'visible' }}>
           {TM_CONNECTIONS.map((d, i) => (
             <path key={i} ref={el => (lineRefs.current[i] = el)} d={d}
-              stroke={`url(#${TM_GRADS[i].id})`} strokeWidth="2" fill="none"
+              stroke={`url(#${TM_GRADS[i].id})`} strokeWidth="1.8" fill="none"
               strokeLinecap="round" strokeLinejoin="round"
               opacity="0" filter="url(#tmglow)"/>
           ))}
-          {/* Junction dots at L-shape corners */}
-          {TM_JUNCTIONS.map((jd, i) =>
-            jd ? (
-              <circle key={i} ref={el => (juncRefs.current[i] = el)}
-                cx={jd.cx} cy={jd.cy} r="3.5"
-                fill={`url(#${TM_GRADS[i].id})`} opacity="0" filter="url(#tmglow)"/>
-            ) : (
-              <g key={i} ref={el => (juncRefs.current[i] = el)}/>
-            )
-          )}
         </svg>
 
         {/* z=3 — desktop wireframe SVG */}
-        <svg width="100%" height="100%" viewBox={`0 0 ${TM_CW} ${TM_CH}`}
+        <svg width={TM_CW} height={TM_CH} viewBox={`0 0 ${TM_CW} ${TM_CH}`}
           style={{ position:'absolute', inset:0, zIndex:3, pointerEvents:'none' }}>
           <g ref={dtWireGrp} opacity="0">
             {DT_WIRE.map((d, i) => (
@@ -665,6 +654,7 @@ const SceneTaskManager = forwardRef(function SceneTaskManager(_, ref) {
           position:'absolute', left:DT_X, top:DT_Y,
           width:DT_W, height:DT_H, borderRadius:DT_R,
           overflow:'hidden', opacity:0, zIndex:6, pointerEvents:'none',
+          willChange:'opacity',
           boxShadow:'0 20px 52px rgba(15,23,42,0.18), 0 4px 14px rgba(15,23,42,0.08)',
           background:'#fff', display:'flex', flexDirection:'column',
         }}>
@@ -672,16 +662,17 @@ const SceneTaskManager = forwardRef(function SceneTaskManager(_, ref) {
           <div style={{ position:'relative', flex:1 }}>
             <Image src="/software images/software images/Task Manager/jkliului.png"
               alt="Task Manager" fill sizes={`${DT_W}px`}
-              style={{ objectFit:'cover', objectPosition:'top' }}/>
+              style={{ objectFit:'cover', objectPosition:'left top' }}/>
           </div>
         </div>
 
         {/* z=7 — icon cards */}
         {TM_ICONS.map((ic, i) => (
           <div key={ic.id} ref={el => (iconRefs.current[i] = el)}
-            style={{ position:'absolute', left:ic.left, top:ic.top, width:ic.size, height:ic.size, zIndex:7, pointerEvents:'none' }}>
+            style={{ position:'absolute', left:ic.left, top:ic.top, width:ic.size, height:ic.size, zIndex:7, pointerEvents:'none', willChange:'opacity' }}>
             <TmInactive id={ic.id} size={ic.size}/>
-            <div ref={el => (activeRefs.current[i] = el)} style={{ position:'absolute', inset:0, opacity:0 }}>
+            <div ref={el => (activeRefs.current[i] = el)}
+              style={{ position:'absolute', inset:0, opacity:0, willChange:'opacity,transform' }}>
               <TmActive id={ic.id} size={ic.size}/>
             </div>
           </div>
@@ -867,7 +858,7 @@ export default function FeatureSlider() {
           <div style={{
             borderRadius:16,
             overflow:'hidden',
-            height:440,
+            height:500,
             position:'relative',
             background:'#fafbff',
             boxShadow:'0 2px 24px rgba(0,0,0,0.05)',

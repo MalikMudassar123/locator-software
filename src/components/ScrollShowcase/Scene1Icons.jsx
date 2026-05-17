@@ -4,19 +4,19 @@ import Image from 'next/image';
 import gsap from 'gsap';
 import BrowserChrome from './BrowserChrome';
 
-const W = 540, H = 580;
+const W = 580, H = 580;
 
 // Phone (mobile phase)
-const PHONE_X = 140, PHONE_Y = 38, PHONE_W = 260, PHONE_H = 500, PHONE_R = 32;
+const PHONE_X = 160, PHONE_Y = 38, PHONE_W = 260, PHONE_H = 500, PHONE_R = 32;
 const PX2 = PHONE_X + PHONE_W, PY2 = PHONE_Y + PHONE_H;
 const PHONE_PERIM = 1465;
 
 // Desktop (browser-style frame)
-const DT_W = 500, DT_H = 340, DT_R = 14;
-const DT_X = (W - DT_W) / 2;             // 20
-const DT_Y = (H - DT_H) / 2;             // 120
+const DT_W = 550, DT_H = 380, DT_R = 14;
+const DT_X = (W - DT_W) / 2;             // 15
+const DT_Y = (H - DT_H) / 2;             // 100
 const DTX2 = DT_X + DT_W, DTY2 = DT_Y + DT_H;
-const DT_PERIM = 2 * (DT_W + DT_H);      // ~1680
+const DT_PERIM = 2 * (DT_W + DT_H);      // ~1860
 
 const PHONE_PATH =
   `M${PHONE_X+PHONE_R} ${PHONE_Y} H${PX2-PHONE_R}` +
@@ -407,7 +407,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
             alt="Desktop dashboard interface"
             fill
             sizes={`${DT_W}px`}
-            style={{ objectFit:'cover', objectPosition:'center top' }}
+            style={{ objectFit:'cover', objectPosition:'left top' }}
           />
         </div>
       </div>

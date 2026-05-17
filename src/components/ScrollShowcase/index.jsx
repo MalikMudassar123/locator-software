@@ -156,42 +156,25 @@ function FeatureCard({ icon, title, desc }) {
 }
 
 export default function ScrollShowcase() {
-  const textRefs    = useRef([]);
-  const wrapperRefs = useRef([]);
-  const innerRefs   = useRef([]);
+  const textRefs  = useRef([]);
+  const innerRefs = useRef([]);
 
   useLayoutEffect(() => {
     if (typeof window === 'undefined') return;
 
-    wrapperRefs.current.forEach((el) => {
-      if (!el) return;
-      gsap.set(el, { opacity: 0, y: 24 });
-    });
-
-    let activeIdx = -1;
-
-    const activate = (idx) => {
-      if (idx === activeIdx) return;
-      activeIdx = idx;
-
-      wrapperRefs.current.forEach((el, j) => {
-        if (!el) return;
-        const inner = innerRefs.current[j];
-        if (j === idx) {
-          gsap.to(el, { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out', overwrite: true });
-          if (inner?.__play) inner.__play();
-        } else {
-          gsap.to(el, { opacity: 0, y: j < idx ? -24 : 24, duration: 0.3, ease: 'power2.in', overwrite: true });
-          if (inner?.__stop) inner.__stop();
-        }
-      });
-    };
-
     const observers = textRefs.current.map((el, i) => {
       if (!el) return null;
       const obs = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) activate(i); },
-        { rootMargin: '-30% 0px -30% 0px', threshold: 0 }
+        ([entry]) => {
+          const scene = innerRefs.current[i];
+          if (!scene) return;
+          if (entry.isIntersecting) {
+            if (scene.__play) scene.__play();
+          } else {
+            if (scene.__stop) scene.__stop();
+          }
+        },
+        { rootMargin: '-20% 0px -20% 0px', threshold: 0 }
       );
       obs.observe(el);
       return obs;
@@ -204,117 +187,116 @@ export default function ScrollShowcase() {
 
   return (
     <section style={{ background: '#f5f7fa', width: '100%', position: 'relative' }}>
-      <div style={{
-        maxWidth: 1400,
-        margin: '0 auto',
-        padding: '0 48px',
-        display: 'flex',
-        alignItems: 'flex-start',
-      }}>
-        {/* LEFT: scrolling text */}
-        <div style={{ flex: '0 0 50%', paddingRight: 56 }}>
-          {textSections.map((s, i) => (
-            <div
-              key={i}
-              ref={(el) => (textRefs.current[i] = el)}
-              style={{
-                minHeight: '100vh',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                paddingTop: 80,
-                paddingBottom: 80,
-              }}
-            >
-              <span style={{
-                fontSize: 13,
-                fontWeight: 700,
-                color: '#2563eb',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-                marginBottom: 18,
-                display: 'block',
-              }}>
-                {s.eyebrow}
-              </span>
-              <h2 style={{
-                fontSize: 36,
-                fontWeight: 800,
-                lineHeight: 1.15,
-                color: '#0f172a',
-                margin: '0 0 16px',
+      {textSections.map((s, i) => {
+        const SceneComponent = SceneComponents[i];
+        // Zigzag: even index (0) → text left, animation right
+        //         odd index  (1) → animation left, text right
+        const animLeft = i % 2 === 1;
+
+        const animPanel = (
+          <div style={{
+            flex: '0 0 50%',
+            height: '100vh',
+            position: 'sticky',
+            top: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'visible',
+          }}>
+            {SceneComponent && (
+              <SceneComponent ref={(el) => { if (el) innerRefs.current[i] = el; }} />
+            )}
+          </div>
+        );
+
+        const textPanel = (
+          <div
+            ref={(el) => (textRefs.current[i] = el)}
+            style={{
+              flex: '0 0 50%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              paddingTop: 80,
+              paddingBottom: 80,
+              minHeight: '100vh',
+              ...(animLeft ? { paddingLeft: 56 } : { paddingRight: 56 }),
+            }}
+          >
+            <span style={{
+              fontSize: 13,
+              fontWeight: 700,
+              color: '#2563eb',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              marginBottom: 18,
+              display: 'block',
+            }}>
+              {s.eyebrow}
+            </span>
+            <h2 style={{
+              fontSize: 36,
+              fontWeight: 800,
+              lineHeight: 1.15,
+              color: '#0f172a',
+              margin: '0 0 16px',
+              maxWidth: 480,
+            }}>
+              {s.headline}
+            </h2>
+            <p style={{
+              fontSize: 15,
+              lineHeight: 1.65,
+              color: '#64748b',
+              margin: '0 0 28px',
+              maxWidth: 440,
+            }}>
+              {s.body}
+            </p>
+
+            {s.subHeadline && (
+              <>
+                <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', margin: '0 0 10px', maxWidth: 480 }}>
+                  {s.subHeadline}
+                </h3>
+                <p style={{ fontSize: 14, lineHeight: 1.6, color: '#64748b', margin: '0 0 24px', maxWidth: 440 }}>
+                  {s.subBody}
+                </p>
+              </>
+            )}
+
+            {s.features && (
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: 12,
                 maxWidth: 480,
               }}>
-                {s.headline}
-              </h2>
-              <p style={{
-                fontSize: 15,
-                lineHeight: 1.65,
-                color: '#64748b',
-                margin: '0 0 28px',
-                maxWidth: 440,
-              }}>
-                {s.body}
-              </p>
-
-              {s.subHeadline && (
-                <>
-                  <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', margin: '0 0 10px', maxWidth: 480 }}>
-                    {s.subHeadline}
-                  </h3>
-                  <p style={{ fontSize: 14, lineHeight: 1.6, color: '#64748b', margin: '0 0 24px', maxWidth: 440 }}>
-                    {s.subBody}
-                  </p>
-                </>
-              )}
-
-              {s.features && (
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 1fr',
-                  gap: 12,
-                  maxWidth: 480,
-                }}>
-                  {s.features.map((f) => (
-                    <FeatureCard key={f.title} icon={f.icon} title={f.title} desc={f.desc} />
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* RIGHT: CSS sticky */}
-        <div style={{
-          flex: '0 0 50%',
-          height: '100vh',
-          position: 'sticky',
-          top: 0,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'visible',
-        }}>
-          <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'visible' }}>
-            {SceneComponents.map((SceneComponent, i) => (
-              <div
-                key={i}
-                ref={(el) => (wrapperRefs.current[i] = el)}
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  overflow: 'visible',
-                }}
-              >
-                <SceneComponent ref={(el) => { if (el) innerRefs.current[i] = el; }} />
+                {s.features.map((f) => (
+                  <FeatureCard key={f.title} icon={f.icon} title={f.title} desc={f.desc} />
+                ))}
               </div>
-            ))}
+            )}
           </div>
-        </div>
-      </div>
+        );
+
+        return (
+          <div
+            key={i}
+            style={{
+              maxWidth: 1400,
+              margin: '0 auto',
+              padding: '0 48px',
+              display: 'flex',
+              alignItems: 'flex-start',
+            }}
+          >
+            {animLeft ? animPanel : textPanel}
+            {animLeft ? textPanel : animPanel}
+          </div>
+        );
+      })}
     </section>
   );
 }

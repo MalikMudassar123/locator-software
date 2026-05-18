@@ -78,9 +78,11 @@
   margin: 0;
 }
 
-html,
+html {
+  overflow-x: clip;
+}
+
 body {
-  height: 100%;
   overflow-x: hidden;
   max-width: 100vw;
 }
@@ -550,11 +552,165 @@ h6 {
 /* ══════════════════════════════════════════════════════
    ROAD SECTION — responsive vehicle scaling
    ══════════════════════════════════════════════════════ */
-@media (max-width: 640px) {
+@media (max-width: 480px) {
+  .road-vehicles-layer { transform: scale(0.45); transform-origin: bottom center; }
+}
+@media (min-width: 481px) and (max-width: 640px) {
   .road-vehicles-layer { transform: scale(0.58); transform-origin: bottom center; }
 }
 @media (min-width: 641px) and (max-width: 900px) {
   .road-vehicles-layer { transform: scale(0.76); transform-origin: bottom center; }
+}
+
+/* ══════════════════════════════════════════════════════
+   SCROLL SHOWCASE — responsive sticky/stacked layout
+   ══════════════════════════════════════════════════════ */
+.ss-row {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.ss-anim-panel {
+  width: 100%;
+  height: 300px;
+  position: relative;
+  flex-shrink: 0;
+  margin-bottom: 24px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fafbff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ss-text-panel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 12px;
+  padding-bottom: 48px;
+}
+@media (min-width: 640px) {
+  .ss-anim-panel { height: 380px; }
+}
+@media (min-width: 1024px) {
+  .ss-row {
+    flex-direction: row;
+    padding: 0 48px;
+    align-items: flex-start;
+  }
+  .ss-anim-panel {
+    flex: 0 0 42%;
+    width: auto;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    border-radius: 0;
+    overflow: visible;
+    background: transparent;
+    margin-bottom: 0;
+  }
+  .ss-text-panel {
+    flex: 0 0 58%;
+    width: auto;
+    min-height: 100vh;
+    padding-top: 80px;
+    padding-bottom: 80px;
+    padding-left: 56px;
+    padding-right: 0;
+  }
+  /* Zigzag: when animation is on right, text gets left side padding */
+  .ss-row--anim-right .ss-anim-panel { order: 1; padding-left: 0; }
+  .ss-row--anim-right .ss-text-panel { order: 0; padding-left: 0; padding-right: 56px; }
+}
+
+/* ══════════════════════════════════════════════════════
+   FEATURE SLIDER — responsive layout
+   ══════════════════════════════════════════════════════ */
+.fs-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 36px;
+  position: relative;
+}
+.fs-left {
+  width: 100%;
+  flex-shrink: 0;
+}
+.fs-right {
+  width: 100%;
+  flex-shrink: 0;
+}
+.fs-scene-wrap {
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  background: #fafbff;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.05);
+  height: 280px;
+}
+@media (min-width: 640px) {
+  .fs-scene-wrap { height: 360px; }
+}
+@media (min-width: 1024px) {
+  .fs-container {
+    flex-direction: row;
+    align-items: center;
+    gap: 48px;
+    padding: 0 60px;
+  }
+  .fs-left { flex: 0 0 540px; min-width: 0; width: auto; }
+  .fs-right { flex: 0 0 480px; min-width: 0; width: auto; }
+  .fs-scene-wrap { height: 400px; }
+}
+
+/* ══════════════════════════════════════════════════════
+   ROAD SECTION — CTA button responsive positioning
+   ══════════════════════════════════════════════════════ */
+.road-cta-wrap {
+  position: absolute;
+  left: clamp(12px, 4vw, 50px);
+  bottom: clamp(90px, 28%, 35%);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+@media (max-width: 640px) {
+  .road-cta-wrap {
+    bottom: 28%;
+    gap: 6px;
+  }
+  .road-cta-btn {
+    padding: 8px 14px !important;
+    font-size: 11px !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   HERO CLOUD — hide on small screens
+   ══════════════════════════════════════════════════════ */
+.hero-cloud-wrap {
+  position: absolute;
+  bottom: 40%;
+  left: 5%;
+  z-index: 7;
+  pointer-events: none;
+}
+@media (max-width: 640px) {
+  .hero-cloud-wrap { display: none; }
+}
+@media (min-width: 641px) and (max-width: 1024px) {
+  .hero-cloud-wrap { transform: scale(0.6); transform-origin: left center; }
 }
 
 /* ══════════════════════════════════════════════════════
@@ -1186,31 +1342,12 @@ h6 {
    ─ overflow:hidden on the wrapper clips at hero bounds
    ══════════════════════════════════════════════════════ */
 
-/* Dark ribbon body */
+/* Dark ribbon body — hidden to avoid dark diagonal band over hero */
 .hero-ribbon-sweep::before {
   content: '';
   position: absolute;
-  top: -80%;
-  left: -100%;
-  width: 300%;
-  height: 260%;
+  opacity: 0;
   pointer-events: none;
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  background: linear-gradient(
-    to bottom,
-    transparent               0%,
-    rgba(1,  8, 28, 0.00)     8%,
-    rgba(2, 12, 42, 0.38)    24%,
-    rgba(3, 16, 54, 0.64)    40%,
-    rgba(3, 19, 60, 0.74)    50%,
-    rgba(3, 16, 54, 0.64)    60%,
-    rgba(2, 12, 42, 0.38)    76%,
-    rgba(1,  8, 28, 0.00)    92%,
-    transparent              100%
-  );
-  animation: heroRibbonSweep 13s cubic-bezier(0.15, 0, 0.85, 1) infinite;
-  animation-delay: -2s;
 }
 
 /* Luminous glow core — bright blue light inside the dark band */
@@ -1280,4 +1417,46 @@ h6 {
   .hero-ribbon-sweep::after {
     animation: none !important;
   }
+}
+
+/* Navbar CTA heartbeat pulse + inner shine */
+@keyframes navCtaPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255,255,255,0.7), 0 2px 12px rgba(255,255,255,0.35); }
+  60%  { box-shadow: 0 0 0 10px rgba(255,255,255,0),  0 2px 12px rgba(255,255,255,0.35); }
+  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0),     0 2px 12px rgba(255,255,255,0.35); }
+}
+@keyframes navCtaShine {
+  0%   { transform: translateX(-160%) skewX(-20deg); }
+  40%  { transform: translateX(260%)  skewX(-20deg); }
+  100% { transform: translateX(260%)  skewX(-20deg); }
+}
+.nav-cta-pulse {
+  position: relative;
+  overflow: hidden;
+  animation: navCtaPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.nav-cta-pulse::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255,255,255,0) 15%,
+    rgba(255,255,255,0.65) 50%,
+    rgba(255,255,255,0) 85%,
+    transparent 100%
+  );
+  animation: navCtaShine 2.8s ease-in-out infinite;
+  pointer-events: none;
+}
+.nav-cta-pulse:hover {
+  animation: none;
+  box-shadow: 0 8px 24px rgba(255,255,255,0.55), 0 2px 8px rgba(26,110,154,0.18) !important;
+}
+.nav-cta-pulse:hover::before {
+  animation: none;
 }

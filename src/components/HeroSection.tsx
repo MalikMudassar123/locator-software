@@ -10,6 +10,7 @@ export default function HeroSection() {
         position: 'relative',
         width: '100%',
         height: '67.5vh',
+        minHeight: 'clamp(380px, 67.5vh, 800px)',
         overflow: 'hidden',
         isolation: 'isolate',
         background: '#0174cb',
@@ -266,11 +267,11 @@ export default function HeroSection() {
       <div
         style={{
           position: 'absolute',
-          bottom: '-45px',
+          bottom: 'clamp(-20px, -3vw, -45px)',
           left: '50%',
           transform: 'translateX(-50%)',
           width: '98%',
-          maxWidth: '590px',
+          maxWidth: 'clamp(300px, 60vw, 590px)',
           zIndex: 8,
           pointerEvents: 'none',
         }}
@@ -293,22 +294,14 @@ export default function HeroSection() {
         />
       </div>
 
-      {/* Cloud */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '40%',
-          left: '5%',
-          zIndex: 7,
-          pointerEvents: 'none',
-        }}
-      >
+      {/* Cloud — hidden on mobile via .hero-cloud-wrap CSS class */}
+      <div className="hero-cloud-wrap">
         <Image
           src="/cloud.svg"
           alt="Cloud"
           width={400}
           height={267}
-          style={{ opacity: 0.7 }}
+          style={{ opacity: 0.7, width: 'clamp(180px, 30vw, 400px)', height: 'auto' }}
         />
       </div>
 
@@ -331,7 +324,7 @@ export default function HeroSection() {
       >
         <h1
           style={{
-            fontSize: 'clamp(20px, 2.2vw, 30px)',
+            fontSize: 'clamp(16px, 3.5vw, 30px)',
             fontWeight: 300,
             color: 'rgba(255,255,255,0.58)',
             lineHeight: 1.45,

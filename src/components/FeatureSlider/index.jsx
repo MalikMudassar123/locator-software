@@ -3,6 +3,27 @@ import { useState, useRef, useEffect, useCallback, forwardRef, useImperativeHand
 import Image from 'next/image';
 import gsap from 'gsap';
 
+// Hook: returns a CSS scale factor so the scene canvas fits its container
+function useCanvasScale(canvasW, canvasH) {
+  const containerRef = useRef(null);
+  const [scale, setScale] = useState(1);
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const update = () => {
+      const w = el.offsetWidth;
+      const h = el.offsetHeight;
+      if (!w || !h) return;
+      setScale(Math.min(1, w / canvasW, h / canvasH));
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [canvasW, canvasH]);
+  return [containerRef, scale];
+}
+
 const SLIDES = [
   {
     id: 'task',
@@ -233,7 +254,7 @@ function BrowserBar() {
         {['#ff5f57','#febc2e','#28c840'].map(c=><div key={c} style={{ width:11,height:11,borderRadius:'50%',background:c }}/>)}
       </div>
       <div style={{ flex:1, height:18, background:'#fff', borderRadius:9, display:'flex', alignItems:'center', justifyContent:'center', maxWidth:'62%', margin:'0 auto' }}>
-        <span style={{ fontSize:9, color:'#f59e0b', fontWeight:600 }}>https://pro.mylocatorplus.com/</span>
+        <span style={{ fontSize:9, color:'rgb(100, 116, 141)', fontWeight:600 }}>https://pro.mylocatorplus.com/</span>
       </div>
     </div>
   );
@@ -487,6 +508,7 @@ const SceneTaskManager = forwardRef(function SceneTaskManager(_, ref) {
   const dtWireRefs = useRef([]);
   const dtImgRef   = useRef(null);
   const tweens     = useRef([]);
+  const [outerRef, canvasScale] = useCanvasScale(TM_CW, TM_CH);
 
   const stop = () => { tweens.current.forEach(t => t?.kill()); tweens.current = []; };
   const getLen = p => { try { return p.getTotalLength(); } catch { return 300; } };
@@ -601,8 +623,8 @@ const SceneTaskManager = forwardRef(function SceneTaskManager(_, ref) {
   }));
 
   return (
-    <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center', background:'#fafbff' }}>
-      <div style={{ position:'relative', width:TM_CW, height:TM_CH }}>
+    <div ref={outerRef} style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center', background:'#fafbff', overflow:'hidden' }}>
+      <div style={{ position:'relative', width:TM_CW, height:TM_CH, transform:`scale(${canvasScale})`, transformOrigin:'center center', flexShrink:0 }}>
 
         {/* SVG gradient + filter definitions */}
         <svg width="0" height="0" style={{ position:'absolute', overflow:'hidden' }}>
@@ -793,55 +815,55 @@ export default function FeatureSlider() {
   const slide = SLIDES[activeIdx];
 
   return (
-    <section style={{ background:'#fff', width:'100%', padding:'88px 0', position:'relative', overflow:'hidden' }}>
+    <section style={{ background:'#fff', width:'100%', padding:'clamp(48px,6vw,88px) 0', position:'relative', overflow:'hidden' }}>
       <div style={{
         position:'absolute', top:0, left:0, width:'55%', height:'100%', pointerEvents:'none',
         background:'radial-gradient(ellipse at 20% 60%, rgba(199,210,254,0.38) 0%, rgba(224,231,255,0.18) 40%, transparent 70%)',
       }}/>
 
-      <div style={{ maxWidth:1240, margin:'0 auto', padding:'0 60px', display:'flex', alignItems:'center', gap:72, position:'relative' }}>
+      <div className="fs-container" style={{ position:'relative' }}>
 
         {/* ── LEFT panel ── */}
-        <div style={{ flex:'0 0 420px', minWidth:0 }}>
-          <div style={{ fontSize:13, fontWeight:700, color:'#2563eb', letterSpacing:'0.01em', marginBottom:18 }}>
+        <div className="fs-left" style={{ paddingRight:'clamp(0px, 2vw, 32px)' }}>
+          <div style={{ fontSize:13, fontWeight:700, color:'#2563eb', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:24 }}>
             {slide.eyebrow}
           </div>
-          <h2 style={{ fontSize:38, fontWeight:800, lineHeight:1.18, color:'#111827', margin:'0 0 14px' }}>
+          <h2 style={{ fontSize:'clamp(28px, 3.8vw, 44px)', fontWeight:800, lineHeight:1.22, color:'rgb(100, 116, 141)', margin:'0 0 20px', maxWidth:'100%', width:'100%' }}>
             Run Your Road Team Smarter<br/>
             <span style={{ fontWeight:700 }}>Empowering field teams,</span>
           </h2>
-          <p style={{ fontSize:15.5, color:'#6b7280', lineHeight:1.68, margin:'0 0 40px' }}>
-            Manage, track, and optimize your field workforce in real time<span style={{ color:'#9ca3af' }}>fleets</span>
+          <p style={{ fontSize:'clamp(14px, 1.3vw, 16px)', color:'#6b7280', lineHeight:1.75, margin:'0 0 48px', maxWidth:'100%' }}>
+            Manage, track, and optimize your field workforce in real time<span style={{ color:'#9ca3af' }}> fleets</span>
           </p>
 
           {/* Carousel card */}
           <div style={{
             borderRadius:20,
             background:'linear-gradient(145deg, rgba(219,227,255,0.55) 0%, rgba(237,242,255,0.42) 50%, rgba(229,236,255,0.38) 100%)',
-            padding:'36px 0 28px',
+            padding:'32px 28px 28px',
           }}>
-            <div style={{ display:'flex', alignItems:'center' }}>
+            <div style={{ display:'flex', alignItems:'flex-start', gap:8 }}>
               <button onClick={prev}
-                style={{ background:'none', border:'none', cursor:'pointer', padding:'0 20px', fontSize:26, color:'#9ca3af', lineHeight:1, flexShrink:0, transition:'color 0.2s' }}
+                style={{ background:'none', border:'none', cursor:'pointer', padding:'4px 16px 0 0', fontSize:28, color:'#9ca3af', lineHeight:1, flexShrink:0, transition:'color 0.2s' }}
                 onMouseEnter={e=>e.currentTarget.style.color='#6b7280'}
                 onMouseLeave={e=>e.currentTarget.style.color='#9ca3af'}>‹</button>
 
               <div ref={cardRef} style={{ flex:1, minWidth:0 }}>
-                <div style={{ fontSize:17.5, fontWeight:700, color:'#111827', marginBottom:12, lineHeight:1.3 }}>
+                <div style={{ fontSize:18, fontWeight:700, color:'rgb(100, 116, 141)', marginBottom:14, lineHeight:1.35 }}>
                   {slide.cardTitle}
                 </div>
-                <p style={{ fontSize:14, color:'#6b7ab8', lineHeight:1.72, margin:0 }}>
+                <p style={{ fontSize:14.5, color:'#6b7ab8', lineHeight:1.78, margin:0 }}>
                   {slide.cardDesc}
                 </p>
               </div>
 
               <button onClick={next}
-                style={{ background:'none', border:'none', cursor:'pointer', padding:'0 20px', fontSize:26, color:'#9ca3af', lineHeight:1, flexShrink:0, transition:'color 0.2s' }}
+                style={{ background:'none', border:'none', cursor:'pointer', padding:'4px 0 0 16px', fontSize:28, color:'#9ca3af', lineHeight:1, flexShrink:0, transition:'color 0.2s' }}
                 onMouseEnter={e=>e.currentTarget.style.color='#6b7280'}
                 onMouseLeave={e=>e.currentTarget.style.color='#9ca3af'}>›</button>
             </div>
 
-            <div style={{ display:'flex', justifyContent:'center', gap:8, marginTop:28 }}>
+            <div style={{ display:'flex', justifyContent:'center', gap:8, marginTop:32 }}>
               {SLIDES.map((_,i) => (
                 <button key={i} onClick={()=>goTo(i)} style={{
                   width:8, height:8, borderRadius:'50%', border:'none', cursor:'pointer', padding:0,
@@ -853,16 +875,9 @@ export default function FeatureSlider() {
           </div>
         </div>
 
-        {/* ── RIGHT panel — no border, no corner icons ── */}
-        <div style={{ flex:1, minWidth:0, position:'relative' }}>
-          <div style={{
-            borderRadius:16,
-            overflow:'hidden',
-            height:500,
-            position:'relative',
-            background:'#fafbff',
-            boxShadow:'0 2px 24px rgba(0,0,0,0.05)',
-          }}>
+        {/* ── RIGHT panel ── */}
+        <div className="fs-right" style={{ position:'relative' }}>
+          <div className="fs-scene-wrap">
             {SCENES.map((SceneComp, i) => (
               <div key={i}
                 ref={el => { containerRef.current[i] = el; }}

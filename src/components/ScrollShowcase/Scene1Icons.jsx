@@ -1,5 +1,5 @@
 'use client';
-import { forwardRef, useLayoutEffect, useRef } from 'react';
+import { forwardRef, useLayoutEffect, useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import gsap from 'gsap';
 import BrowserChrome from './BrowserChrome';
@@ -38,35 +38,73 @@ function rp(x, y, w, h, r = 0) {
 }
 
 const WIRE = [
-  rp(PHONE_X+6,  PHONE_Y+6,   PHONE_W-12, 46, 26),
-  rp(PHONE_X+10, PHONE_Y+58,  PHONE_W-20, 156, 8),
-  rp(PHONE_X+10, PHONE_Y+224, 40, 40, 20),
-  rp(PHONE_X+56, PHONE_Y+232, 126, 10, 4),
-  rp(PHONE_X+56, PHONE_Y+250, 82, 8, 4),
-  rp(PHONE_X+10, PHONE_Y+274, 58, 7, 3),
-  rp(PHONE_X+76, PHONE_Y+274, 136, 7, 3),
-  rp(PHONE_X+10, PHONE_Y+289, 58, 7, 3),
-  rp(PHONE_X+76, PHONE_Y+289, 86, 7, 3),
-  rp(PHONE_X+10, PHONE_Y+304, 58, 7, 3),
-  rp(PHONE_X+76, PHONE_Y+304, 50, 7, 3),
-  rp(PHONE_X+10, PHONE_Y+324, PHONE_W-20, 56, 8),
-  rp(PHONE_X+62, PHONE_Y+398, PHONE_W-124, 26, 13),
+  // 1. Header bar — tall blue "Vehicles - Live View" bar
+  rp(PHONE_X+6,  PHONE_Y+6,   PHONE_W-12, 58, 26),
+
+  // 2. Map view — large area below header
+  rp(PHONE_X+6,  PHONE_Y+70,  PHONE_W-12, 235, 6),
+
+  // 3. Driver avatar — large circle centered, overlapping map/panel boundary
+  rp(PHONE_X+85, PHONE_Y+278, 90, 90, 45),
+
+  // 4. Driver name bold — centered under avatar
+  rp(PHONE_X+55, PHONE_Y+378, 150, 14, 4),
+
+  // 5. Row: Status label | long value
+  rp(PHONE_X+10, PHONE_Y+404, 52, 8, 3),
+  rp(PHONE_X+78, PHONE_Y+404, 162, 8, 3),
+
+  // 6. Row: Driver label | value
+  rp(PHONE_X+10, PHONE_Y+422, 42, 8, 3),
+  rp(PHONE_X+78, PHONE_Y+422, 88, 8, 3),
+
+  // 7. Row: Phone label | value
+  rp(PHONE_X+10, PHONE_Y+440, 42, 8, 3),
+  rp(PHONE_X+78, PHONE_Y+440, 44, 8, 3),
+
+  // 8. Row: Geozone label | value
+  rp(PHONE_X+10, PHONE_Y+458, 56, 8, 3),
+  rp(PHONE_X+78, PHONE_Y+458, 108, 8, 3),
 ];
 
-// Desktop browser-chrome wireframe (header bar + sidebar + content blocks)
+// Desktop wireframe — matches pro.mylocatorplus.com layout exactly
+// DT_W=550 DT_H=380  sidebar≈31%=170px  map≈69%=362px
 const DT_WIRE = [
-  // top chrome bar
-  rp(DT_X+8, DT_Y+8, DT_W-16, 22, 4),
-  // sidebar
-  rp(DT_X+8, DT_Y+38, 90, DT_H-46, 6),
-  // main content card row
-  rp(DT_X+108, DT_Y+38, DT_W-118, 70, 6),
-  // stats blocks
-  rp(DT_X+108, DT_Y+116, (DT_W-130)/3, 60, 6),
-  rp(DT_X+108 + (DT_W-130)/3 + 7, DT_Y+116, (DT_W-130)/3, 60, 6),
-  rp(DT_X+108 + 2*((DT_W-130)/3 + 7), DT_Y+116, (DT_W-130)/3, 60, 6),
-  // bottom card
-  rp(DT_X+108, DT_Y+184, DT_W-118, DT_H-200, 6),
+  // 1. Browser chrome / URL bar (full width)
+  rp(DT_X+8,   DT_Y+8,  DT_W-16, 26, 5),
+
+  // 2. Left sidebar container (full content height)
+  rp(DT_X+8,   DT_Y+42, 168, DT_H-50, 6),
+
+  // 3. Right map container (full content height)
+  rp(DT_X+182, DT_Y+42, DT_W-190, DT_H-50, 6),
+
+  // Sidebar — tab pills: Vehicles | Drivers | Alerts
+  rp(DT_X+14,  DT_Y+50, 52, 18, 9),
+  rp(DT_X+72,  DT_Y+50, 44, 18, 9),
+  rp(DT_X+122, DT_Y+50, 44, 18, 9),
+
+  // Sidebar — stats row: 13 Vehicles | 3 Moving | 1 Idling | 8 Parking | 1 No Signal
+  rp(DT_X+14,  DT_Y+76, 28, 26, 4),
+  rp(DT_X+47,  DT_Y+76, 28, 26, 4),
+  rp(DT_X+80,  DT_Y+76, 28, 26, 4),
+  rp(DT_X+113, DT_Y+76, 28, 26, 4),
+  rp(DT_X+146, DT_Y+76, 20, 26, 4),
+
+  // Sidebar — search bar
+  rp(DT_X+14,  DT_Y+110, 152, 14, 7),
+
+  // Sidebar — vehicle list items (4 rows, each with icon + text lines)
+  rp(DT_X+14,  DT_Y+132, 152, 38, 4),
+  rp(DT_X+14,  DT_Y+178, 152, 38, 4),
+  rp(DT_X+14,  DT_Y+224, 152, 38, 4),
+  rp(DT_X+14,  DT_Y+270, 152, 38, 4),
+
+  // Map — top toolbar (Zone / POI / Traffic filters)
+  rp(DT_X+188, DT_Y+48, DT_W-200, 18, 4),
+
+  // Map — bottom popup card ("Moinu Tech 68280")
+  rp(DT_X+188, DT_Y+DT_H-72, 130, 26, 6),
 ];
 
 const ICONS = [
@@ -175,6 +213,22 @@ export default forwardRef(function Scene1Icons(_props, ref) {
   const desktopImgRef = useRef(null);
   const allTweens    = useRef([]);
   const linesRef     = useRef(null);
+  const outerRef     = useRef(null);
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const el = outerRef.current;
+    if (!el) return;
+    const update = () => {
+      const w = el.offsetWidth;
+      if (!w) return;
+      setScale(Math.min(1, w / W));
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   useLayoutEffect(() => () => allTweens.current.forEach(t => t?.kill()), []);
 
@@ -292,11 +346,17 @@ export default forwardRef(function Scene1Icons(_props, ref) {
   return (
     <div
       ref={el => {
+        outerRef.current = el;
         if (el) { el.__play = play; el.__stop = stop; }
         if (typeof ref === 'function') ref(el); else if (ref) ref.current = el;
       }}
-      style={{ position:'relative', width:W, maxWidth:'100%', height:H }}
+      style={{ position:'relative', width:'100%', height: H * scale, overflow:'hidden' }}
     >
+      <div style={{
+        position:'absolute', top:0, left:0,
+        width:W, height:H,
+        transform:`scale(${scale})`, transformOrigin:'top left',
+      }}>
       <GlobalDefs/>
 
       {/* z=0 — connection lines */}
@@ -431,6 +491,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
           </div>
         </div>
       ))}
+      </div>
     </div>
   );
 });

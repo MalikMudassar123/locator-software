@@ -125,7 +125,7 @@ export default function RoadSection() {
     <section
       className="relative w-full"
       style={{
-        height: 'clamp(200px, 36vw, 380px)',
+        height: 'clamp(140px, 22vw, 240px)',
         marginTop: '-1px',
         overflow: 'visible',
         zIndex: 100,
@@ -143,16 +143,30 @@ export default function RoadSection() {
         />
       </div>
 
-      {/* Road divider line */}
+      {/* Wavy bottom border matching ScrollShowcase background */}
       <div
-        className="absolute left-0 right-0"
         style={{
-          bottom: '32%',
-          height: '1.5px',
-          background: 'linear-gradient(to right, transparent 0%, rgba(180,195,200,0.6) 10%, rgba(180,195,200,0.6) 90%, transparent 100%)',
-          zIndex: 2,
+          position: 'absolute',
+          bottom: -2,
+          left: 0,
+          right: 0,
+          zIndex: 20,
+          lineHeight: 0,
+          pointerEvents: 'none',
         }}
-      />
+      >
+        <svg
+          viewBox="0 0 1440 80"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+          style={{ display: 'block', width: '100%', height: '80px' }}
+        >
+          <path
+            d="M0,40 C180,80 360,0 540,40 C720,80 900,0 1080,40 C1260,80 1380,20 1440,40 L1440,80 L0,80 Z"
+            fill="#f5f7fa"
+          />
+        </svg>
+      </div>
 
       {/* Vehicles layer */}
       <div className="road-vehicles-layer absolute inset-0" style={{ zIndex: 10 }}>
@@ -204,19 +218,10 @@ export default function RoadSection() {
       </div>
 
       {/* CTA Buttons */}
-      <div
-        className="absolute"
-        style={{
-          bottom: '38%',
-          left: 'clamp(20px, 4vw, 50px)',
-          zIndex: 50,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-        }}
-      >
+      <div className="road-cta-wrap">
         {/* Get a Quote — filled blue */}
         <button
+          className="road-cta-btn"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -244,6 +249,7 @@ export default function RoadSection() {
 
         {/* Get a Free Demo — outlined */}
         <button
+          className="road-cta-btn"
           style={{
             display: 'flex',
             alignItems: 'center',

@@ -63,24 +63,10 @@ export default function Navbar() {
             />
 
             {/* Get a Quote — desktop */}
-            <div className="hidden sm:inline-flex items-center justify-center" style={{ position: 'relative' }}>
-              <div style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-35%, -50%)',
-                width: '380px',
-                height: '180px',
-                borderRadius: '50%',
-                background: 'radial-gradient(ellipse at 25% 50%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.32) 30%, rgba(255,255,255,0.14) 55%, rgba(255,255,255,0.04) 72%, transparent 85%)',
-                filter: 'blur(12px)',
-                pointerEvents: 'none',
-                zIndex: 0,
-              }} />
+            <div className="hidden sm:inline-flex items-center justify-center">
               <button
+                className="nav-cta-pulse"
                 style={{
-                  position: 'relative',
-                  zIndex: 1,
                   background: '#ffffff',
                   color: '#1a6e9a',
                   border: 'none',
@@ -92,10 +78,7 @@ export default function Navbar() {
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
                   letterSpacing: '0.01em',
-                  boxShadow: ctaHover
-                    ? '0 8px 24px rgba(255,255,255,0.55), 0 2px 8px rgba(26,110,154,0.18)'
-                    : '0 2px 12px rgba(255,255,255,0.40)',
-                  transition: 'box-shadow 0.45s cubic-bezier(0.65, 0, 0.35, 1), transform 0.45s cubic-bezier(0.65, 0, 0.35, 1)',
+                  transition: 'transform 0.45s cubic-bezier(0.65, 0, 0.35, 1)',
                   transform: ctaHover ? 'translateY(-1.5px)' : 'translateY(0)',
                   display: 'inline-flex',
                   alignItems: 'center',

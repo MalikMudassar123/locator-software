@@ -139,31 +139,58 @@ function FeatureCard({ icon, title, desc }) {
   return (
     <div style={{
       background: '#ffffff',
-      border: '1px solid #e5e9ef',
-      borderRadius: 12,
-      padding: '14px 16px',
+      border: '1px solid #e8edf3',
+      borderRadius: 16,
+      padding: '10px 12px',
       display: 'flex',
-      flexDirection: 'column',
-      gap: 6,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      minHeight: 0,
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <div style={{ flexShrink: 0, opacity: 0.75 }}>{icon}</div>
-        <span style={{ fontSize: 14, fontWeight: 700, color: '#111827', lineHeight: 1.2 }}>{title}</span>
+      <div style={{
+        flexShrink: 0,
+        width: 32,
+        height: 32,
+        borderRadius: 9,
+        background: '#f1f5f9',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        opacity: 0.82,
+      }}>{icon}</div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0, overflow: 'hidden' }}>
+        <span style={{ fontSize: 12, fontWeight: 700, color: 'rgb(100, 116, 141)', lineHeight: 1.25, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{title}</span>
+        <p style={{
+          fontSize: 11,
+          color: '#8896a7',
+          lineHeight: 1.45,
+          margin: 0,
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+        }}>{desc}</p>
       </div>
-      <p style={{ fontSize: 12, color: '#6b7280', lineHeight: 1.55, margin: 0 }}>{desc}</p>
     </div>
   );
 }
 
 export default function ScrollShowcase() {
-  const textRefs  = useRef([]);
+  const rowRefs   = useRef([]);
   const innerRefs = useRef([]);
 
   useLayoutEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const observers = textRefs.current.map((el, i) => {
+    const observers = rowRefs.current.map((el, i) => {
       if (!el) return null;
+      // Use a generous rootMargin so the scene fires as soon as the row enters view.
+      // On desktop the sticky anim panel is always visible, but the row entering/leaving
+      // still gives us a clean play/stop signal. On mobile (stacked), the row entering
+      // the viewport is exactly when we want the animation to start.
+      const isDesktop = window.innerWidth >= 1024;
+      const margin = isDesktop ? '-15% 0px -15% 0px' : '0px';
       const obs = new IntersectionObserver(
         ([entry]) => {
           const scene = innerRefs.current[i];
@@ -174,7 +201,7 @@ export default function ScrollShowcase() {
             if (scene.__stop) scene.__stop();
           }
         },
-        { rootMargin: '-20% 0px -20% 0px', threshold: 0 }
+        { rootMargin: margin, threshold: 0 }
       );
       obs.observe(el);
       return obs;
@@ -189,21 +216,13 @@ export default function ScrollShowcase() {
     <section style={{ background: '#f5f7fa', width: '100%', position: 'relative' }}>
       {textSections.map((s, i) => {
         const SceneComponent = SceneComponents[i];
-        // Zigzag: even index (0) → text left, animation right
-        //         odd index  (1) → animation left, text right
+        // Zigzag on desktop: even index (0) → text left, animation right
+        //                     odd index  (1) → animation left, text right
+        // On mobile, animation always shows first (above text) regardless of zigzag.
         const animLeft = i % 2 === 1;
 
         const animPanel = (
-          <div style={{
-            flex: '0 0 50%',
-            height: '100vh',
-            position: 'sticky',
-            top: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            overflow: 'visible',
-          }}>
+          <div className="ss-anim-panel">
             {SceneComponent && (
               <SceneComponent ref={(el) => { if (el) innerRefs.current[i] = el; }} />
             )}
@@ -211,19 +230,7 @@ export default function ScrollShowcase() {
         );
 
         const textPanel = (
-          <div
-            ref={(el) => (textRefs.current[i] = el)}
-            style={{
-              flex: '0 0 50%',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              paddingTop: 80,
-              paddingBottom: 80,
-              minHeight: '100vh',
-              ...(animLeft ? { paddingLeft: 56 } : { paddingRight: 56 }),
-            }}
-          >
+          <div className="ss-text-panel">
             <span style={{
               fontSize: 13,
               fontWeight: 700,
@@ -236,17 +243,17 @@ export default function ScrollShowcase() {
               {s.eyebrow}
             </span>
             <h2 style={{
-              fontSize: 36,
+              fontSize: 'clamp(24px, 3vw, 36px)',
               fontWeight: 800,
               lineHeight: 1.15,
-              color: '#0f172a',
+              color: 'rgb(100, 116, 141)',
               margin: '0 0 16px',
-              maxWidth: 480,
+              maxWidth: '100%',
             }}>
               {s.headline}
             </h2>
             <p style={{
-              fontSize: 15,
+              fontSize: 'clamp(13px, 1.2vw, 15px)',
               lineHeight: 1.65,
               color: '#64748b',
               margin: '0 0 28px',
@@ -257,10 +264,10 @@ export default function ScrollShowcase() {
 
             {s.subHeadline && (
               <>
-                <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', margin: '0 0 10px', maxWidth: 480 }}>
+                <h3 style={{ fontSize: 'clamp(15px, 1.4vw, 18px)', fontWeight: 700, color: 'rgb(100, 116, 141)', margin: '0 0 10px', maxWidth: '100%' }}>
                   {s.subHeadline}
                 </h3>
-                <p style={{ fontSize: 14, lineHeight: 1.6, color: '#64748b', margin: '0 0 24px', maxWidth: 440 }}>
+                <p style={{ fontSize: 'clamp(12px, 1.1vw, 14px)', lineHeight: 1.6, color: '#64748b', margin: '0 0 24px', maxWidth: 440 }}>
                   {s.subBody}
                 </p>
               </>
@@ -269,9 +276,9 @@ export default function ScrollShowcase() {
             {s.features && (
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: 12,
-                maxWidth: 480,
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: 10,
+                maxWidth: 520,
               }}>
                 {s.features.map((f) => (
                   <FeatureCard key={f.title} icon={f.icon} title={f.title} desc={f.desc} />
@@ -284,16 +291,13 @@ export default function ScrollShowcase() {
         return (
           <div
             key={i}
-            style={{
-              maxWidth: 1400,
-              margin: '0 auto',
-              padding: '0 48px',
-              display: 'flex',
-              alignItems: 'flex-start',
-            }}
+            ref={(el) => (rowRefs.current[i] = el)}
+            // ss-row--anim-right: on desktop, text appears on left (order:0), anim on right (order:1)
+            // This preserves the zigzag visual on desktop while keeping anim-first on mobile
+            className={`ss-row${!animLeft ? ' ss-row--anim-right' : ''}`}
           >
-            {animLeft ? animPanel : textPanel}
-            {animLeft ? textPanel : animPanel}
+            {animPanel}
+            {textPanel}
           </div>
         );
       })}

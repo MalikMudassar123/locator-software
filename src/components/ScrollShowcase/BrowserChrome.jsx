@@ -37,7 +37,7 @@ export default function BrowserChrome({ url = 'https://pro.mylocatorplus.com/' }
         <span
           style={{
             fontSize: 9,
-            color: '#f59e0b',
+            color: 'rgb(100, 116, 141)',
             fontWeight: 600,
             letterSpacing: '0.01em',
             fontFamily: 'ui-sans-serif, system-ui, -apple-system, "SF Pro Text", sans-serif',

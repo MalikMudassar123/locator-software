@@ -441,7 +441,7 @@ export default function VideoHeroSection({
           position: relative;
           z-index: 10;
           width: 100%;
-          max-width: clamp(520px, 70%, 800px);
+          max-width: min(90%, 800px);
           margin: 0 auto;
         }
 
@@ -645,9 +645,6 @@ export default function VideoHeroSection({
           .vhs__block--tr {
             right: -30px;
           }
-          .vhs__video-outer {
-            max-width: 90%;
-          }
         }
 
         @media (max-width: 640px) {
@@ -671,9 +668,6 @@ export default function VideoHeroSection({
           .vhs__block--br-front {
             width: 36vw;
             height: 30vw;
-          }
-          .vhs__video-outer {
-            max-width: 95%;
           }
         }
 

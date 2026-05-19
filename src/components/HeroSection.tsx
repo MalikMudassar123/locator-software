@@ -13,6 +13,7 @@ export default function HeroSection() {
         height: '67.5vh',
         minHeight: 'clamp(380px, 67.5vh, 800px)',
         overflow: 'hidden',
+        clipPath: 'inset(0)',
         isolation: 'isolate',
         background: '#0174cb',
       }}

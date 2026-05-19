@@ -828,11 +828,11 @@ export default function FeatureSlider() {
           <div style={{ fontSize:13, fontWeight:700, color:'#2563eb', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:24 }}>
             {slide.eyebrow}
           </div>
-          <h2 style={{ fontSize:'clamp(28px, 3.8vw, 44px)', fontWeight:800, lineHeight:1.22, color:'rgb(100, 116, 141)', margin:'0 0 20px', maxWidth:'100%', width:'100%' }}>
+          <h2 style={{ fontSize:'clamp(28px, 3.8vw, 44px)', fontWeight:800, lineHeight:1.22, color:'#484b4c', margin:'0 0 20px', maxWidth:'100%', width:'100%' }}>
             Run Your Road Team Smarter<br/>
             <span style={{ fontWeight:700 }}>Empowering field teams,</span>
           </h2>
-          <p style={{ fontSize:'clamp(14px, 1.3vw, 16px)', color:'#6b7280', lineHeight:1.75, margin:'0 0 48px', maxWidth:'100%' }}>
+          <p style={{ fontSize:'clamp(14px, 1.3vw, 16px)', color:'#8090bc', lineHeight:1.75, margin:'0 0 48px', maxWidth:'100%' }}>
             Manage, track, and optimize your field workforce in real time<span style={{ color:'#9ca3af' }}> fleets</span>
           </p>
 
@@ -849,10 +849,10 @@ export default function FeatureSlider() {
                 onMouseLeave={e=>e.currentTarget.style.color='#9ca3af'}>‹</button>
 
               <div ref={cardRef} style={{ flex:1, minWidth:0 }}>
-                <div style={{ fontSize:18, fontWeight:700, color:'rgb(100, 116, 141)', marginBottom:14, lineHeight:1.35 }}>
+                <div style={{ fontSize:18, fontWeight:700, color:'#696b6b', marginBottom:14, lineHeight:1.35 }}>
                   {slide.cardTitle}
                 </div>
-                <p style={{ fontSize:14.5, color:'#6b7ab8', lineHeight:1.78, margin:0 }}>
+                <p style={{ fontSize:14.5, color:'#8090bc', lineHeight:1.78, margin:0 }}>
                   {slide.cardDesc}
                 </p>
               </div>

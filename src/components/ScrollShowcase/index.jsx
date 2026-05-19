@@ -160,10 +160,10 @@ function FeatureCard({ icon, title, desc }) {
         opacity: 0.82,
       }}>{icon}</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0, overflow: 'hidden' }}>
-        <span style={{ fontSize: 12, fontWeight: 700, color: 'rgb(100, 116, 141)', lineHeight: 1.25 }}>{title}</span>
+        <span style={{ fontSize: 12, fontWeight: 700, color: '#696b6b', lineHeight: 1.25 }}>{title}</span>
         <p style={{
           fontSize: 11,
-          color: '#8896a7',
+          color: '#8090bc',
           lineHeight: 1.45,
           margin: 0,
           display: '-webkit-box',
@@ -246,7 +246,7 @@ export default function ScrollShowcase() {
               fontSize: 'clamp(24px, 3vw, 36px)',
               fontWeight: 800,
               lineHeight: 1.15,
-              color: 'rgb(100, 116, 141)',
+              color: '#484b4c',
               margin: '0 0 16px',
               maxWidth: '100%',
             }}>
@@ -255,7 +255,7 @@ export default function ScrollShowcase() {
             <p style={{
               fontSize: 'clamp(13px, 1.2vw, 15px)',
               lineHeight: 1.65,
-              color: '#64748b',
+              color: '#8090bc',
               margin: '0 0 28px',
               maxWidth: 440,
             }}>
@@ -264,10 +264,10 @@ export default function ScrollShowcase() {
 
             {s.subHeadline && (
               <>
-                <h3 style={{ fontSize: 'clamp(15px, 1.4vw, 18px)', fontWeight: 700, color: 'rgb(100, 116, 141)', margin: '0 0 10px', maxWidth: '100%' }}>
+                <h3 style={{ fontSize: 'clamp(15px, 1.4vw, 18px)', fontWeight: 700, color: '#696b6b', margin: '0 0 10px', maxWidth: '100%' }}>
                   {s.subHeadline}
                 </h3>
-                <p style={{ fontSize: 'clamp(12px, 1.1vw, 14px)', lineHeight: 1.6, color: '#64748b', margin: '0 0 24px', maxWidth: 440 }}>
+                <p style={{ fontSize: 'clamp(12px, 1.1vw, 14px)', lineHeight: 1.6, color: '#8090bc', margin: '0 0 24px', maxWidth: 440 }}>
                   {s.subBody}
                 </p>
               </>

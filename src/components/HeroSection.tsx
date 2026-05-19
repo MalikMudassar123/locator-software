@@ -288,7 +288,7 @@ export default function HeroSection() {
             margin: 0,
           }}
         >
-          We help you to manage your <span style={{ fontWeight: 600 }}>Vehicles</span> & <span style={{ fontWeight: 600 }}>Team</span>
+          We help you to manage your <span style={{ fontWeight: 600 }}>Vehiclessss</span> & <span style={{ fontWeight: 600 }}>Team</span>
         </h1>
       </div>
     </section>

@@ -108,6 +108,44 @@ export default function HeroSection() {
         />
       </div>
 
+
+      {/* Bright white-gold halo behind the Burj — primary visible glow (low, near horizon) */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          bottom: '0%',
+          left: '48%',
+          transform: 'translateX(-50%)',
+          width: '60%',
+          height: '38%',
+          zIndex: 7,
+          pointerEvents: 'none',
+          background:
+            'radial-gradient(50% 60% at 50% 75%, rgba(255, 248, 215, 0.95) 0%, rgba(255, 230, 160, 0.75) 25%, rgba(255, 210, 115, 0.48) 50%, rgba(255, 195, 95, 0.22) 72%, rgba(255, 200, 115, 0) 94%)',
+          filter: 'blur(30px)',
+        }}
+      />
+
+      {/* Tiny soft highlight just above the core — subtle, doesn't extend high */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          bottom: '20%',
+          left: '48%',
+          transform: 'translateX(-50%)',
+          width: '38%',
+          height: '22%',
+          zIndex: 7,
+          pointerEvents: 'none',
+          background:
+            'radial-gradient(50% 50% at 50% 60%, rgba(255, 240, 190, 0.45) 0%, rgba(255, 225, 160, 0.20) 50%, rgba(255, 220, 155, 0) 90%)',
+          filter: 'blur(40px)',
+          mixBlendMode: 'screen',
+        }}
+      />
+
       {/* Two smooth diagonal wave bands — top descends, bottom ascends */}
       <div
         style={{
@@ -176,43 +214,6 @@ export default function HeroSection() {
           zIndex: 6,
           pointerEvents: 'none',
           opacity: 0.8,
-        }}
-      />
-
-      {/* Bright white-gold halo behind the Burj — primary visible glow (low, near horizon) */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          bottom: '0%',
-          left: '48%',
-          transform: 'translateX(-50%)',
-          width: '60%',
-          height: '38%',
-          zIndex: 7,
-          pointerEvents: 'none',
-          background:
-            'radial-gradient(50% 60% at 50% 75%, rgba(255, 248, 215, 0.95) 0%, rgba(255, 230, 160, 0.75) 25%, rgba(255, 210, 115, 0.48) 50%, rgba(255, 195, 95, 0.22) 72%, rgba(255, 200, 115, 0) 94%)',
-          filter: 'blur(30px)',
-        }}
-      />
-
-      {/* Tiny soft highlight just above the core — subtle, doesn't extend high */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          bottom: '20%',
-          left: '48%',
-          transform: 'translateX(-50%)',
-          width: '38%',
-          height: '22%',
-          zIndex: 7,
-          pointerEvents: 'none',
-          background:
-            'radial-gradient(50% 50% at 50% 60%, rgba(255, 240, 190, 0.45) 0%, rgba(255, 225, 160, 0.20) 50%, rgba(255, 220, 155, 0) 90%)',
-          filter: 'blur(40px)',
-          mixBlendMode: 'screen',
         }}
       />
 

@@ -1476,32 +1476,13 @@ h6 {
   pointer-events: none;
 }
 
-/* Luminous glow core — bright blue light inside the dark band */
+/* Luminous glow core — disabled */
 .hero-ribbon-sweep::after {
   content: '';
   position: absolute;
-  top: -80%;
-  left: -100%;
-  width: 300%;
-  height: 260%;
+  opacity: 0;
   pointer-events: none;
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  background: linear-gradient(
-    to bottom,
-    transparent                0%,
-    transparent               37%,
-    rgba(38, 108, 228, 0.00)  43%,
-    rgba(48, 128, 245, 0.45)  48%,
-    rgba(62, 148, 255, 0.68)  50%,
-    rgba(48, 128, 245, 0.45)  52%,
-    rgba(38, 108, 228, 0.00)  57%,
-    transparent               63%,
-    transparent              100%
-  );
-  filter: blur(10px);
-  animation: heroRibbonSweep 13s cubic-bezier(0.15, 0, 0.85, 1) infinite;
-  animation-delay: -2s;
+  animation: none;
 }
 
 /* Right → left sweep with billowing scaleY and slight angle variation */

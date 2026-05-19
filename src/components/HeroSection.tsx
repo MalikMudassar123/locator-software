@@ -223,7 +223,7 @@ export default function HeroSection() {
         className="hero-building-wrap"
         style={{
           position: 'absolute',
-          bottom: 'clamp(-20px, -3vw, -45px)',
+          bottom: 'clamp(-40px, -6vw, -80px)',
           left: '50%',
           transform: 'translateX(-50%)',
           width: '98%',

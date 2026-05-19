@@ -219,20 +219,17 @@ export default function HeroSection() {
 
       {/* ─────────── FOREGROUND CONTENT (unchanged) ─────────── */}
 
-      {/* Dubai Skyline — uses zIndex 150 to sit ON TOP of the road section (zIndex 100),
-          and a fixed -60px offset that extends into the road area for a grounded look.
-          Hero section uses overflow:visible so this can escape the bounds cleanly.
-          No clamp() or vw math = deterministic across Chrome, Edge, Safari, Firefox & Vercel. */}
+      {/* Dubai Skyline */}
       <div
         className="hero-building-wrap"
         style={{
           position: 'absolute',
-          bottom: '-60px',
+          bottom: 0,
           left: '50%',
           transform: 'translateX(-50%)',
           width: '98%',
           maxWidth: 'clamp(280px, 70vw, 590px)',
-          zIndex: 150,
+          zIndex: 8,
           pointerEvents: 'none',
         }}
       >

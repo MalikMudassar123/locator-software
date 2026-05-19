@@ -38,33 +38,42 @@ function rp(x, y, w, h, r = 0) {
 }
 
 const WIRE = [
-  // 1. Header bar — tall blue "Vehicles - Live View" bar
-  rp(PHONE_X+6,  PHONE_Y+6,   PHONE_W-12, 58, 26),
+  // 1. Header bar — "Vehicles - Live View" blue bar (full width, tall pill)
+  rp(PHONE_X+6,   PHONE_Y+6,   PHONE_W-12, 58, 26),
 
-  // 2. Map view — large area below header
-  rp(PHONE_X+6,  PHONE_Y+70,  PHONE_W-12, 235, 6),
+  // 2. Map view — below header, 65% of interior height
+  rp(PHONE_X+6,   PHONE_Y+70,  PHONE_W-12, 252, 4),
 
-  // 3. Driver avatar — large circle centered, overlapping map/panel boundary
-  rp(PHONE_X+85, PHONE_Y+278, 90, 90, 45),
+  // 3. Bottom info panel container (map/panel boundary at PHONE_Y+322)
+  rp(PHONE_X+6,   PHONE_Y+322, PHONE_W-12, 172, 8),
 
-  // 4. Driver name bold — centered under avatar
-  rp(PHONE_X+55, PHONE_Y+378, 150, 14, 4),
+  // 4. Nav: back-arrow icon (left side of boundary row)
+  rp(PHONE_X+14,  PHONE_Y+328, 22, 14, 4),
 
-  // 5. Row: Status label | long value
-  rp(PHONE_X+10, PHONE_Y+404, 52, 8, 3),
-  rp(PHONE_X+78, PHONE_Y+404, 162, 8, 3),
+  // 5. Nav: mute icon (right side of boundary row)
+  rp(PHONE_X+224, PHONE_Y+328, 22, 14, 4),
 
-  // 6. Row: Driver label | value
-  rp(PHONE_X+10, PHONE_Y+422, 42, 8, 3),
-  rp(PHONE_X+78, PHONE_Y+422, 88, 8, 3),
+  // 6. Driver avatar — 80×80 circle, center_x=PHONE_X+130, center_y=PHONE_Y+322 (boundary)
+  rp(PHONE_X+90,  PHONE_Y+282, 80, 80, 40),
 
-  // 7. Row: Phone label | value
-  rp(PHONE_X+10, PHONE_Y+440, 42, 8, 3),
-  rp(PHONE_X+78, PHONE_Y+440, 44, 8, 3),
+  // 7. Driver name bold — centered below avatar
+  rp(PHONE_X+48,  PHONE_Y+374, 164, 14, 4),
 
-  // 8. Row: Geozone label | value
-  rp(PHONE_X+10, PHONE_Y+458, 56, 8, 3),
-  rp(PHONE_X+78, PHONE_Y+458, 108, 8, 3),
+  // 8. Row: Status label | long value
+  rp(PHONE_X+10,  PHONE_Y+412, 52, 8, 3),
+  rp(PHONE_X+78,  PHONE_Y+412, 162, 8, 3),
+
+  // 9. Row: Driver label | value
+  rp(PHONE_X+10,  PHONE_Y+430, 42, 8, 3),
+  rp(PHONE_X+78,  PHONE_Y+430, 88, 8, 3),
+
+  // 10. Row: Phone label | value
+  rp(PHONE_X+10,  PHONE_Y+448, 42, 8, 3),
+  rp(PHONE_X+78,  PHONE_Y+448, 44, 8, 3),
+
+  // 11. Row: Geozone label | value
+  rp(PHONE_X+10,  PHONE_Y+466, 56, 8, 3),
+  rp(PHONE_X+78,  PHONE_Y+466, 108, 8, 3),
 ];
 
 // Desktop wireframe — matches pro.mylocatorplus.com layout exactly

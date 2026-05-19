@@ -739,13 +739,13 @@ h6 {
   position: relative;
   background: #fafbff;
   box-shadow: 0 2px 24px rgba(0,0,0,0.05);
-  height: 300px;
+  height: 220px;
 }
 @media (min-width: 480px) {
-  .fs-scene-wrap { height: 380px; }
+  .fs-scene-wrap { height: 270px; }
 }
 @media (min-width: 640px) {
-  .fs-scene-wrap { height: 440px; }
+  .fs-scene-wrap { height: 320px; }
 }
 @media (min-width: 1024px) {
   .fs-container {
@@ -756,7 +756,7 @@ h6 {
   }
   .fs-left { flex: 0 0 540px; min-width: 0; width: auto; }
   .fs-right { flex: 0 0 480px; min-width: 0; width: auto; }
-  .fs-scene-wrap { height: 520px; }
+  .fs-scene-wrap { height: 360px; }
 }
 
 /* ══════════════════════════════════════════════════════

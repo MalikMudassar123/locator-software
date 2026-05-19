@@ -748,9 +748,264 @@ function makeScene(WireComp, imgSrc, imgAlt) {
   });
 }
 
-const SceneExpense    = makeScene(WireExpense,    '/software images/software images/Expense Manager/jikljoikiujk.png', 'Expense Manager');
-const SceneInspection = makeScene(WireInspection, '/software images/software images/Inspection/kjiuguy.png',           'Inspection');
-const SceneFleet      = makeScene(WireFleet,      '/software images/software images/Fleet Manager/hyuiuyku.png',       'Fleet Manager');
+const SceneExpense = forwardRef(function SceneExpense(_, ref) {
+  const wireRef    = useRef(null);
+  const mainImgRef = useRef(null);
+  const mobileRef  = useRef(null);
+  const popupRef   = useRef(null);
+  const tlRef      = useRef(null);
+
+  useImperativeHandle(ref, () => ({
+    play() {
+      tlRef.current?.kill();
+      if (!wireRef.current || !mainImgRef.current) return;
+      const paths = [...wireRef.current.querySelectorAll('[data-w]')];
+      gsap.set(wireRef.current,    { opacity: 1 });
+      gsap.set(mainImgRef.current, { opacity: 0 });
+      gsap.set(mobileRef.current,  { opacity: 0, x: -30, scale: 0.92 });
+      gsap.set(popupRef.current,   { opacity: 0, x: -20, scale: 0.92 });
+      paths.forEach(p => {
+        try { const L = p.getTotalLength(); gsap.set(p, { strokeDasharray: L, strokeDashoffset: L }); }
+        catch { gsap.set(p, { strokeDasharray: 300, strokeDashoffset: 300 }); }
+      });
+      const tl = gsap.timeline();
+      tlRef.current = tl;
+      tl.to(paths, { strokeDashoffset: 0, duration: 0.85, stagger:{ amount: 0.45, from:'start' }, ease:'power2.out' });
+      tl.to(mainImgRef.current, { opacity: 1, duration: 0.55, ease:'power2.out' }, '-=0.38');
+      tl.to(wireRef.current,    { opacity: 0, duration: 0.30, ease:'power2.in'  }, '-=0.28');
+      tl.to(mobileRef.current,  { opacity: 1, x: 0, scale: 1, duration: 0.60, ease:'back.out(1.5)' }, '-=0.10');
+      tl.to(popupRef.current,   { opacity: 1, x: 0, scale: 1, duration: 0.55, ease:'back.out(1.6)' }, '-=0.25');
+    },
+    reset() {
+      tlRef.current?.kill();
+      if (wireRef.current)    gsap.set(wireRef.current,    { opacity: 0 });
+      if (mainImgRef.current) gsap.set(mainImgRef.current, { opacity: 0 });
+      if (mobileRef.current)  gsap.set(mobileRef.current,  { opacity: 0 });
+      if (popupRef.current)   gsap.set(popupRef.current,   { opacity: 0 });
+    },
+  }));
+
+  return (
+    <div style={{ position:'absolute', inset:0, zIndex:10 }}>
+      <div ref={wireRef} style={{ position:'absolute', inset:0, opacity:0 }}><WireExpense/></div>
+      <div ref={mainImgRef} style={{ position:'absolute', inset:0, opacity:0 }}>
+        <div style={{ position:'absolute', inset:0, display:'flex', flexDirection:'column', background:'#fff' }}>
+          <BrowserBar/>
+          <div style={{ position:'relative', flex:1 }}>
+            <Image
+              src="/software images/software images/Expense Manager/jikljoikiujk.png"
+              alt="Expense Manager"
+              fill sizes="700px"
+              style={{ objectFit:'contain', objectPosition:'center top' }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile app overlay — left side, layer 2 (fits inside browser frame) */}
+      <div
+        ref={mobileRef}
+        onMouseEnter={() => gsap.to(mobileRef.current, { scale: 1.05, duration: 0.35, ease:'power3.out' })}
+        onMouseLeave={() => gsap.to(mobileRef.current, { scale: 1,    duration: 0.35, ease:'power3.out' })}
+        style={{
+          position:'absolute',
+          left:'2%', top:'30%',
+          width:'54%', height:'60%',
+          opacity:0, zIndex:40,
+          cursor:'pointer',
+          willChange:'opacity, transform',
+          transformOrigin:'left center',
+          borderRadius:14,
+          overflow:'hidden',
+          boxShadow:'0 18px 50px rgba(15,23,42,0.22), 0 4px 14px rgba(15,23,42,0.10)',
+        }}
+      >
+        <Image
+          src="/software images/software images/Expense Manager/yijlkjlkj.png"
+          alt="Expense Manager mobile"
+          fill sizes="320px"
+          style={{ objectFit:'contain', objectPosition:'left top' }}
+        />
+      </div>
+
+      {/* Small "Toll Gate" popup — layer 3, sits on top of mobile */}
+      <div
+        ref={popupRef}
+        onMouseEnter={() => gsap.to(popupRef.current, { scale: 1.12, duration: 0.35, ease:'power3.out' })}
+        onMouseLeave={() => gsap.to(popupRef.current, { scale: 1,    duration: 0.35, ease:'power3.out' })}
+        style={{
+          position:'absolute',
+          left:'-4%', top:'49%',
+          width:'58%', height:'10%',
+          opacity:0, zIndex:50,
+          cursor:'pointer',
+          willChange:'opacity, transform',
+          transformOrigin:'left center',
+        }}
+      >
+        <Image
+          src="/software images/software images/Expense Manager/lk;oiio;io.png"
+          alt="Toll payment popup"
+          fill sizes="300px"
+          style={{ objectFit:'contain', objectPosition:'left top' }}
+        />
+      </div>
+    </div>
+  );
+});
+const SceneInspection = forwardRef(function SceneInspection(_, ref) {
+  const wireRef    = useRef(null);
+  const mainImgRef = useRef(null);
+  const mobileRef  = useRef(null);
+  const tlRef      = useRef(null);
+
+  useImperativeHandle(ref, () => ({
+    play() {
+      tlRef.current?.kill();
+      if (!wireRef.current || !mainImgRef.current) return;
+      const paths = [...wireRef.current.querySelectorAll('[data-w]')];
+      gsap.set(wireRef.current,    { opacity: 1 });
+      gsap.set(mainImgRef.current, { opacity: 0 });
+      gsap.set(mobileRef.current,  { opacity: 0, x: -30, scale: 0.92 });
+      paths.forEach(p => {
+        try { const L = p.getTotalLength(); gsap.set(p, { strokeDasharray: L, strokeDashoffset: L }); }
+        catch { gsap.set(p, { strokeDasharray: 300, strokeDashoffset: 300 }); }
+      });
+      const tl = gsap.timeline();
+      tlRef.current = tl;
+      tl.to(paths, { strokeDashoffset: 0, duration: 0.85, stagger:{ amount: 0.45, from:'start' }, ease:'power2.out' });
+      tl.to(mainImgRef.current, { opacity: 1, duration: 0.55, ease:'power2.out' }, '-=0.38');
+      tl.to(wireRef.current,    { opacity: 0, duration: 0.30, ease:'power2.in'  }, '-=0.28');
+      tl.to(mobileRef.current,  { opacity: 1, x: 0, scale: 1, duration: 0.60, ease:'back.out(1.5)' }, '-=0.10');
+    },
+    reset() {
+      tlRef.current?.kill();
+      if (wireRef.current)    gsap.set(wireRef.current,    { opacity: 0 });
+      if (mainImgRef.current) gsap.set(mainImgRef.current, { opacity: 0 });
+      if (mobileRef.current)  gsap.set(mobileRef.current,  { opacity: 0 });
+    },
+  }));
+
+  return (
+    <div style={{ position:'absolute', inset:0, zIndex:10 }}>
+      <div ref={wireRef} style={{ position:'absolute', inset:0, opacity:0 }}><WireInspection/></div>
+      <div ref={mainImgRef} style={{ position:'absolute', inset:0, opacity:0 }}>
+        <div style={{ position:'absolute', inset:0, display:'flex', flexDirection:'column', background:'#fff' }}>
+          <BrowserBar/>
+          <div style={{ position:'relative', flex:1 }}>
+            <Image
+              src="/software images/software images/Inspection/kjiuguy.png"
+              alt="Inspection"
+              fill sizes="700px"
+              style={{ objectFit:'contain', objectPosition:'center top' }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile app overlay — left side */}
+      <div
+        ref={mobileRef}
+        onMouseEnter={() => gsap.to(mobileRef.current, { scale: 1.05, duration: 0.35, ease:'power3.out' })}
+        onMouseLeave={() => gsap.to(mobileRef.current, { scale: 1,    duration: 0.35, ease:'power3.out' })}
+        style={{
+          position:'absolute',
+          left:'8%', top:'35%',
+          width:'48%', height:'48%',
+          opacity:0, zIndex:40,
+          cursor:'pointer',
+          willChange:'opacity, transform',
+          transformOrigin:'left center',
+          borderRadius:14,
+          overflow:'hidden',
+          boxShadow:'0 18px 50px rgba(15,23,42,0.22), 0 4px 14px rgba(15,23,42,0.10)',
+        }}
+      >
+        <Image
+          src="/software images/software images/Inspection/hjgjbjkkj.png"
+          alt="Inspection mobile"
+          fill sizes="320px"
+          style={{ objectFit:'contain', objectPosition:'left top' }}
+        />
+      </div>
+    </div>
+  );
+});
+const SceneFleet = forwardRef(function SceneFleet(_, ref) {
+  const wireRef    = useRef(null);
+  const mainImgRef = useRef(null);
+  const popupRef   = useRef(null);
+  const tlRef      = useRef(null);
+
+  useImperativeHandle(ref, () => ({
+    play() {
+      tlRef.current?.kill();
+      if (!wireRef.current || !mainImgRef.current) return;
+      const paths = [...wireRef.current.querySelectorAll('[data-w]')];
+      gsap.set(wireRef.current,    { opacity: 1 });
+      gsap.set(mainImgRef.current, { opacity: 0 });
+      gsap.set(popupRef.current,   { opacity: 0, x: -20, scale: 0.92 });
+      paths.forEach(p => {
+        try { const L = p.getTotalLength(); gsap.set(p, { strokeDasharray: L, strokeDashoffset: L }); }
+        catch { gsap.set(p, { strokeDasharray: 300, strokeDashoffset: 300 }); }
+      });
+      const tl = gsap.timeline();
+      tlRef.current = tl;
+      tl.to(paths, { strokeDashoffset: 0, duration: 0.85, stagger:{ amount: 0.45, from:'start' }, ease:'power2.out' });
+      tl.to(mainImgRef.current, { opacity: 1, duration: 0.55, ease:'power2.out' }, '-=0.38');
+      tl.to(wireRef.current,    { opacity: 0, duration: 0.30, ease:'power2.in'  }, '-=0.28');
+      tl.to(popupRef.current,   { opacity: 1, x: 0, scale: 1, duration: 0.55, ease:'back.out(1.6)' }, '-=0.20');
+    },
+    reset() {
+      tlRef.current?.kill();
+      if (wireRef.current)    gsap.set(wireRef.current,    { opacity: 0 });
+      if (mainImgRef.current) gsap.set(mainImgRef.current, { opacity: 0 });
+      if (popupRef.current)   gsap.set(popupRef.current,   { opacity: 0 });
+    },
+  }));
+
+  return (
+    <div style={{ position:'absolute', inset:0, zIndex:10 }}>
+      <div ref={wireRef} style={{ position:'absolute', inset:0, opacity:0 }}><WireFleet/></div>
+      <div ref={mainImgRef} style={{ position:'absolute', inset:0, opacity:0 }}>
+        <div style={{ position:'absolute', inset:0, display:'flex', flexDirection:'column', background:'#fff' }}>
+          <BrowserBar/>
+          <div style={{ position:'relative', flex:1 }}>
+            <Image
+              src="/software images/software images/Fleet Manager/hyuiuyku.png"
+              alt="Fleet Manager"
+              fill sizes="700px"
+              style={{ objectFit:'contain', objectPosition:'center top' }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Top-left "Sarah Support" popup overlay */}
+      <div
+        ref={popupRef}
+        onMouseEnter={() => gsap.to(popupRef.current, { scale: 1.10, duration: 0.35, ease:'power3.out' })}
+        onMouseLeave={() => gsap.to(popupRef.current, { scale: 1,    duration: 0.35, ease:'power3.out' })}
+        style={{
+          position:'absolute',
+          left:'-3%', top:'18%',
+          width:'42%', height:'10%',
+          opacity:0, zIndex:50,
+          cursor:'pointer',
+          willChange:'opacity, transform',
+          transformOrigin:'left center',
+        }}
+      >
+        <Image
+          src="/software images/software images/Fleet Manager/dsfdgvdfgdf.png"
+          alt="Sarah Support popup"
+          fill sizes="320px"
+          style={{ objectFit:'contain', objectPosition:'left top' }}
+        />
+      </div>
+    </div>
+  );
+});
 
 const SCENES = [SceneTaskManager, SceneExpense, SceneInspection, SceneFleet];
 
@@ -815,7 +1070,7 @@ export default function FeatureSlider() {
   const slide = SLIDES[activeIdx];
 
   return (
-    <section style={{ background:'#fff', width:'100%', padding:'clamp(48px,6vw,88px) 0', position:'relative', overflow:'hidden' }}>
+    <section style={{ background:'#fff', width:'100%', padding:'clamp(32px,4vw,56px) 0 clamp(4px,0.8vw,12px)', position:'relative', overflow:'hidden' }}>
       <div style={{
         position:'absolute', top:0, left:0, width:'55%', height:'100%', pointerEvents:'none',
         background:'radial-gradient(ellipse at 20% 60%, rgba(199,210,254,0.38) 0%, rgba(224,231,255,0.18) 40%, transparent 70%)',
@@ -824,7 +1079,7 @@ export default function FeatureSlider() {
       <div className="fs-container" style={{ position:'relative' }}>
 
         {/* ── LEFT panel ── */}
-        <div className="fs-left" style={{ paddingRight:'clamp(0px, 2vw, 32px)' }}>
+        <div className="fs-left" style={{ paddingRight:'clamp(0px, 2vw, 32px)', position:'relative', zIndex:1 }}>
           <div style={{ fontSize:13, fontWeight:700, color:'#2563eb', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:24 }}>
             {slide.eyebrow}
           </div>
@@ -876,8 +1131,8 @@ export default function FeatureSlider() {
         </div>
 
         {/* ── RIGHT panel ── */}
-        <div className="fs-right" style={{ position:'relative' }}>
-          <div className="fs-scene-wrap">
+        <div className="fs-right" style={{ position:'relative', zIndex:20 }}>
+          <div className="fs-scene-wrap" style={{ overflow:'visible' }}>
             {SCENES.map((SceneComp, i) => (
               <div key={i}
                 ref={el => { containerRef.current[i] = el; }}

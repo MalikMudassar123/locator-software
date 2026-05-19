@@ -131,6 +131,7 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
   const wireRefs     = useRef([]);
   const wireGrpRef   = useRef(null);
   const videoImgRef  = useRef(null);
+  const popupRef     = useRef(null);
   const allTweens    = useRef([]);
   const linesRef     = useRef(null);
   const outerRef     = useRef(null);
@@ -169,6 +170,7 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     gsap.set(wireGrpRef.current,   { opacity: 0 });
     gsap.set(framePathRef.current, { opacity: 0, strokeDashoffset: FRAME_PERIM });
     gsap.set(videoImgRef.current,  { opacity: 0 });
+    gsap.set(popupRef.current,     { opacity: 0, x: -12, scale: 0.96 });
     lineRefs.current.filter(Boolean).forEach(p => {
       const len = getLen(p);
       gsap.set(p, { opacity:0, strokeDasharray:`${len} ${len+1}`, strokeDashoffset:len });
@@ -230,8 +232,15 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     // Wireframe fades out as video PNG takes over
     tl.to(wireGrpRef.current, { opacity:0, duration:0.65, ease:FADE_EASE }, pngAt + 0.20);
 
+    // Popup card appears together with the video PNG
+    tl.to(popupRef.current, {
+      opacity: 1, x: 0, scale: 1,
+      duration: 0.55, ease: 'back.out(1.6)',
+    }, pngAt);
+
     // Hold ~4.5s, then fade image before loop restart
     const holdEnd = pngAt + 0.85 + 4.5;
+    tl.to(popupRef.current,    { opacity:0, duration:0.45, ease:FADE_EASE }, holdEnd - 0.15);
     tl.to(videoImgRef.current, { opacity:0, duration:0.60, ease:FADE_EASE }, holdEnd);
   };
 
@@ -242,7 +251,7 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
         if (el) { el.__play = play; el.__stop = stop; }
         if (typeof ref === 'function') ref(el); else if (ref) ref.current = el;
       }}
-      style={{ position: 'relative', width: '100%', height: H * scale, overflow: 'hidden' }}
+      style={{ position: 'relative', width: '100%', height: H * scale, overflow: 'visible' }}
     >
     <div style={{
       position: 'absolute', top: 0, left: 0,
@@ -322,6 +331,34 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
             style={{ objectFit:'cover', objectPosition:'left top' }}
           />
         </div>
+      </div>
+
+      {/* z=50 — hover popup card over sidebar top-left empty area */}
+      <div
+        ref={popupRef}
+        onMouseEnter={() => gsap.to(popupRef.current, { scale: 1.12, duration: 0.35, ease: 'power3.out', transformOrigin: 'left center' })}
+        onMouseLeave={() => gsap.to(popupRef.current, { scale: 1, duration: 0.35, ease: 'power3.out', transformOrigin: 'left center' })}
+        style={{
+          position:'absolute',
+          left: FX - 60,
+          top: FY + 75,
+          width: 250,
+          height: 54,
+          opacity: 0,
+          zIndex: 50,
+          pointerEvents: 'auto',
+          cursor: 'pointer',
+          willChange: 'opacity, transform',
+          transformOrigin: 'left center',
+        }}
+      >
+        <Image
+          src="/block 1/fdghgyhjhk.png"
+          alt="Vehicle hover popup"
+          fill
+          sizes="250px"
+          style={{ objectFit:'contain', objectPosition:'left top' }}
+        />
       </div>
 
       {/* Icons — outline always visible, active overlay GSAP-driven */}

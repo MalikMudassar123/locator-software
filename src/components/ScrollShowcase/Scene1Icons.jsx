@@ -494,7 +494,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
             alt="Desktop dashboard interface"
             fill
             sizes={`${DT_W}px`}
-            style={{ objectFit:'cover', objectPosition:'left top' }}
+            style={{ objectFit:'contain', objectPosition:'left top' }}
           />
         </div>
       </div>
@@ -534,7 +534,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
         onMouseLeave={() => gsap.to(mobilePopupRef.current, { scale: 1, duration: 0.35, ease: 'power3.out', transformOrigin: 'left center' })}
         style={{
           position:'absolute',
-          left: PHONE_X - 5,
+          left: PHONE_X - 40,
           top: PHONE_Y + 70,
           width: 150,
           height: 44,

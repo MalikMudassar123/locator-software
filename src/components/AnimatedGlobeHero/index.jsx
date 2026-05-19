@@ -992,12 +992,12 @@ export default function AnimatedGlobeHero({
         }
 
         /* Positioning — closer to globe, tighter to center */
-        .stat-card--left  { left: clamp(3%, 5vw, 8%); }
-        .stat-card--right { right: clamp(3%, 5vw, 8%); }
-        .stat-card--top.stat-card--left     { top: 24%; }
-        .stat-card--bottom.stat-card--left  { top: 60%; }
-        .stat-card--top.stat-card--right    { top: 24%; }
-        .stat-card--bottom.stat-card--right { top: 60%; }
+        .stat-card--left  { left: clamp(8%, 14vw, 20%); }
+        .stat-card--right { right: clamp(8%, 14vw, 20%); }
+        .stat-card--top.stat-card--left     { top: 40%; }
+        .stat-card--bottom.stat-card--left  { top: 71%; }
+        .stat-card--top.stat-card--right    { top: 26%; }
+        .stat-card--bottom.stat-card--right { top: 57%; }
 
         @keyframes cardEnter {
           0%   { opacity: 0; transform: translateY(20px) scale(0.96); filter: blur(6px); }
@@ -1017,10 +1017,12 @@ export default function AnimatedGlobeHero({
         /* ----- Responsive ----- */
         @media (max-width: 1024px) {
           .stat-card { min-width: 112px; padding: 8px 12px; border-radius: 12px; }
-          .stat-card--top.stat-card--left     { top: 20%; }
-          .stat-card--bottom.stat-card--left  { top: 62%; }
-          .stat-card--top.stat-card--right    { top: 20%; }
-          .stat-card--bottom.stat-card--right { top: 62%; }
+          .stat-card--left  { left: clamp(6%, 10vw, 15%); }
+          .stat-card--right { right: clamp(6%, 10vw, 15%); }
+          .stat-card--top.stat-card--left     { top: 37%; }
+          .stat-card--bottom.stat-card--left  { top: 68%; }
+          .stat-card--top.stat-card--right    { top: 22%; }
+          .stat-card--bottom.stat-card--right { top: 58%; }
         }
         @media (max-width: 768px) {
           .globe-hero { aspect-ratio: 4 / 3; }

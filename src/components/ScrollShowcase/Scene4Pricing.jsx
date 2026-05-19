@@ -328,7 +328,7 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
             alt="Video telematics dashboard"
             fill
             sizes={`${FW}px`}
-            style={{ objectFit:'cover', objectPosition:'left top' }}
+            style={{ objectFit:'contain', objectPosition:'left top' }}
           />
         </div>
       </div>

@@ -265,7 +265,7 @@ function FullImage({ src, alt }) {
     <div style={{ position:'absolute', inset:0, display:'flex', flexDirection:'column', background:'#fff' }}>
       <BrowserBar/>
       <div style={{ position:'relative', flex:1 }}>
-        <Image src={src} alt={alt} fill style={{ objectFit:'cover', objectPosition:'left top' }} sizes="700px"/>
+        <Image src={src} alt={alt} fill style={{ objectFit:'contain', objectPosition:'left top' }} sizes="700px"/>
       </div>
     </div>
   );
@@ -623,7 +623,7 @@ const SceneTaskManager = forwardRef(function SceneTaskManager(_, ref) {
   }));
 
   return (
-    <div ref={outerRef} style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center', background:'#fafbff', overflow:'hidden' }}>
+    <div ref={outerRef} style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center', overflow:'visible' }}>
       <div style={{ position:'relative', width:TM_CW, height:TM_CH, transform:`scale(${canvasScale})`, transformOrigin:'center center', flexShrink:0 }}>
 
         {/* SVG gradient + filter definitions */}
@@ -684,7 +684,7 @@ const SceneTaskManager = forwardRef(function SceneTaskManager(_, ref) {
           <div style={{ position:'relative', flex:1 }}>
             <Image src="/software images/software images/Task Manager/jkliului.png"
               alt="Task Manager" fill sizes={`${DT_W}px`}
-              style={{ objectFit:'cover', objectPosition:'left top' }}/>
+              style={{ objectFit:'contain', objectPosition:'left top' }}/>
           </div>
         </div>
 
@@ -796,35 +796,36 @@ const SceneExpense = forwardRef(function SceneExpense(_, ref) {
               src="/software images/software images/Expense Manager/jikljoikiujk.png"
               alt="Expense Manager"
               fill sizes="700px"
-              style={{ objectFit:'contain', objectPosition:'center top' }}
+              style={{ objectFit:'contain', objectPosition:'left top' }}
             />
           </div>
         </div>
       </div>
 
-      {/* Mobile app overlay — left side, layer 2 (fits inside browser frame) */}
+      {/* Mobile app overlay — left side, layer 2 */}
       <div
         ref={mobileRef}
         onMouseEnter={() => gsap.to(mobileRef.current, { scale: 1.05, duration: 0.35, ease:'power3.out' })}
         onMouseLeave={() => gsap.to(mobileRef.current, { scale: 1,    duration: 0.35, ease:'power3.out' })}
         style={{
           position:'absolute',
-          left:'2%', top:'30%',
-          width:'54%', height:'60%',
+          left:'-2%', top:'18%',
           opacity:0, zIndex:40,
           cursor:'pointer',
           willChange:'opacity, transform',
           transformOrigin:'left center',
-          borderRadius:14,
-          overflow:'hidden',
-          boxShadow:'0 18px 50px rgba(15,23,42,0.22), 0 4px 14px rgba(15,23,42,0.10)',
         }}
       >
         <Image
           src="/software images/software images/Expense Manager/yijlkjlkj.png"
           alt="Expense Manager mobile"
-          fill sizes="320px"
-          style={{ objectFit:'contain', objectPosition:'left top' }}
+          width={155}
+          height={285}
+          style={{
+            borderRadius:16,
+            boxShadow:'0 18px 50px rgba(15,23,42,0.22), 0 4px 14px rgba(15,23,42,0.10)',
+            display:'block',
+          }}
         />
       </div>
 
@@ -835,7 +836,7 @@ const SceneExpense = forwardRef(function SceneExpense(_, ref) {
         onMouseLeave={() => gsap.to(popupRef.current, { scale: 1,    duration: 0.35, ease:'power3.out' })}
         style={{
           position:'absolute',
-          left:'-4%', top:'49%',
+          left:'-14%', top:'40%',
           width:'58%', height:'10%',
           opacity:0, zIndex:50,
           cursor:'pointer',
@@ -897,7 +898,7 @@ const SceneInspection = forwardRef(function SceneInspection(_, ref) {
               src="/software images/software images/Inspection/kjiuguy.png"
               alt="Inspection"
               fill sizes="700px"
-              style={{ objectFit:'contain', objectPosition:'center top' }}
+              style={{ objectFit:'contain', objectPosition:'left top' }}
             />
           </div>
         </div>
@@ -910,22 +911,23 @@ const SceneInspection = forwardRef(function SceneInspection(_, ref) {
         onMouseLeave={() => gsap.to(mobileRef.current, { scale: 1,    duration: 0.35, ease:'power3.out' })}
         style={{
           position:'absolute',
-          left:'8%', top:'35%',
-          width:'48%', height:'48%',
+          left:'-2%', top:'40%',
           opacity:0, zIndex:40,
           cursor:'pointer',
           willChange:'opacity, transform',
           transformOrigin:'left center',
-          borderRadius:14,
-          overflow:'hidden',
-          boxShadow:'0 18px 50px rgba(15,23,42,0.22), 0 4px 14px rgba(15,23,42,0.10)',
         }}
       >
         <Image
           src="/software images/software images/Inspection/hjgjbjkkj.png"
           alt="Inspection mobile"
-          fill sizes="320px"
-          style={{ objectFit:'contain', objectPosition:'left top' }}
+          width={155}
+          height={285}
+          style={{
+            borderRadius:16,
+            boxShadow:'0 18px 50px rgba(15,23,42,0.22), 0 4px 14px rgba(15,23,42,0.10)',
+            display:'block',
+          }}
         />
       </div>
     </div>
@@ -988,7 +990,7 @@ const SceneFleet = forwardRef(function SceneFleet(_, ref) {
         onMouseLeave={() => gsap.to(popupRef.current, { scale: 1,    duration: 0.35, ease:'power3.out' })}
         style={{
           position:'absolute',
-          left:'-3%', top:'18%',
+          left:'-9%', top:'18%',
           width:'42%', height:'10%',
           opacity:0, zIndex:50,
           cursor:'pointer',
@@ -1093,7 +1095,7 @@ export default function FeatureSlider() {
 
           {/* Carousel card */}
           <div style={{
-            borderRadius:20,
+            borderRadius:8,
             background:'linear-gradient(145deg, rgba(219,227,255,0.55) 0%, rgba(237,242,255,0.42) 50%, rgba(229,236,255,0.38) 100%)',
             padding:'32px 28px 28px',
           }}>

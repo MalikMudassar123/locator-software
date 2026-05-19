@@ -734,11 +734,8 @@ h6 {
   flex-shrink: 0;
 }
 .fs-scene-wrap {
-  border-radius: 16px;
-  overflow: hidden;
   position: relative;
-  background: #fafbff;
-  box-shadow: 0 2px 24px rgba(0,0,0,0.05);
+  overflow: visible;
   height: 220px;
 }
 @media (min-width: 480px) {

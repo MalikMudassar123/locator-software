@@ -45,6 +45,162 @@ export default function HeroSection() {
         }}
       />
 
+      {/* Uneven dark patch — top-left heavy cloud mass */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 1,
+          pointerEvents: 'none',
+          background:
+            'radial-gradient(58% 44% at 10% 6%, rgba(2, 12, 40, 0.52) 0%, rgba(4, 20, 58, 0.32) 38%, rgba(6, 28, 72, 0.12) 65%, rgba(8, 36, 88, 0) 82%)',
+        }}
+      />
+
+      {/* Uneven dark patch — top-right drift */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 1,
+          pointerEvents: 'none',
+          background:
+            'radial-gradient(52% 38% at 92% 3%, rgba(2, 10, 38, 0.50) 0%, rgba(4, 18, 55, 0.30) 40%, rgba(6, 26, 70, 0.10) 68%, rgba(8, 34, 85, 0) 84%)',
+        }}
+      />
+
+      {/* Uneven dark smear — mid-left */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 1,
+          pointerEvents: 'none',
+          background:
+            'radial-gradient(42% 28% at 16% 44%, rgba(3, 16, 50, 0.46) 0%, rgba(5, 24, 65, 0.26) 45%, rgba(7, 32, 80, 0.08) 72%, rgba(9, 40, 95, 0) 88%)',
+        }}
+      />
+
+      {/* Uneven dark smear — mid-right */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 1,
+          pointerEvents: 'none',
+          background:
+            'radial-gradient(46% 32% at 80% 32%, rgba(2, 14, 46, 0.48) 0%, rgba(4, 22, 62, 0.28) 40%, rgba(6, 30, 78, 0.10) 68%, rgba(8, 38, 92, 0) 85%)',
+        }}
+      />
+
+      {/* Uneven dark patch — upper center wisp */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 1,
+          pointerEvents: 'none',
+          background:
+            'radial-gradient(34% 20% at 52% 10%, rgba(3, 14, 48, 0.44) 0%, rgba(5, 22, 64, 0.24) 48%, rgba(7, 30, 78, 0.08) 74%, rgba(9, 38, 92, 0) 90%)',
+        }}
+      />
+
+      {/* Center patch — mid-center bulk */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 1,
+          pointerEvents: 'none',
+          background:
+            'radial-gradient(48% 30% at 50% 35%, rgba(3, 14, 48, 0.48) 0%, rgba(5, 22, 64, 0.28) 40%, rgba(7, 30, 78, 0.10) 68%, rgba(9, 38, 92, 0) 86%)',
+        }}
+      />
+
+      {/* Center patch — slightly left of center, lower */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 1,
+          pointerEvents: 'none',
+          background:
+            'radial-gradient(32% 18% at 44% 52%, rgba(2, 12, 42, 0.42) 0%, rgba(4, 20, 58, 0.22) 48%, rgba(6, 28, 72, 0.07) 76%, rgba(8, 36, 88, 0) 92%)',
+        }}
+      />
+
+      {/* Center patch — slightly right of center, upper-mid */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 1,
+          pointerEvents: 'none',
+          background:
+            'radial-gradient(28% 16% at 58% 22%, rgba(3, 14, 46, 0.40) 0%, rgba(5, 22, 62, 0.20) 50%, rgba(7, 30, 76, 0.06) 78%, rgba(9, 38, 90, 0) 92%)',
+        }}
+      />
+
+      {/* Extra dark patch — far left edge, mid height */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 1,
+          pointerEvents: 'none',
+          background:
+            'radial-gradient(36% 24% at 3% 55%, rgba(2, 12, 42, 0.45) 0%, rgba(4, 20, 58, 0.24) 48%, rgba(6, 28, 72, 0.08) 74%, rgba(8, 36, 88, 0) 88%)',
+        }}
+      />
+
+      {/* Extra dark patch — top center-right streak */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 1,
+          pointerEvents: 'none',
+          background:
+            'radial-gradient(30% 16% at 68% 6%, rgba(2, 10, 36, 0.42) 0%, rgba(4, 18, 52, 0.22) 50%, rgba(6, 26, 68, 0.07) 78%, rgba(8, 34, 84, 0) 92%)',
+        }}
+      />
+
+      {/* Extra dark patch — lower-left atmospheric depth */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 1,
+          pointerEvents: 'none',
+          background:
+            'radial-gradient(44% 22% at 8% 72%, rgba(2, 12, 40, 0.38) 0%, rgba(4, 20, 56, 0.20) 52%, rgba(6, 28, 72, 0.06) 78%, rgba(8, 36, 88, 0) 92%)',
+        }}
+      />
+
+      {/* Extra dark patch — right side mid-low */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 1,
+          pointerEvents: 'none',
+          background:
+            'radial-gradient(38% 20% at 96% 58%, rgba(2, 10, 38, 0.40) 0%, rgba(4, 18, 54, 0.22) 48%, rgba(6, 26, 70, 0.07) 75%, rgba(8, 34, 86, 0) 90%)',
+        }}
+      />
+
       {/* L3 — Bright white-gold sunrise core behind the Burj (kept low, near skyline base) */}
       <div
         aria-hidden="true"

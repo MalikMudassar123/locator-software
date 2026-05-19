@@ -225,7 +225,7 @@ export default function HeroSection() {
         className="hero-building-wrap"
         style={{
           position: 'absolute',
-          bottom: 'clamp(-40px, -6vw, -80px)',
+          bottom: '-30px',
           left: '50%',
           transform: 'translateX(-50%)',
           width: '98%',

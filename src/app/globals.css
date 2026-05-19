@@ -1537,7 +1537,7 @@ h6 {
 .nav-cta-pulse {
   position: relative;
   overflow: hidden;
-  animation: navCtaPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  box-shadow: 0 8px 24px rgba(255,255,255,0.55), 0 2px 8px rgba(26,110,154,0.18);
 }
 .nav-cta-pulse::before {
   content: '';
@@ -1556,11 +1556,4 @@ h6 {
   );
   animation: navCtaShine 2.8s ease-in-out infinite;
   pointer-events: none;
-}
-.nav-cta-pulse:hover {
-  animation: none;
-  box-shadow: 0 8px 24px rgba(255,255,255,0.55), 0 2px 8px rgba(26,110,154,0.18) !important;
-}
-.nav-cta-pulse:hover::before {
-  animation: none;
 }

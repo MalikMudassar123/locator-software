@@ -79,7 +79,7 @@ export default function Navbar() {
                   whiteSpace: 'nowrap',
                   letterSpacing: '0.01em',
                   transition: 'transform 0.45s cubic-bezier(0.65, 0, 0.35, 1)',
-                  transform: ctaHover ? 'translateY(-1.5px)' : 'translateY(0)',
+                  transform: 'translateY(-1.5px)',
                   display: 'inline-flex',
                   alignItems: 'center',
                   justifyContent: 'center',

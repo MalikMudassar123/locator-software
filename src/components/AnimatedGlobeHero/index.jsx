@@ -41,24 +41,18 @@ const DEFAULT_STATS = [
 ];
 
 /**
- * City nodes spread across the visible hemisphere using polar coordinates.
- * Each is placed at a normalized radius (0–1) from globe center at a given
- * angle (degrees, 0 = right, going clockwise). Radii are kept under 0.92
- * so nodes sit comfortably inside the rim, not on the edge.
+ * City nodes anchored close to the globe rim — arcs span across
+ * the full globe like flight paths / satellite orbits.
  */
 const CITY_POLAR = [
-  { angle: 215, radius: 0.62, name: "north-america" },  // upper-left
-  { angle: 270, radius: 0.78, name: "europe-north" },   // top
-  { angle: 305, radius: 0.55, name: "europe-east" },    // upper-right inner
-  { angle: 340, radius: 0.85, name: "asia-east" },      // right-top
-  { angle: 20,  radius: 0.78, name: "asia-south" },     // right
-  { angle: 60,  radius: 0.72, name: "oceania" },        // lower-right
-  { angle: 105, radius: 0.82, name: "south-pacific" },  // bottom
-  { angle: 150, radius: 0.68, name: "south-america" },  // lower-left
-  { angle: 185, radius: 0.80, name: "atlantic" },       // left
-  { angle: 250, radius: 0.40, name: "central" },        // inner-upper
-  { angle: 30,  radius: 0.35, name: "core" },           // inner-right
-  { angle: 130, radius: 0.45, name: "africa" },         // inner-lower-left
+  { angle: 268, radius: 0.86, name: "n01" },  // top
+  { angle: 315, radius: 0.82, name: "n02" },  // upper-right
+  { angle: 8,   radius: 0.86, name: "n03" },  // right-upper
+  { angle: 55,  radius: 0.82, name: "n04" },  // right-lower
+  { angle: 100, radius: 0.86, name: "n05" },  // lower-right
+  { angle: 148, radius: 0.82, name: "n06" },  // bottom
+  { angle: 195, radius: 0.86, name: "n07" },  // bottom-left
+  { angle: 242, radius: 0.82, name: "n08" },  // left
 ];
 
 const CITY_NODES = CITY_POLAR.map(({ angle, radius, name }) => {
@@ -71,20 +65,22 @@ const CITY_NODES = CITY_POLAR.map(({ angle, radius, name }) => {
 });
 
 /**
- * Connection arcs: cinematic curves between two city nodes.
- * Each arc lifts up off the globe surface, peaks above, then lands.
- * The `d` path is a quadratic curve with a control point above the midpoint.
+ * Connections — dense network mesh spanning the globe like flight routes.
+ * 12 arcs distributed so the animation keeps a continuous flow of pulses.
  */
 const ARC_CONNECTIONS = buildArcs([
-  [0, 4,  5.8, 0.0],   // NA -> Asia South (long diagonal across)
-  [1, 5,  6.2, 1.0],   // Europe N -> Oceania (top to bottom-right)
-  [8, 3,  5.5, 2.2],   // Atlantic -> Asia East (left to right)
-  [7, 2,  6.0, 3.4],   // SA -> Europe East (lower-left to upper-right)
-  [6, 0,  5.5, 4.6],   // South Pacific -> NA (bottom to top-left)
-  [4, 8,  5.8, 5.8],   // Asia South -> Atlantic (right to left)
-  [11, 3, 5.2, 7.0],   // Africa -> Asia East
-  [5, 0,  6.0, 8.2],   // Oceania -> NA (long diagonal)
-  [1, 7,  5.5, 9.4],   // Europe N -> SA (top to bottom-left)
+  [0, 4, 6.0, 0.0],   // top → lower-right (diameter)
+  [1, 5, 6.0, 0.5],   // upper-right → bottom
+  [2, 6, 6.0, 1.0],   // right-upper → bottom-left
+  [3, 7, 6.0, 1.5],   // right-lower → left (diameter)
+  [0, 5, 6.0, 2.0],   // top → bottom
+  [1, 6, 6.0, 2.5],   // upper-right → bottom-left (diameter)
+  [2, 7, 6.0, 3.0],   // right-upper → left
+  [0, 3, 6.0, 3.5],   // top → right-lower
+  [4, 7, 6.0, 4.0],   // lower-right → left
+  [5, 2, 6.0, 4.5],   // bottom → right-upper
+  [6, 1, 6.0, 5.0],   // bottom-left → upper-right
+  [0, 6, 6.0, 5.5],   // top → bottom-left
 ]);
 
 function buildArcs(spec) {
@@ -93,23 +89,20 @@ function buildArcs(spec) {
     const b = CITY_NODES[toIdx];
     const mx = (a.x + b.x) / 2;
     const my = (a.y + b.y) / 2;
-    const dist = Math.hypot(b.x - a.x, b.y - a.y);
-    // Lift control point AWAY from the globe center along the perpendicular
-    // of the chord — this makes each arc bulge outward (over the surface)
-    // instead of all pulling up to the same point above the globe.
     const dx = b.x - a.x;
     const dy = b.y - a.y;
-    // Perpendicular vector (rotate 90°)
-    let px = -dy;
-    let py = dx;
-    const pLen = Math.hypot(px, py) || 1;
-    px /= pLen;
-    py /= pLen;
-    // Always push perpendicular AWAY from globe center
-    const toCenterX = mx - CX;
-    const toCenterY = my - CY;
-    const sign = px * toCenterX + py * toCenterY > 0 ? 1 : -1;
-    const lift = Math.min(180, 70 + dist * 0.35);
+    const dist = Math.hypot(dx, dy) || 1;
+    // Perpendicular to the chord, normalized
+    const px = -dy / dist;
+    const py = dx / dist;
+    // Pick the perpendicular direction that goes AWAY from globe center
+    // so every arc bows outward like an orbital path. For chords passing
+    // through the center, alternate the bow side so the network has variety.
+    const toCenterX = CX - mx;
+    const toCenterY = CY - my;
+    const dot = px * toCenterX + py * toCenterY;
+    const sign = dot === 0 ? (i % 2 === 0 ? 1 : -1) : (dot > 0 ? -1 : 1);
+    const lift = 32 + dist * 0.22;
     const cx = mx + px * sign * lift;
     const cy = my + py * sign * lift;
     return {
@@ -205,25 +198,46 @@ export default function AnimatedGlobeHero({
               soft cyan mid, warm cream-amber at the horizon bottom.
               ============================================================ */}
           <linearGradient id="bgSky" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#1a6fa8" />
-            <stop offset="30%" stopColor="#4ba0cf" />
-            <stop offset="60%" stopColor="#9ed1e8" />
-            <stop offset="100%" stopColor="#e8eef0" />
+            <stop offset="0%" stopColor="#1f78b3" />
+            <stop offset="22%" stopColor="#4ba0cf" />
+            <stop offset="48%" stopColor="#8cc8e3" />
+            <stop offset="72%" stopColor="#d2e4ed" />
+            <stop offset="100%" stopColor="#f3ede0" />
           </linearGradient>
-          <radialGradient id="bgDeepBlue" cx="10%" cy="15%" r="75%">
-            <stop offset="0%" stopColor="#0f5a92" stopOpacity="0.55" />
-            <stop offset="60%" stopColor="#0f5a92" stopOpacity="0.08" />
-            <stop offset="100%" stopColor="#0f5a92" stopOpacity="0" />
+          <radialGradient id="bgDeepBlue" cx="18%" cy="12%" r="70%">
+            <stop offset="0%" stopColor="#0e5a92" stopOpacity="0.6" />
+            <stop offset="55%" stopColor="#0e5a92" stopOpacity="0.10" />
+            <stop offset="100%" stopColor="#0e5a92" stopOpacity="0" />
           </radialGradient>
-          <radialGradient id="bgHorizonGlow" cx="50%" cy="100%" r="60%">
-            <stop offset="0%" stopColor="#ffd89a" stopOpacity="0.7" />
-            <stop offset="35%" stopColor="#ffe2b3" stopOpacity="0.35" />
-            <stop offset="70%" stopColor="#fff0d4" stopOpacity="0.1" />
-            <stop offset="100%" stopColor="#fff0d4" stopOpacity="0" />
+          <radialGradient id="bgHorizonGlow" cx="45%" cy="108%" r="70%">
+            <stop offset="0%" stopColor="#ffbf7a" stopOpacity="0.85" />
+            <stop offset="25%" stopColor="#ffd092" stopOpacity="0.55" />
+            <stop offset="55%" stopColor="#ffe2b8" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="#ffe2b8" stopOpacity="0" />
           </radialGradient>
-          <radialGradient id="bgRightWarm" cx="90%" cy="65%" r="50%">
-            <stop offset="0%" stopColor="#ffe0b8" stopOpacity="0.35" />
+          <radialGradient id="bgRightWarm" cx="95%" cy="55%" r="55%">
+            <stop offset="0%" stopColor="#fff0d8" stopOpacity="0.55" />
+            <stop offset="50%" stopColor="#ffe0b8" stopOpacity="0.20" />
             <stop offset="100%" stopColor="#ffe0b8" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="bgBottomLeftWarm" cx="15%" cy="95%" r="45%">
+            <stop offset="0%" stopColor="#ffe4c0" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#ffe4c0" stopOpacity="0" />
+          </radialGradient>
+
+          {/* Reusable cool-blue cloud patch — vibrant saturated blue, no black */}
+          <radialGradient id="darkCloudPatch" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"  stopColor="#0e5fa6" stopOpacity="1" />
+            <stop offset="40%" stopColor="#1873b8" stopOpacity="0.62" />
+            <stop offset="65%" stopColor="#2486c8" stopOpacity="0.22" />
+            <stop offset="100%" stopColor="#2486c8" stopOpacity="0" />
+          </radialGradient>
+          {/* Cool watery blue patch — lighter, cyan-leaning for the right side */}
+          <radialGradient id="wateryBluePatch" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"  stopColor="#2d9ccc" stopOpacity="0.85" />
+            <stop offset="45%" stopColor="#48b2dc" stopOpacity="0.45" />
+            <stop offset="75%" stopColor="#6cc4e6" stopOpacity="0.15" />
+            <stop offset="100%" stopColor="#6cc4e6" stopOpacity="0" />
           </radialGradient>
 
           {/* ============================================================
@@ -311,13 +325,13 @@ export default function AnimatedGlobeHero({
           {/* Atmospheric halo — soft white ring around the globe */}
           <radialGradient id="atmoHalo" cx="50%" cy="50%" r="50%">
             <stop offset="55%" stopColor="#ffffff" stopOpacity="0" />
-            <stop offset="78%" stopColor="#cce8f8" stopOpacity="0.18" />
-            <stop offset="92%" stopColor="#ffffff" stopOpacity="0.55" />
+            <stop offset="78%" stopColor="#cce8f8" stopOpacity="0.03" />
+            <stop offset="92%" stopColor="#ffffff" stopOpacity="0.07" />
             <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
           </radialGradient>
           <radialGradient id="atmoHaloOuter" cx="50%" cy="50%" r="50%">
             <stop offset="70%" stopColor="#ffffff" stopOpacity="0" />
-            <stop offset="88%" stopColor="#e8f4fc" stopOpacity="0.22" />
+            <stop offset="88%" stopColor="#e8f4fc" stopOpacity="0.03" />
             <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
           </radialGradient>
 
@@ -346,6 +360,14 @@ export default function AnimatedGlobeHero({
           <filter id="cometGlow" x="-200%" y="-200%" width="500%" height="500%">
             <feGaussianBlur stdDeviation="3.5" result="blur" />
             <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <filter id="ringGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="6" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
@@ -413,7 +435,31 @@ export default function AnimatedGlobeHero({
             ==================================================================== */}
         <rect width={VB_W} height={VB_H} fill="url(#bgSky)" />
         <rect width={VB_W} height={VB_H} fill="url(#bgDeepBlue)" />
+
+        {/* Uneven cool-blue cloud patches — top + sides only.
+            Keep clear of the bottom where the warm horizon glow lives,
+            so blue and gold never muddy each other. */}
+        <g className="cloud-patches">
+          {/* Top band */}
+          <ellipse cx="128"  cy="32"  rx="742" ry="238" fill="url(#darkCloudPatch)" opacity="0.62" />
+          <ellipse cx="1178" cy="16"  rx="666" ry="205" fill="url(#darkCloudPatch)" opacity="0.60" />
+          <ellipse cx="666"  cy="54"  rx="435" ry="108" fill="url(#darkCloudPatch)" opacity="0.52" />
+          <ellipse cx="870"  cy="32"  rx="384" ry="86"  fill="url(#darkCloudPatch)" opacity="0.50" />
+          {/* Mid band */}
+          <ellipse cx="205"  cy="172" rx="538" ry="151" fill="url(#darkCloudPatch)" opacity="0.44" />
+          <ellipse cx="1024" cy="138" rx="589" ry="173" fill="url(#darkCloudPatch)" opacity="0.42" />
+          {/* Side patches hugging the globe (kept above the warm horizon) */}
+          <ellipse cx="60"   cy="260" rx="320" ry="180" fill="url(#darkCloudPatch)" opacity="0.36" />
+          <ellipse cx="1230" cy="240" rx="320" ry="180" fill="url(#darkCloudPatch)" opacity="0.34" />
+          <ellipse cx="180"  cy="360" rx="240" ry="150" fill="url(#darkCloudPatch)" opacity="0.26" />
+          <ellipse cx="1110" cy="340" rx="240" ry="150" fill="url(#darkCloudPatch)" opacity="0.24" />
+          {/* Cool watery blue around the 1M+ card area (right-mid / lower-right) */}
+          <ellipse cx="1150" cy="320" rx="280" ry="170" fill="url(#wateryBluePatch)" opacity="0.55" />
+          <ellipse cx="1230" cy="395" rx="220" ry="135" fill="url(#wateryBluePatch)" opacity="0.42" />
+        </g>
+
         <rect width={VB_W} height={VB_H} fill="url(#bgRightWarm)" />
+        <rect width={VB_W} height={VB_H} fill="url(#bgBottomLeftWarm)" />
         <rect width={VB_W} height={VB_H} fill="url(#bgHorizonGlow)" className="horizon-pulse" />
 
         {/* Starfield */}
@@ -530,15 +576,27 @@ export default function AnimatedGlobeHero({
             clipPath="url(#globeClip)"
           />
 
-          {/* Crisp rim light */}
+          {/* Glowing white ring — outer bloom layer */}
           <circle
             cx={CX}
             cy={CY}
-            r={R}
+            r={R + 6}
             fill="none"
             stroke="#ffffff"
-            strokeWidth="1.2"
-            opacity="0.7"
+            strokeWidth="8"
+            opacity="0.10"
+            filter="url(#ringGlow)"
+          />
+          {/* Glowing white ring — crisp bright stroke */}
+          <circle
+            cx={CX}
+            cy={CY}
+            r={R + 2}
+            fill="none"
+            stroke="#ffffff"
+            strokeWidth="4.5"
+            opacity="0.92"
+            filter="url(#ringGlow)"
           />
           {/* Inner edge darkening for sphere depth */}
           <circle
@@ -647,18 +705,20 @@ export default function AnimatedGlobeHero({
         <g className="arcs">
           {ARC_CONNECTIONS.map((arc, i) => (
             <g key={i}>
-              {/* Faint guide line so arcs are visible even between travels */}
+              {/* Static network route — always visible thin white line */}
               <path
                 d={arc.d}
+                pathLength="100"
                 fill="none"
                 stroke="#ffffff"
-                strokeWidth="0.5"
-                strokeOpacity="0.1"
+                strokeWidth="0.8"
+                strokeOpacity="0.45"
                 strokeLinecap="round"
               />
-              {/* Animated arc trail */}
+              {/* Animated bright pulse traveling the full path */}
               <path
                 d={arc.d}
+                pathLength="100"
                 fill="none"
                 stroke="#ffffff"
                 strokeWidth="1.4"
@@ -666,28 +726,28 @@ export default function AnimatedGlobeHero({
                 strokeOpacity="0"
                 filter="url(#softGlow)"
                 style={{
-                  animation: `arcDraw ${arc.dur}s cubic-bezier(0.45, 0, 0.25, 1) ${arc.delay}s infinite`,
+                  animation: `arcDraw ${arc.dur}s linear ${arc.delay}s infinite`,
                 }}
               />
-              {/* Comet head */}
+              {/* Traveling comet head — outer glow */}
               <circle
-                r="2.8"
+                r="3"
                 fill="#ffffff"
                 opacity="0"
                 filter="url(#cometGlow)"
                 style={{
                   offsetPath: `path('${arc.d}')`,
-                  animation: `arcComet ${arc.dur}s cubic-bezier(0.45, 0, 0.25, 1) ${arc.delay}s infinite`,
+                  animation: `arcComet ${arc.dur}s linear ${arc.delay}s infinite`,
                 }}
               />
-              {/* Bright core of comet */}
+              {/* Traveling comet head — bright core */}
               <circle
-                r="1.4"
+                r="1.5"
                 fill="#ffffff"
                 opacity="0"
                 style={{
                   offsetPath: `path('${arc.d}')`,
-                  animation: `arcComet ${arc.dur}s cubic-bezier(0.45, 0, 0.25, 1) ${arc.delay}s infinite`,
+                  animation: `arcComet ${arc.dur}s linear ${arc.delay}s infinite`,
                 }}
               />
               {/* Landing pulse at destination */}
@@ -744,7 +804,7 @@ export default function AnimatedGlobeHero({
           aspect-ratio: 1280 / 540;
           overflow: hidden;
           isolation: isolate;
-          background: #1a6fa8;
+          background: #1f78b3;
         }
         .globe-hero__svg {
           position: absolute;
@@ -842,12 +902,12 @@ export default function AnimatedGlobeHero({
           animation: haloBreatheOut 9s ease-in-out infinite;
         }
         @keyframes haloBreatheIn {
-          0%, 100% { opacity: 0.85; transform: scale(1); }
-          50%      { opacity: 1;    transform: scale(1.03); }
+          0%, 100% { opacity: 0.4; transform: scale(1); }
+          50%      { opacity: 0.55; transform: scale(1.03); }
         }
         @keyframes haloBreatheOut {
-          0%, 100% { opacity: 0.7; transform: scale(1); }
-          50%      { opacity: 0.95; transform: scale(1.05); }
+          0%, 100% { opacity: 0.3; transform: scale(1); }
+          50%      { opacity: 0.45; transform: scale(1.05); }
         }
 
         .globe-hero :global(.horizon-pulse) {
@@ -891,13 +951,13 @@ export default function AnimatedGlobeHero({
           50%      { stroke-opacity: 1; }
         }
 
-        /* ----- Arc animations ----- */
+        /* ----- Arc animations (normalized to pathLength=100) ----- */
         @keyframes arcDraw {
-          0%   { stroke-dasharray: 0 600; stroke-dashoffset: 0; stroke-opacity: 0; }
-          15%  { stroke-opacity: 0.95; }
-          50%  { stroke-dasharray: 220 600; stroke-dashoffset: -50; stroke-opacity: 0.95; }
-          80%  { stroke-dasharray: 80 600; stroke-dashoffset: -380; stroke-opacity: 0.5; }
-          100% { stroke-dasharray: 0 600; stroke-dashoffset: -600; stroke-opacity: 0; }
+          0%   { stroke-dasharray: 0 100; stroke-dashoffset: 0;    stroke-opacity: 0; }
+          10%  { stroke-opacity: 0.95; }
+          50%  { stroke-dasharray: 30 100; stroke-dashoffset: -25; stroke-opacity: 0.95; }
+          85%  { stroke-dasharray: 8 100;  stroke-dashoffset: -92; stroke-opacity: 0.5; }
+          100% { stroke-dasharray: 0 100;  stroke-dashoffset: -100; stroke-opacity: 0; }
         }
         @keyframes arcComet {
           0%   { offset-distance: 0%;   opacity: 0; }
@@ -936,15 +996,15 @@ export default function AnimatedGlobeHero({
           position: absolute;
           padding: clamp(9px, 1vw, 14px) clamp(13px, 1.4vw, 20px);
           min-width: clamp(118px, 13vw, 175px);
-          background: rgba(255, 255, 255, 0.09);
-          backdrop-filter: blur(18px) saturate(160%);
-          -webkit-backdrop-filter: blur(18px) saturate(160%);
-          border: 1px solid rgba(255, 255, 255, 0.22);
+          background: rgba(255, 255, 255, 0.015);
+          backdrop-filter: blur(5px) saturate(110%);
+          -webkit-backdrop-filter: blur(5px) saturate(110%);
+          border: 1px solid rgba(255, 255, 255, 0.07);
           border-radius: 14px;
           color: #ffffff;
           box-shadow:
-            0 8px 28px rgba(15, 70, 120, 0.16),
-            inset 0 1px 0 rgba(255, 255, 255, 0.28);
+            0 2px 8px rgba(15, 70, 120, 0.04),
+            inset 0 1px 0 rgba(255, 255, 255, 0.07);
           opacity: 0;
           transform: translateY(20px) scale(0.96);
           filter: blur(6px);
@@ -980,7 +1040,7 @@ export default function AnimatedGlobeHero({
           background: linear-gradient(
             115deg,
             transparent 35%,
-            rgba(255, 255, 255, 0.14) 50%,
+            rgba(255, 255, 255, 0.07) 50%,
             transparent 65%
           );
           transform: translateX(-100%);

@@ -10,7 +10,7 @@ import SmartIoT from "@/components/SmartIoT";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white relative overflow-x-hidden">
+    <main className="min-h-screen bg-white relative">
       <HeroSection />
 
       {/* Road needs elevated z-index to layer over hero bottom edge */}

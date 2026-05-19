@@ -77,7 +77,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body
-        className="min-h-screen bg-background font-poppins antialiased overflow-x-hidden"
+        className="min-h-screen bg-background font-poppins antialiased"
         suppressHydrationWarning
       >
         {children}

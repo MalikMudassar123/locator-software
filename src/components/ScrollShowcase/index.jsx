@@ -60,7 +60,7 @@ const fleetFeatures = [
       </svg>
     ),
     title: 'Daily Route History',
-    desc: 'Track vehicles live, monitor drivers, improve road team control.',
+    desc: 'Review full trip logs, stop reports, and route timelines for every vehicle, every day.',
   },
   {
     icon: (
@@ -81,7 +81,7 @@ const videoFeatures = [
         <path d="M17 9l5-3v12l-5-3V9z" stroke="#374151" strokeWidth="1.5" strokeLinejoin="round"/>
       </svg>
     ),
-    title: 'LIVE HD video',
+    title: 'Live HD Video',
     desc: 'Stream real-time HD road and driver footage to improve driver behavior, retrieve video on-demand, and enforce safer driving across',
   },
   {
@@ -91,7 +91,7 @@ const videoFeatures = [
         <path d="M9 12l2 2 4-4" stroke="#374151" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
     ),
-    title: 'Collision prevention',
+    title: 'Collision Prevention',
     desc: 'Analyze incidents with video evidence and deploy AI audible alerts to warn drivers instantly, reducing future collision risks.',
   },
   {
@@ -101,7 +101,7 @@ const videoFeatures = [
         <path d="M12 1v3M12 20v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M1 12h3M20 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12" stroke="#374151" strokeWidth="1.5" strokeLinecap="round"/>
       </svg>
     ),
-    title: 'Operational efficiency',
+    title: 'Operational Efficiency',
     desc: 'AI driver monitoring detects drowsiness and distraction (yawning, eye closure, phone use, looking away), helping managers take',
   },
   {
@@ -110,7 +110,7 @@ const videoFeatures = [
         <path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" stroke="#374151" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
     ),
-    title: 'Cost savings',
+    title: 'Cost Savings',
     desc: 'Cut costs from accidents, insurance claims, vehicle damage, and fraud disputes with undeniable recorded proof that protects your',
   },
 ];
@@ -160,7 +160,7 @@ function FeatureCard({ icon, title, desc }) {
         opacity: 0.82,
       }}>{icon}</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0, overflow: 'hidden' }}>
-        <span style={{ fontSize: 12, fontWeight: 700, color: 'rgb(100, 116, 141)', lineHeight: 1.25, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{title}</span>
+        <span style={{ fontSize: 12, fontWeight: 700, color: 'rgb(100, 116, 141)', lineHeight: 1.25 }}>{title}</span>
         <p style={{
           fontSize: 11,
           color: '#8896a7',
@@ -274,9 +274,8 @@ export default function ScrollShowcase() {
             )}
 
             {s.features && (
-              <div style={{
+              <div className="ss-feature-grid" style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)',
                 gap: 10,
                 maxWidth: 520,
               }}>

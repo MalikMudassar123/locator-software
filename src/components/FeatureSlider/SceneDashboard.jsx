@@ -1,5 +1,5 @@
 'use client';
-import { forwardRef, useLayoutEffect, useRef } from 'react';
+import { forwardRef, useLayoutEffect, useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 
 // ─── Browser-frame geometry ──────────────────────────────────────────────────
@@ -142,6 +142,22 @@ export default forwardRef(function SceneDashboard(_props, ref) {
   const allTweens    = useRef([]);
   const hoverTl      = useRef(null);
   const isHovered    = useRef(false);
+  const outerRef     = useRef(null);
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const el = outerRef.current;
+    if (!el) return;
+    const update = () => {
+      const w = el.offsetWidth;
+      if (!w) return;
+      setScale(Math.min(1, w / W));
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   useLayoutEffect(() => () => allTweens.current.forEach(t => t?.kill()), []);
 
@@ -256,11 +272,17 @@ export default forwardRef(function SceneDashboard(_props, ref) {
   return (
     <div
       ref={el => {
+        outerRef.current = el;
         if (el) { el.__play = play; el.__stop = stop; }
         if (typeof ref === 'function') ref(el); else if (ref) ref.current = el;
       }}
-      style={{ position: 'relative', width: W, maxWidth: '100%', height: H }}
+      style={{ position: 'relative', width: '100%', height: H * scale, overflow: 'hidden' }}
     >
+    <div style={{
+      position: 'absolute', top: 0, left: 0,
+      width: W, height: H,
+      transform: `scale(${scale})`, transformOrigin: 'top left',
+    }}>
       <style>{CSS}</style>
       <GlobalDefs/>
 
@@ -420,6 +442,7 @@ export default forwardRef(function SceneDashboard(_props, ref) {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 });

@@ -2,6 +2,37 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
+/**
+ * AnimatedGlobeHero
+ * ----------------------------------------------------------------------------
+ * A cinematic, premium globe hero section featuring:
+ *  - A photorealistic, procedurally textured Earth (no bitmap dependencies)
+ *  - Smooth continuous 360° rotation via a clipped texture pan
+ *  - Cinematic curved connection arcs that lift, travel, and land between cities
+ *  - Layered atmospheric glow tuned to match a warm-horizon sky gradient
+ *  - Minimal glass-morphism stat cards with subtle float + shimmer
+ *
+ * Notes on implementation:
+ *  - Earth surface is built from layered <feTurbulence> noise filters, giving
+ *    organic continent / cloud / terminator detail without external assets.
+ *  - The "rotation" is a wide texture strip clipped to the globe sphere; it
+ *    pans horizontally on loop, which reads as a true 360° spin and avoids
+ *    the stretched look of rotating a circular mask.
+ *  - Arcs use SVG offset-path for the comet head + a synchronized stroke
+ *    reveal for the trail — both share the same cubic-bezier curve so the
+ *    head sits perfectly on the trail's leading edge.
+ */
+
+/* ============================================================================
+ * CONSTANTS
+ * ========================================================================== */
+
+const VB_W = 1280;
+const VB_H = 540;
+const CX = 640;
+const CY = 270;
+const R = 175; // Globe radius
+
 const DEFAULT_STATS = [
   { value: "10+", label: "Years of industry experience", side: "left", row: "top" },
   { value: "20,000+", label: "Devices actively tracked", side: "left", row: "bottom" },
@@ -9,41 +40,91 @@ const DEFAULT_STATS = [
   { value: "1M+", label: "Data points processed daily", side: "right", row: "bottom" },
 ];
 
-const CX = 640;
-const CY = 270;
-const R = 180;
-
-const CONNECTIONS = [
-  { d: "M 490,180 Q 580,100 720,120 T 830,250", end: [830, 250], dur: 4.5, delay: 0 },
-  { d: "M 830,250 Q 850,360 740,420 T 560,400", end: [560, 400], dur: 4.5, delay: 1.5 },
-  { d: "M 560,400 Q 460,380 450,290 T 490,180", end: [490, 180], dur: 4.5, delay: 3.0 },
-  { d: "M 490,180 Q 590,220 640,270 T 760,340", end: [760, 340], dur: 4.5, delay: 4.5 },
-  { d: "M 760,340 Q 700,420 590,420 T 490,310", end: [490, 310], dur: 4.5, delay: 6.0 },
-  { d: "M 490,310 Q 520,210 620,150 T 790,210", end: [790, 210], dur: 4.5, delay: 7.5 },
+/**
+ * City nodes spread across the visible hemisphere using polar coordinates.
+ * Each is placed at a normalized radius (0–1) from globe center at a given
+ * angle (degrees, 0 = right, going clockwise). Radii are kept under 0.92
+ * so nodes sit comfortably inside the rim, not on the edge.
+ */
+const CITY_POLAR = [
+  { angle: 215, radius: 0.62, name: "north-america" },  // upper-left
+  { angle: 270, radius: 0.78, name: "europe-north" },   // top
+  { angle: 305, radius: 0.55, name: "europe-east" },    // upper-right inner
+  { angle: 340, radius: 0.85, name: "asia-east" },      // right-top
+  { angle: 20,  radius: 0.78, name: "asia-south" },     // right
+  { angle: 60,  radius: 0.72, name: "oceania" },        // lower-right
+  { angle: 105, radius: 0.82, name: "south-pacific" },  // bottom
+  { angle: 150, radius: 0.68, name: "south-america" },  // lower-left
+  { angle: 185, radius: 0.80, name: "atlantic" },       // left
+  { angle: 250, radius: 0.40, name: "central" },        // inner-upper
+  { angle: 30,  radius: 0.35, name: "core" },           // inner-right
+  { angle: 130, radius: 0.45, name: "africa" },         // inner-lower-left
 ];
 
-const STRAIGHT_LINES = [
-  { d: "M 380,140 L 920,400", dur: 3.5, delay: 0.5 },
-  { d: "M 920,150 L 380,400", dur: 3.5, delay: 2.0 },
-  { d: "M 470,90 L 810,460", dur: 3.5, delay: 3.5 },
-  { d: "M 810,90 L 470,460", dur: 3.5, delay: 5.0 },
-];
+const CITY_NODES = CITY_POLAR.map(({ angle, radius, name }) => {
+  const rad = (angle * Math.PI) / 180;
+  return {
+    x: CX + Math.cos(rad) * R * radius,
+    y: CY + Math.sin(rad) * R * radius,
+    name,
+  };
+});
 
-const STATIC_ARCS = [
-  "M 490,180 Q 580,100 720,120 T 830,250",
-  "M 830,250 Q 850,360 740,420 T 560,400",
-  "M 560,400 Q 460,380 450,290 T 490,180",
-  "M 490,180 Q 590,220 640,270 T 760,340",
-  "M 760,340 Q 700,420 590,420 T 490,310",
-  "M 490,310 Q 520,210 620,150 T 790,210",
-  "M 440,260 Q 640,90 850,260 Q 790,440 600,450 Q 430,410 440,260",
-];
+/**
+ * Connection arcs: cinematic curves between two city nodes.
+ * Each arc lifts up off the globe surface, peaks above, then lands.
+ * The `d` path is a quadratic curve with a control point above the midpoint.
+ */
+const ARC_CONNECTIONS = buildArcs([
+  [0, 4,  5.8, 0.0],   // NA -> Asia South (long diagonal across)
+  [1, 5,  6.2, 1.0],   // Europe N -> Oceania (top to bottom-right)
+  [8, 3,  5.5, 2.2],   // Atlantic -> Asia East (left to right)
+  [7, 2,  6.0, 3.4],   // SA -> Europe East (lower-left to upper-right)
+  [6, 0,  5.5, 4.6],   // South Pacific -> NA (bottom to top-left)
+  [4, 8,  5.8, 5.8],   // Asia South -> Atlantic (right to left)
+  [11, 3, 5.2, 7.0],   // Africa -> Asia East
+  [5, 0,  6.0, 8.2],   // Oceania -> NA (long diagonal)
+  [1, 7,  5.5, 9.4],   // Europe N -> SA (top to bottom-left)
+]);
 
-const CONSTELLATIONS = [
-  [[560, 235], [580, 245], [600, 250], [620, 245]],
-  [[700, 280], [715, 290], [730, 285]],
-  [[600, 350], [620, 360], [640, 358]],
-];
+function buildArcs(spec) {
+  return spec.map(([fromIdx, toIdx, dur, delay], i) => {
+    const a = CITY_NODES[fromIdx];
+    const b = CITY_NODES[toIdx];
+    const mx = (a.x + b.x) / 2;
+    const my = (a.y + b.y) / 2;
+    const dist = Math.hypot(b.x - a.x, b.y - a.y);
+    // Lift control point AWAY from the globe center along the perpendicular
+    // of the chord — this makes each arc bulge outward (over the surface)
+    // instead of all pulling up to the same point above the globe.
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    // Perpendicular vector (rotate 90°)
+    let px = -dy;
+    let py = dx;
+    const pLen = Math.hypot(px, py) || 1;
+    px /= pLen;
+    py /= pLen;
+    // Always push perpendicular AWAY from globe center
+    const toCenterX = mx - CX;
+    const toCenterY = my - CY;
+    const sign = px * toCenterX + py * toCenterY > 0 ? 1 : -1;
+    const lift = Math.min(180, 70 + dist * 0.35);
+    const cx = mx + px * sign * lift;
+    const cy = my + py * sign * lift;
+    return {
+      d: `M ${a.x},${a.y} Q ${cx},${cy} ${b.x},${b.y}`,
+      from: a,
+      to: b,
+      dur,
+      delay,
+    };
+  });
+}
+
+/* ============================================================================
+ * STARFIELD (seeded for SSR-safe stability)
+ * ========================================================================== */
 
 function mulberry32(seed) {
   let a = seed;
@@ -57,6 +138,10 @@ function mulberry32(seed) {
   };
 }
 
+/* ============================================================================
+ * COMPONENT
+ * ========================================================================== */
+
 export default function AnimatedGlobeHero({
   stats = DEFAULT_STATS,
   showStats = true,
@@ -65,6 +150,7 @@ export default function AnimatedGlobeHero({
   const sectionRef = useRef(null);
   const [active, setActive] = useState(false);
 
+  // Activate animations only when scrolled into view (perf + nicer entrance)
   useEffect(() => {
     if (!sectionRef.current) return;
     if (typeof IntersectionObserver === "undefined") {
@@ -80,42 +166,24 @@ export default function AnimatedGlobeHero({
           }
         });
       },
-      { threshold: 0.2, rootMargin: "0px 0px -10% 0px" }
+      { threshold: 0.15, rootMargin: "0px 0px -10% 0px" }
     );
     observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
 
+  // Stable starfield
   const stars = useMemo(() => {
-    const seeded = mulberry32(20250517);
-    return Array.from({ length: 70 }, () => ({
-      cx: seeded() * 1280,
-      cy: seeded() * 540,
-      r: 0.3 + seeded() * 1.1,
-      delay: seeded() * 6,
-      duration: 2.5 + seeded() * 3,
-      opacity: 0.25 + seeded() * 0.55,
+    const rnd = mulberry32(20260518);
+    return Array.from({ length: 90 }, () => ({
+      cx: rnd() * VB_W,
+      cy: rnd() * VB_H * 0.7, // Keep stars in upper portion
+      r: 0.3 + rnd() * 1.1,
+      delay: rnd() * 6,
+      duration: 2.5 + rnd() * 3,
+      opacity: 0.25 + rnd() * 0.55,
     }));
   }, []);
-
-  const cityNodes = useMemo(
-    () => [
-      [490, 180], [830, 250], [560, 400], [760, 340], [490, 310], [790, 210],
-      [640, 100], [640, 440], [560, 230], [720, 230], [640, 270],
-    ],
-    []
-  );
-
-  const bigBursts = useMemo(
-    () => [
-      { cx: 830, cy: 250, delay: 0 },
-      { cx: 490, cy: 180, delay: 1.8 },
-      { cx: 760, cy: 340, delay: 3.6 },
-      { cx: 560, cy: 400, delay: 5.4 },
-      { cx: 790, cy: 210, delay: 7.2 },
-    ],
-    []
-  );
 
   return (
     <div
@@ -125,80 +193,230 @@ export default function AnimatedGlobeHero({
       aria-label="Animated globe with global network connections"
     >
       <svg
-        viewBox="0 0 1280 540"
+        viewBox={`0 0 ${VB_W} ${VB_H}`}
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="xMidYMid slice"
         className="globe-hero__svg"
       >
         <defs>
-          <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#3a9cd6" />
-            <stop offset="35%" stopColor="#7fc6e3" />
-            <stop offset="70%" stopColor="#b8dae8" />
-            <stop offset="100%" stopColor="#e0e8eb" />
+          {/* ============================================================
+              BACKGROUND GRADIENTS
+              Tuned to match the reference: cool deep blue at top-left,
+              soft cyan mid, warm cream-amber at the horizon bottom.
+              ============================================================ */}
+          <linearGradient id="bgSky" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#1a6fa8" />
+            <stop offset="30%" stopColor="#4ba0cf" />
+            <stop offset="60%" stopColor="#9ed1e8" />
+            <stop offset="100%" stopColor="#e8eef0" />
           </linearGradient>
-          <radialGradient id="leftWash" cx="0%" cy="20%" r="80%">
-            <stop offset="0%" stopColor="#1e7fc4" stopOpacity="0.55" />
-            <stop offset="60%" stopColor="#1e7fc4" stopOpacity="0.1" />
-            <stop offset="100%" stopColor="#1e7fc4" stopOpacity="0" />
+          <radialGradient id="bgDeepBlue" cx="10%" cy="15%" r="75%">
+            <stop offset="0%" stopColor="#0f5a92" stopOpacity="0.55" />
+            <stop offset="60%" stopColor="#0f5a92" stopOpacity="0.08" />
+            <stop offset="100%" stopColor="#0f5a92" stopOpacity="0" />
           </radialGradient>
-          <radialGradient id="rightWarm" cx="100%" cy="60%" r="55%">
-            <stop offset="0%" stopColor="#fde6c0" stopOpacity="0.45" />
-            <stop offset="100%" stopColor="#fde6c0" stopOpacity="0" />
+          <radialGradient id="bgHorizonGlow" cx="50%" cy="100%" r="60%">
+            <stop offset="0%" stopColor="#ffd89a" stopOpacity="0.7" />
+            <stop offset="35%" stopColor="#ffe2b3" stopOpacity="0.35" />
+            <stop offset="70%" stopColor="#fff0d4" stopOpacity="0.1" />
+            <stop offset="100%" stopColor="#fff0d4" stopOpacity="0" />
           </radialGradient>
-          <radialGradient id="sunGlow" cx="50%" cy="92%" r="32%">
-            <stop offset="0%" stopColor="#ffd089" stopOpacity="0.95" />
-            <stop offset="35%" stopColor="#ffd9a0" stopOpacity="0.55" />
-            <stop offset="70%" stopColor="#ffe5c2" stopOpacity="0.2" />
-            <stop offset="100%" stopColor="#ffe5c2" stopOpacity="0" />
+          <radialGradient id="bgRightWarm" cx="90%" cy="65%" r="50%">
+            <stop offset="0%" stopColor="#ffe0b8" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#ffe0b8" stopOpacity="0" />
           </radialGradient>
-          <radialGradient id="globeGrad" cx="48%" cy="38%" r="62%">
-            <stop offset="0%" stopColor="#5fb8d8" />
-            <stop offset="40%" stopColor="#2e8fbf" />
-            <stop offset="75%" stopColor="#1a6da0" />
-            <stop offset="100%" stopColor="#0d4a78" />
+
+          {/* ============================================================
+              EARTH SURFACE — procedural texture via turbulence
+              Layer 1: low-frequency noise = continent shapes
+              Layer 2: higher-frequency = terrain detail / coastlines
+              Layer 3: very high frequency = cloud streaks
+              ============================================================ */}
+          <filter id="continentNoise" x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.008 0.014"
+              numOctaves="4"
+              seed="7"
+              stitchTiles="stitch"
+            />
+            <feColorMatrix
+              type="matrix"
+              values="0 0 0 0 0.45
+                      0 0 0 0 0.72
+                      0 0 0 0 0.88
+                      0 0 0 4 -1.6"
+            />
+          </filter>
+          <filter id="terrainNoise" x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.04"
+              numOctaves="3"
+              seed="13"
+              stitchTiles="stitch"
+            />
+            <feColorMatrix
+              type="matrix"
+              values="0 0 0 0 0.55
+                      0 0 0 0 0.78
+                      0 0 0 0 0.92
+                      0 0 0 1.5 -0.6"
+            />
+          </filter>
+          <filter id="cloudNoise" x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.018 0.045"
+              numOctaves="3"
+              seed="22"
+              stitchTiles="stitch"
+            />
+            <feColorMatrix
+              type="matrix"
+              values="0 0 0 0 1
+                      0 0 0 0 1
+                      0 0 0 0 1
+                      0 0 0 2.2 -0.9"
+            />
+          </filter>
+
+          {/* Ocean base — light sky-cyan to match background gradient */}
+          <radialGradient id="oceanBase" cx="42%" cy="35%" r="68%">
+            <stop offset="0%" stopColor="#a8d9ec" />
+            <stop offset="45%" stopColor="#7fc6e3" />
+            <stop offset="80%" stopColor="#4ba0cf" />
+            <stop offset="100%" stopColor="#3a8db8" />
           </radialGradient>
-          <radialGradient id="globeBottomGlow" cx="50%" cy="95%" r="55%">
-            <stop offset="0%" stopColor="#ffd89a" stopOpacity="0.65" />
-            <stop offset="50%" stopColor="#ffd89a" stopOpacity="0.2" />
+
+          {/* Spherical shading — top-left highlight, bottom-right shadow */}
+          <radialGradient id="sphereLight" cx="32%" cy="22%" r="55%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.55" />
+            <stop offset="35%" stopColor="#ffffff" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="sphereShade" cx="70%" cy="78%" r="65%">
+            <stop offset="0%" stopColor="#1a5680" stopOpacity="0" />
+            <stop offset="65%" stopColor="#1a5680" stopOpacity="0.15" />
+            <stop offset="100%" stopColor="#1a5680" stopOpacity="0.35" />
+          </radialGradient>
+
+          {/* Terminator — warm rim at bottom where horizon glow meets globe */}
+          <radialGradient id="terminatorWarm" cx="50%" cy="95%" r="55%">
+            <stop offset="0%" stopColor="#ffc68a" stopOpacity="0.75" />
+            <stop offset="50%" stopColor="#ffd89a" stopOpacity="0.25" />
             <stop offset="100%" stopColor="#ffd89a" stopOpacity="0" />
           </radialGradient>
-          <radialGradient id="globeHighlight" cx="38%" cy="22%" r="38%">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.5" />
+
+          {/* Atmospheric halo — soft white ring around the globe */}
+          <radialGradient id="atmoHalo" cx="50%" cy="50%" r="50%">
+            <stop offset="55%" stopColor="#ffffff" stopOpacity="0" />
+            <stop offset="78%" stopColor="#cce8f8" stopOpacity="0.18" />
+            <stop offset="92%" stopColor="#ffffff" stopOpacity="0.55" />
             <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
           </radialGradient>
-          <radialGradient id="haloGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="62%" stopColor="#ffffff" stopOpacity="0" />
-            <stop offset="80%" stopColor="#cae8f8" stopOpacity="0.4" />
-            <stop offset="90%" stopColor="#ffffff" stopOpacity="0.6" />
+          <radialGradient id="atmoHaloOuter" cx="50%" cy="50%" r="50%">
+            <stop offset="70%" stopColor="#ffffff" stopOpacity="0" />
+            <stop offset="88%" stopColor="#e8f4fc" stopOpacity="0.22" />
             <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
           </radialGradient>
-          <linearGradient id="rayGrad" x1="0%" y1="50%" x2="100%" y2="50%">
+
+          {/* Arc trail gradient — fades from transparent to bright white tip */}
+          <linearGradient id="arcTrail" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
-            <stop offset="50%" stopColor="#ffffff" stopOpacity="1" />
-            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+            <stop offset="60%" stopColor="#ffffff" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#ffffff" stopOpacity="1" />
           </linearGradient>
+
+          {/* Glow filters */}
           <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="3" result="blur" />
-            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            <feGaussianBlur stdDeviation="2.5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
           </filter>
-          <filter id="strongGlow" x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur stdDeviation="6" result="blur" />
-            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          <filter id="brightGlow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
           </filter>
-          <filter id="megaGlow" x="-200%" y="-200%" width="500%" height="500%">
-            <feGaussianBlur stdDeviation="10" />
+          <filter id="cometGlow" x="-200%" y="-200%" width="500%" height="500%">
+            <feGaussianBlur stdDeviation="3.5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
           </filter>
+
+          {/* Sphere clip path */}
           <clipPath id="globeClip">
-            <circle cx={CX} cy={CY} r={R + 1} />
+            <circle cx={CX} cy={CY} r={R} />
           </clipPath>
+
+          {/* ============================================================
+              Earth texture symbol — one self-contained tile, exactly
+              the width of the globe diameter. We render TWO copies of
+              this symbol side-by-side and translate the parent group
+              horizontally. When the leading copy has moved exactly one
+              tile-width, the trailing copy is now in the leading
+              copy's original position — so the loop is seamless.
+
+              This is the standard trick for endless scrolling textures.
+              Crucially, the noise is BAKED into the symbol once, so the
+              two copies render identical pixels — no procedural mismatch.
+              ============================================================ */}
+          <symbol
+            id="earthTile"
+            width={R * 2}
+            height={R * 2}
+            viewBox={`0 0 ${R * 2} ${R * 2}`}
+          >
+            <rect width={R * 2} height={R * 2} fill="#7fc6e3" />
+            <rect
+              width={R * 2}
+              height={R * 2}
+              fill="white"
+              filter="url(#continentNoise)"
+              opacity="0.78"
+            />
+            <rect
+              width={R * 2}
+              height={R * 2}
+              fill="white"
+              filter="url(#terrainNoise)"
+              opacity="0.16"
+              style={{ mixBlendMode: "screen" }}
+            />
+          </symbol>
+
+          <symbol
+            id="cloudTile"
+            width={R * 2}
+            height={R * 2}
+            viewBox={`0 0 ${R * 2} ${R * 2}`}
+          >
+            <rect
+              width={R * 2}
+              height={R * 2}
+              fill="white"
+              filter="url(#cloudNoise)"
+              opacity="0.6"
+            />
+          </symbol>
         </defs>
 
-        <rect width="1280" height="540" fill="url(#bgGrad)" />
-        <rect width="1280" height="540" fill="url(#leftWash)" />
-        <rect width="1280" height="540" fill="url(#rightWarm)" />
-        <rect width="1280" height="540" fill="url(#sunGlow)" className="sun-pulse" />
+        {/* ====================================================================
+            BACKGROUND LAYERS
+            ==================================================================== */}
+        <rect width={VB_W} height={VB_H} fill="url(#bgSky)" />
+        <rect width={VB_W} height={VB_H} fill="url(#bgDeepBlue)" />
+        <rect width={VB_W} height={VB_H} fill="url(#bgRightWarm)" />
+        <rect width={VB_W} height={VB_H} fill="url(#bgHorizonGlow)" className="horizon-pulse" />
 
+        {/* Starfield */}
         <g className="stars">
           {stars.map((s, i) => (
             <circle
@@ -210,181 +428,281 @@ export default function AnimatedGlobeHero({
               opacity={s.opacity}
               style={{
                 animation: `twinkle ${s.duration}s ease-in-out ${s.delay}s infinite`,
-                transformOrigin: `${s.cx}px ${s.cy}px`,
+                transformBox: "fill-box",
+                transformOrigin: "center",
               }}
             />
           ))}
         </g>
 
+        {/* ====================================================================
+            GLOBE
+            ==================================================================== */}
         <g className="globe-group">
-          <circle cx={CX} cy={CY} r={R + 48} fill="url(#haloGlow)" className="halo-pulse" />
-          <circle cx={CX} cy={CY} r={R} fill="url(#globeGrad)" opacity="0.95" />
+          {/* Outer soft atmosphere */}
+          <circle
+            cx={CX}
+            cy={CY}
+            r={R + 60}
+            fill="url(#atmoHaloOuter)"
+            className="halo-outer"
+          />
+          {/* Inner crisp atmosphere */}
+          <circle
+            cx={CX}
+            cy={CY}
+            r={R + 28}
+            fill="url(#atmoHalo)"
+            className="halo-inner"
+          />
 
-          <g clipPath="url(#globeClip)" className="globe-rotate">
-            <g opacity="0.65">
-              <path d="M 540,200 Q 580,185 630,195 Q 680,205 700,230 Q 690,260 645,265 Q 590,255 560,240 Q 540,225 540,200 Z" fill="#8fd8ee" opacity="0.55" />
-              <path d="M 590,305 Q 640,295 695,310 Q 720,335 700,365 Q 650,375 600,360 Q 575,335 590,305 Z" fill="#6ec8e0" opacity="0.5" />
-              <path d="M 490,245 Q 515,230 540,250 Q 550,275 530,295 Q 495,295 490,265 Z" fill="#8fd8ee" opacity="0.45" />
-              <path d="M 735,260 Q 770,250 790,280 Q 780,305 750,310 Q 725,290 735,260 Z" fill="#8fd8ee" opacity="0.45" />
-              <ellipse cx="600" cy="195" rx="75" ry="14" fill="#ffffff" opacity="0.22" transform="rotate(-8 600 195)" />
-              <ellipse cx="690" cy="225" rx="55" ry="10" fill="#ffffff" opacity="0.18" transform="rotate(5 690 225)" />
-              <ellipse cx="570" cy="280" rx="80" ry="12" fill="#ffffff" opacity="0.24" transform="rotate(-3 570 280)" />
-              <ellipse cx="700" cy="320" rx="60" ry="10" fill="#ffffff" opacity="0.2" transform="rotate(7 700 320)" />
-              <ellipse cx="580" cy="360" rx="70" ry="11" fill="#ffffff" opacity="0.22" transform="rotate(-5 580 360)" />
-              <ellipse cx="650" cy="155" rx="45" ry="7" fill="#ffffff" opacity="0.17" />
+          {/* Ocean base sphere */}
+          <circle cx={CX} cy={CY} r={R} fill="url(#oceanBase)" />
+
+          {/* Rotating Earth texture — two identical copies of the texture
+              tile placed side-by-side, translated as a group. When the
+              group has shifted left by exactly one tile-width, the second
+              copy is in the first copy's original spot — so when the
+              animation loops back to 0, there's no visible jump. This is
+              what makes the surface VISIBLY rotate (the noise is baked
+              into a symbol, so it moves with the geometry). */}
+          <g clipPath="url(#globeClip)">
+            <g className="earth-rotate">
+              <use
+                href="#earthTile"
+                x={CX - R}
+                y={CY - R}
+                width={R * 2}
+                height={R * 2}
+              />
+              <use
+                href="#earthTile"
+                x={CX - R + R * 2}
+                y={CY - R}
+                width={R * 2}
+                height={R * 2}
+              />
             </g>
           </g>
 
-          <g clipPath="url(#globeClip)" className="constellations">
-            {CONSTELLATIONS.map((cluster, ci) => (
-              <g key={ci} style={{ animation: `twinkle ${3 + ci}s ease-in-out ${ci * 0.7}s infinite` }}>
-                {cluster.map(([cx, cy], i) => (
-                  <circle key={i} cx={cx} cy={cy} r="1.4" fill="#ffffff" opacity="0.9" />
-                ))}
-              </g>
-            ))}
-          </g>
-
-          <g clipPath="url(#globeClip)" className="globe-sparkles">
-            {[
-              [560, 180], [640, 215], [700, 200], [580, 270], [680, 310],
-              [620, 350], [560, 320], [720, 270], [600, 400], [660, 380],
-              [510, 260], [740, 320], [620, 160], [680, 410], [540, 380],
-            ].map(([cx, cy], i) => (
-              <circle
-                key={i}
-                cx={cx}
-                cy={cy}
-                r="1.3"
-                fill="#ffffff"
-                style={{
-                  animation: `twinkle ${2 + (i % 4)}s ease-in-out ${i * 0.25}s infinite`,
-                  transformOrigin: `${cx}px ${cy}px`,
-                }}
+          {/* Cloud layer — same two-copy technique, slower drift */}
+          <g clipPath="url(#globeClip)" style={{ mixBlendMode: "screen" }}>
+            <g className="cloud-rotate" opacity="0.55">
+              <use
+                href="#cloudTile"
+                x={CX - R}
+                y={CY - R}
+                width={R * 2}
+                height={R * 2}
               />
-            ))}
+              <use
+                href="#cloudTile"
+                x={CX - R + R * 2}
+                y={CY - R}
+                width={R * 2}
+                height={R * 2}
+              />
+            </g>
           </g>
 
-          <circle cx={CX} cy={CY} r={R} fill="url(#globeBottomGlow)" clipPath="url(#globeClip)" />
-          <circle cx={CX} cy={CY} r={R} fill="url(#globeHighlight)" />
-          <circle cx={CX} cy={CY} r={R} fill="none" stroke="#ffffff" strokeWidth="2.5" opacity="0.95" filter="url(#softGlow)" />
-          <circle cx={CX} cy={CY} r={R} fill="none" stroke="#ffffff" strokeWidth="0.8" opacity="0.55" />
+          {/* Spherical shading — applied after texture for proper 3D feel */}
+          <circle
+            cx={CX}
+            cy={CY}
+            r={R}
+            fill="url(#sphereLight)"
+            clipPath="url(#globeClip)"
+          />
+          <circle
+            cx={CX}
+            cy={CY}
+            r={R}
+            fill="url(#sphereShade)"
+            clipPath="url(#globeClip)"
+          />
+
+          {/* Warm terminator glow at bottom */}
+          <circle
+            cx={CX}
+            cy={CY}
+            r={R}
+            fill="url(#terminatorWarm)"
+            clipPath="url(#globeClip)"
+          />
+
+          {/* Crisp rim light */}
+          <circle
+            cx={CX}
+            cy={CY}
+            r={R}
+            fill="none"
+            stroke="#ffffff"
+            strokeWidth="1.2"
+            opacity="0.7"
+          />
+          {/* Inner edge darkening for sphere depth */}
+          <circle
+            cx={CX}
+            cy={CY}
+            r={R - 0.5}
+            fill="none"
+            stroke="#2e7ba8"
+            strokeWidth="1.5"
+            opacity="0.25"
+          />
         </g>
 
-        <g className="static-arcs">
-          {STATIC_ARCS.map((d, i) => (
-            <path key={i} d={d} fill="none" stroke="#ffffff" strokeWidth="0.7" strokeOpacity="0.22" strokeLinecap="round" />
-          ))}
+        {/* ====================================================================
+            ORBITAL RINGS + SATELLITES — premium 3D orbital ring system.
+            Three elliptical rings at different tilts encircle the globe,
+            with satellite dots traveling along each path via CSS offset-path
+            (GPU-accelerated, no layout cost). Gives a cinematic high-end
+            SaaS "global network" feel without breaking the existing layout.
+            ==================================================================== */}
+        <g className="orbital-layer">
+          {/* Outer orbit — broadest, gentle tilt left */}
+          <ellipse
+            cx={CX} cy={CY}
+            rx={R * 1.48} ry={R * 0.46}
+            fill="none"
+            stroke="rgba(255,255,255,0.22)"
+            strokeWidth="0.7"
+            transform={`rotate(-16 ${CX} ${CY})`}
+            className="orbit-ring orbit-ring--outer"
+            filter="url(#softGlow)"
+          />
+          {/* Middle orbit — opposite tilt, dashed */}
+          <ellipse
+            cx={CX} cy={CY}
+            rx={R * 1.32} ry={R * 0.34}
+            fill="none"
+            stroke="rgba(190,225,255,0.28)"
+            strokeWidth="0.6"
+            strokeDasharray="3 2.5"
+            transform={`rotate(22 ${CX} ${CY})`}
+            className="orbit-ring orbit-ring--middle"
+          />
+          {/* Inner orbit — subtle, just outside atmosphere */}
+          <ellipse
+            cx={CX} cy={CY}
+            rx={R * 1.18} ry={R * 0.27}
+            fill="none"
+            stroke="rgba(255,255,255,0.14)"
+            strokeWidth="0.5"
+            transform={`rotate(-6 ${CX} ${CY})`}
+            className="orbit-ring orbit-ring--inner"
+          />
+
+          {/* Orbiting satellites — native SVG animateMotion along each ring path */}
+          <circle r="2.8" fill="#ffffff" filter="url(#cometGlow)" className="satellite">
+            <animateMotion dur="18s" repeatCount="indefinite" rotate="auto"
+              path={`M ${CX - R * 1.48} ${CY} A ${R * 1.48} ${R * 0.46} -16 1 1 ${CX + R * 1.48} ${CY} A ${R * 1.48} ${R * 0.46} -16 1 1 ${CX - R * 1.48} ${CY}`}
+            />
+          </circle>
+          <circle r="1.7" fill="#cfeaff" filter="url(#softGlow)" className="satellite">
+            <animateMotion dur="13s" repeatCount="indefinite" rotate="auto" begin="-4s"
+              path={`M ${CX - R * 1.32} ${CY} A ${R * 1.32} ${R * 0.34} 22 1 0 ${CX + R * 1.32} ${CY} A ${R * 1.32} ${R * 0.34} 22 1 0 ${CX - R * 1.32} ${CY}`}
+            />
+          </circle>
+          <circle r="2.0" fill="#ffffff" filter="url(#softGlow)" className="satellite">
+            <animateMotion dur="22s" repeatCount="indefinite" rotate="auto" begin="-10s"
+              path={`M ${CX - R * 1.18} ${CY} A ${R * 1.18} ${R * 0.27} -6 1 1 ${CX + R * 1.18} ${CY} A ${R * 1.18} ${R * 0.27} -6 1 1 ${CX - R * 1.18} ${CY}`}
+            />
+          </circle>
+          {/* Counter-orbital small particle for extra life */}
+          <circle r="1.3" fill="#ffe7b8" filter="url(#softGlow)" className="satellite">
+            <animateMotion dur="26s" repeatCount="indefinite" rotate="auto" begin="-16s"
+              path={`M ${CX + R * 1.48} ${CY} A ${R * 1.48} ${R * 0.46} -16 1 0 ${CX - R * 1.48} ${CY} A ${R * 1.48} ${R * 0.46} -16 1 0 ${CX + R * 1.48} ${CY}`}
+            />
+          </circle>
         </g>
 
+        {/* ====================================================================
+            CITY NODES — pulsing markers anchored to the visible hemisphere
+            ==================================================================== */}
         <g className="city-nodes">
-          {cityNodes.map(([cx, cy], i) => (
+          {CITY_NODES.map((node, i) => (
             <g
-              key={i}
+              key={node.name}
               style={{
-                animation: `cityPulse ${3 + (i % 3)}s ease-in-out ${i * 0.4}s infinite`,
+                animation: `cityPulse ${3.2 + (i % 4) * 0.4}s ease-in-out ${i * 0.35}s infinite`,
                 transformBox: "fill-box",
                 transformOrigin: "center",
               }}
             >
-              <circle cx={cx} cy={cy} r="5" fill="#ffffff" opacity="0.18" filter="url(#strongGlow)" />
-              <circle cx={cx} cy={cy} r="2" fill="#ffffff" filter="url(#softGlow)" />
-              <circle cx={cx} cy={cy} r="1" fill="#ffffff" />
+              <circle cx={node.x} cy={node.y} r="6" fill="#ffffff" opacity="0.15" filter="url(#brightGlow)" />
+              <circle cx={node.x} cy={node.y} r="2" fill="#ffffff" filter="url(#softGlow)" />
+              <circle cx={node.x} cy={node.y} r="0.9" fill="#ffffff" />
             </g>
           ))}
         </g>
 
-        <g className="straight-lines" filter="url(#softGlow)">
-          {STRAIGHT_LINES.map((line, i) => (
+        {/* ====================================================================
+            CONNECTION ARCS — cinematic city-to-city travel paths
+            Each arc has:
+              - A faint static guide line (very subtle)
+              - An animated stroke that draws along the path
+              - A bright comet head following the same offset-path
+            ==================================================================== */}
+        <g className="arcs">
+          {ARC_CONNECTIONS.map((arc, i) => (
             <g key={i}>
+              {/* Faint guide line so arcs are visible even between travels */}
               <path
-                d={line.d}
+                d={arc.d}
                 fill="none"
                 stroke="#ffffff"
-                strokeWidth="1.3"
+                strokeWidth="0.5"
+                strokeOpacity="0.1"
                 strokeLinecap="round"
-                strokeOpacity="0"
-                style={{
-                  strokeDasharray: "0 1500",
-                  animation: `travelLineLong ${line.dur}s linear ${line.delay}s infinite`,
-                }}
               />
-              <circle
-                r="2.5"
-                fill="#ffffff"
-                opacity="0"
-                filter="url(#strongGlow)"
-                style={{
-                  offsetPath: `path('${line.d}')`,
-                  animation: `travelDot ${line.dur}s linear ${line.delay}s infinite`,
-                }}
-              />
-            </g>
-          ))}
-        </g>
-
-        <g className="connections" filter="url(#softGlow)">
-          {CONNECTIONS.map((conn, i) => (
-            <g key={i}>
+              {/* Animated arc trail */}
               <path
-                d={conn.d}
+                d={arc.d}
                 fill="none"
                 stroke="#ffffff"
-                strokeWidth="1.6"
+                strokeWidth="1.4"
                 strokeLinecap="round"
                 strokeOpacity="0"
+                filter="url(#softGlow)"
                 style={{
-                  strokeDasharray: "0 1500",
-                  animation: `travelLine ${conn.dur}s cubic-bezier(0.55, 0, 0.4, 1) ${conn.delay}s infinite`,
+                  animation: `arcDraw ${arc.dur}s cubic-bezier(0.45, 0, 0.25, 1) ${arc.delay}s infinite`,
                 }}
               />
+              {/* Comet head */}
               <circle
-                r="3"
+                r="2.8"
                 fill="#ffffff"
                 opacity="0"
-                filter="url(#strongGlow)"
+                filter="url(#cometGlow)"
                 style={{
-                  offsetPath: `path('${conn.d}')`,
-                  animation: `travelDot ${conn.dur}s cubic-bezier(0.55, 0, 0.4, 1) ${conn.delay}s infinite`,
+                  offsetPath: `path('${arc.d}')`,
+                  animation: `arcComet ${arc.dur}s cubic-bezier(0.45, 0, 0.25, 1) ${arc.delay}s infinite`,
                 }}
               />
-            </g>
-          ))}
-        </g>
-
-        <g className="starbursts">
-          {bigBursts.map((b, i) => (
-            <g
-              key={i}
-              style={{
-                animation: `starburst 9s ease-out ${b.delay}s infinite`,
-                transformBox: "fill-box",
-                transformOrigin: "center",
-                opacity: 0,
-              }}
-            >
-              <circle cx={b.cx} cy={b.cy} r="8" fill="#ffffff" filter="url(#megaGlow)" opacity="0.9" />
-              <circle cx={b.cx} cy={b.cy} r="3" fill="#ffffff" filter="url(#softGlow)" />
-              <g stroke="url(#rayGrad)" strokeWidth="1.5" strokeLinecap="round" filter="url(#softGlow)">
-                <line x1={b.cx - 32} y1={b.cy} x2={b.cx + 32} y2={b.cy} />
-                <line x1={b.cx} y1={b.cy - 32} x2={b.cx} y2={b.cy + 32} />
-              </g>
-              <g stroke="#ffffff" strokeWidth="0.9" strokeLinecap="round" opacity="0.8" filter="url(#softGlow)">
-                <line x1={b.cx - 14} y1={b.cy - 14} x2={b.cx + 14} y2={b.cy + 14} />
-                <line x1={b.cx - 14} y1={b.cy + 14} x2={b.cx + 14} y2={b.cy - 14} />
-              </g>
+              {/* Bright core of comet */}
               <circle
-                cx={b.cx}
-                cy={b.cy}
+                r="1.4"
+                fill="#ffffff"
+                opacity="0"
+                style={{
+                  offsetPath: `path('${arc.d}')`,
+                  animation: `arcComet ${arc.dur}s cubic-bezier(0.45, 0, 0.25, 1) ${arc.delay}s infinite`,
+                }}
+              />
+              {/* Landing pulse at destination */}
+              <circle
+                cx={arc.to.x}
+                cy={arc.to.y}
                 r="3"
                 fill="none"
                 stroke="#ffffff"
-                strokeWidth="1"
-                opacity="0.7"
+                strokeWidth="1.2"
+                opacity="0"
                 style={{
-                  animation: `ringExpand 9s ease-out ${b.delay}s infinite`,
                   transformBox: "fill-box",
                   transformOrigin: "center",
+                  animation: `arcLand ${arc.dur}s ease-out ${arc.delay}s infinite`,
                 }}
               />
             </g>
@@ -392,31 +710,41 @@ export default function AnimatedGlobeHero({
         </g>
       </svg>
 
+      {/* ======================================================================
+          FLOATING STAT CARDS — minimal glass-morphism
+          ====================================================================== */}
       {showStats && (
         <div className="globe-hero__stats">
           {stats.map((stat, i) => (
             <div
               key={i}
               className={`stat-card stat-card--${stat.side} stat-card--${stat.row}`}
-              style={{ "--enter-delay": `${1.6 + i * 0.18}s`, "--float-delay": `${i * 0.7}s` }}
+              style={{
+                "--enter-delay": `${1.4 + i * 0.15}s`,
+                "--float-delay": `${i * 0.6}s`,
+              }}
             >
               <div className="stat-card__inner">
                 <div className="stat-card__value">{stat.value}</div>
                 <div className="stat-card__label">{stat.label}</div>
               </div>
-              <span className="stat-card__shimmer" />
+              <span className="stat-card__shimmer" aria-hidden="true" />
             </div>
           ))}
         </div>
       )}
 
-      <style jsx>{`
+      {/* ======================================================================
+          STYLES
+          ====================================================================== */}
+      <style jsx global>{`
         .globe-hero {
           position: relative;
           width: 100%;
           aspect-ratio: 1280 / 540;
           overflow: hidden;
           isolation: isolate;
+          background: #1a6fa8;
         }
         .globe-hero__svg {
           position: absolute;
@@ -426,136 +754,178 @@ export default function AnimatedGlobeHero({
           display: block;
         }
 
+        /* ----- Entrance gating ----- */
         .globe-hero :global(.globe-group),
-        .globe-hero :global(.static-arcs),
         .globe-hero :global(.city-nodes),
-        .globe-hero :global(.connections),
-        .globe-hero :global(.straight-lines),
-        .globe-hero :global(.starbursts),
-        .globe-hero :global(.constellations),
-        .globe-hero :global(.globe-sparkles),
+        .globe-hero :global(.arcs),
         .globe-hero :global(.stars),
-        .globe-hero :global(.sun-pulse),
-        .globe-hero :global(.halo-pulse),
-        .globe-hero :global(.globe-rotate) {
+        .globe-hero :global(.horizon-pulse),
+        .globe-hero :global(.halo-inner),
+        .globe-hero :global(.halo-outer),
+        .globe-hero :global(.earth-rotate),
+        .globe-hero :global(.cloud-rotate),
+        .globe-hero :global(.satellite),
+        .globe-hero :global(.orbit-ring) {
           animation-play-state: paused !important;
         }
         .globe-hero :global(.globe-group),
-        .globe-hero :global(.static-arcs),
         .globe-hero :global(.city-nodes),
-        .globe-hero :global(.connections),
-        .globe-hero :global(.straight-lines),
-        .globe-hero :global(.starbursts) {
+        .globe-hero :global(.arcs) {
           opacity: 0;
         }
 
         .globe-hero.is-active :global(.globe-group),
-        .globe-hero.is-active :global(.static-arcs),
         .globe-hero.is-active :global(.city-nodes),
-        .globe-hero.is-active :global(.connections),
-        .globe-hero.is-active :global(.straight-lines),
-        .globe-hero.is-active :global(.starbursts),
-        .globe-hero.is-active :global(.constellations),
-        .globe-hero.is-active :global(.globe-sparkles),
+        .globe-hero.is-active :global(.arcs),
         .globe-hero.is-active :global(.stars),
-        .globe-hero.is-active :global(.sun-pulse),
-        .globe-hero.is-active :global(.halo-pulse),
-        .globe-hero.is-active :global(.globe-rotate),
-        .globe-hero.is-active :global(.starbursts > g > circle:last-child) {
+        .globe-hero.is-active :global(.horizon-pulse),
+        .globe-hero.is-active :global(.halo-inner),
+        .globe-hero.is-active :global(.halo-outer),
+        .globe-hero.is-active :global(.earth-rotate),
+        .globe-hero.is-active :global(.cloud-rotate),
+        .globe-hero.is-active :global(.satellite),
+        .globe-hero.is-active :global(.orbit-ring) {
           animation-play-state: running !important;
         }
 
         .globe-hero.is-active :global(.globe-group) {
-          animation: globeReveal 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+          animation: globeReveal 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
           transform-box: fill-box;
           transform-origin: ${CX}px ${CY}px;
         }
-        .globe-hero.is-active :global(.static-arcs),
         .globe-hero.is-active :global(.city-nodes) {
-          animation: fadeIn 0.9s ease-out 1.1s forwards;
+          animation: fadeIn 1s ease-out 1.3s forwards;
         }
-        .globe-hero.is-active :global(.connections),
-        .globe-hero.is-active :global(.straight-lines),
-        .globe-hero.is-active :global(.starbursts) {
-          animation: fadeIn 0.7s ease-out 1.3s forwards;
+        .globe-hero.is-active :global(.arcs) {
+          animation: fadeIn 0.8s ease-out 1.5s forwards;
         }
 
         @keyframes globeReveal {
-          0% { opacity: 0; transform: scale(0.88); }
-          100% { opacity: 1; transform: scale(1); }
+          0% { opacity: 0; transform: scale(0.85); filter: blur(6px); }
+          60% { filter: blur(0); }
+          100% { opacity: 1; transform: scale(1); filter: blur(0); }
         }
         @keyframes fadeIn { to { opacity: 1; } }
 
-        :global(.globe-rotate) {
-          transform-origin: ${CX}px ${CY}px;
-          animation: globeSpin 90s linear infinite;
+        /* ----- Earth rotation: two-copy seamless slide.
+                 The .earth-rotate group contains two identical tiles
+                 side-by-side. Translating by exactly -tileWidth puts
+                 the second tile where the first started, so the loop
+                 back to 0 is invisible. This is what makes the surface
+                 VISIBLY rotate. ----- */
+        .globe-hero :global(.earth-rotate) {
+          animation: earthSpin 32s linear infinite;
+          will-change: transform;
         }
-        @keyframes globeSpin { to { transform: rotate(360deg); } }
+        .globe-hero :global(.cloud-rotate) {
+          animation: cloudSpin 58s linear infinite;
+          will-change: transform;
+        }
+        @keyframes earthSpin {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-${R * 2}px); }
+        }
+        @keyframes cloudSpin {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-${R * 2}px); }
+        }
 
-        :global(.halo-pulse) {
-          transform-origin: ${CX}px ${CY}px;
+        /* ----- Atmospheric halo breathing ----- */
+        .globe-hero :global(.halo-inner) {
           transform-box: fill-box;
-          animation: haloBreathe 7s ease-in-out infinite;
+          transform-origin: center;
+          animation: haloBreatheIn 7s ease-in-out infinite;
         }
-        @keyframes haloBreathe {
+        .globe-hero :global(.halo-outer) {
+          transform-box: fill-box;
+          transform-origin: center;
+          animation: haloBreatheOut 9s ease-in-out infinite;
+        }
+        @keyframes haloBreatheIn {
           0%, 100% { opacity: 0.85; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.04); }
+          50%      { opacity: 1;    transform: scale(1.03); }
+        }
+        @keyframes haloBreatheOut {
+          0%, 100% { opacity: 0.7; transform: scale(1); }
+          50%      { opacity: 0.95; transform: scale(1.05); }
         }
 
-        :global(.sun-pulse) { animation: sunBreathe 8s ease-in-out infinite; }
-        @keyframes sunBreathe {
-          0%, 100% { opacity: 0.92; }
-          50% { opacity: 1; }
+        .globe-hero :global(.horizon-pulse) {
+          animation: horizonBreathe 10s ease-in-out infinite;
+        }
+        @keyframes horizonBreathe {
+          0%, 100% { opacity: 0.85; }
+          50%      { opacity: 1; }
         }
 
-        @keyframes travelLine {
-          0% { stroke-dashoffset: 0; stroke-dasharray: 0 1500; stroke-opacity: 0; }
-          10% { stroke-opacity: 1; }
-          45% { stroke-dasharray: 600 1500; stroke-dashoffset: 0; stroke-opacity: 1; }
-          80% { stroke-dasharray: 150 1500; stroke-dashoffset: -700; stroke-opacity: 0.6; }
-          100% { stroke-dasharray: 0 1500; stroke-dashoffset: -1500; stroke-opacity: 0; }
+        /* ----- Orbital rings + satellites ----- */
+        .globe-hero :global(.orbital-layer) {
+          opacity: 0;
+        }
+        .globe-hero.is-active :global(.orbital-layer) {
+          animation: fadeIn 1.2s ease-out 1s forwards;
+        }
+        .globe-hero :global(.orbit-ring) {
+          transform-box: fill-box;
+          transform-origin: center;
+        }
+        .globe-hero :global(.orbit-ring--outer) {
+          animation: ringPulse 6s ease-in-out infinite;
+        }
+        .globe-hero :global(.orbit-ring--middle) {
+          animation: ringPulse 7.5s ease-in-out -2s infinite;
+        }
+        .globe-hero :global(.orbit-ring--inner) {
+          animation: ringPulse 5.2s ease-in-out -3s infinite;
+        }
+        .globe-hero :global(.satellite) {
+          will-change: transform, offset-distance;
+          offset-rotate: 0deg;
+        }
+        @keyframes satOrbit {
+          0%   { offset-distance: 0%; }
+          100% { offset-distance: 100%; }
+        }
+        @keyframes ringPulse {
+          0%, 100% { stroke-opacity: 0.65; }
+          50%      { stroke-opacity: 1; }
         }
 
-        @keyframes travelLineLong {
-          0% { stroke-dashoffset: 0; stroke-dasharray: 0 1500; stroke-opacity: 0; }
-          10% { stroke-opacity: 0.8; }
-          50% { stroke-dasharray: 400 1500; stroke-dashoffset: 0; stroke-opacity: 0.8; }
-          80% { stroke-dasharray: 100 1500; stroke-dashoffset: -500; stroke-opacity: 0.5; }
-          100% { stroke-dasharray: 0 1500; stroke-dashoffset: -1500; stroke-opacity: 0; }
+        /* ----- Arc animations ----- */
+        @keyframes arcDraw {
+          0%   { stroke-dasharray: 0 600; stroke-dashoffset: 0; stroke-opacity: 0; }
+          15%  { stroke-opacity: 0.95; }
+          50%  { stroke-dasharray: 220 600; stroke-dashoffset: -50; stroke-opacity: 0.95; }
+          80%  { stroke-dasharray: 80 600; stroke-dashoffset: -380; stroke-opacity: 0.5; }
+          100% { stroke-dasharray: 0 600; stroke-dashoffset: -600; stroke-opacity: 0; }
         }
-
-        @keyframes travelDot {
-          0% { offset-distance: 0%; opacity: 0; }
-          5% { opacity: 1; }
-          95% { opacity: 1; }
+        @keyframes arcComet {
+          0%   { offset-distance: 0%;   opacity: 0; }
+          8%   { opacity: 1; }
+          92%  { opacity: 1; }
           100% { offset-distance: 100%; opacity: 0; }
         }
-
-        @keyframes starburst {
-          0% { opacity: 0; transform: scale(0.4) rotate(0deg); }
-          4% { opacity: 1; transform: scale(1.1) rotate(15deg); }
-          12% { opacity: 0.9; transform: scale(1) rotate(20deg); }
-          25% { opacity: 0; transform: scale(0.9) rotate(30deg); }
-          100% { opacity: 0; transform: scale(0.9) rotate(30deg); }
+        @keyframes arcLand {
+          0%, 88% { opacity: 0; transform: scale(0.5); }
+          92%     { opacity: 0.9; transform: scale(1); }
+          100%    { opacity: 0; transform: scale(3.2); }
         }
 
-        @keyframes ringExpand {
-          0% { opacity: 0; transform: scale(0.5); }
-          5% { opacity: 0.8; transform: scale(1); }
-          18% { opacity: 0; transform: scale(4); }
-          100% { opacity: 0; transform: scale(4); }
-        }
-
+        /* ----- City node pulse ----- */
         @keyframes cityPulse {
-          0%, 100% { opacity: 0.5; transform: scale(0.85); }
-          50% { opacity: 1; transform: scale(1.15); }
+          0%, 100% { opacity: 0.55; transform: scale(0.85); }
+          50%      { opacity: 1;    transform: scale(1.15); }
         }
 
+        /* ----- Star twinkle ----- */
         @keyframes twinkle {
           0%, 100% { opacity: 0.2; transform: scale(0.7); }
-          50% { opacity: 1; transform: scale(1.2); }
+          50%      { opacity: 1;   transform: scale(1.2); }
         }
 
+        /* ====================================================================
+           STAT CARDS — minimal, tighter to globe, more premium glass
+           ==================================================================== */
         .globe-hero__stats {
           position: absolute;
           inset: 0;
@@ -564,45 +934,44 @@ export default function AnimatedGlobeHero({
         }
         .stat-card {
           position: absolute;
-          padding: clamp(11px, 1.3vw, 18px) clamp(15px, 1.7vw, 26px);
-          min-width: clamp(140px, 16vw, 220px);
-          background: rgba(255, 255, 255, 0.13);
-          backdrop-filter: blur(16px) saturate(150%);
-          -webkit-backdrop-filter: blur(16px) saturate(150%);
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          border-radius: 16px;
+          padding: clamp(9px, 1vw, 14px) clamp(13px, 1.4vw, 20px);
+          min-width: clamp(118px, 13vw, 175px);
+          background: rgba(255, 255, 255, 0.09);
+          backdrop-filter: blur(18px) saturate(160%);
+          -webkit-backdrop-filter: blur(18px) saturate(160%);
+          border: 1px solid rgba(255, 255, 255, 0.22);
+          border-radius: 14px;
           color: #ffffff;
           box-shadow:
-            0 12px 40px rgba(20, 90, 150, 0.18),
-            inset 0 1px 0 rgba(255, 255, 255, 0.35);
+            0 8px 28px rgba(15, 70, 120, 0.16),
+            inset 0 1px 0 rgba(255, 255, 255, 0.28);
           opacity: 0;
-          transform: translateY(24px) scale(0.96);
-          filter: blur(8px);
+          transform: translateY(20px) scale(0.96);
+          filter: blur(6px);
           pointer-events: auto;
           overflow: hidden;
         }
         .globe-hero.is-active .stat-card {
           animation:
-            cardEnter 1.2s cubic-bezier(0.16, 1, 0.3, 1) var(--enter-delay) forwards,
-            cardFloat 6s ease-in-out calc(var(--enter-delay) + 1.4s) infinite,
-            cardShimmer 8s ease-in-out calc(var(--enter-delay) + 2s) infinite;
+            cardEnter 1.1s cubic-bezier(0.16, 1, 0.3, 1) var(--enter-delay) forwards,
+            cardFloat 6s ease-in-out calc(var(--enter-delay) + 1.3s) infinite;
         }
         .stat-card__inner {
           position: relative;
           z-index: 2;
         }
         .stat-card__value {
-          font-size: clamp(20px, 2.4vw, 34px);
+          font-size: clamp(17px, 1.9vw, 26px);
           font-weight: 600;
           line-height: 1.1;
-          letter-spacing: -0.015em;
-          text-shadow: 0 2px 14px rgba(0, 50, 110, 0.3);
+          letter-spacing: -0.02em;
+          text-shadow: 0 2px 12px rgba(0, 40, 90, 0.25);
         }
         .stat-card__label {
-          font-size: clamp(10px, 0.9vw, 13px);
+          font-size: clamp(9px, 0.78vw, 11.5px);
           font-weight: 400;
-          opacity: 0.94;
-          margin-top: 5px;
+          opacity: 0.92;
+          margin-top: 4px;
           letter-spacing: 0.01em;
         }
         .stat-card__shimmer {
@@ -610,81 +979,81 @@ export default function AnimatedGlobeHero({
           inset: 0;
           background: linear-gradient(
             115deg,
-            transparent 30%,
-            rgba(255, 255, 255, 0.18) 50%,
-            transparent 70%
+            transparent 35%,
+            rgba(255, 255, 255, 0.14) 50%,
+            transparent 65%
           );
           transform: translateX(-100%);
           pointer-events: none;
           z-index: 1;
         }
         .globe-hero.is-active .stat-card__shimmer {
-          animation: shimmerSweep 8s ease-in-out calc(var(--enter-delay) + 2s) infinite;
+          animation: shimmerSweep 9s ease-in-out calc(var(--enter-delay) + 2s) infinite;
         }
 
-        .stat-card--left { left: clamp(2%, 4vw, 6%); }
-        .stat-card--right { right: clamp(2%, 4vw, 6%); }
-        .stat-card--top.stat-card--left { top: 22%; }
-        .stat-card--bottom.stat-card--left { top: 60%; }
-        .stat-card--top.stat-card--right { top: 18%; }
-        .stat-card--bottom.stat-card--right { top: 54%; }
+        /* Positioning — closer to globe, tighter to center */
+        .stat-card--left  { left: clamp(3%, 5vw, 8%); }
+        .stat-card--right { right: clamp(3%, 5vw, 8%); }
+        .stat-card--top.stat-card--left     { top: 24%; }
+        .stat-card--bottom.stat-card--left  { top: 60%; }
+        .stat-card--top.stat-card--right    { top: 24%; }
+        .stat-card--bottom.stat-card--right { top: 60%; }
 
         @keyframes cardEnter {
-          0% { opacity: 0; transform: translateY(24px) scale(0.96); filter: blur(8px); }
-          50% { filter: blur(0); }
+          0%   { opacity: 0; transform: translateY(20px) scale(0.96); filter: blur(6px); }
+          55%  { filter: blur(0); }
           100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
         }
         @keyframes cardFloat {
           0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-6px); }
-        }
-        @keyframes cardShimmer {
-          0%, 100% { box-shadow: 0 12px 40px rgba(20, 90, 150, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.35); }
-          50% { box-shadow: 0 14px 44px rgba(30, 120, 190, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.45); }
+          50%      { transform: translateY(-5px); }
         }
         @keyframes shimmerSweep {
-          0% { transform: translateX(-100%); }
-          40% { transform: translateX(100%); }
+          0%   { transform: translateX(-100%); }
+          45%  { transform: translateX(100%); }
           100% { transform: translateX(100%); }
         }
 
+        /* ----- Responsive ----- */
         @media (max-width: 1024px) {
-          .stat-card { min-width: 130px; padding: 10px 14px; border-radius: 13px; }
-          .stat-card--top.stat-card--left { top: 18%; }
-          .stat-card--bottom.stat-card--left { top: 62%; }
-          .stat-card--top.stat-card--right { top: 14%; }
-          .stat-card--bottom.stat-card--right { top: 54%; }
+          .stat-card { min-width: 112px; padding: 8px 12px; border-radius: 12px; }
+          .stat-card--top.stat-card--left     { top: 20%; }
+          .stat-card--bottom.stat-card--left  { top: 62%; }
+          .stat-card--top.stat-card--right    { top: 20%; }
+          .stat-card--bottom.stat-card--right { top: 62%; }
         }
         @media (max-width: 768px) {
           .globe-hero { aspect-ratio: 4 / 3; }
-          .stat-card { min-width: 115px; padding: 8px 12px; border-radius: 11px; }
-          .stat-card__value { font-size: 17px; }
-          .stat-card__label { font-size: 10px; }
-          .stat-card--top.stat-card--left { top: 6%; left: 3%; }
-          .stat-card--bottom.stat-card--left { top: 78%; left: 3%; }
-          .stat-card--top.stat-card--right { top: 6%; right: 3%; }
-          .stat-card--bottom.stat-card--right { top: 78%; right: 3%; }
+          .stat-card { min-width: 100px; padding: 7px 10px; border-radius: 10px; }
+          .stat-card__value { font-size: 15px; }
+          .stat-card__label { font-size: 9.5px; }
+          .stat-card--top.stat-card--left     { top: 8%;  left: 3%; }
+          .stat-card--bottom.stat-card--left  { top: 76%; left: 3%; }
+          .stat-card--top.stat-card--right    { top: 8%;  right: 3%; }
+          .stat-card--bottom.stat-card--right { top: 76%; right: 3%; }
         }
         @media (max-width: 480px) {
           .globe-hero { aspect-ratio: 3 / 4; }
-          .stat-card { min-width: 100px; padding: 7px 10px; }
-          .stat-card__value { font-size: 15px; }
-          .stat-card__label { font-size: 9px; }
-          .stat-card--top.stat-card--left { top: 4%; }
-          .stat-card--bottom.stat-card--left { top: 82%; }
-          .stat-card--top.stat-card--right { top: 4%; }
-          .stat-card--bottom.stat-card--right { top: 82%; }
+          .stat-card { min-width: 88px; padding: 6px 9px; }
+          .stat-card__value { font-size: 13px; }
+          .stat-card__label { font-size: 8.5px; }
+          .stat-card--top.stat-card--left     { top: 5%; }
+          .stat-card--bottom.stat-card--left  { top: 80%; }
+          .stat-card--top.stat-card--right    { top: 5%; }
+          .stat-card--bottom.stat-card--right { top: 80%; }
         }
 
+        /* ----- Accessibility ----- */
         @media (prefers-reduced-motion: reduce) {
           .globe-hero :global(*) { animation: none !important; }
           .globe-hero :global(.globe-group),
-          .globe-hero :global(.static-arcs),
           .globe-hero :global(.city-nodes),
-          .globe-hero :global(.connections),
-          .globe-hero :global(.straight-lines),
-          .globe-hero :global(.starbursts) { opacity: 1 !important; }
-          .stat-card { opacity: 1 !important; transform: none !important; filter: none !important; }
+          .globe-hero :global(.arcs) { opacity: 1 !important; }
+          .stat-card {
+            opacity: 1 !important;
+            transform: none !important;
+            filter: none !important;
+          }
         }
       `}</style>
     </div>

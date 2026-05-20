@@ -383,6 +383,83 @@ h6 {
 }
 
 /* ══════════════════════════════════════════════════════
+   HERO DARK PATCHES — animated deep-navy cloud masses
+   ─ Same navy palette as the static patches in HeroSection
+   ─ Each patch DRIFTS (transform) + MORPHS (clip-path)
+   ─ NO mix-blend-mode → dark stays dark, colour never washes
+   ─ Soft radial-gradient fill so clipped edges read as cloud
+   ─ Prime-ish, phase-shifted cycles → patches never re-sync
+   ══════════════════════════════════════════════════════ */
+
+/*
+  HERO WATER WAVES — all smooth SVG bezier ribbons (no angular
+  clip-path). Two wide HORIZONTAL waves with gently waving top &
+  bottom edges glide across the full screen; one slim VERTICAL wave
+  flows diagonally. No mix-blend-mode → dark blue stays pure.
+*/
+
+/* ── Wide HORIZONTAL water waves — span the whole width and glide
+      seamlessly across the screen (start off-right, exit off-left,
+      loop with no visible jump). The path morphs (SMIL) for ripple. ── */
+.hero-wave-horiz {
+  position: absolute;
+  left: 0;
+  width: 78%;
+  height: clamp(150px, 34%, 340px);
+  pointer-events: none;
+  filter: blur(22px);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.hero-wave-horiz-1 {
+  top: 14%;
+  animation: heroHorizWaveFlow1 26s linear infinite;
+}
+.hero-wave-horiz-2 {
+  top: 46%;
+  animation: heroHorizWaveFlow2 32s linear infinite;
+  animation-delay: -13s;
+}
+
+/* width 78% → travel from off-right (130%) to off-left (-230%) so the
+   band crosses the whole hero and re-enters seamlessly */
+@keyframes heroHorizWaveFlow1 {
+  0%   { transform: translate3d( 130%, 0, 0); }
+  100% { transform: translate3d(-230%, 0, 0); }
+}
+/* opposite direction: left → right */
+@keyframes heroHorizWaveFlow2 {
+  0%   { transform: translate3d(-230%, 0, 0); }
+  100% { transform: translate3d( 130%, 0, 0); }
+}
+
+/* ── Slim VERTICAL water wave — flows DIAGONALLY top-right →
+      bottom-left, off-screen at both ends for a seamless loop. ── */
+.hero-wave-vert {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: clamp(150px, 20vw, 320px);
+  height: clamp(300px, 80%, 640px);
+  pointer-events: none;
+  filter: blur(26px);
+  will-change: transform;
+  animation: heroVertWaveFlow 20s linear infinite;
+}
+
+@keyframes heroVertWaveFlow {
+  /* begin off-screen top-left, sweep down-right, exit off bottom-right */
+  0%   { transform: translate3d(-140%, -90%, 0) rotate(-8deg); }
+  100% { transform: translate3d( 440%, 120%, 0) rotate(8deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-wave-horiz,
+  .hero-wave-vert { animation: none !important; }
+}
+
+/* ══════════════════════════════════════════════════════
    HERO WAVE LAYERS — zig-zag flowing edge
    ─ clip-path: polygon() creates the zig-zag boundary
    ─ Each keyframe shifts the polygon points → wave flows

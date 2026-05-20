@@ -796,7 +796,7 @@ const SceneExpense = forwardRef(function SceneExpense(_, ref) {
               src="/software images/software images/Expense Manager/jikljoikiujk.png"
               alt="Expense Manager"
               fill sizes="700px"
-              style={{ objectFit:'contain', objectPosition:'left top' }}
+              style={{ objectFit:'fill' }}
             />
           </div>
         </div>
@@ -911,7 +911,7 @@ const SceneInspection = forwardRef(function SceneInspection(_, ref) {
         onMouseLeave={() => gsap.to(mobileRef.current, { scale: 1,    duration: 0.35, ease:'power3.out' })}
         style={{
           position:'absolute',
-          left:'-2%', top:'40%',
+          left:'-1%', top:'calc(32% + 3px)',
           opacity:0, zIndex:40,
           cursor:'pointer',
           willChange:'opacity, transform',
@@ -924,8 +924,6 @@ const SceneInspection = forwardRef(function SceneInspection(_, ref) {
           width={155}
           height={285}
           style={{
-            borderRadius:16,
-            boxShadow:'0 18px 50px rgba(15,23,42,0.22), 0 4px 14px rgba(15,23,42,0.10)',
             display:'block',
           }}
         />

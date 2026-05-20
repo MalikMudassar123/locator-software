@@ -340,7 +340,7 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
         onMouseLeave={() => gsap.to(popupRef.current, { scale: 1, duration: 0.35, ease: 'power3.out', transformOrigin: 'left center' })}
         style={{
           position:'absolute',
-          left: FX - 60,
+          left: FX - 75,
           top: FY + 75,
           width: 250,
           height: 54,

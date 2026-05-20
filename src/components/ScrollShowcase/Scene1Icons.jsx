@@ -37,43 +37,49 @@ function rp(x, y, w, h, r = 0) {
   return `M${x+r} ${y}H${x+w-r}Q${x+w} ${y} ${x+w} ${y+r}V${y+h-r}Q${x+w} ${y+h} ${x+w-r} ${y+h}H${x+r}Q${x} ${y+h} ${x} ${y+h-r}V${y+r}Q${x} ${y} ${x+r} ${y}Z`;
 }
 
+// Calibrated to /block 1/mobile.png (1535×3378) under objectFit:cover, center-top.
+// Vertical scale orig→box ≈ 0.16938; offsets below are measured from the PNG.
 const WIRE = [
-  // 1. Header bar — "Vehicles - Live View" blue bar (full width, tall pill)
-  rp(PHONE_X+6,   PHONE_Y+6,   PHONE_W-12, 58, 26),
+  // 1. Header bar — "Vehicles - Live View" blue bar (full width, flat, bottom ≈ box 72)
+  rp(PHONE_X+4,   PHONE_Y+4,   PHONE_W-8, 66, 6),
 
-  // 2. Map view — below header, 65% of interior height
-  rp(PHONE_X+6,   PHONE_Y+70,  PHONE_W-12, 252, 4),
+  // 2. Map view — header bottom (72) → map/panel boundary (325)
+  rp(PHONE_X+4,   PHONE_Y+72,  PHONE_W-8, 251, 4),
 
-  // 3. Bottom info panel container (map/panel boundary at PHONE_Y+322)
-  rp(PHONE_X+6,   PHONE_Y+322, PHONE_W-12, 172, 8),
+  // 3. Bottom info panel container (boundary at PHONE_Y+325)
+  rp(PHONE_X+4,   PHONE_Y+325, PHONE_W-8, 169, 8),
 
-  // 4. Nav: back-arrow icon (left side of boundary row)
-  rp(PHONE_X+14,  PHONE_Y+328, 22, 14, 4),
+  // 4. Nav: back-arrow icon (left, aligned with avatar lower edge)
+  rp(PHONE_X+12,  PHONE_Y+344, 20, 16, 4),
 
-  // 5. Nav: mute icon (right side of boundary row)
-  rp(PHONE_X+224, PHONE_Y+328, 22, 14, 4),
+  // 5. Nav: mute icon (right, aligned with avatar lower edge)
+  rp(PHONE_X+228, PHONE_Y+344, 20, 16, 4),
 
-  // 6. Driver avatar — 80×80 circle, center_x=PHONE_X+130, center_y=PHONE_Y+322 (boundary)
-  rp(PHONE_X+90,  PHONE_Y+282, 80, 80, 40),
+  // 6. Driver avatar — ø59 circle, center_x=PHONE_X+130, center_y=PHONE_Y+350
+  rp(PHONE_X+100, PHONE_Y+320, 60, 60, 30),
 
-  // 7. Driver name bold — centered below avatar
-  rp(PHONE_X+48,  PHONE_Y+374, 164, 14, 4),
+  // 7. Driver name bold "Steve Johns 7895" — centered below avatar (center ≈ box 386)
+  rp(PHONE_X+58,  PHONE_Y+380, 144, 12, 4),
 
-  // 8. Row: Status label | long value
-  rp(PHONE_X+10,  PHONE_Y+412, 52, 8, 3),
-  rp(PHONE_X+78,  PHONE_Y+412, 162, 8, 3),
+  // 8. Row: Status label | long value (center ≈ box 412)
+  rp(PHONE_X+10,  PHONE_Y+409, 52, 8, 3),
+  rp(PHONE_X+76,  PHONE_Y+409, 164, 8, 3),
 
-  // 9. Row: Driver label | value
-  rp(PHONE_X+10,  PHONE_Y+430, 42, 8, 3),
-  rp(PHONE_X+78,  PHONE_Y+430, 88, 8, 3),
+  // 9. Row: Driver label | value (center ≈ box 431)
+  rp(PHONE_X+10,  PHONE_Y+428, 42, 8, 3),
+  rp(PHONE_X+76,  PHONE_Y+428, 86, 8, 3),
 
-  // 10. Row: Phone label | value
-  rp(PHONE_X+10,  PHONE_Y+448, 42, 8, 3),
-  rp(PHONE_X+78,  PHONE_Y+448, 44, 8, 3),
+  // 10. Row: Phone label | value (center ≈ box 448)
+  rp(PHONE_X+10,  PHONE_Y+445, 42, 8, 3),
+  rp(PHONE_X+76,  PHONE_Y+445, 32, 8, 3),
 
-  // 11. Row: Geozone label | value
+  // 11. Row: Geozone label | value (center ≈ box 469)
   rp(PHONE_X+10,  PHONE_Y+466, 56, 8, 3),
-  rp(PHONE_X+78,  PHONE_Y+466, 108, 8, 3),
+  rp(PHONE_X+76,  PHONE_Y+466, 104, 8, 3),
+
+  // 12. Row: Last Update label | value (center ≈ box 488)
+  rp(PHONE_X+10,  PHONE_Y+485, 64, 8, 3),
+  rp(PHONE_X+76,  PHONE_Y+485, 110, 8, 3),
 ];
 
 // Desktop wireframe — matches pro.mylocatorplus.com layout exactly

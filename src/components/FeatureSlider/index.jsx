@@ -122,37 +122,51 @@ function WireExpense() {
       <W d={ci(42,18,5)} s="#34d399" sw={0.9} o={0.65}/>
       <W d={r(60,10,430,18)} s="#c4b5fd" sw={0.8} o={0.45}/>
       <W d={l(3,60,567,60)} s="#a78bfa" sw={0.7} o={0.5}/>
-      {[0,1,2].map(i=><W key={i} d={r(10+i*115,38,105,20)} s={i===0?'#7c3aed':'#c4b5fd'} sw={0.8} o={i===0?0.7:0.35}/>)}
-      <W d={l(162,60,162,387)} s="#a78bfa" sw={0.8} o={0.45}/>
-      <W d={r(6,68,148,16)} s="#7c3aed" sw={0.9} o={0.6}/>
-      {Array.from({length:8},(_,i)=>(
-        <g key={i}>
-          <W d={ci(20,96+i*36,9)} s="#8b5cf6" sw={0.7} o={0.5}/>
-          <W d={r(36,90+i*36,118,8)} s="#a78bfa" sw={0.6} o={0.4}/>
-          <W d={r(36,102+i*36,78,6)} s="#c4b5fd" sw={0.5} o={0.3}/>
-        </g>
+
+      {/* ── Top nav bar (full width): Main View · tabs · driver · data · menu ── */}
+      <W d={r(8,63,552,25)} s="#7c3aed" sw={0.9} o={0.35}/>          {/* nav container */}
+      <W d={r(12,67,40,17)} s="#3b82f6" sw={0.9} o={0.6}/>           {/* Main View button */}
+      <W d={r(60,70,62,12)} s="#c4b5fd" sw={0.7} o={0.4}/>           {/* Installation Files */}
+      <W d={r(130,70,50,12)} s="#c4b5fd" sw={0.7} o={0.4}/>          {/* Permissions */}
+      <W d={ci(213,75,9)} s="#8b5cf6" sw={0.8} o={0.55}/>            {/* avatar */}
+      <W d={r(228,69,64,7)} s="#8b5cf6" sw={0.6} o={0.5}/>           {/* Dokan 1 */}
+      <W d={r(228,79,52,5)} s="#c4b5fd" sw={0.5} o={0.35}/>          {/* VIEWCOMP CORPORATION */}
+      <W d={r(382,71,58,11)} s="#c4b5fd" sw={0.7} o={0.4}/>          {/* Data database - v1.3.0.46 */}
+      <W d={r(446,69,16,15)} s="#a78bfa" sw={0.7} o={0.45}/>         {/* chart icon */}
+      <W d={r(466,69,13,15)} s="#a78bfa" sw={0.7} o={0.4}/>          {/* dropdown */}
+      <W d={r(491,68,44,17)} s="#c4b5fd" sw={0.7} o={0.45}/>         {/* PC-TECHVIEW */}
+      <W d={r(539,68,18,17)} s="#3b82f6" sw={0.8} o={0.6}/>          {/* 3-dot menu */}
+
+      {/* ── 3-column dividers (left empty area · table on the right) ── */}
+      <W d={l(76,90,76,385)} s="#a78bfa" sw={0.6} o={0.3}/>
+      <W d={l(207,90,207,385)} s="#a78bfa" sw={0.7} o={0.4}/>
+
+      {/* ── Table header row (right column only) ── */}
+      <W d={r(214,114,28,15)} s="#3b82f6" sw={0.8} o={0.6}/>         {/* SELECT ALL */}
+      {[ {x:262,w:34},{x:311,w:60},{x:379,w:52},{x:450,w:64},{x:527,w:42} ].map((c,i)=>(
+        <W key={i} d={r(c.x,117,c.w,9)} s="#8b5cf6" sw={0.7} o={0.5}/>
       ))}
-      <W d={r(170,68,390,20)} s="#8b5cf6" sw={0.9} o={0.6}/>
-      {[170,247,322,402,482].map((x,i)=>(
-        <W key={i} d={r(x,96,i<4?70:76,12)} s="#a78bfa" sw={0.7} o={0.45}/>
-      ))}
-      {[247,322,402,482].map(x=>(
-        <W key={x} d={l(x,92,x,387)} s="#c4b5fd" sw={0.5} o={0.25}/>
-      ))}
-      {Array.from({length:9},(_,i)=>(
-        <g key={i}>
-          <W d={l(170,116+i*30,558,116+i*30)} s="#c4b5fd" sw={0.5} o={0.22}/>
-          <W d={r(176,119+i*30,62,7)} s="#8b5cf6" sw={0.6} o={0.45}/>
-          <W d={r(256,119+i*30,55,7)} s="#c4b5fd" sw={0.5} o={0.35}/>
-          <W d={r(332,118+i*30,56,9)} s="#a78bfa" sw={0.6} o={0.4}/>
-          <W d={r(410,118+i*30,60,9)} s={i%4===0?'#10b981':'#f87171'} sw={0.7} o={0.55}/>
-        </g>
-      ))}
-      <W d={r(390,232,162,148)} s="#7c3aed" sw={1.2} o={0.55}/>
-      <W d={r(398,242,146,20)} s="#a78bfa" sw={0.8} o={0.5}/>
-      {Array.from({length:4},(_,i)=>(
-        <W key={i} d={r(398,270+i*26,146,18)} s="#c4b5fd" sw={0.6} o={0.4}/>
-      ))}
+      <W d={l(210,133,550,133)} s="#a78bfa" sw={0.6} o={0.3}/>
+
+      {/* ── 4 data row cards (right column) ── */}
+      {Array.from({length:4},(_,i)=>{
+        const y = 137 + i*40.5;
+        return (
+          <g key={i}>
+            <W d={r(210,y,340,34)} s="#a78bfa" sw={0.8} o={0.4}/>        {/* row card */}
+            <W d={r(219,y+11,12,12)} s="#3b82f6" sw={0.9} o={0.65}/>     {/* blue checkbox */}
+            <W d={r(258,y+13,40,7)} s="#8b5cf6" sw={0.6} o={0.45}/>      {/* Date */}
+            <W d={r(311,y+13,46,7)} s="#c4b5fd" sw={0.5} o={0.4}/>       {/* Employee Name */}
+            <W d={r(379,y+13,42,7)} s="#a78bfa" sw={0.6} o={0.4}/>       {/* Category */}
+            <W d={r(450,y+13,64,7)} s="#c4b5fd" sw={0.5} o={0.4}/>       {/* Description */}
+            <W d={r(522,y+12,30,9)} s="#10b981" sw={0.7} o={0.55}/>      {/* Account/Amount */}
+          </g>
+        );
+      })}
+
+      {/* ── Bottom action buttons ── */}
+      <W d={r(337,354,64,18)} s="#3b82f6" sw={0.9} o={0.6}/>         {/* ADD DEVICE/EMPLOYEE */}
+      <W d={r(510,354,40,18)} s="#c4b5fd" sw={0.7} o={0.45}/>        {/* RELEASE ALL */}
     </svg>
   );
 }
@@ -161,44 +175,97 @@ function WireInspection() {
   return (
     <svg width="100%" height="100%" viewBox={`0 0 ${vb.w} ${vb.h}`} preserveAspectRatio="xMidYMid meet"
       style={{ position:'absolute', inset:0 }}>
+      {/* Calibrated to kjiuguy.png (3064×1400), objectFit:contain in 480×360.
+          Image content occupies vb x 0→620, y 99→382  (WX=ix·0.2024, WY=98.9+iy·0.2023). */}
       <rect width={vb.w} height={vb.h} fill="#fafbff"/>
-      <W d={r(3,3,564,384)} s="#7c3aed" sw={1.4} o={0.7}/>
-      <W d={l(3,34,567,34)} s="#a78bfa" sw={0.9} o={0.6}/>
+      {/* Browser chrome */}
       <W d={ci(18,18,5)} s="#f87171" sw={0.9} o={0.65}/>
       <W d={ci(30,18,5)} s="#fbbf24" sw={0.9} o={0.65}/>
       <W d={ci(42,18,5)} s="#34d399" sw={0.9} o={0.65}/>
-      <W d={r(60,10,430,18)} s="#c4b5fd" sw={0.8} o={0.45}/>
-      <W d={l(3,60,567,60)} s="#a78bfa" sw={0.8} o={0.5}/>
-      <W d={r(8,38,160,20)} s="#8b5cf6" sw={0.7} o={0.55}/>
-      <W d={l(222,60,222,387)} s="#a78bfa" sw={0.8} o={0.45}/>
-      <W d={r(8,68,206,18)} s="#7c3aed" sw={0.9} o={0.6}/>
-      {Array.from({length:7},(_,i)=>(
+      <W d={r(60,10,500,18)} s="#c4b5fd" sw={0.8} o={0.45}/>
+
+      {/* App viewport frame + column dividers (sidebar 0→198 · center 198→401 · right 401→614) */}
+      <W d={r(4,99,610,283)} s="#7c3aed" sw={1.2} o={0.55}/>
+      <W d={l(198,99,198,382)} s="#a78bfa" sw={0.8} o={0.45}/>
+      <W d={l(401,124,401,382)} s="#a78bfa" sw={0.7} o={0.4}/>
+
+      {/* ── Top bar ── */}
+      <W d={ci(212,109,6)} s="#8b5cf6" sw={0.8} o={0.5}/>            {/* car icon */}
+      <W d={r(224,106,40,8)} s="#8b5cf6" sw={0.7} o={0.5}/>          {/* John */}
+      <W d={r(556,101,48,16)} s="#f87171" sw={0.9} o={0.65}/>        {/* MOVE TO SERVICING */}
+      <W d={ci(610,109,6)} s="#3b82f6" sw={0.8} o={0.55}/>          {/* settings gear */}
+
+      {/* ── Sidebar ── */}
+      <W d={r(8,124,184,15)} s="#3b82f6" sw={0.9} o={0.55}/>         {/* Vehicles tab */}
+      <W d={r(8,143,60,22)} s="#3b82f6" sw={0.8} o={0.55}/>          {/* 173 All Vehicles */}
+      <W d={r(70,143,60,22)} s="#34d399" sw={0.8} o={0.5}/>          {/* 173 Active */}
+      <W d={r(132,143,60,22)} s="#f87171" sw={0.8} o={0.5}/>         {/* 0 In Service */}
+      <W d={r(8,169,184,16)} s="#7c3aed" sw={0.8} o={0.5}/>          {/* Loom Transport 173 */}
+      <W d={r(8,188,184,28)} s="#3b82f6" sw={0.9} o={0.6}/>          {/* John card (selected) */}
+      <W d={ci(20,197,4)} s="#34d399" sw={0.9} o={0.6}/>             {/* online dot */}
+      <W d={r(30,193,44,8)} s="#8b5cf6" sw={0.7} o={0.5}/>           {/* John */}
+      <W d={r(30,205,110,6)} s="#c4b5fd" sw={0.6} o={0.4}/>          {/* Last Inspected */}
+      <W d={r(150,191,34,12)} s="#3b82f6" sw={0.7} o={0.5}/>         {/* score badge */}
+      <W d={r(0,220,198,162)} s="#1e293b" sw={0.8} o={0.35}/>        {/* black lower sidebar */}
+
+      {/* ── Center: car panel ── */}
+      <W d={r(210,124,182,128)} s="#a78bfa" sw={0.8} o={0.45}/>      {/* car card */}
+      {/* realistic sedan side-view silhouette */}
+      <W d="M234,197 L234,188 C234,184 237,182 243,181 L280,179 C286,179 289,177 293,172 L304,161 C307,158 310,157 315,157 L338,157 C345,157 348,160 351,165 L360,177 C362,180 365,181 369,181 L382,182 C386,182 388,184 388,189 L388,197 Z"
+         s="#7c3aed" sw={1.1} o={0.6}/>
+      <W d="M298,173 L307,163 L337,163 L350,173 Z" s="#a78bfa" sw={0.8} o={0.5}/>  {/* greenhouse glass */}
+      <W d={l(322,163,322,173)} s="#a78bfa" sw={0.6} o={0.4}/>       {/* door pillar */}
+      <W d={ci(264,198,14)} s="#8b5cf6" sw={1.1} o={0.6}/>           {/* front wheel */}
+      <W d={ci(352,198,14)} s="#8b5cf6" sw={1.1} o={0.6}/>           {/* rear wheel */}
+      <W d={ci(264,198,6)} s="#8b5cf6" sw={0.8} o={0.45}/>
+      <W d={ci(352,198,6)} s="#8b5cf6" sw={0.8} o={0.45}/>
+      <W d={ci(348,194,18)} s="#fbbf24" sw={1} o={0.55}/>            {/* inspection highlight */}
+      <W d={ci(218,184,7)} s="#a78bfa" sw={0.8} o={0.45}/>           {/* prev arrow */}
+      <W d={ci(384,184,7)} s="#a78bfa" sw={0.8} o={0.45}/>           {/* next arrow */}
+      {[250,278,306,334,362].map((cx,i)=>(
+        <W key={i} d={ci(cx,233,9)} s={i===4?'#7c3aed':'#a78bfa'} sw={0.8} o={i===4?0.6:0.4}/>
+      ))}
+
+      {/* ── Center: Inspection Logs ── */}
+      <W d={r(210,262,182,118)} s="#a78bfa" sw={0.8} o={0.45}/>      {/* logs card */}
+      <W d={r(216,267,86,9)} s="#7c3aed" sw={0.7} o={0.55}/>         {/* Inspection Logs */}
+      <W d={r(216,287,60,7)} s="#8b5cf6" sw={0.6} o={0.45}/>         {/* Date,Time hdr */}
+      <W d={r(312,287,52,7)} s="#8b5cf6" sw={0.6} o={0.45}/>         {/* Inspected By hdr */}
+      <W d={r(372,287,18,7)} s="#8b5cf6" sw={0.6} o={0.45}/>         {/* Score hdr */}
+      <W d={r(213,300,176,13)} s="#c4b5fd" sw={0.6} o={0.35}/>       {/* row 1 */}
+      <W d={r(213,314,176,13)} s="#3b82f6" sw={0.7} o={0.4}/>        {/* row 2 (selected) */}
+
+      {/* ── Right: Inspection Report ── */}
+      <W d={r(407,131,100,11)} s="#7c3aed" sw={0.8} o={0.6}/>        {/* Inspection Report */}
+      <W d={ci(606,134,5)} s="#3b82f6" sw={0.8} o={0.5}/>           {/* download */}
+      <W d={r(407,150,52,9)} s="#7c3aed" sw={0.7} o={0.55}/>         {/* Mandatory */}
+      <W d={r(520,151,22,6)} s="#c4b5fd" sw={0.6} o={0.4}/>          {/* Prev */}
+      <W d={r(566,151,30,6)} s="#c4b5fd" sw={0.6} o={0.4}/>          {/* Current */}
+      {[0,1,2].map(i=>{ const y=164+i*15; return (
         <g key={i}>
-          <W d={r(8,92+i*40,206,34)} s={i===0?'#7c3aed':'#c4b5fd'} sw={0.8} o={i===0?0.65:0.38}/>
-          <W d={r(14,96+i*40,142,8)} s="#8b5cf6" sw={0.6} o={0.5}/>
-          <W d={r(14,108+i*40,102,6)} s="#c4b5fd" sw={0.5} o={0.3}/>
+          <W d={r(407,y,40,7)} s="#8b5cf6" sw={0.6} o={0.45}/>
+          <W d={ci(528,y+3,5)} s="#c4b5fd" sw={0.8} o={0.45}/>
+          <W d={ci(578,y+3,5)} s="#34d399" sw={0.9} o={0.6}/>
         </g>
-      ))}
-      <W d={r(230,68,330,132)} s="#8b5cf6" sw={0.9} o={0.5}/>
-      <W d="M282,102 Q312,84 362,90 Q402,92 422,106 Q437,116 440,132 Q440,150 420,154 Q360,157 282,154 Q262,150 264,132 Q264,116 282,102 Z" s="#7c3aed" sw={1.2} o={0.55}/>
-      <W d={ci(297,154,13)} s="#8b5cf6" sw={1} o={0.5}/>
-      <W d={ci(412,154,13)} s="#8b5cf6" sw={1} o={0.5}/>
-      <W d={ci(322,110,6)} s="#f87171" sw={1.2} o={0.7}/>
-      <W d={ci(390,102,5)} s="#f87171" sw={1.2} o={0.7}/>
-      <W d={r(230,208,330,170)} s="#a78bfa" sw={0.8} o={0.45}/>
-      {Array.from({length:6},(_,i)=>(
+      );})}
+      <W d={r(407,213,46,9)} s="#7c3aed" sw={0.7} o={0.55}/>         {/* Optional */}
+      {[0,1].map(i=>{ const y=227+i*15; return (
         <g key={i}>
-          <W d={r(238,216+i*28,12,12)} s={i<3?'#34d399':'#c4b5fd'} sw={0.8} o={i<3?0.7:0.4}/>
-          <W d={r(258,219+i*28,220,7)} s="#8b5cf6" sw={0.6} o={0.45}/>
-          <W d={r(258,229+i*28,162,5)} s="#c4b5fd" sw={0.5} o={0.3}/>
+          <W d={r(407,y,44,7)} s="#8b5cf6" sw={0.6} o={0.45}/>
+          <W d={ci(528,y+3,5)} s="#c4b5fd" sw={0.8} o={0.45}/>
+          <W d={ci(578,y+3,5)} s="#34d399" sw={0.9} o={0.6}/>
         </g>
-      ))}
-      <W d={r(14,252,138,128)} s="#7c3aed" sw={1.1} o={0.55}/>
-      <W d={r(22,260,122,16)} s="#a78bfa" sw={0.8} o={0.5}/>
-      <W d={r(22,282,122,90)} s="#c4b5fd" sw={0.7} o={0.4}/>
-      {Array.from({length:3},(_,i)=>(
-        <W key={i} d={r(28,286+i*28,42,22)} s="#8b5cf6" sw={0.6} o={0.45}/>
-      ))}
+      );})}
+      <W d={r(407,259,72,9)} s="#7c3aed" sw={0.7} o={0.55}/>         {/* Scratches/Dents */}
+      <W d={r(407,272,200,28)} s="#3b82f6" sw={0.7} o={0.4}/>        {/* scratch card */}
+      <W d={r(412,276,22,20)} s="#f87171" sw={0.8} o={0.55}/>        {/* scratch photo */}
+      <W d={r(442,278,70,7)} s="#8b5cf6" sw={0.6} o={0.5}/>          {/* Scratch */}
+      <W d={r(442,288,120,5)} s="#c4b5fd" sw={0.5} o={0.4}/>         {/* desc */}
+      <W d={r(585,275,20,10)} s="#3b82f6" sw={0.7} o={0.5}/>         {/* Left badge */}
+      <W d={r(407,312,82,9)} s="#7c3aed" sw={0.7} o={0.55}/>         {/* Inspector Details */}
+      <W d="M430,345 C440,330 446,355 452,348 C458,340 466,360 478,332"
+         s="#34d399" sw={1} o={0.6}/>                                {/* signature */}
+      <W d={r(407,368,56,7)} s="#8b5cf6" sw={0.6} o={0.4}/>          {/* Inspected By: */}
     </svg>
   );
 }
@@ -325,14 +392,45 @@ function rp(x, y, w, h, rr = 0) {
   return `M${x+rr} ${y}H${x+w-rr}Q${x+w} ${y} ${x+w} ${y+rr}V${y+h-rr}Q${x+w} ${y+h} ${x+w-rr} ${y+h}H${x+rr}Q${x} ${y+h} ${x} ${y+h-rr}V${y+rr}Q${x} ${y} ${x+rr} ${y}Z`;
 }
 const DT_X = 14, DT_Y = 28, DT_W = 532, DT_H = 360, DT_R = 12;
+
+// Wireframe calibrated to /Task Manager/jkliului.png (4500×2428) rendered
+// objectFit:contain in a 532-wide area below the 32px browser bar.
+// Image content region (canvas px): x 14→546, y 60→347.
+// Columns: sidebar 16→168 · center 174→418 · right panel 422→544.
 const DT_WIRE = [
-  rp(DT_X+6,   DT_Y+6,   DT_W-12, 22, 4),
-  rp(DT_X+6,   DT_Y+34,  88, DT_H-42, 6),
-  rp(DT_X+102, DT_Y+34,  DT_W-110, 60, 6),
-  rp(DT_X+102, DT_Y+102, (DT_W-118)/3, 56, 5),
-  rp(DT_X+102 + (DT_W-118)/3 + 6, DT_Y+102, (DT_W-118)/3, 56, 5),
-  rp(DT_X+102 + 2*((DT_W-118)/3+6), DT_Y+102, (DT_W-118)/3, 56, 5),
-  rp(DT_X+102, DT_Y+166, DT_W-110, DT_H-178, 5),
+  // 0. Browser chrome / URL bar
+  rp(DT_X+6, DT_Y+6, DT_W-12, 22, 4),
+
+  // ── Left sidebar ──
+  rp(16, 60, 152, 286, 6),          // 1. sidebar container
+  rp(22, 64, 140, 18, 4),           // 2. tab row (Active Tasks / Map View)
+  rp(22, 88, 140, 13, 3),           // 3. FIELD STAFF TEAM header
+  rp(22, 105, 140, 22, 4),          // 4. Driver 1 row
+  rp(22, 131, 140, 22, 4),          // 5. Driver 2 row
+  rp(22, 159, 140, 13, 3),          // 6. SALES TEAM header
+  rp(22, 176, 140, 22, 4),          // 7. Mohd row
+  rp(22, 202, 140, 22, 4),          // 8. Ali row
+  rp(22, 323, 140, 18, 9),          // 9. search bar (bottom)
+
+  // ── Center column ──
+  rp(174, 64, 244, 18, 4),          // 10. top toolbar strip
+  rp(174, 88, 44, 26, 4),           // 11. driver header (avatar + name)
+  rp(300, 86, 27, 28, 4),           // 12. stat card: Total
+  rp(330, 86, 27, 28, 4),           // 13. stat card: Assigned
+  rp(360, 86, 27, 28, 4),           // 14. stat card: In progress
+  rp(390, 86, 27, 28, 4),           // 15. stat card: Completed
+  rp(174, 152, 244, 24, 5),         // 16. task #1
+  rp(174, 186, 244, 24, 5),         // 17. task #2
+  rp(174, 220, 244, 24, 5),         // 18. task #3
+  rp(174, 254, 244, 24, 5),         // 19. task #4
+  rp(174, 288, 244, 24, 5),         // 20. task #5
+
+  // ── Right detail panel ──
+  rp(422, 60, 122, 286, 6),         // 21. panel container
+  rp(427, 64, 112, 24, 4),          // 22. header (Created by + action icons)
+  rp(427, 94, 112, 78, 4),          // 23. job description + location block
+  rp(427, 176, 112, 92, 6),         // 24. map block
+  rp(427, 272, 112, 22, 4),         // 25. assigned time
 ];
 
 // ── Icon card components ──────────────────────────────────────────────────────

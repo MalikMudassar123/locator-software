@@ -187,16 +187,32 @@ export default function RoadSection() {
               {(v as any).waterSrc ? (
                 <div style={{ position: 'relative', width: v.width + 16, height: v.height + 6, marginLeft: -8 }}>
                   {/* Water surface */}
-                  <div style={{
-                    position: 'absolute',
-                    bottom: '18%',
-                    left: 0,
-                    right: 0,
-                    height: '28%',
-                    borderRadius: '4px',
-                    background: 'linear-gradient(180deg, #bae6fd 0%, #38bdf8 100%)',
-                    boxShadow: '0 1px 4px rgba(14,165,233,0.25)',
-                  }} />
+                  <svg
+                    viewBox="0 0 150 20"
+                    preserveAspectRatio="none"
+                    style={{
+                      position: 'absolute',
+                      bottom: '22%',
+                      left: '0%',
+                      width: '100%',
+                      height: '24%',
+                      zIndex: 0,
+                    }}
+                  >
+                    <defs>
+                      <linearGradient id="wg" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%"   stopColor="#e0f7ff" stopOpacity="0.72"/>
+                        <stop offset="55%"  stopColor="#7dd3fc" stopOpacity="0.82"/>
+                        <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.90"/>
+                      </linearGradient>
+                    </defs>
+                    <path
+                      d="M0,10 L10,3 L20,10 L30,3 L40,10 L50,3 L60,10 L70,3 L80,10 L90,3 L100,10 L110,3 L120,10 L130,3 L140,10 L150,3 L150,20 L0,20 Z"
+                      fill="url(#wg)"
+                    />
+                    <path d="M10,11 Q22,8 34,11" stroke="rgba(255,255,255,0.55)" strokeWidth="0.9" fill="none" strokeLinecap="round"/>
+                    <path d="M60,13 Q72,10 84,13" stroke="rgba(255,255,255,0.38)" strokeWidth="0.7" fill="none" strokeLinecap="round"/>
+                  </svg>
                   {/* Yacht */}
                   <Image
                     src={v.src}
@@ -205,7 +221,7 @@ export default function RoadSection() {
                     height={v.height}
                     style={{
                       position: 'absolute',
-                      bottom: '20%',
+                      bottom: '16%',
                       left: '50%',
                       transform: 'translateX(-50%)',
                       zIndex: 1,
@@ -227,7 +243,7 @@ export default function RoadSection() {
         ))}
 
         {/* Scooter */}
-        <div className="absolute" style={{ bottom: '60%', left: '60%' }}>
+        <div className="absolute" style={{ bottom: '50%', left: '60%' }}>
           <div
             className="cursor-pointer transition-all duration-500 ease-out"
             style={{
@@ -546,7 +562,7 @@ export default function RoadSection() {
         <div 
           className="absolute cursor-pointer group"
           style={{
-            bottom: '86%',
+            bottom: '76%',
             left: '62%',
             animation: 'iconEntrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both, iconFloat 5s ease-in-out 1.5s infinite',
             pointerEvents: 'auto',

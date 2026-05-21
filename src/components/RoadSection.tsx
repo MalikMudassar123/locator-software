@@ -62,11 +62,11 @@ const vehicles = [
     alt: 'Yacht',
     width: 106,
     height: 63,
-    bottom: '91%',
-    left: '58%',
+    bottom: '84%',
+    left: '57%',
     pinSize: 22,
-    pinBottom: '103%',
-    pinLeft: '59.5%',
+    pinBottom: '112%',
+    pinLeft: '59%',
     zIndex: 10,
     driverName: 'Captain Rashid',
     vehicleId: 'YCH4892',
@@ -185,31 +185,32 @@ export default function RoadSection() {
               onMouseLeave={() => setHoveredPin(null)}
             >
               {(v as any).waterSrc ? (
-                <div style={{ position: 'relative', width: v.width, height: v.height }}>
-                  {/* Water surface behind yacht */}
-                  <Image
-                    src={(v as any).waterSrc}
-                    alt="Water"
-                    width={v.width}
-                    height={Math.round(v.height * 0.45)}
-                    style={{
-                      position: 'absolute',
-                      bottom: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '45%',
-                      objectFit: 'cover',
-                      objectPosition: 'center',
-                      borderRadius: '4px',
-                    }}
-                  />
-                  {/* Yacht on top */}
+                <div style={{ position: 'relative', width: v.width + 16, height: v.height + 6, marginLeft: -8 }}>
+                  {/* Water surface */}
+                  <div style={{
+                    position: 'absolute',
+                    bottom: '18%',
+                    left: 0,
+                    right: 0,
+                    height: '28%',
+                    borderRadius: '4px',
+                    background: 'linear-gradient(180deg, #bae6fd 0%, #38bdf8 100%)',
+                    boxShadow: '0 1px 4px rgba(14,165,233,0.25)',
+                  }} />
+                  {/* Yacht */}
                   <Image
                     src={v.src}
                     alt={v.alt}
                     width={v.width}
                     height={v.height}
-                    style={{ position: 'relative', zIndex: 1, objectFit: 'contain' }}
+                    style={{
+                      position: 'absolute',
+                      bottom: '20%',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      zIndex: 1,
+                      objectFit: 'contain',
+                    }}
                   />
                 </div>
               ) : (

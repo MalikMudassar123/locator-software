@@ -12,7 +12,7 @@ const POSTS = [
     title: "Fleet Tracking Software: The Smart Way to Manage Vehicles in Real-Time",
     excerpt:
       "Whether you're managing delivery vans, heavy trucks, or service vehicles, staying in control of operations is crucial. Today's fleet tracking software does far more than just show vehicle locations — it gives you full control of your mobile workforce in real-time.",
-    image: "/blog/ChatGPT Image May 21, 2026, 02_33_32 PM.png",
+    image: "/blog/fleet tracking.png",
     alt: "Fleet Tracking Software",
     href: "#",
   },
@@ -24,7 +24,7 @@ const POSTS = [
     title: "The Tracking Edge – Optimized GPS & Field Tools",
     excerpt:
       "Whether you're managing delivery fleets, service vehicles, or mobile field teams, staying in control of operations is key to success. Modern GPS tracking is no longer just about showing vehicle locations — it's about managing your entire field workflow smarter and faster.",
-    image: "/blog/ChatGPT Image May 21, 2026, 02_44_43 PM.png",
+    image: "/blog/Optimized GPS.png",
     alt: "Optimized GPS & Field Tools",
     href: "#",
   },
@@ -362,13 +362,18 @@ function BlogCard({ post, delay, visible }) {
         .bc__img-wrap {
           position: relative;
           width: 100%;
-          /* 3:2 ratio — compact and proportional */
-          aspect-ratio: 3 / 2;
+          height: 0;
+          padding-top: 66.67%; /* 3:2 ratio — explicit before hydration */
           overflow: hidden;
           background: #cce5f7;
           flex-shrink: 0;
         }
         .bc__img-wrap :global(.bc__img) {
+          position: absolute !important;
+          top: 0 !important;
+          left: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
           object-fit: cover;
           transition: transform .7s cubic-bezier(.16,1,.3,1);
         }

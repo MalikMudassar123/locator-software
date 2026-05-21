@@ -698,6 +698,7 @@ h6 {
   align-items: stretch;
 }
 .ss-anim-panel {
+  order: 2;
   width: 100%;
   height: 340px;
   position: relative;
@@ -711,6 +712,7 @@ h6 {
   justify-content: center;
 }
 .ss-text-panel {
+  order: 1;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -731,6 +733,7 @@ h6 {
     align-items: flex-start;
   }
   .ss-anim-panel {
+    order: unset;
     flex: 0 0 42%;
     width: auto;
     height: 100vh;
@@ -742,6 +745,7 @@ h6 {
     margin-bottom: 0;
   }
   .ss-text-panel {
+    order: unset;
     flex: 0 0 58%;
     width: auto;
     min-height: 100vh;

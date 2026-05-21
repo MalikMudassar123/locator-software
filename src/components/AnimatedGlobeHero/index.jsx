@@ -132,6 +132,99 @@ function mulberry32(seed) {
 }
 
 /* ============================================================================
+ * STAT COUNTER
+ * ----------------------------------------------------------------------------
+ * Parses a display string like "10+", "20,000+", "1000+", "1M+" into a target
+ * number plus its surrounding formatting (prefix / thousands grouping /
+ * magnitude letter / suffix), then smoothly counts up to it once the section
+ * scrolls into view.
+ *
+ * Start value is chosen relative to the target so the motion always feels
+ * natural and quick:
+ *   - magnitude values (1M+)  -> start ~85% of target (e.g. 0.9M -> 1M)
+ *   - small values   (<= 50)  -> start ~50% of target (e.g. 20 -> 12 -> 20)
+ *   - large values            -> start ~88-94% of target (no long crawl from 0)
+ * ========================================================================== */
+
+const MAGNITUDE = { k: 1e3, m: 1e6, b: 1e9 };
+
+function parseStat(raw) {
+  const str = String(raw).trim();
+  // prefix | number (digits, commas, dot) | magnitude letter | trailing suffix
+  const m = str.match(/^(\D*?)([\d.,]+)\s*([KkMmBb])?(.*)$/);
+  if (!m) return null;
+  const base = parseFloat(m[2].replace(/,/g, ""));
+  if (!isFinite(base)) return null;
+  const mag = m[3] ? MAGNITUDE[m[3].toLowerCase()] : 1;
+  return {
+    raw: str,
+    target: base * mag, // real numeric target (1M -> 1,000,000)
+  };
+}
+
+function getStartValue(target) {
+  // Small numbers can count from ~half; big ones start close so there's
+  // no long crawl. Either way the motion stays short and natural.
+  if (target <= 50) return Math.round(target * 0.5);
+  return Math.round(target * 0.85);
+}
+
+function AnimatedNumber({ value, active, delay = 0, duration = 1600 }) {
+  const info = useMemo(() => parseStat(value), [value]);
+  const startValue = info ? getStartValue(info.target) : 0;
+
+  const [display, setDisplay] = useState(() =>
+    info ? startValue.toLocaleString("en-US") : String(value)
+  );
+  const startedRef = useRef(false);
+
+  useEffect(() => {
+    if (!active || !info || startedRef.current) return;
+
+    const reduced =
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      setDisplay(info.raw);
+      return;
+    }
+
+    startedRef.current = true;
+    let rafId;
+    let timeoutId;
+    let startTs = null;
+
+    // easeOutCubic — smooth, steady glide that settles gently
+    const ease = (t) => 1 - Math.pow(1 - t, 3);
+
+    const tick = (ts) => {
+      if (startTs === null) startTs = ts;
+      const t = Math.min((ts - startTs) / duration, 1);
+      if (t >= 1) {
+        setDisplay(info.raw); // snap to the exact source string (e.g. "1M+")
+        return;
+      }
+      const current = startValue + (info.target - startValue) * ease(t);
+      setDisplay(Math.round(current).toLocaleString("en-US"));
+      rafId = requestAnimationFrame(tick);
+    };
+
+    timeoutId = setTimeout(() => {
+      rafId = requestAnimationFrame(tick);
+    }, delay);
+
+    return () => {
+      clearTimeout(timeoutId);
+      cancelAnimationFrame(rafId);
+    };
+  }, [active, info, startValue, delay, duration]);
+
+  if (!info) return <>{value}</>;
+  return <>{display}</>;
+}
+
+/* ============================================================================
  * COMPONENT
  * ========================================================================== */
 
@@ -785,7 +878,13 @@ export default function AnimatedGlobeHero({
               }}
             >
               <div className="stat-card__inner">
-                <div className="stat-card__value">{stat.value}</div>
+                <div className="stat-card__value">
+                  <AnimatedNumber
+                    value={stat.value}
+                    active={active}
+                    delay={(1.4 + i * 0.15) * 1000}
+                  />
+                </div>
                 <div className="stat-card__label">{stat.label}</div>
               </div>
               <span className="stat-card__shimmer" aria-hidden="true" />

@@ -891,7 +891,7 @@ const SceneExpense = forwardRef(function SceneExpense(_, ref) {
           <BrowserBar/>
           <div style={{ position:'relative', width:'100%', aspectRatio:'1448 / 1060', overflow:'hidden' }}>
             <Image
-              src="/software images/software images/Expense Manager/jikljoikiujk.png"
+              src="/software images/software images/Expense Manager/main.png"
               alt="Expense Manager"
               width={1448}
               height={1086}
@@ -909,7 +909,7 @@ const SceneExpense = forwardRef(function SceneExpense(_, ref) {
         onMouseLeave={() => gsap.to(mobileRef.current, { scale: 1,    duration: 0.35, ease:'power3.out' })}
         style={{
           position:'absolute',
-          left:'-2%', top:'28%',
+          left:'-2%', top:'18%',
           opacity:0, zIndex:40,
           cursor:'pointer',
           willChange:'opacity, transform',
@@ -936,8 +936,8 @@ const SceneExpense = forwardRef(function SceneExpense(_, ref) {
         onMouseLeave={() => gsap.to(popupRef.current, { scale: 1,    duration: 0.35, ease:'power3.out' })}
         style={{
           position:'absolute',
-          left:'-9%', top:'55%',
-          width:'58%', height:'10%',
+          left:'-13%', top:'calc(45% - 4px)',
+          width:'58%', height:'calc(10% + 4px)',
           opacity:0, zIndex:50,
           cursor:'pointer',
           willChange:'opacity, transform',

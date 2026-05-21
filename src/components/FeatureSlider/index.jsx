@@ -887,14 +887,16 @@ const SceneExpense = forwardRef(function SceneExpense(_, ref) {
     <div style={{ position:'absolute', inset:0, zIndex:10 }}>
       <div ref={wireRef} style={{ position:'absolute', inset:0, opacity:0 }}><WireExpense/></div>
       <div ref={mainImgRef} style={{ position:'absolute', inset:0, opacity:0 }}>
-        <div style={{ position:'absolute', inset:0, display:'flex', flexDirection:'column', background:'#fff' }}>
+        <div style={{ position:'absolute', top:0, left:0, right:0, display:'flex', flexDirection:'column' }}>
           <BrowserBar/>
-          <div style={{ position:'relative', flex:1 }}>
+          <div style={{ position:'relative', width:'100%', aspectRatio:'1448 / 1060', overflow:'hidden' }}>
             <Image
               src="/software images/software images/Expense Manager/jikljoikiujk.png"
               alt="Expense Manager"
-              fill sizes="700px"
-              style={{ objectFit:'contain', objectPosition:'left top' }}
+              width={1448}
+              height={1086}
+              sizes="700px"
+              style={{ position:'absolute', top:0, left:0, width:'100%', height:'auto', display:'block', objectFit:'contain' }}
             />
           </div>
         </div>
@@ -907,7 +909,7 @@ const SceneExpense = forwardRef(function SceneExpense(_, ref) {
         onMouseLeave={() => gsap.to(mobileRef.current, { scale: 1,    duration: 0.35, ease:'power3.out' })}
         style={{
           position:'absolute',
-          left:'-2%', top:'18%',
+          left:'-2%', top:'28%',
           opacity:0, zIndex:40,
           cursor:'pointer',
           willChange:'opacity, transform',
@@ -934,7 +936,7 @@ const SceneExpense = forwardRef(function SceneExpense(_, ref) {
         onMouseLeave={() => gsap.to(popupRef.current, { scale: 1,    duration: 0.35, ease:'power3.out' })}
         style={{
           position:'absolute',
-          left:'-14%', top:'40%',
+          left:'-9%', top:'55%',
           width:'58%', height:'10%',
           opacity:0, zIndex:50,
           cursor:'pointer',
@@ -1168,7 +1170,7 @@ export default function FeatureSlider() {
   const slide = SLIDES[activeIdx];
 
   return (
-    <section style={{ background:'#fff', width:'100%', padding:'clamp(32px,4vw,56px) 0 clamp(4px,0.8vw,12px)', position:'relative', overflow:'hidden' }}>
+    <section style={{ background:'#fff', width:'100%', padding:'clamp(32px,4vw,56px) 0 clamp(48px,6vw,88px)', position:'relative', overflow:'hidden' }}>
       <div style={{
         position:'absolute', top:0, left:0, width:'55%', height:'100%', pointerEvents:'none',
         background:'radial-gradient(ellipse at 20% 60%, rgba(199,210,254,0.38) 0%, rgba(224,231,255,0.18) 40%, transparent 70%)',
@@ -1181,11 +1183,11 @@ export default function FeatureSlider() {
           <div style={{ fontSize:13, fontWeight:700, color:'#0a89dd', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:24 }}>
             {slide.eyebrow}
           </div>
-          <h2 style={{ fontSize:'clamp(28px, 3.8vw, 44px)', fontWeight:800, lineHeight:1.22, color:'#484b4c', margin:'0 0 20px', maxWidth:'100%', width:'100%' }}>
+          <h2 style={{ fontSize:'clamp(24px, 3vw, 36px)', fontWeight:800, lineHeight:1.2, color:'#484b4c', margin:'0 0 16px', maxWidth:'100%', width:'100%' }}>
             Run Your Road Team Smarter<br/>
             <span style={{ fontWeight:700 }}>Empowering field teams,</span>
           </h2>
-          <p style={{ fontSize:'clamp(14px, 1.3vw, 16px)', color:'#8090bc', lineHeight:1.75, margin:'0 0 48px', maxWidth:'100%' }}>
+          <p style={{ fontSize:'clamp(14px, 1.3vw, 16px)', color:'#8090bc', lineHeight:1.7, margin:'0 0 28px', maxWidth:'100%' }}>
             Manage, track, and optimize your field workforce in real time<span style={{ color:'#9ca3af' }}> fleets</span>
           </p>
 
@@ -1193,7 +1195,7 @@ export default function FeatureSlider() {
           <div style={{
             borderRadius:8,
             background:'linear-gradient(145deg, rgba(219,227,255,0.55) 0%, rgba(237,242,255,0.42) 50%, rgba(229,236,255,0.38) 100%)',
-            padding:'32px 28px 28px',
+            padding:'22px 28px 20px',
           }}>
             <div style={{ display:'flex', alignItems:'flex-start', gap:8 }}>
               <button onClick={prev}
@@ -1216,7 +1218,7 @@ export default function FeatureSlider() {
                 onMouseLeave={e=>e.currentTarget.style.color='#9ca3af'}>›</button>
             </div>
 
-            <div style={{ display:'flex', justifyContent:'center', gap:8, marginTop:32 }}>
+            <div style={{ display:'flex', justifyContent:'center', gap:8, marginTop:20 }}>
               {SLIDES.map((_,i) => (
                 <button key={i} onClick={()=>goTo(i)} style={{
                   width:8, height:8, borderRadius:'50%', border:'none', cursor:'pointer', padding:0,

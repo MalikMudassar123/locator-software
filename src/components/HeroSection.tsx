@@ -1,5 +1,5 @@
-'use client'
-
+// Server component: pure markup, inline styles and CSS-only animations.
+// Only the interactive <Navbar> (its own 'use client' boundary) ships JS.
 import Image from 'next/image'
 import Navbar from './Navbar'
 

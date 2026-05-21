@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/* Tailwind v4 is CSS-first: the legacy tailwind.config.ts (v3 syntax) is NOT
+   auto-loaded. Theme tokens, the `dark:` variant, and design tokens must be
+   declared here or Tailwind generates no CSS for them. */
+
+/* Restore class-based dark mode (original intent: darkMode: "class").
+   Without this, v4 defaults `dark:` to prefers-color-scheme, which would let
+   dark-OS users trigger dark styles on a light-only design. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* shadcn/ui CSS Variables */
 @layer base {
   :root {
@@ -59,17 +68,42 @@
 }
 
 @theme inline {
-  /* Font Family Configuration */
-  --font-family-poppins: var(--font-poppins), sans-serif;
-  --font-family-inter: var(--font-inter), sans-serif;
+  /* Font families — drive the `font-poppins` / `font-inter` utilities */
+  --font-poppins: var(--font-poppins), sans-serif;
+  --font-inter: var(--font-inter), sans-serif;
+
+  /* Color tokens — map shadcn HSL-triplet vars to v4 color utilities so
+     classes like bg-background, text-foreground, border-border, bg-primary
+     actually generate CSS (the v3 config that defined these is ignored). */
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-  }
-}
+/* NOTE: the previous `@media (prefers-color-scheme: dark)` block that forced
+   --background/--foreground to dark was removed. This is a light-only design;
+   that block made dark-OS users render a dark background (a visual bug / flash
+   on refresh). The .dark class block above is retained for opt-in dark mode. */
 
 /* Base Styles */
 * {

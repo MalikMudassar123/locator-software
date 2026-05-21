@@ -30,14 +30,13 @@ export const metadata: Metadata = {
     "Tailwind CSS",
     "Production Ready",
   ],
-  authors: [
-    {
-      name: "Your Name",
-      url: siteConfig.url,
-    },
-  ],
-  creator: "Your Name",
+  authors: [{ name: siteConfig.name, url: siteConfig.url }],
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
   metadataBase: new URL(siteConfig.url),
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -45,12 +44,20 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     siteName: siteConfig.name,
+    images: [
+      {
+        url: siteConfig.ogImage,
+        width: 1200,
+        height: 630,
+        alt: siteConfig.name,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
-    creator: "@yourusername",
+    images: [siteConfig.ogImage],
   },
   robots: {
     index: true,
@@ -80,6 +87,19 @@ export default function RootLayout({
         className="min-h-screen bg-background font-poppins antialiased"
         suppressHydrationWarning
       >
+        {/* Organization/WebSite structured data for rich search results */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: siteConfig.name,
+              url: siteConfig.url,
+              description: siteConfig.description,
+            }),
+          }}
+        />
         {children}
       </body>
     </html>

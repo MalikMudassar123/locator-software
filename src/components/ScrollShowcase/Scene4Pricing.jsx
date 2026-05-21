@@ -341,9 +341,9 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
         style={{
           position:'absolute',
           left: FX - 75,
-          top: FY + 75,
-          width: 250,
-          height: 54,
+          top: FY + 83,
+          width: 220,
+          height: 48,
           opacity: 0,
           zIndex: 50,
           pointerEvents: 'auto',

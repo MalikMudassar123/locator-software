@@ -1011,7 +1011,7 @@ const SceneInspection = forwardRef(function SceneInspection(_, ref) {
         onMouseLeave={() => gsap.to(mobileRef.current, { scale: 1,    duration: 0.35, ease:'power3.out' })}
         style={{
           position:'absolute',
-          left:'-1%', top:'calc(32% + 3px)',
+          left:'calc(-3% + 9px)', top:'calc(32% + 20px)',
           opacity:0, zIndex:40,
           cursor:'pointer',
           willChange:'opacity, transform',

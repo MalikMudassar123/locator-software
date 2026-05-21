@@ -544,9 +544,9 @@ export default forwardRef(function Scene1Icons(_props, ref) {
         onMouseLeave={() => gsap.to(mobilePopupRef.current, { scale: 1, duration: 0.35, ease: 'power3.out', transformOrigin: 'left center' })}
         style={{
           position:'absolute',
-          left: PHONE_X - 10,
+          left: PHONE_X - 30,
           top: PHONE_Y + 68,
-          width: 150,
+          width: 400,
           height: 44,
           opacity: 0,
           zIndex: 50,

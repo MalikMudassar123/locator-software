@@ -562,8 +562,8 @@ export default function RoadSection() {
         <div 
           className="absolute cursor-pointer group"
           style={{
-            bottom: '76%',
-            left: '62%',
+            bottom: '85%',
+            left: '65%',
             animation: 'iconEntrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both, iconFloat 5s ease-in-out 1.5s infinite',
             pointerEvents: 'auto',
           }}

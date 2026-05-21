@@ -272,13 +272,22 @@ function BlogCard({ post, delay, visible }) {
       style={{ transitionDelay: `${delay}ms` }}
     >
       {/* ── Image ── */}
-      <div className="bc__img-wrap">
+      <div
+        className="bc__img-wrap"
+        style={{
+          position: "relative",
+          width: "100%",
+          aspectRatio: "3 / 2",
+          overflow: "hidden",
+        }}
+      >
         <Image
           src={post.image}
           alt={post.alt}
           fill
           className="bc__img"
           sizes="(max-width: 680px) 92vw, 48vw"
+          style={{ objectFit: "cover" }}
         />
 
         {/* Directional vignette */}
@@ -359,22 +368,15 @@ function BlogCard({ post, delay, visible }) {
         }
 
         /* ─────────── IMAGE ─────────── */
+        /* Layout-critical props (position/aspect-ratio/overflow) are set
+           inline on the wrapper so they apply on first paint, before
+           styled-jsx hydrates — prevents the fill image from escaping
+           its container on hard refresh. */
         .bc__img-wrap {
-          position: relative;
-          width: 100%;
-          height: 0;
-          padding-top: 66.67%; /* 3:2 ratio — explicit before hydration */
-          overflow: hidden;
           background: #cce5f7;
           flex-shrink: 0;
         }
         .bc__img-wrap :global(.bc__img) {
-          position: absolute !important;
-          top: 0 !important;
-          left: 0 !important;
-          width: 100% !important;
-          height: 100% !important;
-          object-fit: cover;
           transition: transform .7s cubic-bezier(.16,1,.3,1);
         }
         .bc:hover .bc__img-wrap :global(.bc__img) {

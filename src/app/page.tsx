@@ -7,6 +7,8 @@ import VideoHeroSection from "@/components/VideoHeroSection";
 import TestimonialCarousel from "@/components/TestimonialCarousel";
 import LogoMarquee from "@/components/Logomarquee";
 import SmartIoT from "@/components/SmartIoT";
+import BlogSection from "@/components/BlogSection";
+import Footer from "@/components/layouts/Footer";
 
 export default function Home() {
   return (
@@ -25,6 +27,8 @@ export default function Home() {
       <VideoHeroSection />
       <TestimonialCarousel />
       <LogoMarquee />
+      <BlogSection />
+      <Footer />
     </main>
   );
 }

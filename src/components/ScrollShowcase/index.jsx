@@ -234,7 +234,7 @@ export default function ScrollShowcase() {
             <span style={{
               fontSize: 13,
               fontWeight: 700,
-              color: '#2563eb',
+              color: '#0a89dd',
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
               marginBottom: 18,

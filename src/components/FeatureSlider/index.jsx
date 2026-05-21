@@ -894,7 +894,7 @@ const SceneExpense = forwardRef(function SceneExpense(_, ref) {
               src="/software images/software images/Expense Manager/jikljoikiujk.png"
               alt="Expense Manager"
               fill sizes="700px"
-              style={{ objectFit:'fill' }}
+              style={{ objectFit:'contain', objectPosition:'left top' }}
             />
           </div>
         </div>
@@ -1178,7 +1178,7 @@ export default function FeatureSlider() {
 
         {/* ── LEFT panel ── */}
         <div className="fs-left" style={{ paddingRight:'clamp(0px, 2vw, 32px)', position:'relative', zIndex:1 }}>
-          <div style={{ fontSize:13, fontWeight:700, color:'#2563eb', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:24 }}>
+          <div style={{ fontSize:13, fontWeight:700, color:'#0a89dd', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:24 }}>
             {slide.eyebrow}
           </div>
           <h2 style={{ fontSize:'clamp(28px, 3.8vw, 44px)', fontWeight:800, lineHeight:1.22, color:'#484b4c', margin:'0 0 20px', maxWidth:'100%', width:'100%' }}>

@@ -13,7 +13,7 @@ const vehicles = [
     bottom: '82%',
     left: '14%',
     pinSize: 24,
-    pinBottom: '95%',
+    pinBottom: '103%',
     pinLeft: '15.5%',
     zIndex: 10,
     driverName: 'Ahmed Hassan',
@@ -30,7 +30,7 @@ const vehicles = [
     bottom: '78%',
     left: '30%',
     pinSize: 26,
-    pinBottom: '93%',
+    pinBottom: '101%',
     pinLeft: '32%',
     zIndex: 10,
     driverName: 'Mohammed Ali',
@@ -47,7 +47,7 @@ const vehicles = [
     bottom: '75%',
     left: '46%',
     pinSize: 22,
-    pinBottom: '89%',
+    pinBottom: '97%',
     pinLeft: '48%',
     zIndex: 10,
     driverName: 'Khalid Omar',
@@ -58,6 +58,7 @@ const vehicles = [
   {
     id: 'yacht',
     src: '/yatch boat.png',
+    waterSrc: '/water.png',
     alt: 'Yacht',
     width: 106,
     height: 63,
@@ -81,7 +82,7 @@ const vehicles = [
     bottom: '72%',
     left: '72%',
     pinSize: 22,
-    pinBottom: '84%',
+    pinBottom: '92%',
     pinLeft: '73%',
     zIndex: 10,
     driverName: 'Generator Unit',
@@ -98,7 +99,7 @@ const vehicles = [
     bottom: '70%',
     left: '80%',
     pinSize: 28,
-    pinBottom: '87%',
+    pinBottom: '97%',
     pinLeft: '82%',
     zIndex: 10,
     driverName: 'Saeed Abdullah',
@@ -174,8 +175,8 @@ export default function RoadSection() {
           <div key={v.id}>
             <div
               className="absolute cursor-pointer transition-all duration-500 ease-out"
-              style={{ 
-                bottom: v.bottom, 
+              style={{
+                bottom: v.bottom,
                 left: v.left,
                 transform: hoveredPin === v.id ? 'translateY(-3px) scale(1.02)' : 'translateY(0) scale(1)',
                 filter: hoveredPin === v.id ? 'drop-shadow(0 6px 16px rgba(0,0,0,0.25))' : 'drop-shadow(0 2px 6px rgba(0,0,0,0.12))',
@@ -183,13 +184,43 @@ export default function RoadSection() {
               onMouseEnter={() => setHoveredPin(v.id)}
               onMouseLeave={() => setHoveredPin(null)}
             >
-              <Image
-                src={v.src}
-                alt={v.alt}
-                width={v.width}
-                height={v.height}
-                className="object-contain"
-              />
+              {(v as any).waterSrc ? (
+                <div style={{ position: 'relative', width: v.width, height: v.height }}>
+                  {/* Water surface behind yacht */}
+                  <Image
+                    src={(v as any).waterSrc}
+                    alt="Water"
+                    width={v.width}
+                    height={Math.round(v.height * 0.45)}
+                    style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '45%',
+                      objectFit: 'cover',
+                      objectPosition: 'center',
+                      borderRadius: '4px',
+                    }}
+                  />
+                  {/* Yacht on top */}
+                  <Image
+                    src={v.src}
+                    alt={v.alt}
+                    width={v.width}
+                    height={v.height}
+                    style={{ position: 'relative', zIndex: 1, objectFit: 'contain' }}
+                  />
+                </div>
+              ) : (
+                <Image
+                  src={v.src}
+                  alt={v.alt}
+                  width={v.width}
+                  height={v.height}
+                  className="object-contain"
+                />
+              )}
             </div>
           </div>
         ))}
@@ -226,7 +257,7 @@ export default function RoadSection() {
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            background: '#1a84b8',
+            background: '#0a89dd',
             color: '#ffffff',
             border: 'none',
             borderRadius: '8px',
@@ -255,7 +286,7 @@ export default function RoadSection() {
             alignItems: 'center',
             gap: '8px',
             background: '#ffffff',
-            color: '#1a6e9a',
+            color: '#0a89dd',
             border: '1.5px solid #c8e4f5',
             borderRadius: '8px',
             padding: '10px 20px',
@@ -326,8 +357,8 @@ export default function RoadSection() {
                 >
                   <div
                     style={{
-                      width: '160px',
-                      padding: '10px 11px',
+                      width: '150px',
+                      padding: '7px 10px',
                       background: 'rgba(255, 255, 255, 0.88)',
                       backdropFilter: 'blur(60px) saturate(150%)',
                       WebkitBackdropFilter: 'blur(60px) saturate(150%)',
@@ -345,15 +376,15 @@ export default function RoadSection() {
                     }}
                   >
                     {/* Header with avatar, driver name and menu */}
-                    <div style={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
                       justifyContent: 'space-between',
                       marginBottom: '4px',
                     }}>
-                      <div style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
                         gap: '8px',
                       }}>
                         {/* Avatar */}
@@ -373,17 +404,17 @@ export default function RoadSection() {
                             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="#0ea5e9"/>
                           </svg>
                         </div>
-                        <div style={{ 
-                          fontSize: '13px', 
-                          fontWeight: 700, 
-                          color: '#1e3a5f', 
+                        <div style={{
+                          fontSize: '11.5px',
+                          fontWeight: 700,
+                          color: '#1e3a5f',
                           letterSpacing: '-0.01em',
                         }}>
                           {v.driverName}
                         </div>
                       </div>
-                      <div style={{ 
-                        display: 'flex', 
+                      <div style={{
+                        display: 'flex',
                         gap: '2px',
                         opacity: 0.4,
                       }}>
@@ -394,11 +425,11 @@ export default function RoadSection() {
                     </div>
 
                     {/* Vehicle ID */}
-                    <div style={{ 
-                      fontSize: '11px', 
-                      color: '#64748b', 
+                    <div style={{
+                      fontSize: '9px',
+                      color: '#64748b',
                       fontWeight: 500,
-                      marginBottom: '12px',
+                      marginBottom: '5px',
                     }}>
                       ID: {v.vehicleId}
                     </div>
@@ -411,32 +442,32 @@ export default function RoadSection() {
                     }} />
 
                     {/* Idling Time */}
-                    <div style={{ 
+                    <div style={{
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       marginBottom: '5px',
                     }}>
-                      <div style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
                         gap: '8px',
                       }}>
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.6 }}>
                           <circle cx="12" cy="12" r="10" stroke="#64748b" strokeWidth="2" fill="none"/>
                           <path d="M12 6v6l4 2" stroke="#64748b" strokeWidth="2" strokeLinecap="round"/>
                         </svg>
-                        <span style={{ 
-                          fontSize: '11px', 
-                          color: '#64748b', 
+                        <span style={{
+                          fontSize: '9.5px',
+                          color: '#64748b',
                           fontWeight: 500,
                         }}>
                           Idling Time
                         </span>
                       </div>
-                      <span style={{ 
-                        fontSize: '12px', 
-                        color: '#0ea5e9', 
+                      <span style={{
+                        fontSize: '10.5px',
+                        color: '#0ea5e9',
                         fontWeight: 700,
                       }}>
                         {v.idlingTime}
@@ -451,38 +482,38 @@ export default function RoadSection() {
                     }} />
 
                     {/* Fuel Level */}
-                    <div style={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
                       justifyContent: 'space-between',
                     }}>
-                      <div style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
                         gap: '8px',
                       }}>
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.6 }}>
                           <path d="M3 8h12v10c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V8zm0-2V4c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v2M15 11l4-4v10l-4-4" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
                         </svg>
-                        <span style={{ 
-                          fontSize: '11px', 
-                          color: '#64748b', 
+                        <span style={{
+                          fontSize: '9.5px',
+                          color: '#64748b',
                           fontWeight: 500,
                         }}>
                           Fuel
                         </span>
                       </div>
-                      <div style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
                         gap: '5px',
                       }}>
                         <svg width="14" height="16" viewBox="0 0 24 24" fill="none">
                           <path d="M3 8h12v10c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V8zm0-2V4c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v2M15 11l4-4v10l-4-4" stroke="#0ea5e9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="#0ea5e9"/>
                         </svg>
-                        <span style={{ 
-                          fontSize: '12px', 
-                          color: '#0ea5e9', 
+                        <span style={{
+                          fontSize: '10.5px',
+                          color: '#0ea5e9',
                           fontWeight: 700,
                         }}>
                           {v.fuelLevel}
@@ -514,7 +545,7 @@ export default function RoadSection() {
         <div 
           className="absolute cursor-pointer group"
           style={{
-            bottom: '78%',
+            bottom: '86%',
             left: '62%',
             animation: 'iconEntrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both, iconFloat 5s ease-in-out 1.5s infinite',
             pointerEvents: 'auto',

@@ -40,46 +40,46 @@ function rp(x, y, w, h, r = 0) {
 // Calibrated to /block 1/mobile.png (1535×3378) under objectFit:cover, center-top.
 // Vertical scale orig→box ≈ 0.16938; offsets below are measured from the PNG.
 const WIRE = [
-  // 1. Header bar — "Vehicles - Live View" blue bar (full width, flat, bottom ≈ box 72)
+  // 1. Header bar — full blue "Vehicles - Live View" bar (matches PNG top region)
   rp(PHONE_X+4,   PHONE_Y+4,   PHONE_W-8, 66, 6),
 
   // 2. Map view — header bottom (72) → map/panel boundary (325)
   rp(PHONE_X+4,   PHONE_Y+72,  PHONE_W-8, 251, 4),
 
-  // 3. Bottom info panel container (boundary at PHONE_Y+325)
+  // 3. Bottom info panel container — ends at PHONE_Y+494 (within bottom safe zone ≤506)
   rp(PHONE_X+4,   PHONE_Y+325, PHONE_W-8, 169, 8),
 
-  // 4. Nav: back-arrow icon (left, aligned with avatar lower edge)
+  // 4. Nav: back-arrow icon (left)
   rp(PHONE_X+12,  PHONE_Y+344, 20, 16, 4),
 
-  // 5. Nav: mute icon (right, aligned with avatar lower edge)
+  // 5. Nav: mute icon (right)
   rp(PHONE_X+228, PHONE_Y+344, 20, 16, 4),
 
-  // 6. Driver avatar — ø59 circle, center_x=PHONE_X+130, center_y=PHONE_Y+350
+  // 6. Driver avatar — ø60 circle
   rp(PHONE_X+100, PHONE_Y+320, 60, 60, 30),
 
-  // 7. Driver name bold "Steve Johns 7895" — centered below avatar (center ≈ box 386)
+  // 7. Driver name "Steve Johns 7895"
   rp(PHONE_X+58,  PHONE_Y+380, 144, 12, 4),
 
-  // 8. Row: Status label | long value (center ≈ box 412)
+  // 8. Status row
   rp(PHONE_X+10,  PHONE_Y+409, 52, 8, 3),
   rp(PHONE_X+76,  PHONE_Y+409, 164, 8, 3),
 
-  // 9. Row: Driver label | value (center ≈ box 431)
+  // 9. Driver row
   rp(PHONE_X+10,  PHONE_Y+428, 42, 8, 3),
   rp(PHONE_X+76,  PHONE_Y+428, 86, 8, 3),
 
-  // 10. Row: Phone label | value (center ≈ box 448)
+  // 10. Phone row
   rp(PHONE_X+10,  PHONE_Y+445, 42, 8, 3),
   rp(PHONE_X+76,  PHONE_Y+445, 32, 8, 3),
 
-  // 11. Row: Geozone label | value (center ≈ box 469)
-  rp(PHONE_X+10,  PHONE_Y+466, 56, 8, 3),
-  rp(PHONE_X+76,  PHONE_Y+466, 104, 8, 3),
+  // 11. Geozone row
+  rp(PHONE_X+10,  PHONE_Y+462, 56, 8, 3),
+  rp(PHONE_X+76,  PHONE_Y+462, 104, 8, 3),
 
-  // 12. Row: Last Update label | value (center ≈ box 488)
-  rp(PHONE_X+10,  PHONE_Y+485, 64, 8, 3),
-  rp(PHONE_X+76,  PHONE_Y+485, 110, 8, 3),
+  // 12. Last Update row — ends at PHONE_Y+487 = 525, within phone bottom (538)
+  rp(PHONE_X+10,  PHONE_Y+479, 64, 8, 3),
+  rp(PHONE_X+76,  PHONE_Y+479, 110, 8, 3),
 ];
 
 // Desktop wireframe — matches pro.mylocatorplus.com layout exactly
@@ -421,10 +421,14 @@ export default forwardRef(function Scene1Icons(_props, ref) {
             <feGaussianBlur stdDeviation="0.8" result="b"/>
             <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
           </filter>
+          {/* Clip wireframe rects to the exact phone rounded-rectangle shape */}
+          <clipPath id="phone_wire_clip">
+            <path d={PHONE_PATH}/>
+          </clipPath>
         </defs>
         <path ref={phoneOutRef} d={PHONE_PATH}
           stroke="none" fill="none" opacity="0"/>
-        <g ref={wireGrpRef} opacity="0">
+        <g ref={wireGrpRef} opacity="0" clipPath="url(#phone_wire_clip)">
           {WIRE.map((d, i) => (
             <path key={i} ref={r => (wireRefs.current[i] = r)} d={d}
               stroke="url(#s1pg_w)" strokeWidth="0.7" fill="rgba(59,130,246,0.02)"

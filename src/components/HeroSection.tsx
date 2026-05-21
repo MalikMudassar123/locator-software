@@ -201,124 +201,6 @@ export default function HeroSection() {
         }}
       />
 
-      {/* ─── ANIMATED DARK-BLUE WATER WAVES ───
-          Two wide, smooth HORIZONTAL bezier waves glide across the full
-          width; one slim VERTICAL wave flows diagonally. All use smooth
-          curves (no angular edges) and morph gently like water. Kept at
-          zIndex 7 with NO mixBlendMode so the dark blue stays pure. */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 7,
-          pointerEvents: 'none',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Two wide, smooth HORIZONTAL water waves — bezier ribbons
-            with gently waving top & bottom edges, gliding across the
-            full width of the hero. */}
-        <svg
-          className="hero-wave-horiz hero-wave-horiz-1"
-          viewBox="0 0 600 200"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <defs>
-            <linearGradient id="heroHorizWaveGrad1" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%"   stopColor="rgba(8, 38, 98, 0)" />
-              <stop offset="22%"  stopColor="rgba(8, 38, 98, 0.34)" />
-              <stop offset="50%"  stopColor="rgba(6, 30, 84, 0.46)" />
-              <stop offset="78%"  stopColor="rgba(8, 38, 98, 0.34)" />
-              <stop offset="100%" stopColor="rgba(8, 38, 98, 0)" />
-            </linearGradient>
-          </defs>
-          <path fill="url(#heroHorizWaveGrad1)"
-            d="M 0,80 C 100,40 200,40 300,80 S 500,120 600,80 L 600,140 C 500,180 400,180 300,140 S 100,100 0,140 Z">
-            <animate
-              attributeName="d"
-              dur="9s"
-              repeatCount="indefinite"
-              calcMode="spline"
-              keyTimes="0;0.5;1"
-              keySplines="0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95"
-              values="
-                M 0,80 C 100,40 200,40 300,80 S 500,120 600,80 L 600,140 C 500,180 400,180 300,140 S 100,100 0,140 Z;
-                M 0,80 C 100,120 200,120 300,80 S 500,40 600,80 L 600,140 C 500,100 400,100 300,140 S 100,180 0,140 Z;
-                M 0,80 C 100,40 200,40 300,80 S 500,120 600,80 L 600,140 C 500,180 400,180 300,140 S 100,100 0,140 Z"
-            />
-          </path>
-        </svg>
-
-        <svg
-          className="hero-wave-horiz hero-wave-horiz-2"
-          viewBox="0 0 600 200"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <defs>
-            <linearGradient id="heroHorizWaveGrad2" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%"   stopColor="rgba(5, 26, 80, 0)" />
-              <stop offset="22%"  stopColor="rgba(8, 36, 96, 0.30)" />
-              <stop offset="50%"  stopColor="rgba(6, 30, 84, 0.42)" />
-              <stop offset="78%"  stopColor="rgba(8, 36, 96, 0.30)" />
-              <stop offset="100%" stopColor="rgba(5, 26, 80, 0)" />
-            </linearGradient>
-          </defs>
-          <path fill="url(#heroHorizWaveGrad2)"
-            d="M 0,90 C 120,50 220,50 320,90 S 500,130 600,90 L 600,150 C 480,190 380,190 280,150 S 100,110 0,150 Z">
-            <animate
-              attributeName="d"
-              dur="11s"
-              repeatCount="indefinite"
-              calcMode="spline"
-              keyTimes="0;0.5;1"
-              keySplines="0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95"
-              values="
-                M 0,90 C 120,50 220,50 320,90 S 500,130 600,90 L 600,150 C 480,190 380,190 280,150 S 100,110 0,150 Z;
-                M 0,90 C 120,130 220,130 320,90 S 500,50 600,90 L 600,150 C 480,110 380,110 280,150 S 100,190 0,150 Z;
-                M 0,90 C 120,50 220,50 320,90 S 500,130 600,90 L 600,150 C 480,190 380,190 280,150 S 100,110 0,150 Z"
-            />
-          </path>
-        </svg>
-
-        {/* Single refined VERTICAL water wave — smooth bezier ribbon
-            that flows diagonally from top-right down to bottom-left,
-            morphing gently like a ripple of water. */}
-        <svg
-          className="hero-wave-vert"
-          viewBox="0 0 120 320"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <defs>
-            <linearGradient id="heroVertWaveGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"   stopColor="rgba(12, 56, 130, 0)" />
-              <stop offset="14%"  stopColor="rgba(12, 56, 130, 0.34)" />
-              <stop offset="50%"  stopColor="rgba(10, 48, 116, 0.48)" />
-              <stop offset="86%"  stopColor="rgba(12, 56, 130, 0.34)" />
-              <stop offset="100%" stopColor="rgba(12, 56, 130, 0)" />
-            </linearGradient>
-          </defs>
-          <path fill="url(#heroVertWaveGrad)"
-            d="M 48,0 C 28,53 68,107 48,160 C 28,213 68,267 48,320 L 78,320 C 58,267 98,213 78,160 C 58,107 98,53 78,0 Z">
-            <animate
-              attributeName="d"
-              dur="7s"
-              repeatCount="indefinite"
-              calcMode="spline"
-              keyTimes="0;0.5;1"
-              keySplines="0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95"
-              values="
-                M 48,0 C 28,53 68,107 48,160 C 28,213 68,267 48,320 L 78,320 C 58,267 98,213 78,160 C 58,107 98,53 78,0 Z;
-                M 48,0 C 68,53 28,107 48,160 C 68,213 28,267 48,320 L 78,320 C 98,267 58,213 78,160 C 98,107 58,53 78,0 Z;
-                M 48,0 C 28,53 68,107 48,160 C 28,213 68,267 48,320 L 78,320 C 58,267 98,213 78,160 C 58,107 98,53 78,0 Z"
-            />
-          </path>
-        </svg>
-      </div>
-
       {/* L3 — Bright white-gold sunrise core behind the Burj (kept low, near skyline base) */}
       <div
         aria-hidden="true"
@@ -490,6 +372,62 @@ export default function HeroSection() {
           opacity: 0.8,
         }}
       />
+
+      {/* ─────────── SKY IMAGE — LEFT OF BUILDING ─────────── */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: '2%',
+          width: 'clamp(180px, 28vw, 420px)',
+          zIndex: 7,
+          pointerEvents: 'none',
+        }}
+      >
+        <Image
+          src="/skky.png"
+          alt=""
+          width={420}
+          height={320}
+          style={{
+            width: '100%',
+            height: 'auto',
+            objectFit: 'contain',
+            objectPosition: 'bottom',
+            opacity: 0.72,
+            mixBlendMode: 'screen',
+          }}
+        />
+      </div>
+
+      {/* ─────────── SKY IMAGE — TOP RIGHT (inset) ─────────── */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: '8%',
+          right: '4%',
+          width: 'clamp(160px, 24vw, 380px)',
+          zIndex: 7,
+          pointerEvents: 'none',
+        }}
+      >
+        <Image
+          src="/skky.png"
+          alt=""
+          width={380}
+          height={280}
+          style={{
+            width: '100%',
+            height: 'auto',
+            objectFit: 'contain',
+            opacity: 0.75,
+            mixBlendMode: 'screen',
+            transform: 'scaleX(-1)',
+          }}
+        />
+      </div>
 
       {/* ─────────── FOREGROUND CONTENT (unchanged) ─────────── */}
 

@@ -379,10 +379,7 @@ function FeatureCard({ feature, delay }) {
           border-radius: 12px;
           overflow: hidden;
           position: relative;
-          background: #ffffff;
-          box-shadow:
-            0 4px 16px rgba(70, 100, 140, 0.08),
-            0 1px 3px rgba(70, 100, 140, 0.06);
+          background: transparent;
         }
       `}</style>
     </article>
@@ -432,7 +429,13 @@ function FeaturePreview({ type, customImage }) {
       <img
         src={customImage}
         alt=""
-        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "contain",
+          objectPosition: "center",
+          display: "block",
+        }}
       />
     );
   }

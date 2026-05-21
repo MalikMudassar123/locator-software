@@ -148,7 +148,7 @@ export default function RoadAnimationSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4 }}
-              className="text-[13px] font-semibold text-[#00BCD4] mb-5"
+              className="text-[13px] font-semibold text-[#0a89dd] mb-5"
             >
               Fleet Telematics
             </motion.p>

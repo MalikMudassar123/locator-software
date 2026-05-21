@@ -68,7 +68,7 @@ export default function Navbar() {
                 className="nav-cta-pulse"
                 style={{
                   background: '#ffffff',
-                  color: '#1a6e9a',
+                  color: '#0a89dd',
                   border: 'none',
                   borderRadius: '12px',
                   padding: '14px 26px',

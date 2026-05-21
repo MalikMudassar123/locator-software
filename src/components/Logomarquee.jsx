@@ -1,58 +1,30 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
-/**
- * LogoMarquee
- * ─────────────────────────────────────────────────────────────────────────────
- * Premium infinite scrolling logo carousel.
- *
- * Features:
- *  • Two rows scrolling in OPPOSITE directions (premium SaaS pattern)
- *  • Pure CSS animation — buttery smooth, no JS per-frame work
- *  • Seamless infinite loop (logos duplicated and translated by exactly -50%)
- *  • Pauses on hover for accessibility
- *  • Edge fade gradients on left/right (logos fade out at the edges)
- *  • Soft cream background matching the reference
- *  • Top row: vibrant logos. Bottom row: subtle/grayscale logos.
- *  • Scroll-triggered fade-in entrance
- *  • Fully responsive — logo sizes & spacing scale on mobile
- *
- * Usage:
- *   import LogoMarquee from "@/components/LogoMarquee";
- *   <LogoMarquee />
- * ─────────────────────────────────────────────────────────────────────────────
- */
-
-/* ── Demo brand names — text-only display (replace with image src when ready) ── */
-const DEFAULT_ROW_1 = [
-  { name: "Samsung" },
-  { name: "Microsoft" },
-  { name: "Google" },
-  { name: "IBM" },
-  { name: "Oracle" },
-  { name: "Cisco" },
-  { name: "Intel" },
-  { name: "HP" },
+const ALL_LOGOS = [
+  { name: "ABU DHABI EXECUTIVE OFFICE",     src: "/client Logo/ABU-DHABI-EXECUTIVE-OFFICE.png" },
+  { name: "AL LAITH GROUP",                  src: "/client Logo/AL LAITH Group.png" },
+  { name: "Aditya Birla Group",              src: "/client Logo/Aditya-Birla-Group-Logo-Vector-600x600-1 (1).jpg" },
+  { name: "DB Schenker",                     src: "/client Logo/DB-SCHENKER.png" },
+  { name: "ELMEC",                           src: "/client Logo/ELMEC-.png" },
+  { name: "GMG",                             src: "/client Logo/GMG.png" },
+  { name: "Refrigerated Transport System",   src: "/client Logo/Refrigerated-Transport-System-logo.png" },
+  { name: "Silver Line Group",               src: "/client Logo/SILVER-LINE-GROUP .png" },
+  { name: "United Al Saqer Heavy Equipment", src: "/client Logo/United al saqerHeavy equiment .png" },
+  { name: "Access Hire Middle East",         src: "/client Logo/access-hire-middle-east-logo.png" },
+  { name: "Al Furath",                       src: "/client Logo/al-furath-.png" },
+  { name: "Al Ghazal Transport",             src: "/client Logo/al-ghazal-transport.png" },
+  { name: "Bakemart",                        src: "/client Logo/bakemart_logo.jpeg" },
+  { name: "Samsung",                         src: "/client Logo/samsung.png" },
 ];
 
-const DEFAULT_ROW_2 = [
-  { name: "DHL" },
-  { name: "FedEx" },
-  { name: "UPS" },
-  { name: "Maersk" },
-  { name: "DB Schenker" },
-  { name: "Volvo" },
-  { name: "Caterpillar" },
-  { name: "Bosch" },
-];
+/* Split into two rows — first 7 in row 1, remaining 7 in row 2 */
+const ROW_1 = ALL_LOGOS.slice(0, 7);
+const ROW_2 = ALL_LOGOS.slice(7);
 
-export default function LogoMarquee({
-  row1 = DEFAULT_ROW_1,
-  row2 = DEFAULT_ROW_2,
-  speed1 = 40, // seconds for one full loop (lower = faster)
-  speed2 = 45,
-}) {
+export default function LogoMarquee({ speed1 = 38, speed2 = 44 }) {
   const sectionRef = useRef(null);
   const [active, setActive] = useState(false);
 
@@ -60,7 +32,7 @@ export default function LogoMarquee({
     if (typeof IntersectionObserver === "undefined") { setActive(true); return; }
     const obs = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) { setActive(true); obs.disconnect(); } },
-      { threshold: 0.1 }
+      { threshold: 0.08 }
     );
     if (sectionRef.current) obs.observe(sectionRef.current);
     return () => obs.disconnect();
@@ -68,67 +40,83 @@ export default function LogoMarquee({
 
   return (
     <section ref={sectionRef} className={`lm ${active ? "lm--active" : ""}`}>
+
+      {/* Section heading */}
+      <div className="lm__header">
+        <p className="lm__eyebrow">Trusted by industry leaders</p>
+      </div>
+
       <div className="lm__inner">
-
-        {/* ROW 1 — scrolling LEFT (logos move from right to left) */}
-        <div className="lm__row lm__row--1">
+        {/* ROW 1 — scrolls left */}
+        <div className="lm__row">
           <div className="lm__track lm__track--left" style={{ "--dur": `${speed1}s` }}>
-            {/* Duplicate the array exactly twice so the -50% translate loops seamlessly */}
-            {[...row1, ...row1].map((logo, i) => (
-              <LogoItem key={`r1-${i}`} logo={logo} variant="vibrant" />
+            {[...ROW_1, ...ROW_1].map((logo, i) => (
+              <LogoItem key={`r1-${i}`} logo={logo} />
             ))}
           </div>
         </div>
 
-        {/* ROW 2 — scrolling RIGHT (opposite direction) */}
-        <div className="lm__row lm__row--2">
+        {/* ROW 2 — scrolls right */}
+        <div className="lm__row">
           <div className="lm__track lm__track--right" style={{ "--dur": `${speed2}s` }}>
-            {[...row2, ...row2].map((logo, i) => (
-              <LogoItem key={`r2-${i}`} logo={logo} variant="muted" />
+            {[...ROW_2, ...ROW_2].map((logo, i) => (
+              <LogoItem key={`r2-${i}`} logo={logo} />
             ))}
           </div>
         </div>
-
       </div>
 
       <style jsx>{`
         .lm {
-          --bg-top:    #f6f4ed;
-          --bg-bottom: #efece2;
-          --gap: clamp(40px, 5vw, 80px);
-          --row-height: clamp(60px, 8vw, 100px);
-          --logo-max-h: clamp(28px, 3.6vw, 48px);
+          --gap: clamp(32px, 4vw, 64px);
+          --logo-h: clamp(32px, 4vw, 52px);
+          --logo-max-w: clamp(100px, 14vw, 180px);
 
           position: relative;
           width: 100%;
-          background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
-          padding: clamp(40px, 5vw, 64px) 0;
+          background: #f7f6f2;
+          padding: clamp(32px, 4vw, 52px) 0 clamp(28px, 3.5vw, 48px);
           overflow: hidden;
           opacity: 0;
-          transform: translateY(20px);
-          transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+          transform: translateY(18px);
+          transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                      transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .lm--active {
           opacity: 1;
           transform: translateY(0);
         }
 
+        /* Heading */
+        .lm__header {
+          text-align: center;
+          margin-bottom: clamp(20px, 2.5vw, 32px);
+          padding: 0 16px;
+        }
+        .lm__eyebrow {
+          font-size: clamp(11px, 1.1vw, 13px);
+          font-weight: 600;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: #94a3b8;
+          margin: 0;
+        }
+
+        /* Edge fade mask */
         .lm__inner {
           position: relative;
-          width: 100%;
-          /* Soft edge fade — logos disappear at edges */
           mask-image: linear-gradient(
             90deg,
             transparent 0,
-            #000 8%,
-            #000 92%,
+            #000 7%,
+            #000 93%,
             transparent 100%
           );
           -webkit-mask-image: linear-gradient(
             90deg,
             transparent 0,
-            #000 8%,
-            #000 92%,
+            #000 7%,
+            #000 93%,
             transparent 100%
           );
         }
@@ -136,10 +124,10 @@ export default function LogoMarquee({
         .lm__row {
           display: flex;
           overflow: hidden;
-          padding: clamp(8px, 1.2vw, 16px) 0;
+          padding: clamp(6px, 1vw, 12px) 0;
         }
         .lm__row + .lm__row {
-          margin-top: clamp(8px, 1.2vw, 18px);
+          margin-top: clamp(6px, 1vw, 14px);
         }
 
         .lm__track {
@@ -147,102 +135,60 @@ export default function LogoMarquee({
           flex-shrink: 0;
           gap: var(--gap);
           padding-right: var(--gap);
-          /* Width auto-grows with content */
           width: max-content;
           will-change: transform;
+          align-items: center;
         }
-        /* The animation translates the doubled list by exactly -50% (one full original-list width).
-           When the second copy reaches the position of the first, it loops back to 0 — seamless. */
-        .lm__track--left {
-          animation: scrollLeft var(--dur) linear infinite;
-        }
-        .lm__track--right {
-          animation: scrollRight var(--dur) linear infinite;
-        }
+        .lm__track--left  { animation: scrollLeft  var(--dur) linear infinite; }
+        .lm__track--right { animation: scrollRight var(--dur) linear infinite; }
 
-        @keyframes scrollLeft {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
-        }
-        @keyframes scrollRight {
-          from { transform: translateX(-50%); }
-          to   { transform: translateX(0); }
-        }
+        @keyframes scrollLeft  { from { transform: translateX(0);    } to { transform: translateX(-50%); } }
+        @keyframes scrollRight { from { transform: translateX(-50%); } to { transform: translateX(0);    } }
 
-        /* Pause on hover (anywhere on section) */
-        .lm:hover .lm__track {
-          animation-play-state: paused;
-        }
+        .lm:hover .lm__track { animation-play-state: paused; }
 
-        /* Reduced motion: stop the marquee */
         @media (prefers-reduced-motion: reduce) {
-          .lm__track {
-            animation: none !important;
-          }
-          .lm {
-            opacity: 1 !important;
-            transform: none !important;
-          }
+          .lm__track         { animation: none !important; }
+          .lm                { opacity: 1 !important; transform: none !important; }
         }
       `}</style>
     </section>
   );
 }
 
-/* ─────────────────────────────────────────────────────────────────────────── */
-/* Logo Item — text-only brand name (premium typography)                       */
-/* ─────────────────────────────────────────────────────────────────────────── */
-function LogoItem({ logo, variant = "vibrant" }) {
+function LogoItem({ logo }) {
   return (
-    <div className={`lmi lmi--${variant}`}>
-      <span className="lmi__name">{logo.name}</span>
+    <div className="lmi">
+      <Image
+        src={logo.src}
+        alt={logo.name}
+        width={180}
+        height={52}
+        className="lmi__img"
+        style={{
+          width: "auto",
+          height: "clamp(28px, 3.6vw, 48px)",
+          maxWidth: "clamp(90px, 12vw, 160px)",
+          objectFit: "contain",
+          objectPosition: "center",
+          userSelect: "none",
+          pointerEvents: "none",
+        }}
+      />
 
       <style jsx>{`
         .lmi {
           flex-shrink: 0;
-          height: var(--row-height);
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 0 clamp(8px, 1vw, 16px);
-          transition: filter 0.4s ease, transform 0.4s ease, opacity 0.4s ease, color 0.4s ease;
-          user-select: none;
-        }
-
-        .lmi__name {
-          font-family: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
-          font-weight: 700;
-          font-size: clamp(18px, 2vw, 28px);
-          letter-spacing: -0.015em;
-          white-space: nowrap;
-          line-height: 1;
-        }
-
-        /* Top row — bold, dark, vibrant */
-        .lmi--vibrant .lmi__name {
-          color: #2d3748;
+          padding: 0 clamp(6px, 0.8vw, 12px);
           opacity: 0.85;
+          transition: opacity 0.3s ease, transform 0.3s ease;
         }
-        .lmi--vibrant:hover .lmi__name {
+        .lmi:hover {
           opacity: 1;
-          color: #1a202c;
-        }
-        .lmi--vibrant:hover {
-          transform: scale(1.06);
-        }
-
-        /* Bottom row — muted, softer gray */
-        .lmi--muted .lmi__name {
-          color: #94a3b8;
-          opacity: 0.7;
-          font-weight: 600;
-        }
-        .lmi--muted:hover .lmi__name {
-          opacity: 1;
-          color: #475569;
-        }
-        .lmi--muted:hover {
-          transform: scale(1.06);
+          transform: scale(1.07);
         }
       `}</style>
     </div>

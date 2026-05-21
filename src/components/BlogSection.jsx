@@ -12,7 +12,7 @@ const POSTS = [
     title: "Fleet Tracking Software: The Smart Way to Manage Vehicles in Real-Time",
     excerpt:
       "Whether you're managing delivery vans, heavy trucks, or service vehicles, staying in control of operations is crucial. Today's fleet tracking software does far more than just show vehicle locations — it gives you full control of your mobile workforce in real-time.",
-    image: "/blog/fleet tracking.png",
+    image: "/blog/ChatGPT Image May 21, 2026, 02_33_32 PM.png",
     alt: "Fleet Tracking Software",
     href: "#",
   },
@@ -24,7 +24,7 @@ const POSTS = [
     title: "The Tracking Edge – Optimized GPS & Field Tools",
     excerpt:
       "Whether you're managing delivery fleets, service vehicles, or mobile field teams, staying in control of operations is key to success. Modern GPS tracking is no longer just about showing vehicle locations — it's about managing your entire field workflow smarter and faster.",
-    image: "/blog/Optimized GPS.png",
+    image: "/blog/ChatGPT Image May 21, 2026, 02_44_43 PM.png",
     alt: "Optimized GPS & Field Tools",
     href: "#",
   },

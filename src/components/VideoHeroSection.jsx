@@ -418,13 +418,13 @@ export default function VideoHeroSection({
           transform: translateX(0) translateY(0);
         }
 
-        /* Bottom-right front overlay (IN FRONT of video, z-index:20) */
+        /* Bottom-right block (BEHIND video, z-index:1) */
         .vhs__block--br-front {
           width: clamp(170px, 23vw, 295px);
           height: clamp(150px, 20vw, 264px);
           bottom: clamp(-28px, -2.8vw, -40px);
           right: clamp(-18px, -0.8vw, 2px);
-          z-index: 20;
+          z-index: 1;
           transform: translateX(18px) translateY(-14px);
           transition-delay: 0.35s;
           /* slightly different shade — top-right is brighter (catches light) */

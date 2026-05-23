@@ -189,10 +189,10 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     const tl = gsap.timeline({ onComplete: () => play() });
     allTweens.current.push(tl);
 
-    // ── PHASE 1: ICON LINES ONLY — no wireframe visible (~3.4s)
-    const CONN_START = 0.20;
-    const CONN_DUR   = 1.30;
-    const STAGGER    = 0.75;
+    // ── PHASE 1: ICON LINES ONLY — no wireframe visible (faster)
+    const CONN_START = 0.06;
+    const CONN_DUR   = 0.55;
+    const STAGGER    = 0.32;
     const SEQ = [{ ci:1 }, { ci:2 }, { ci:3 }]; // overarch → shield-play → ai-alert (touches all 5 icons)
 
     SEQ.forEach(({ ci }, idx) => {
@@ -200,13 +200,13 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
       const iconIdx = PAIRS[ci];
       iconIdx.forEach(ii => {
         const el = activeRefs.current[ii];
-        if (el) tl.to(el, { opacity:1, duration:0.40, ease:ICON_EASE }, at);
+        if (el) tl.to(el, { opacity:1, duration:0.18, ease:ICON_EASE }, at);
       });
       const line = lineRefs.current[ci];
       if (line) {
         const len = getLen(line);
-        tl.set(line, { strokeDasharray:`${len} ${len + 1}`, strokeDashoffset:len, opacity:1 }, at + 0.12);
-        tl.to(line, { strokeDashoffset:0, duration:CONN_DUR, ease:LINE_EASE }, at + 0.12);
+        tl.set(line, { strokeDasharray:`${len} ${len + 1}`, strokeDashoffset:len, opacity:1 }, at + 0.05);
+        tl.to(line, { strokeDashoffset:0, duration:CONN_DUR, ease:LINE_EASE }, at + 0.05);
       }
     });
 

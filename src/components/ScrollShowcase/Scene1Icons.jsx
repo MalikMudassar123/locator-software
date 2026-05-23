@@ -295,10 +295,10 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     const tl = gsap.timeline({ onComplete: () => play() });
     allTweens.current.push(tl);
 
-    // ── PHASE 1: ICON LINES ONLY — no wireframe visible (~3.4s)
-    const CONN_START = 0.20;
-    const CONN_DUR   = 1.35;
-    const STAGGER    = 0.80;
+    // ── PHASE 1: ICON LINES ONLY — no wireframe visible (faster)
+    const CONN_START = 0.06;
+    const CONN_DUR   = 0.55;
+    const STAGGER    = 0.32;
     const SEQ = [{ ci:0 }, { ci:2 }, { ci:4 }];
 
     SEQ.forEach(({ ci }, idx) => {
@@ -307,12 +307,12 @@ export default forwardRef(function Scene1Icons(_props, ref) {
       const elA = activeRefs.current[ia];
       const elB = activeRefs.current[ib];
       const line = lineRefs.current[ci];
-      if (elA) tl.to(elA, { opacity:1, duration:0.42, ease:ICON_EASE }, at);
-      if (elB) tl.to(elB, { opacity:1, duration:0.42, ease:ICON_EASE }, at + 0.22);
+      if (elA) tl.to(elA, { opacity:1, duration:0.18, ease:ICON_EASE }, at);
+      if (elB) tl.to(elB, { opacity:1, duration:0.18, ease:ICON_EASE }, at + 0.08);
       if (line) {
         const len = getLen(line);
-        tl.set(line, { strokeDasharray:`${len} ${len + 1}`, strokeDashoffset:len, opacity:1 }, at + 0.12);
-        tl.to(line, { strokeDashoffset:0, duration:CONN_DUR, ease:LINE_EASE }, at + 0.12);
+        tl.set(line, { strokeDasharray:`${len} ${len + 1}`, strokeDashoffset:len, opacity:1 }, at + 0.05);
+        tl.to(line, { strokeDashoffset:0, duration:CONN_DUR, ease:LINE_EASE }, at + 0.05);
       }
     });
 

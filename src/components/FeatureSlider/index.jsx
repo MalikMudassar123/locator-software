@@ -639,7 +639,7 @@ const SceneTaskManager = forwardRef(function SceneTaskManager(_, ref) {
     const showIcon = (tl, i, at) => {
       const el = activeRefs.current[i];
       if (!el) return;
-      tl.to(el, { opacity: 1, scale: 1, duration: 0.42, ease: 'back.out(1.7)' }, at);
+      tl.to(el, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(1.7)' }, at);
     };
 
     const drawLine = (tl, ci, at, dur) => {
@@ -665,31 +665,31 @@ const SceneTaskManager = forwardRef(function SceneTaskManager(_, ref) {
     // ~0.75 s between beats → full network at ~4.6 s
 
     // Beat 1 — task & crm light up, horizontal top line draws
-    showIcon(tl, 0, 0.10);
-    showIcon(tl, 1, 0.32);
-    drawLine(tl, 0, 0.50, 0.70);   // done ≈ 1.20
+    showIcon(tl, 0, 0.06);
+    showIcon(tl, 1, 0.20);
+    drawLine(tl, 0, 0.30, 0.42);   // done ≈ 0.72
 
     // Beat 2 — mobile pops, crm→mobile L-curve draws
-    showIcon(tl, 2, 1.25);
-    drawLine(tl, 1, 1.48, 0.68);   // done ≈ 2.16
+    showIcon(tl, 2, 0.78);
+    drawLine(tl, 1, 0.92, 0.42);   // done ≈ 1.34
 
     // Beat 3 — team pops, vertical left spine draws
-    showIcon(tl, 3, 2.22);
-    drawLine(tl, 2, 2.45, 0.65);   // done ≈ 3.10
+    showIcon(tl, 3, 1.38);
+    drawLine(tl, 2, 1.52, 0.40);   // done ≈ 1.92
 
     // Beat 4 — clock pops, team→clock short horizontal draws
-    showIcon(tl, 4, 3.15);
-    drawLine(tl, 3, 3.38, 0.42);   // done ≈ 3.80
+    showIcon(tl, 4, 1.95);
+    drawLine(tl, 3, 2.10, 0.26);   // done ≈ 2.36
 
     // Beat 5 — done pops, clock→done short horizontal draws
-    showIcon(tl, 5, 3.85);
-    drawLine(tl, 4, 4.08, 0.42);   // done ≈ 4.50
+    showIcon(tl, 5, 2.40);
+    drawLine(tl, 4, 2.55, 0.26);   // done ≈ 2.81
 
     // Beat 6 — mobile→done L-curve closes the network loop
-    drawLine(tl, 5, 4.55, 0.60);   // done ≈ 5.15
+    drawLine(tl, 5, 2.85, 0.38);   // done ≈ 3.23
 
-    // ── Hold: all 6 icons + 6 lines fully visible (~1 s) ─────────────────────
-    const PHASE1_END = 5.15;
+    // ── Hold: all 6 icons + 6 lines fully visible ───────────────────────────
+    const PHASE1_END = 3.25;
 
     // ── Fade everything out ───────────────────────────────────────────────────
     const FADE_START = PHASE1_END + 0.95;

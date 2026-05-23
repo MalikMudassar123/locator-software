@@ -219,7 +219,7 @@ export default forwardRef(function SceneVideo(_props, ref) {
     const tl = gsap.timeline();
     allTweens.current.push(tl);
 
-    const CYCLE = 1.0;
+    const CYCLE = 0.62;
     CONNECTIONS.forEach((_, i) => {
       const at   = i * CYCLE;
       const [ia, ib] = PAIRS[i];

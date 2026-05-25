@@ -1840,24 +1840,33 @@ h6 {
    ══════════════════════════════════════════════════════ */
 .hero-blue-orb-a {
   will-change: transform;
-  animation: heroBlueOrbA 8s ease-in-out infinite alternate;
+  animation: heroBlueOrbA 24s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 @keyframes heroBlueOrbA {
-  /* Starts visually at TOP-LEFT corner (logo side), sweeps to BOTTOM-RIGHT */
-  0%   { transform: translate3d(-30%,  -30%, 0) scale(0.95); }
-  50%  { transform: translate3d(54%,   24%,  0) scale(1.08); }
-  100% { transform: translate3d(138%,  78%,  0) scale(0.98); }
+  /* Roams the FULL hero — every quadrant + edges */
+  0%   { transform: translate3d(-40%, -40%, 0) scale(0.95); }
+  14%  { transform: translate3d( 90%, -30%, 0) scale(1.06); }
+  28%  { transform: translate3d(150%,  10%, 0) scale(1.10); }
+  42%  { transform: translate3d( 40%,  50%, 0) scale(1.05); }
+  57%  { transform: translate3d(150%,  90%, 0) scale(1.08); }
+  71%  { transform: translate3d( 30%, 100%, 0) scale(1.06); }
+  86%  { transform: translate3d(-30%,  60%, 0) scale(1.02); }
+  100% { transform: translate3d(-40%, -40%, 0) scale(0.95); }
 }
 
 .hero-blue-orb-b {
   will-change: transform;
-  animation: heroBlueOrbB 10s ease-in-out infinite alternate;
+  animation: heroBlueOrbB 31s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 @keyframes heroBlueOrbB {
-  /* Starts visually at TOP-RIGHT corner, glides down to BOTTOM-RIGHT */
-  0%   { transform: translate3d(30%,  -30%, 0) scale(0.95); }
-  50%  { transform: translate3d(30%,   34%, 0) scale(1.08); }
-  100% { transform: translate3d(30%,   98%, 0) scale(0.98); }
+  /* Roams the FULL hero on an independent meandering path */
+  0%   { transform: translate3d(  40%, -40%, 0) scale(0.95); }
+  16%  { transform: translate3d( -60%, -20%, 0) scale(1.06); }
+  32%  { transform: translate3d(-160%,  10%, 0) scale(1.10); }
+  48%  { transform: translate3d( -30%,  60%, 0) scale(1.05); }
+  64%  { transform: translate3d(-180%,  90%, 0) scale(1.08); }
+  80%  { transform: translate3d( -70%, 110%, 0) scale(1.06); }
+  100% { transform: translate3d(  40%, -40%, 0) scale(0.95); }
 }
 
 @media (prefers-reduced-motion: reduce) {

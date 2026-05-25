@@ -153,10 +153,10 @@ export default function HeroSection() {
           borderRadius: '50%',
           zIndex: 5,
           pointerEvents: 'none',
-          opacity: 0.85,
+          opacity: 0.8,
           background:
-            'radial-gradient(closest-side at 50% 50%, rgba(13, 47, 165, 0.85) 0%, rgba(13, 47, 165, 0.55) 35%, rgba(13, 47, 165, 0.22) 62%, rgba(13, 47, 165, 0.07) 82%, rgba(13, 47, 165, 0) 96%)',
-          filter: 'blur(26px)',
+            'radial-gradient(closest-side at 50% 50%, rgba(13, 47, 165, 0.9) 0%, rgba(13, 47, 165, 0.62) 32%, rgba(13, 47, 165, 0.32) 58%, rgba(13, 47, 165, 0.1) 80%, rgba(13, 47, 165, 0) 96%)',
+          filter: 'blur(22px)',
         }}
       />
 
@@ -323,10 +323,10 @@ export default function HeroSection() {
           borderRadius: '50%',
           zIndex: 7,
           pointerEvents: 'none',
-          opacity: 0.8,
+          opacity: 0.75,
           background:
-            'radial-gradient(closest-side at 50% 50%, rgba(13, 47, 165, 0.8) 0%, rgba(13, 47, 165, 0.5) 38%, rgba(13, 47, 165, 0.2) 65%, rgba(13, 47, 165, 0.06) 84%, rgba(13, 47, 165, 0) 96%)',
-          filter: 'blur(28px)',
+            'radial-gradient(closest-side at 50% 50%, rgba(13, 47, 165, 0.85) 0%, rgba(13, 47, 165, 0.58) 34%, rgba(13, 47, 165, 0.3) 60%, rgba(13, 47, 165, 0.09) 82%, rgba(13, 47, 165, 0) 96%)',
+          filter: 'blur(24px)',
         }}
       />
 

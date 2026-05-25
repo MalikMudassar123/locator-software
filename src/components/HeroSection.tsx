@@ -372,8 +372,8 @@ export default function HeroSection() {
         />
       </div>
 
-      {/* Navbar */}
-      <div style={{ position: 'relative', zIndex: 9 }}>
+      {/* Navbar — high z so its mobile drawer overlays everything else */}
+      <div style={{ position: 'relative', zIndex: 50 }}>
         <Navbar />
       </div>
 

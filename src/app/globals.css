@@ -1832,6 +1832,26 @@ h6 {
 }
 
 /* ══════════════════════════════════════════════════════
+   MOBILE NAV DRAWER — entrance animation
+   ══════════════════════════════════════════════════════ */
+.mobile-drawer-enter {
+  animation: mobileDrawerEnter 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes mobileDrawerEnter {
+  0%   { opacity: 0; transform: translateY(-6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.mobile-drawer-item {
+  opacity: 0;
+  animation: mobileDrawerItem 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes mobileDrawerItem {
+  0%   { opacity: 0; transform: translateX(-18px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+/* ══════════════════════════════════════════════════════
    HERO DRIFTING PATCHES
    ─ Two soft blue patches sail diagonally across the sky:
      orb-a TL→BR, orb-b TR→BL. Crossing paths, mismatched

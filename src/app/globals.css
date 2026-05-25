@@ -1753,3 +1753,80 @@ h6 {
   animation: navCtaShine 2.8s ease-in-out infinite;
   pointer-events: none;
 }
+
+/* ══════════════════════════════════════════════════════
+   ANIMATED GLOBE HERO — keyframes
+   Hoisted out of <style jsx global> so the inline
+   `style={{ animation: '... ' }}` declarations on SVG
+   children can reliably resolve these names.
+   ══════════════════════════════════════════════════════ */
+@keyframes globeReveal {
+  0%   { opacity: 0; transform: scale(0.85); filter: blur(6px); }
+  60%  { filter: blur(0); }
+  100% { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+@keyframes globeFadeIn { to { opacity: 1; } }
+@keyframes earthSpin {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-350px); }
+}
+@keyframes cloudSpin {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-350px); }
+}
+@keyframes haloBreatheIn {
+  0%, 100% { opacity: 0.4;  transform: scale(1); }
+  50%      { opacity: 0.55; transform: scale(1.03); }
+}
+@keyframes haloBreatheOut {
+  0%, 100% { opacity: 0.3;  transform: scale(1); }
+  50%      { opacity: 0.45; transform: scale(1.05); }
+}
+@keyframes horizonBreathe {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 1; }
+}
+@keyframes ringPulse {
+  0%, 100% { stroke-opacity: 0.65; }
+  50%      { stroke-opacity: 1; }
+}
+@keyframes arcDraw {
+  0%   { stroke-dasharray: 0 100;  stroke-dashoffset: 0;    stroke-opacity: 0; }
+  10%  { stroke-opacity: 0.95; }
+  50%  { stroke-dasharray: 30 100; stroke-dashoffset: -25;  stroke-opacity: 0.95; }
+  85%  { stroke-dasharray: 8 100;  stroke-dashoffset: -92;  stroke-opacity: 0.5; }
+  100% { stroke-dasharray: 0 100;  stroke-dashoffset: -100; stroke-opacity: 0; }
+}
+@keyframes arcComet {
+  0%   { offset-distance: 0%;   opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+@keyframes arcLand {
+  0%, 88% { opacity: 0;   transform: scale(0.5); }
+  92%     { opacity: 0.9; transform: scale(1); }
+  100%    { opacity: 0;   transform: scale(3.2); }
+}
+@keyframes cityPulse {
+  0%, 100% { opacity: 0.55; transform: scale(0.85); }
+  50%      { opacity: 1;    transform: scale(1.15); }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.7); }
+  50%      { opacity: 1;   transform: scale(1.2); }
+}
+@keyframes cardEnter {
+  0%   { opacity: 0; transform: translateY(20px) scale(0.96); filter: blur(6px); }
+  55%  { filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+@keyframes shimmerSweep {
+  0%   { transform: translateX(-100%); }
+  45%  { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
+}

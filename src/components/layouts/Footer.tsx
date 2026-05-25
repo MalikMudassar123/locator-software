@@ -78,18 +78,18 @@ export default function Footer() {
     <footer style={{
       position: 'relative',
       overflow: 'hidden',
-      /* Lighter blue gradient — more vibrant and premium */
-      background: 'linear-gradient(160deg, #0c3f6b 0%, #1258a8 45%, #1a74c8 100%)',
+      /* HERO PALETTE — pixel-matched to .hero-gradient-flow base ramp */
+      background: 'linear-gradient(180deg, #1360ee 0%, #0a84e3 45%, #3abede 75%, #97def1 100%)',
     }}>
 
       {/* ── Ambient glow layer ── */}
       <div aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-        {/* Top-left orb */}
-        <div style={{ position: 'absolute', width: '480px', height: '480px', top: '-120px', left: '-80px', background: 'radial-gradient(circle, rgba(30,140,255,0.22) 0%, transparent 65%)', borderRadius: '50%' }} />
-        {/* Bottom-right orb */}
-        <div style={{ position: 'absolute', width: '420px', height: '420px', bottom: '-60px', right: '-60px', background: 'radial-gradient(circle, rgba(79,195,247,0.16) 0%, transparent 65%)', borderRadius: '50%' }} />
-        {/* Centre ambient */}
-        <div style={{ position: 'absolute', width: '600px', height: '300px', top: '35%', left: '50%', transform: 'translate(-50%,-50%)', background: 'radial-gradient(ellipse, rgba(100,180,255,0.07) 0%, transparent 70%)', borderRadius: '50%' }} />
+        {/* Top-left orb — hero deep navy patch (rgba 13,47,165) */}
+        <div style={{ position: 'absolute', width: '480px', height: '480px', top: '-120px', left: '-80px', background: 'radial-gradient(circle, rgba(13,47,165,0.32) 0%, transparent 65%)', borderRadius: '50%' }} />
+        {/* Bottom-right orb — hero sky-cyan patch (rgba 58,190,222) */}
+        <div style={{ position: 'absolute', width: '420px', height: '420px', bottom: '-60px', right: '-60px', background: 'radial-gradient(circle, rgba(58,190,222,0.22) 0%, transparent 65%)', borderRadius: '50%' }} />
+        {/* Centre ambient — hero pale-ice patch (rgba 193,235,247) */}
+        <div style={{ position: 'absolute', width: '600px', height: '300px', top: '35%', left: '50%', transform: 'translate(-50%,-50%)', background: 'radial-gradient(ellipse, rgba(193,235,247,0.12) 0%, transparent 70%)', borderRadius: '50%' }} />
         {/* Top glow line */}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(79,195,247,0.5) 35%, rgba(255,255,255,0.3) 50%, rgba(79,195,247,0.5) 65%, transparent)' }} />
         {/* Subtle dot-grid texture */}

@@ -236,27 +236,40 @@ export default function AnimatedGlobeHero({
   const sectionRef = useRef(null);
   const [active, setActive] = useState(false);
 
-  // Activate animations only when scrolled into view (perf + nicer entrance)
+  // Activate when the section scrolls into view: globe reveals first,
+  // then cards animate in (their CSS uses staggered --enter-delay).
+  // Fallback timer guarantees the section becomes visible even if
+  // IntersectionObserver doesn't fire (some hydration paths skip it).
   useEffect(() => {
-    if (!sectionRef.current) return;
-    if (typeof IntersectionObserver === "undefined") {
+    if (active) return;
+    const fallback = setTimeout(() => setActive(true), 4000);
+
+    if (!sectionRef.current || typeof IntersectionObserver === "undefined") {
       setActive(true);
+      clearTimeout(fallback);
       return;
     }
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
+        for (const entry of entries) {
           if (entry.isIntersecting) {
             setActive(true);
             observer.disconnect();
+            clearTimeout(fallback);
+            break;
           }
-        });
+        }
       },
-      { threshold: 0.15, rootMargin: "0px 0px -10% 0px" }
+      // threshold 0 fires the moment ANY pixel enters the viewport,
+      // so short sections (or sections revealed by quick scrolls) still trigger.
+      { threshold: 0, rootMargin: "0px 0px -5% 0px" }
     );
     observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
+    return () => {
+      observer.disconnect();
+      clearTimeout(fallback);
+    };
+  }, [active]);
 
   // Stable starfield
   const stars = useMemo(() => {
@@ -287,50 +300,55 @@ export default function AnimatedGlobeHero({
         <defs>
           {/* ============================================================
               BACKGROUND GRADIENTS
-              Tuned to match the reference: cool deep blue at top-left,
-              soft cyan mid, warm cream-amber at the horizon bottom.
+              HERO PALETTE — pixel-matched to .hero-gradient-flow:
+                base ramp #1360ee → #0a84e3 → #3abede → #97def1
+                patches  rgba(13,47,165) / (10,132,227) / (8,178,224)
+                         (58,190,222) / (170,225,245) / (193,235,247)
+              No warm/amber tones — pure blue→cyan→ice family.
               ============================================================ */}
-          <linearGradient id="bgSky" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#1f78b3" />
-            <stop offset="22%" stopColor="#4ba0cf" />
-            <stop offset="48%" stopColor="#8cc8e3" />
-            <stop offset="72%" stopColor="#d2e4ed" />
-            <stop offset="100%" stopColor="#f3ede0" />
+          <linearGradient id="bgSky" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%"   stopColor="#1360ee" />
+            <stop offset="45%"  stopColor="#0a84e3" />
+            <stop offset="75%"  stopColor="#3abede" />
+            <stop offset="100%" stopColor="#97def1" />
           </linearGradient>
           <radialGradient id="bgDeepBlue" cx="18%" cy="12%" r="70%">
-            <stop offset="0%" stopColor="#0e5a92" stopOpacity="0.6" />
-            <stop offset="55%" stopColor="#0e5a92" stopOpacity="0.10" />
-            <stop offset="100%" stopColor="#0e5a92" stopOpacity="0" />
+            <stop offset="0%"   stopColor="#0d2fa5" stopOpacity="0.6" />
+            <stop offset="55%"  stopColor="#0d2fa5" stopOpacity="0.10" />
+            <stop offset="100%" stopColor="#0d2fa5" stopOpacity="0" />
           </radialGradient>
+          {/* Horizon glow — re-tuned from warm amber to pale-ice cyan */}
           <radialGradient id="bgHorizonGlow" cx="45%" cy="108%" r="70%">
-            <stop offset="0%" stopColor="#ffbf7a" stopOpacity="0.85" />
-            <stop offset="25%" stopColor="#ffd092" stopOpacity="0.55" />
-            <stop offset="55%" stopColor="#ffe2b8" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="#ffe2b8" stopOpacity="0" />
+            <stop offset="0%"   stopColor="#c1ebf7" stopOpacity="0.85" />
+            <stop offset="25%"  stopColor="#aae1f5" stopOpacity="0.55" />
+            <stop offset="55%"  stopColor="#97def1" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="#97def1" stopOpacity="0" />
           </radialGradient>
+          {/* Right wash — re-tuned to sky-cyan */}
           <radialGradient id="bgRightWarm" cx="95%" cy="55%" r="55%">
-            <stop offset="0%" stopColor="#fff0d8" stopOpacity="0.55" />
-            <stop offset="50%" stopColor="#ffe0b8" stopOpacity="0.20" />
-            <stop offset="100%" stopColor="#ffe0b8" stopOpacity="0" />
+            <stop offset="0%"   stopColor="#3abede" stopOpacity="0.45" />
+            <stop offset="50%"  stopColor="#08b2e0" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="#08b2e0" stopOpacity="0" />
           </radialGradient>
+          {/* Bottom-left wash — re-tuned to pale-ice cyan */}
           <radialGradient id="bgBottomLeftWarm" cx="15%" cy="95%" r="45%">
-            <stop offset="0%" stopColor="#ffe4c0" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="#ffe4c0" stopOpacity="0" />
+            <stop offset="0%"   stopColor="#c1ebf7" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#c1ebf7" stopOpacity="0" />
           </radialGradient>
 
-          {/* Reusable cool-blue cloud patch — vibrant saturated blue, no black */}
+          {/* Deep-blue cloud patch — hero deep-navy + electric blue */}
           <radialGradient id="darkCloudPatch" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"  stopColor="#0e5fa6" stopOpacity="1" />
-            <stop offset="40%" stopColor="#1873b8" stopOpacity="0.62" />
-            <stop offset="65%" stopColor="#2486c8" stopOpacity="0.22" />
-            <stop offset="100%" stopColor="#2486c8" stopOpacity="0" />
+            <stop offset="0%"   stopColor="#0d2fa5" stopOpacity="1" />
+            <stop offset="40%"  stopColor="#0a84e3" stopOpacity="0.62" />
+            <stop offset="65%"  stopColor="#0a84e3" stopOpacity="0.22" />
+            <stop offset="100%" stopColor="#0a84e3" stopOpacity="0" />
           </radialGradient>
-          {/* Cool watery blue patch — lighter, cyan-leaning for the right side */}
+          {/* Watery cyan patch — hero sky-cyan + pale cyan */}
           <radialGradient id="wateryBluePatch" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"  stopColor="#2d9ccc" stopOpacity="0.85" />
-            <stop offset="45%" stopColor="#48b2dc" stopOpacity="0.45" />
-            <stop offset="75%" stopColor="#6cc4e6" stopOpacity="0.15" />
-            <stop offset="100%" stopColor="#6cc4e6" stopOpacity="0" />
+            <stop offset="0%"   stopColor="#08b2e0" stopOpacity="0.85" />
+            <stop offset="45%"  stopColor="#3abede" stopOpacity="0.45" />
+            <stop offset="75%"  stopColor="#aae1f5" stopOpacity="0.15" />
+            <stop offset="100%" stopColor="#aae1f5" stopOpacity="0" />
           </radialGradient>
 
           {/* ============================================================
@@ -408,11 +426,11 @@ export default function AnimatedGlobeHero({
             <stop offset="100%" stopColor="#1a5680" stopOpacity="0.35" />
           </radialGradient>
 
-          {/* Terminator — warm rim at bottom where horizon glow meets globe */}
+          {/* Terminator — re-tuned to pale-ice cyan rim (matches hero palette) */}
           <radialGradient id="terminatorWarm" cx="50%" cy="95%" r="55%">
-            <stop offset="0%" stopColor="#ffc68a" stopOpacity="0.75" />
-            <stop offset="50%" stopColor="#ffd89a" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="#ffd89a" stopOpacity="0" />
+            <stop offset="0%"   stopColor="#c1ebf7" stopOpacity="0.75" />
+            <stop offset="50%"  stopColor="#97def1" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="#97def1" stopOpacity="0" />
           </radialGradient>
 
           {/* Atmospheric halo — soft white ring around the globe */}
@@ -772,20 +790,25 @@ export default function AnimatedGlobeHero({
             CITY NODES — pulsing markers anchored to the visible hemisphere
             ==================================================================== */}
         <g className="city-nodes">
-          {CITY_NODES.map((node, i) => (
-            <g
-              key={node.name}
-              style={{
-                animation: `cityPulse ${3.2 + (i % 4) * 0.4}s ease-in-out ${i * 0.35}s infinite`,
-                transformBox: "fill-box",
-                transformOrigin: "center",
-              }}
-            >
-              <circle cx={node.x} cy={node.y} r="6" fill="#ffffff" opacity="0.15" filter="url(#brightGlow)" />
-              <circle cx={node.x} cy={node.y} r="2" fill="#ffffff" filter="url(#softGlow)" />
-              <circle cx={node.x} cy={node.y} r="0.9" fill="#ffffff" />
-            </g>
-          ))}
+          {CITY_NODES.map((node, i) => {
+            const dur = 3.2 + (i % 4) * 0.4;
+            const begin = `${i * 0.35}s`;
+            return (
+              <g key={node.name}>
+                <circle cx={node.x} cy={node.y} r="6" fill="#ffffff" opacity="0.15" filter="url(#brightGlow)">
+                  <animate attributeName="opacity" values="0.07;0.22;0.07" dur={`${dur}s`} begin={begin} repeatCount="indefinite" />
+                  <animate attributeName="r" values="5;7.5;5" dur={`${dur}s`} begin={begin} repeatCount="indefinite" />
+                </circle>
+                <circle cx={node.x} cy={node.y} r="2" fill="#ffffff" filter="url(#softGlow)">
+                  <animate attributeName="opacity" values="0.55;1;0.55" dur={`${dur}s`} begin={begin} repeatCount="indefinite" />
+                  <animate attributeName="r" values="1.7;2.4;1.7" dur={`${dur}s`} begin={begin} repeatCount="indefinite" />
+                </circle>
+                <circle cx={node.x} cy={node.y} r="0.9" fill="#ffffff">
+                  <animate attributeName="opacity" values="0.55;1;0.55" dur={`${dur}s`} begin={begin} repeatCount="indefinite" />
+                </circle>
+              </g>
+            );
+          })}
         </g>
 
         {/* ====================================================================
@@ -796,7 +819,10 @@ export default function AnimatedGlobeHero({
               - A bright comet head following the same offset-path
             ==================================================================== */}
         <g className="arcs">
-          {ARC_CONNECTIONS.map((arc, i) => (
+          {ARC_CONNECTIONS.map((arc, i) => {
+            const dur = `${arc.dur}s`;
+            const begin = `${arc.delay}s`;
+            return (
             <g key={i}>
               {/* Static network route — always visible thin white line */}
               <path
@@ -808,7 +834,9 @@ export default function AnimatedGlobeHero({
                 strokeOpacity="0.45"
                 strokeLinecap="round"
               />
-              {/* Animated bright pulse traveling the full path */}
+              {/* Animated bright pulse traveling the full path
+                  Uses SVG SMIL <animate> so it works on SVG without
+                  needing CSS keyframe resolution. */}
               <path
                 d={arc.d}
                 pathLength="100"
@@ -816,50 +844,90 @@ export default function AnimatedGlobeHero({
                 stroke="#ffffff"
                 strokeWidth="1.4"
                 strokeLinecap="round"
+                strokeLinejoin="round"
                 strokeOpacity="0"
+                strokeDasharray="0 100"
                 filter="url(#softGlow)"
-                style={{
-                  animation: `arcDraw ${arc.dur}s linear ${arc.delay}s infinite`,
-                }}
-              />
-              {/* Traveling comet head — outer glow */}
-              <circle
-                r="3"
-                fill="#ffffff"
-                opacity="0"
-                filter="url(#cometGlow)"
-                style={{
-                  offsetPath: `path('${arc.d}')`,
-                  animation: `arcComet ${arc.dur}s linear ${arc.delay}s infinite`,
-                }}
-              />
+              >
+                <animate
+                  attributeName="stroke-dasharray"
+                  values="0 100; 30 100; 8 100; 0 100"
+                  keyTimes="0; 0.5; 0.85; 1"
+                  dur={dur}
+                  begin={begin}
+                  repeatCount="indefinite"
+                />
+                <animate
+                  attributeName="stroke-dashoffset"
+                  values="0; -25; -92; -100"
+                  keyTimes="0; 0.5; 0.85; 1"
+                  dur={dur}
+                  begin={begin}
+                  repeatCount="indefinite"
+                />
+                <animate
+                  attributeName="stroke-opacity"
+                  values="0; 0.95; 0.95; 0.5; 0"
+                  keyTimes="0; 0.1; 0.5; 0.85; 1"
+                  dur={dur}
+                  begin={begin}
+                  repeatCount="indefinite"
+                />
+              </path>
+              {/* Traveling comet head — outer glow (animateMotion) */}
+              <circle r="3" fill="#ffffff" opacity="0" filter="url(#cometGlow)">
+                <animateMotion dur={dur} begin={begin} repeatCount="indefinite" path={arc.d} />
+                <animate
+                  attributeName="opacity"
+                  values="0; 1; 1; 0"
+                  keyTimes="0; 0.08; 0.92; 1"
+                  dur={dur}
+                  begin={begin}
+                  repeatCount="indefinite"
+                />
+              </circle>
               {/* Traveling comet head — bright core */}
-              <circle
-                r="1.5"
-                fill="#ffffff"
-                opacity="0"
-                style={{
-                  offsetPath: `path('${arc.d}')`,
-                  animation: `arcComet ${arc.dur}s linear ${arc.delay}s infinite`,
-                }}
-              />
+              <circle r="1.5" fill="#ffffff" opacity="0">
+                <animateMotion dur={dur} begin={begin} repeatCount="indefinite" path={arc.d} />
+                <animate
+                  attributeName="opacity"
+                  values="0; 1; 1; 0"
+                  keyTimes="0; 0.08; 0.92; 1"
+                  dur={dur}
+                  begin={begin}
+                  repeatCount="indefinite"
+                />
+              </circle>
               {/* Landing pulse at destination */}
               <circle
                 cx={arc.to.x}
                 cy={arc.to.y}
-                r="3"
+                r="1.5"
                 fill="none"
                 stroke="#ffffff"
                 strokeWidth="1.2"
                 opacity="0"
-                style={{
-                  transformBox: "fill-box",
-                  transformOrigin: "center",
-                  animation: `arcLand ${arc.dur}s ease-out ${arc.delay}s infinite`,
-                }}
-              />
+              >
+                <animate
+                  attributeName="opacity"
+                  values="0; 0; 0.9; 0"
+                  keyTimes="0; 0.88; 0.92; 1"
+                  dur={dur}
+                  begin={begin}
+                  repeatCount="indefinite"
+                />
+                <animate
+                  attributeName="r"
+                  values="1.5; 1.5; 3; 9.6"
+                  keyTimes="0; 0.88; 0.92; 1"
+                  dur={dur}
+                  begin={begin}
+                  repeatCount="indefinite"
+                />
+              </circle>
             </g>
-          ))}
+            );
+          })}
         </g>
       </svg>
 
@@ -903,7 +971,8 @@ export default function AnimatedGlobeHero({
           aspect-ratio: 1280 / 540;
           overflow: hidden;
           isolation: isolate;
-          background: #1f78b3;
+          /* HERO PALETTE — fallback before SVG paints */
+          background: #1360ee;
         }
         .globe-hero__svg {
           position: absolute;
@@ -913,38 +982,15 @@ export default function AnimatedGlobeHero({
           display: block;
         }
 
-        /* ----- Entrance gating ----- */
+        /* Entrance gating — hidden until the section scrolls into view
+           (or the fallback timer fires). Globe reveals first, then ~1.3s
+           later the city nodes appear, then the arcs at 1.5s. Stat cards
+           animate in via their own staggered --enter-delay timing. */
         .globe-hero :global(.globe-group),
         .globe-hero :global(.city-nodes),
         .globe-hero :global(.arcs),
-        .globe-hero :global(.stars),
-        .globe-hero :global(.horizon-pulse),
-        .globe-hero :global(.halo-inner),
-        .globe-hero :global(.halo-outer),
-        .globe-hero :global(.earth-rotate),
-        .globe-hero :global(.cloud-rotate),
-        .globe-hero :global(.satellite),
-        .globe-hero :global(.orbit-ring) {
-          animation-play-state: paused !important;
-        }
-        .globe-hero :global(.globe-group),
-        .globe-hero :global(.city-nodes),
-        .globe-hero :global(.arcs) {
+        .globe-hero :global(.orbital-layer) {
           opacity: 0;
-        }
-
-        .globe-hero.is-active :global(.globe-group),
-        .globe-hero.is-active :global(.city-nodes),
-        .globe-hero.is-active :global(.arcs),
-        .globe-hero.is-active :global(.stars),
-        .globe-hero.is-active :global(.horizon-pulse),
-        .globe-hero.is-active :global(.halo-inner),
-        .globe-hero.is-active :global(.halo-outer),
-        .globe-hero.is-active :global(.earth-rotate),
-        .globe-hero.is-active :global(.cloud-rotate),
-        .globe-hero.is-active :global(.satellite),
-        .globe-hero.is-active :global(.orbit-ring) {
-          animation-play-state: running !important;
         }
 
         .globe-hero.is-active :global(.globe-group) {
@@ -953,18 +999,20 @@ export default function AnimatedGlobeHero({
           transform-origin: ${CX}px ${CY}px;
         }
         .globe-hero.is-active :global(.city-nodes) {
-          animation: fadeIn 1s ease-out 1.3s forwards;
+          animation: globeFadeIn 1s ease-out 1.3s forwards;
         }
         .globe-hero.is-active :global(.arcs) {
-          animation: fadeIn 0.8s ease-out 1.5s forwards;
+          animation: globeFadeIn 0.8s ease-out 1.5s forwards;
         }
-
-        @keyframes globeReveal {
-          0% { opacity: 0; transform: scale(0.85); filter: blur(6px); }
-          60% { filter: blur(0); }
-          100% { opacity: 1; transform: scale(1); filter: blur(0); }
+        .globe-hero.is-active :global(.orbital-layer) {
+          animation: globeFadeIn 1.2s ease-out 1s forwards;
         }
-        @keyframes fadeIn { to { opacity: 1; } }
+        /* Keyframes (globeReveal, globeFadeIn, earthSpin, cloudSpin,
+           haloBreatheIn, haloBreatheOut, horizonBreathe, ringPulse,
+           arcDraw, arcComet, arcLand, cityPulse, twinkle, cardEnter,
+           cardFloat, shimmerSweep) live in src/app/globals.css so the
+           inline style={{ animation: '...' }} on SVG children can
+           resolve them — styled-jsx scoping was preventing that. */
 
         /* ----- Earth rotation: two-copy seamless slide.
                  The .earth-rotate group contains two identical tiles
@@ -980,14 +1028,6 @@ export default function AnimatedGlobeHero({
           animation: cloudSpin 58s linear infinite;
           will-change: transform;
         }
-        @keyframes earthSpin {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-${R * 2}px); }
-        }
-        @keyframes cloudSpin {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-${R * 2}px); }
-        }
 
         /* ----- Atmospheric halo breathing ----- */
         .globe-hero :global(.halo-inner) {
@@ -1000,30 +1040,12 @@ export default function AnimatedGlobeHero({
           transform-origin: center;
           animation: haloBreatheOut 9s ease-in-out infinite;
         }
-        @keyframes haloBreatheIn {
-          0%, 100% { opacity: 0.4; transform: scale(1); }
-          50%      { opacity: 0.55; transform: scale(1.03); }
-        }
-        @keyframes haloBreatheOut {
-          0%, 100% { opacity: 0.3; transform: scale(1); }
-          50%      { opacity: 0.45; transform: scale(1.05); }
-        }
 
         .globe-hero :global(.horizon-pulse) {
           animation: horizonBreathe 10s ease-in-out infinite;
         }
-        @keyframes horizonBreathe {
-          0%, 100% { opacity: 0.85; }
-          50%      { opacity: 1; }
-        }
 
         /* ----- Orbital rings + satellites ----- */
-        .globe-hero :global(.orbital-layer) {
-          opacity: 0;
-        }
-        .globe-hero.is-active :global(.orbital-layer) {
-          animation: fadeIn 1.2s ease-out 1s forwards;
-        }
         .globe-hero :global(.orbit-ring) {
           transform-box: fill-box;
           transform-origin: center;
@@ -1040,46 +1062,6 @@ export default function AnimatedGlobeHero({
         .globe-hero :global(.satellite) {
           will-change: transform, offset-distance;
           offset-rotate: 0deg;
-        }
-        @keyframes satOrbit {
-          0%   { offset-distance: 0%; }
-          100% { offset-distance: 100%; }
-        }
-        @keyframes ringPulse {
-          0%, 100% { stroke-opacity: 0.65; }
-          50%      { stroke-opacity: 1; }
-        }
-
-        /* ----- Arc animations (normalized to pathLength=100) ----- */
-        @keyframes arcDraw {
-          0%   { stroke-dasharray: 0 100; stroke-dashoffset: 0;    stroke-opacity: 0; }
-          10%  { stroke-opacity: 0.95; }
-          50%  { stroke-dasharray: 30 100; stroke-dashoffset: -25; stroke-opacity: 0.95; }
-          85%  { stroke-dasharray: 8 100;  stroke-dashoffset: -92; stroke-opacity: 0.5; }
-          100% { stroke-dasharray: 0 100;  stroke-dashoffset: -100; stroke-opacity: 0; }
-        }
-        @keyframes arcComet {
-          0%   { offset-distance: 0%;   opacity: 0; }
-          8%   { opacity: 1; }
-          92%  { opacity: 1; }
-          100% { offset-distance: 100%; opacity: 0; }
-        }
-        @keyframes arcLand {
-          0%, 88% { opacity: 0; transform: scale(0.5); }
-          92%     { opacity: 0.9; transform: scale(1); }
-          100%    { opacity: 0; transform: scale(3.2); }
-        }
-
-        /* ----- City node pulse ----- */
-        @keyframes cityPulse {
-          0%, 100% { opacity: 0.55; transform: scale(0.85); }
-          50%      { opacity: 1;    transform: scale(1.15); }
-        }
-
-        /* ----- Star twinkle ----- */
-        @keyframes twinkle {
-          0%, 100% { opacity: 0.2; transform: scale(0.7); }
-          50%      { opacity: 1;   transform: scale(1.2); }
         }
 
         /* ====================================================================
@@ -1149,6 +1131,7 @@ export default function AnimatedGlobeHero({
         .globe-hero.is-active .stat-card__shimmer {
           animation: shimmerSweep 9s ease-in-out calc(var(--enter-delay) + 2s) infinite;
         }
+        /* cardEnter / cardFloat / shimmerSweep keyframes live in globals.css */
 
         /* Positioning — closer to globe, tighter to center */
         .stat-card--left  { left: clamp(8%, 14vw, 20%); }
@@ -1157,21 +1140,6 @@ export default function AnimatedGlobeHero({
         .stat-card--bottom.stat-card--left  { top: 71%; }
         .stat-card--top.stat-card--right    { top: 26%; }
         .stat-card--bottom.stat-card--right { top: 57%; }
-
-        @keyframes cardEnter {
-          0%   { opacity: 0; transform: translateY(20px) scale(0.96); filter: blur(6px); }
-          55%  { filter: blur(0); }
-          100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-        }
-        @keyframes cardFloat {
-          0%, 100% { transform: translateY(0); }
-          50%      { transform: translateY(-5px); }
-        }
-        @keyframes shimmerSweep {
-          0%   { transform: translateX(-100%); }
-          45%  { transform: translateX(100%); }
-          100% { transform: translateX(100%); }
-        }
 
         /* ----- Responsive ----- */
         @media (max-width: 1024px) {
@@ -1209,7 +1177,8 @@ export default function AnimatedGlobeHero({
           .globe-hero :global(*) { animation: none !important; }
           .globe-hero :global(.globe-group),
           .globe-hero :global(.city-nodes),
-          .globe-hero :global(.arcs) { opacity: 1 !important; }
+          .globe-hero :global(.arcs),
+          .globe-hero :global(.orbital-layer) { opacity: 1 !important; }
           .stat-card {
             opacity: 1 !important;
             transform: none !important;

@@ -494,6 +494,87 @@ h6 {
 }
 
 /* ══════════════════════════════════════════════════════
+   HERO GRADIENT FLOW — five soft radial color patches
+   (same palette) stacked on a base ramp. Each patch is
+   its own background layer with background-size > 100%,
+   so animating background-position physically slides the
+   patch across the surface. One keyframe drives all five
+   positions; the patches travel along different paths so
+   the colors drift independently — left, right, up, down,
+   diagonal — and the surface never re-syncs.
+   ══════════════════════════════════════════════════════ */
+.hero-gradient-flow {
+  background:
+    /* Lane 6 — soft cyan diagonal sweeper: top-right → bottom-left → back */
+    radial-gradient(closest-side at 50% 50%, rgba(170, 225, 245, 0.8) 0%, rgba(170, 225, 245, 0) 72%),
+    radial-gradient(closest-side at 50% 50%, rgba(13, 47, 165, 0.95) 0%, rgba(13, 47, 165, 0) 65%),
+    radial-gradient(closest-side at 50% 50%, rgba(10, 132, 227, 0.9) 0%, rgba(10, 132, 227, 0) 68%),
+    radial-gradient(closest-side at 50% 50%, rgba(8, 178, 224, 0.92) 0%, rgba(8, 178, 224, 0) 66%),
+    radial-gradient(closest-side at 50% 50%, rgba(193, 235, 247, 0.95) 0%, rgba(193, 235, 247, 0) 68%),
+    radial-gradient(closest-side at 50% 50%, rgba(58, 190, 222, 0.9) 0%, rgba(58, 190, 222, 0) 70%),
+    linear-gradient(180deg, #1360ee 0%, #0a84e3 45%, #3abede 75%, #97def1 100%);
+  background-repeat: no-repeat;
+  background-size:
+    60% 65%,
+    70% 70%,
+    80% 65%,
+    75% 70%,
+    70% 60%,
+    60% 60%,
+    100% 100%;
+  /* Starting positions all anchored on the RIGHT side — every patch
+     enters from the right and glides leftward (then loops back). */
+  /* Each patch occupies a different vertical "lane" and sweeps
+     fully across the screen — alternating R→L and L→R so at any
+     moment there is motion in BOTH directions across multiple bands. */
+  background-position:
+    115%  -10%,  /* lane 6: top-right → bottom-left diagonal */
+    110%  15%,
+    -10%  35%,
+    110%  55%,
+    -10%  72%,
+    110%  88%,
+       0 0;
+  will-change: background-position, transform;
+  transform-origin: 50% 60%;
+  animation:
+    heroGradientFlow 36s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite,
+    heroGradientDrift 70s ease-in-out infinite;
+}
+
+/* Five patches sweeping the FULL width in alternating directions.
+   Each lane crosses from one edge clear to the other, with curved
+   Y wobble so the path is organic, not a straight line. */
+@keyframes heroGradientFlow {
+  /* time:    lane6 (top-right→bot-left diag)   lane1 (top R→L→R)    lane2 (umid L→R→L)    lane3 (mid R→L→R)    lane4 (lmid L→R→L)    lane5 (btm R→L→R)   base */
+  0%   { background-position: 115% -10%, 110% 15%, -10% 35%, 110% 55%, -10% 72%, 110% 88%, 0 0; }
+  12%  { background-position:  92%   8%,  86% 22%,  14% 28%,  88% 48%,  16% 80%,  84% 80%, 0 0; }
+  25%  { background-position:  72%  26%,  62% 10%,  38% 42%,  64% 62%,  40% 66%,  60% 92%, 0 0; }
+  37%  { background-position:  50%  48%,  38% 24%,  62% 30%,  40% 50%,  62% 78%,  38% 82%, 0 0; }
+  50%  { background-position:  22%  72%, -10% 18%, 110% 38%, -10% 58%, 110% 70%, -10% 88%, 0 0; }
+  62%  { background-position:  -8% 105%,  16% 28%,  86% 26%,  18% 46%,  84% 82%,  18% 80%, 0 0; }
+  75%  { background-position:  20%  78%,  42% 12%,  58% 44%,  44% 60%,  60% 64%,  42% 92%, 0 0; }
+  87%  { background-position:  62%  38%,  74% 22%,  26% 30%,  78% 52%,  28% 78%,  76% 82%, 0 0; }
+  100% { background-position: 115% -10%, 110% 15%, -10% 35%, 110% 55%, -10% 72%, 110% 88%, 0 0; }
+}
+
+/* Slow whole-field breathing: subtle scale + rotation so the motion
+   feels fluid and alive instead of just sliding. Scale > 1 prevents
+   rotation from exposing the section's corners. */
+@keyframes heroGradientDrift {
+  0%   { transform: scale(1.18) rotate(-1.6deg) translate3d(0%, 0%, 0); }
+  25%  { transform: scale(1.22) rotate(0.8deg)  translate3d(-1.5%, 0.8%, 0); }
+  50%  { transform: scale(1.20) rotate(2.0deg)  translate3d(0.6%, -1.2%, 0); }
+  75%  { transform: scale(1.24) rotate(-0.4deg) translate3d(1.4%, 0.6%, 0); }
+  100% { transform: scale(1.18) rotate(-1.6deg) translate3d(0%, 0%, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-gradient-flow { animation: none !important; }
+}
+
+
+/* ══════════════════════════════════════════════════════
    HERO WAVE LAYERS — zig-zag flowing edge
    ─ clip-path: polygon() creates the zig-zag boundary
    ─ Each keyframe shifts the polygon points → wave flows

@@ -14,38 +14,26 @@ export default function HeroSection() {
         minHeight: 'clamp(380px, 67.5vh, 800px)',
         overflow: 'visible',
         isolation: 'isolate',
-        background: '#0174cb',
+        background: '#1360ee',
       }}
     >
-      {/* ─────────── GRADIENT BACKDROP ─────────── */}
+      {/* ─────────── GRADIENT BACKDROP (matched to reference palette) ─────────── */}
 
-      {/* L0 — Light airy blue base (lighter sky, soft pastel tones) */}
+      {/* L0 — Main vertical ramp: deep electric blue → cyan → pale near-white
+          Stops sampled from reference: #1360ee → #1266ed → #0d73e3 → #0a84e3 →
+          #106dea → #06a4e2 → #0e9ee2 → #08b2e0 → #3abede → #85bad3 → #97def1 → #d1d8dd */}
       <div
         aria-hidden="true"
+        className="hero-gradient-flow"
         style={{
           position: 'absolute',
           inset: 0,
           zIndex: 0,
           pointerEvents: 'none',
-          background:
-            'linear-gradient(180deg, #1a6fb0 0%, #2d83c2 18%, #4a9bd4 38%, #6bb1de 58%, #93c8e6 76%, #bcdcec 90%, #dfeef2 100%)',
         }}
       />
 
-      {/* L0b — Very gentle top tint (subtle depth, no heavy navy) */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 0,
-          pointerEvents: 'none',
-          background:
-            'linear-gradient(180deg, rgba(20, 90, 150, 0.22) 0%, rgba(20, 90, 150, 0.08) 20%, rgba(20, 90, 150, 0) 40%)',
-        }}
-      />
-
-      {/* Uneven dark patch — top-left heavy cloud mass */}
+      {/* L1 — Subtle right-side lightening (left 50% untouched → top-left stays #1360ee) */}
       <div
         aria-hidden="true"
         style={{
@@ -54,11 +42,11 @@ export default function HeroSection() {
           zIndex: 1,
           pointerEvents: 'none',
           background:
-            'radial-gradient(58% 44% at 10% 6%, rgba(2, 12, 40, 0.52) 0%, rgba(4, 20, 58, 0.32) 38%, rgba(6, 28, 72, 0.12) 65%, rgba(8, 36, 88, 0) 82%)',
+            'linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 55%, rgba(255,255,255,0.08) 100%)',
         }}
       />
 
-      {/* Uneven dark patch — top-right drift */}
+      {/* L1a — Top-right #6d99e4 zone */}
       <div
         aria-hidden="true"
         style={{
@@ -67,11 +55,11 @@ export default function HeroSection() {
           zIndex: 1,
           pointerEvents: 'none',
           background:
-            'radial-gradient(52% 38% at 92% 3%, rgba(2, 10, 38, 0.50) 0%, rgba(4, 18, 55, 0.30) 40%, rgba(6, 26, 70, 0.10) 68%, rgba(8, 34, 85, 0) 84%)',
+            'radial-gradient(34% 28% at 96% 6%, rgba(109, 153, 228, 0.7) 0%, rgba(109, 153, 228, 0.35) 40%, rgba(109, 153, 228, 0.1) 70%, rgba(109, 153, 228, 0) 90%)',
         }}
       />
 
-      {/* Uneven dark smear — mid-left */}
+      {/* L1b — Upper-mid right #3183e4 / #1f74e8 zone */}
       <div
         aria-hidden="true"
         style={{
@@ -80,11 +68,11 @@ export default function HeroSection() {
           zIndex: 1,
           pointerEvents: 'none',
           background:
-            'radial-gradient(42% 28% at 16% 44%, rgba(3, 16, 50, 0.46) 0%, rgba(5, 24, 65, 0.26) 45%, rgba(7, 32, 80, 0.08) 72%, rgba(9, 40, 95, 0) 88%)',
+            'radial-gradient(28% 22% at 82% 20%, rgba(49, 131, 228, 0.45) 0%, rgba(49, 131, 228, 0.18) 50%, rgba(49, 131, 228, 0) 88%)',
         }}
       />
 
-      {/* Uneven dark smear — mid-right */}
+      {/* L2 — Mid-right pale highlight (#d1d8dd / #97def1 zone) */}
       <div
         aria-hidden="true"
         style={{
@@ -93,11 +81,11 @@ export default function HeroSection() {
           zIndex: 1,
           pointerEvents: 'none',
           background:
-            'radial-gradient(46% 32% at 80% 32%, rgba(2, 14, 46, 0.48) 0%, rgba(4, 22, 62, 0.28) 40%, rgba(6, 30, 78, 0.10) 68%, rgba(8, 38, 92, 0) 85%)',
+            'radial-gradient(32% 38% at 94% 42%, rgba(209, 216, 221, 0.7) 0%, rgba(151, 222, 241, 0.4) 40%, rgba(151, 222, 241, 0.14) 70%, rgba(151, 222, 241, 0) 92%)',
         }}
       />
 
-      {/* Uneven dark patch — upper center wisp */}
+      {/* L2b — Pale bottom-left wash (#c2d1dd / #64aedd zone) */}
       <div
         aria-hidden="true"
         style={{
@@ -106,11 +94,11 @@ export default function HeroSection() {
           zIndex: 1,
           pointerEvents: 'none',
           background:
-            'radial-gradient(34% 20% at 52% 10%, rgba(3, 14, 48, 0.44) 0%, rgba(5, 22, 64, 0.24) 48%, rgba(7, 30, 78, 0.08) 74%, rgba(9, 38, 92, 0) 90%)',
+            'radial-gradient(40% 30% at 6% 96%, rgba(194, 209, 221, 0.55) 0%, rgba(100, 174, 221, 0.28) 45%, rgba(100, 174, 221, 0) 85%)',
         }}
       />
 
-      {/* Center patch — mid-center bulk */}
+      {/* L2c — Bottom-right cyan #79dffa zone */}
       <div
         aria-hidden="true"
         style={{
@@ -119,89 +107,11 @@ export default function HeroSection() {
           zIndex: 1,
           pointerEvents: 'none',
           background:
-            'radial-gradient(48% 30% at 50% 35%, rgba(3, 14, 48, 0.48) 0%, rgba(5, 22, 64, 0.28) 40%, rgba(7, 30, 78, 0.10) 68%, rgba(9, 38, 92, 0) 86%)',
+            'radial-gradient(32% 26% at 96% 96%, rgba(121, 223, 250, 0.6) 0%, rgba(121, 223, 250, 0.28) 45%, rgba(121, 223, 250, 0.08) 75%, rgba(121, 223, 250, 0) 92%)',
         }}
       />
 
-      {/* Center patch — slightly left of center, lower */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 1,
-          pointerEvents: 'none',
-          background:
-            'radial-gradient(32% 18% at 44% 52%, rgba(2, 12, 42, 0.42) 0%, rgba(4, 20, 58, 0.22) 48%, rgba(6, 28, 72, 0.07) 76%, rgba(8, 36, 88, 0) 92%)',
-        }}
-      />
-
-      {/* Center patch — slightly right of center, upper-mid */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 1,
-          pointerEvents: 'none',
-          background:
-            'radial-gradient(28% 16% at 58% 22%, rgba(3, 14, 46, 0.40) 0%, rgba(5, 22, 62, 0.20) 50%, rgba(7, 30, 76, 0.06) 78%, rgba(9, 38, 90, 0) 92%)',
-        }}
-      />
-
-      {/* Extra dark patch — far left edge, mid height */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 1,
-          pointerEvents: 'none',
-          background:
-            'radial-gradient(36% 24% at 3% 55%, rgba(2, 12, 42, 0.45) 0%, rgba(4, 20, 58, 0.24) 48%, rgba(6, 28, 72, 0.08) 74%, rgba(8, 36, 88, 0) 88%)',
-        }}
-      />
-
-      {/* Extra dark patch — top center-right streak */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 1,
-          pointerEvents: 'none',
-          background:
-            'radial-gradient(30% 16% at 68% 6%, rgba(2, 10, 36, 0.42) 0%, rgba(4, 18, 52, 0.22) 50%, rgba(6, 26, 68, 0.07) 78%, rgba(8, 34, 84, 0) 92%)',
-        }}
-      />
-
-      {/* Extra dark patch — lower-left atmospheric depth */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 1,
-          pointerEvents: 'none',
-          background:
-            'radial-gradient(44% 22% at 8% 72%, rgba(2, 12, 40, 0.38) 0%, rgba(4, 20, 56, 0.20) 52%, rgba(6, 28, 72, 0.06) 78%, rgba(8, 36, 88, 0) 92%)',
-        }}
-      />
-
-      {/* Extra dark patch — right side mid-low */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 1,
-          pointerEvents: 'none',
-          background:
-            'radial-gradient(38% 20% at 96% 58%, rgba(2, 10, 38, 0.40) 0%, rgba(4, 18, 54, 0.22) 48%, rgba(6, 26, 70, 0.07) 75%, rgba(8, 34, 86, 0) 90%)',
-        }}
-      />
-
-      {/* L3 — Bright white-gold sunrise core behind the Burj (kept low, near skyline base) */}
+      {/* L3 — Warm cream sunrise core behind the Burj (#fbeabc from reference) */}
       <div
         aria-hidden="true"
         style={{
@@ -210,12 +120,12 @@ export default function HeroSection() {
           zIndex: 3,
           pointerEvents: 'none',
           background:
-            'radial-gradient(32% 22% at 48% 90%, rgba(255, 250, 225, 1) 0%, rgba(255, 232, 165, 0.95) 18%, rgba(255, 210, 115, 0.78) 38%, rgba(255, 188, 85, 0.48) 60%, rgba(255, 180, 80, 0.20) 80%, rgba(255, 190, 100, 0) 96%)',
-          filter: 'blur(28px)',
+            'radial-gradient(32% 22% at 50% 90%, rgba(251, 234, 188, 0.98) 0%, rgba(251, 234, 188, 0.78) 22%, rgba(251, 234, 188, 0.5) 45%, rgba(251, 234, 188, 0.24) 70%, rgba(251, 234, 188, 0.08) 88%, rgba(251, 234, 188, 0) 98%)',
+          filter: 'blur(26px)',
         }}
       />
 
-      {/* L4 — Small golden bloom just above the core (subtle lift, stays low) */}
+      {/* L4 — Small warm bloom just above the core */}
       <div
         aria-hidden="true"
         style={{
@@ -224,45 +134,13 @@ export default function HeroSection() {
           zIndex: 3,
           pointerEvents: 'none',
           background:
-            'radial-gradient(24% 14% at 48% 78%, rgba(255, 230, 170, 0.55) 0%, rgba(255, 215, 140, 0.28) 50%, rgba(255, 210, 140, 0) 92%)',
-          filter: 'blur(38px)',
+            'radial-gradient(24% 14% at 50% 78%, rgba(251, 234, 188, 0.5) 0%, rgba(251, 234, 188, 0.22) 50%, rgba(251, 234, 188, 0) 92%)',
+          filter: 'blur(36px)',
         }}
       />
 
-      {/* ─────────── ANIMATED LAYERS (subtle, screen-blend only) ─────────── */}
-
-      {/* Animated colour blobs — drifting cloud blooms */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          overflow: 'hidden',
-          zIndex: 5,
-          pointerEvents: 'none',
-          mixBlendMode: 'screen',
-        }}
-      >
-        <div
-          className="hero-blob hero-blob-a"
-          style={{ background: 'rgba(22, 131, 210, 0.35)' }}
-        />
-        <div
-          className="hero-blob hero-blob-b"
-          style={{ background: 'rgba(255, 200, 110, 0.28)' }}
-        />
-        <div
-          className="hero-blob hero-blob-c"
-          style={{ background: 'rgba(46, 149, 216, 0.38)' }}
-        />
-        <div
-          className="hero-blob hero-blob-d"
-          style={{ background: 'rgba(10, 101, 179, 0.40)' }}
-        />
-        <div
-          className="hero-blob hero-blob-e"
-          style={{ background: 'rgba(118, 175, 219, 0.25)' }}
-        />
-      </div>
+      {/* Animated blobs removed — they drifted across the building area
+          and bled color through the translucent building PNG. */}
 
 
       {/* Bright white-gold halo behind the Burj — primary visible glow (low, near horizon) */}
@@ -278,7 +156,7 @@ export default function HeroSection() {
           zIndex: 7,
           pointerEvents: 'none',
           background:
-            'radial-gradient(50% 60% at 50% 75%, rgba(255, 248, 215, 0.95) 0%, rgba(255, 230, 160, 0.75) 25%, rgba(255, 210, 115, 0.48) 50%, rgba(255, 195, 95, 0.22) 72%, rgba(255, 200, 115, 0) 94%)',
+            'radial-gradient(50% 60% at 50% 75%, rgba(251, 234, 188, 0.95) 0%, rgba(251, 234, 188, 0.72) 25%, rgba(251, 234, 188, 0.45) 50%, rgba(251, 234, 188, 0.2) 72%, rgba(251, 234, 188, 0) 94%)',
           filter: 'blur(30px)',
         }}
       />
@@ -296,82 +174,14 @@ export default function HeroSection() {
           zIndex: 7,
           pointerEvents: 'none',
           background:
-            'radial-gradient(50% 50% at 50% 60%, rgba(255, 240, 190, 0.45) 0%, rgba(255, 225, 160, 0.20) 50%, rgba(255, 220, 155, 0) 90%)',
+            'radial-gradient(50% 50% at 50% 60%, rgba(251, 234, 188, 0.45) 0%, rgba(251, 234, 188, 0.2) 50%, rgba(251, 234, 188, 0) 90%)',
           filter: 'blur(40px)',
           mixBlendMode: 'screen',
         }}
       />
 
-      {/* Two smooth diagonal wave bands — top descends, bottom ascends */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          overflow: 'hidden',
-          zIndex: 6,
-          pointerEvents: 'none',
-          mixBlendMode: 'screen',
-        }}
-      >
-        {/* Top wave — slides down through the hero */}
-        <svg
-          className="hero-diag-wave hero-diag-wave-top"
-          viewBox="0 0 1200 240"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <defs>
-            <linearGradient id="heroDiagWaveTopGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%"  stopColor="rgba(255,255,255,0)" />
-              <stop offset="25%" stopColor="rgba(255,255,255,0.14)" />
-              <stop offset="45%" stopColor="rgba(255,255,255,0.48)" />
-              <stop offset="60%" stopColor="rgba(190,232,255,0.38)" />
-              <stop offset="80%" stopColor="rgba(140,205,250,0.15)" />
-              <stop offset="100%" stopColor="rgba(255,255,255,0)" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M 0,105 C 300,40 600,190 900,115 S 1200,60 1200,115 L 1200,160 C 900,220 600,105 300,180 S 0,220 0,155 Z"
-            fill="url(#heroDiagWaveTopGrad)"
-          />
-        </svg>
-
-        {/* Bottom wave — slides up through the hero */}
-        <svg
-          className="hero-diag-wave hero-diag-wave-bottom"
-          viewBox="0 0 1200 240"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <defs>
-            <linearGradient id="heroDiagWaveBottomGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%"  stopColor="rgba(255,255,255,0)" />
-              <stop offset="22%" stopColor="rgba(140,205,250,0.15)" />
-              <stop offset="45%" stopColor="rgba(190,232,255,0.38)" />
-              <stop offset="62%" stopColor="rgba(255,255,255,0.48)" />
-              <stop offset="80%" stopColor="rgba(255,255,255,0.14)" />
-              <stop offset="100%" stopColor="rgba(255,255,255,0)" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M 0,105 C 300,40 600,190 900,115 S 1200,60 1200,115 L 1200,160 C 900,220 600,105 300,180 S 0,220 0,155 Z"
-            fill="url(#heroDiagWaveBottomGrad)"
-          />
-        </svg>
-      </div>
-
-      {/* Animated ribbon sweep — flowing light ribbon across the sky */}
-      <div
-        className="hero-ribbon-sweep"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          overflow: 'hidden',
-          zIndex: 6,
-          pointerEvents: 'none',
-          opacity: 0.8,
-        }}
-      />
+      {/* Diagonal waves + ribbon sweep removed — they bled through the
+          translucent building PNG and created visible "rays" on the skyline. */}
 
       {/* ─────────── SKY IMAGE — LEFT OF BUILDING ─────────── */}
       <div

@@ -78,18 +78,20 @@ export default function Footer() {
     <footer style={{
       position: 'relative',
       overflow: 'hidden',
-      /* HERO PALETTE — pixel-matched to .hero-gradient-flow base ramp */
-      background: 'linear-gradient(180deg, #1360ee 0%, #0a84e3 45%, #3abede 75%, #97def1 100%)',
+      /* HERO PALETTE — light/pale at top, deep navy at bottom (flipped) */
+      background: 'linear-gradient(180deg, #97def1 0%, #3abede 22%, #0a84e3 55%, #1360ee 82%, #062a8a 100%)',
     }}>
 
       {/* ── Ambient glow layer ── */}
       <div aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-        {/* Top-left orb — hero deep navy patch (rgba 13,47,165) */}
-        <div style={{ position: 'absolute', width: '480px', height: '480px', top: '-120px', left: '-80px', background: 'radial-gradient(circle, rgba(13,47,165,0.32) 0%, transparent 65%)', borderRadius: '50%' }} />
-        {/* Bottom-right orb — hero sky-cyan patch (rgba 58,190,222) */}
-        <div style={{ position: 'absolute', width: '420px', height: '420px', bottom: '-60px', right: '-60px', background: 'radial-gradient(circle, rgba(58,190,222,0.22) 0%, transparent 65%)', borderRadius: '50%' }} />
-        {/* Centre ambient — hero pale-ice patch (rgba 193,235,247) */}
-        <div style={{ position: 'absolute', width: '600px', height: '300px', top: '35%', left: '50%', transform: 'translate(-50%,-50%)', background: 'radial-gradient(ellipse, rgba(193,235,247,0.12) 0%, transparent 70%)', borderRadius: '50%' }} />
+        {/* Top-left orb — pale-ice glow that softens the light top */}
+        <div style={{ position: 'absolute', width: '480px', height: '480px', top: '-160px', left: '-80px', background: 'radial-gradient(circle, rgba(193,235,247,0.55) 0%, transparent 65%)', borderRadius: '50%' }} />
+        {/* Top-right orb — cyan haze along the upper light band */}
+        <div style={{ position: 'absolute', width: '420px', height: '420px', top: '-80px', right: '-60px', background: 'radial-gradient(circle, rgba(58,190,222,0.35) 0%, transparent 65%)', borderRadius: '50%' }} />
+        {/* Bottom-left orb — deep navy bloom anchoring the dark base */}
+        <div style={{ position: 'absolute', width: '520px', height: '520px', bottom: '-140px', left: '-100px', background: 'radial-gradient(circle, rgba(13,47,165,0.45) 0%, transparent 65%)', borderRadius: '50%' }} />
+        {/* Bottom-right orb — extra navy weight in the dark zone */}
+        <div style={{ position: 'absolute', width: '420px', height: '420px', bottom: '-60px', right: '-60px', background: 'radial-gradient(circle, rgba(13,47,165,0.32) 0%, transparent 65%)', borderRadius: '50%' }} />
         {/* Top glow line */}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(79,195,247,0.5) 35%, rgba(255,255,255,0.3) 50%, rgba(79,195,247,0.5) 65%, transparent)' }} />
         {/* Subtle dot-grid texture */}

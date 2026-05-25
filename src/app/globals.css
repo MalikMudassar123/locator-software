@@ -967,7 +967,7 @@ h6 {
 }
 @media (max-width: 640px) {
   .road-cta-wrap {
-    bottom: 28%;
+    bottom: 14px;
     gap: 6px;
   }
   .road-cta-btn {

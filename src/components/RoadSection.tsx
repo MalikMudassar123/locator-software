@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const vehicles = [
   {
@@ -109,24 +109,65 @@ const vehicles = [
   },
 ]
 
+// On viewports ≤ 640px show four vehicles (car, bus, van, truck), evenly spaced, no tooltips.
+const MOBILE_VEHICLE_IDS = new Set(['car', 'bus', 'van', 'truck'])
+const MOBILE_OVERRIDES: Record<
+  string,
+  { left: string; bottom: string; pinLeft: string; pinBottom: string; widthFactor: number; pinFactor: number }
+> = {
+  car:   { left: '-12%', bottom: '175%', pinLeft: '-8%', pinBottom: '200%', widthFactor: 1.10, pinFactor: 1.00 },
+  bus:   { left: '23%', bottom: '152%', pinLeft: '26%', pinBottom: '177%', widthFactor: 1.05, pinFactor: 1.00 },
+  van:   { left: '62%', bottom: '175%', pinLeft: '65%', pinBottom: '200%', widthFactor: 1.08, pinFactor: 1.00 },
+  truck: { left: '70%', bottom: '106%', pinLeft: '74%', pinBottom: '131%', widthFactor: 1.00, pinFactor: 1.00 },
+}
+
 export default function RoadSection() {
   const [hoveredPin, setHoveredPin] = useState<string | null>(null)
   const [showAllTooltips, setShowAllTooltips] = useState(true)
+  const [isMobile, setIsMobile] = useState(false)
 
-  // Hide all tooltips after 3 seconds on initial load
-  useState(() => {
-    const timer = setTimeout(() => {
-      setShowAllTooltips(false)
-    }, 3000)
-    
+  // Auto-hide the on-load tooltip flash after 3s
+  // (was incorrectly written with useState — never cleaned up).
+  useEffect(() => {
+    const timer = setTimeout(() => setShowAllTooltips(false), 3000)
     return () => clearTimeout(timer)
-  })
+  }, [])
+
+  // Track narrow viewports so we can render a slimmer set of vehicles.
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 640px)')
+    const update = () => setIsMobile(mq.matches)
+    update()
+    mq.addEventListener('change', update)
+    return () => mq.removeEventListener('change', update)
+  }, [])
+
+  const renderedVehicles = isMobile
+    ? vehicles
+        .filter((v) => MOBILE_VEHICLE_IDS.has(v.id))
+        .map((v) => {
+          const o = MOBILE_OVERRIDES[v.id]
+          return {
+            ...v,
+            left: o.left,
+            bottom: o.bottom,
+            pinLeft: o.pinLeft,
+            pinBottom: o.pinBottom,
+            width: Math.round(v.width * o.widthFactor),
+            height: Math.round(v.height * o.widthFactor),
+            pinSize: Math.round(v.pinSize * o.pinFactor),
+          }
+        })
+    : vehicles
+
+  // Tooltips are too large to fit beside vehicles on mobile — suppress them.
+  const tooltipsEnabled = !isMobile
 
   return (
     <section
-      className="relative w-full"
+      className="relative w-full road-section"
       style={{
-        height: 'clamp(140px, 22vw, 240px)',
+        height: isMobile ? '210px' : 'clamp(140px, 22vw, 240px)',
         marginTop: '-1px',
         overflow: 'visible',
         zIndex: 100,
@@ -171,7 +212,7 @@ export default function RoadSection() {
 
       {/* Vehicles layer */}
       <div className="road-vehicles-layer absolute inset-0" style={{ zIndex: 10 }}>
-        {vehicles.map((v) => (
+        {renderedVehicles.map((v) => (
           <div key={v.id}>
             <div
               className="absolute cursor-pointer transition-all duration-500 ease-out"
@@ -242,7 +283,8 @@ export default function RoadSection() {
           </div>
         ))}
 
-        {/* Scooter */}
+        {/* Scooter — desktop only (mobile drops it to declutter) */}
+        {!isMobile && (
         <div className="absolute" style={{ bottom: '50%', left: '60%' }}>
           <div
             className="cursor-pointer transition-all duration-500 ease-out"
@@ -263,6 +305,7 @@ export default function RoadSection() {
             />
           </div>
         </div>
+        )}
       </div>
 
       {/* CTA Buttons */}
@@ -326,7 +369,7 @@ export default function RoadSection() {
 
       {/* GPS Icons layer - HIGHEST z-index */}
       <div className="road-vehicles-layer absolute inset-0" style={{ zIndex: 10000, pointerEvents: 'none' }}>
-        {vehicles.map((v, index) => (
+        {renderedVehicles.map((v, index) => (
           v.pinSize > 0 && (
             <div
               key={`pin-${v.id}`}
@@ -357,7 +400,7 @@ export default function RoadSection() {
                 />
               </div>
 
-              {(hoveredPin === v.id || (showAllTooltips && index % 2 === 0)) && (
+              {tooltipsEnabled && (hoveredPin === v.id || (showAllTooltips && index % 2 === 0)) && (
                 <div
                   className="absolute"
                   style={{
@@ -558,8 +601,9 @@ export default function RoadSection() {
           )
         ))}
 
-        {/* Scooter GPS pin */}
-        <div 
+        {/* Scooter GPS pin — desktop only */}
+        {!isMobile && (
+        <div
           className="absolute cursor-pointer group"
           style={{
             bottom: '85%',
@@ -582,7 +626,7 @@ export default function RoadSection() {
             <Image src="/gps-pin.svg" alt="GPS Pin" width={24} height={24} />
           </div>
 
-          {hoveredPin === 'scooter' && (
+          {tooltipsEnabled && hoveredPin === 'scooter' && (
             <div
               className="absolute"
               style={{
@@ -780,6 +824,7 @@ export default function RoadSection() {
             </div>
           )}
         </div>
+        )}
       </div>
 
       <style jsx>{`

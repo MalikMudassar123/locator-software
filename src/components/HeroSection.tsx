@@ -180,8 +180,61 @@ export default function HeroSection() {
         }}
       />
 
-      {/* Diagonal waves + ribbon sweep removed — they bled through the
-          translucent building PNG and created visible "rays" on the skyline. */}
+      {/* ─────────── DIAGONAL WAVES — top descends, bottom ascends ─────────── */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          overflow: 'hidden',
+          zIndex: 6,
+          pointerEvents: 'none',
+          mixBlendMode: 'screen',
+        }}
+      >
+        <svg
+          className="hero-diag-wave hero-diag-wave-top"
+          viewBox="0 0 1200 240"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <defs>
+            <linearGradient id="heroDiagWaveTopGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"  stopColor="rgba(255,255,255,0)" />
+              <stop offset="25%" stopColor="rgba(255,255,255,0.14)" />
+              <stop offset="45%" stopColor="rgba(255,255,255,0.48)" />
+              <stop offset="60%" stopColor="rgba(190,232,255,0.38)" />
+              <stop offset="80%" stopColor="rgba(140,205,250,0.15)" />
+              <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M 0,105 C 300,40 600,190 900,115 S 1200,60 1200,115 L 1200,160 C 900,220 600,105 300,180 S 0,220 0,155 Z"
+            fill="url(#heroDiagWaveTopGrad)"
+          />
+        </svg>
+
+        <svg
+          className="hero-diag-wave hero-diag-wave-bottom"
+          viewBox="0 0 1200 240"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <defs>
+            <linearGradient id="heroDiagWaveBottomGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"  stopColor="rgba(255,255,255,0)" />
+              <stop offset="22%" stopColor="rgba(140,205,250,0.15)" />
+              <stop offset="45%" stopColor="rgba(190,232,255,0.38)" />
+              <stop offset="62%" stopColor="rgba(255,255,255,0.48)" />
+              <stop offset="80%" stopColor="rgba(255,255,255,0.14)" />
+              <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M 0,105 C 300,40 600,190 900,115 S 1200,60 1200,115 L 1200,160 C 900,220 600,105 300,180 S 0,220 0,155 Z"
+            fill="url(#heroDiagWaveBottomGrad)"
+          />
+        </svg>
+      </div>
 
       {/* ─────────── SKY IMAGE — LEFT OF BUILDING ─────────── */}
       <div

@@ -1830,3 +1830,37 @@ h6 {
   45%  { transform: translateX(100%); }
   100% { transform: translateX(100%); }
 }
+
+/* ══════════════════════════════════════════════════════
+   HERO DRIFTING PATCHES
+   ─ Two soft blue patches sail diagonally across the sky:
+     orb-a TL→BR, orb-b TR→BL. Crossing paths, mismatched
+     durations so they never re-sync. Opacity fades at the
+     endpoints so the loop wrap-around is invisible.
+   ══════════════════════════════════════════════════════ */
+.hero-blue-orb-a {
+  will-change: transform;
+  animation: heroBlueOrbA 8s ease-in-out infinite alternate;
+}
+@keyframes heroBlueOrbA {
+  /* Starts visually at TOP-LEFT corner (logo side), sweeps to BOTTOM-RIGHT */
+  0%   { transform: translate3d(-30%,  -30%, 0) scale(0.95); }
+  50%  { transform: translate3d(54%,   24%,  0) scale(1.08); }
+  100% { transform: translate3d(138%,  78%,  0) scale(0.98); }
+}
+
+.hero-blue-orb-b {
+  will-change: transform;
+  animation: heroBlueOrbB 10s ease-in-out infinite alternate;
+}
+@keyframes heroBlueOrbB {
+  /* Starts visually at TOP-RIGHT corner, glides down to BOTTOM-RIGHT */
+  0%   { transform: translate3d(30%,  -30%, 0) scale(0.95); }
+  50%  { transform: translate3d(30%,   34%, 0) scale(1.08); }
+  100% { transform: translate3d(30%,   98%, 0) scale(0.98); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-blue-orb-a,
+  .hero-blue-orb-b { animation: none !important; }
+}

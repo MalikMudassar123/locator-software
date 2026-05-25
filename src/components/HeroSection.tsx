@@ -139,8 +139,26 @@ export default function HeroSection() {
         }}
       />
 
-      {/* Animated blobs removed — they drifted across the building area
-          and bled color through the translucent building PNG. */}
+      {/* ─────────── DRIFTING PATCHES — bounce diagonally inside the sky ─────────── */}
+      {/* Patch A — TOP-LEFT ↔ BOTTOM-RIGHT (deep navy, stays in bounds) */}
+      <div
+        aria-hidden="true"
+        className="hero-blue-orb-a"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '48%',
+          height: '68%',
+          borderRadius: '50%',
+          zIndex: 5,
+          pointerEvents: 'none',
+          opacity: 0.85,
+          background:
+            'radial-gradient(closest-side at 50% 50%, rgba(13, 47, 165, 0.85) 0%, rgba(13, 47, 165, 0.55) 35%, rgba(13, 47, 165, 0.22) 62%, rgba(13, 47, 165, 0.07) 82%, rgba(13, 47, 165, 0) 96%)',
+          filter: 'blur(26px)',
+        }}
+      />
 
 
       {/* Bright white-gold halo behind the Burj — primary visible glow (low, near horizon) */}
@@ -291,6 +309,26 @@ export default function HeroSection() {
           }}
         />
       </div>
+
+      {/* Patch B — TOP-RIGHT ↔ BOTTOM-LEFT (rendered AFTER sky images so it shows over them) */}
+      <div
+        aria-hidden="true"
+        className="hero-blue-orb-b"
+        style={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          width: '42%',
+          height: '60%',
+          borderRadius: '50%',
+          zIndex: 7,
+          pointerEvents: 'none',
+          opacity: 0.8,
+          background:
+            'radial-gradient(closest-side at 50% 50%, rgba(13, 47, 165, 0.8) 0%, rgba(13, 47, 165, 0.5) 38%, rgba(13, 47, 165, 0.2) 65%, rgba(13, 47, 165, 0.06) 84%, rgba(13, 47, 165, 0) 96%)',
+          filter: 'blur(28px)',
+        }}
+      />
 
       {/* ─────────── FOREGROUND CONTENT (unchanged) ─────────── */}
 

@@ -387,8 +387,13 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     >
       <div style={{
         position:'relative',
+        width: W * scale, height: H * scale,
+        flexShrink: 0,
+      }}>
+      <div style={{
+        position:'absolute', top:0, left:0,
         width:W, height:H,
-        transform:`scale(${scale})`, transformOrigin:'top center',
+        transform:`scale(${scale})`, transformOrigin:'top left',
       }}>
       <GlobalDefs/>
 
@@ -516,7 +521,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
         onMouseLeave={() => gsap.to(desktopPopupRef.current, { scale: 1, duration: 0.35, ease: 'power3.out', transformOrigin: 'left center' })}
         style={{
           position:'absolute',
-          left: DT_X - 80,
+          left: Math.max(0, DT_X - 10),
           top: DT_Y + 130,
           width: 250,
           height: 54,
@@ -546,7 +551,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
           position:'absolute',
           left: PHONE_X - 25,
           top: PHONE_Y + 68,
-          width: 480,
+          width: 250,
           height: 44,
           opacity: 0,
           zIndex: 50,
@@ -584,6 +589,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
           </div>
         </div>
       ))}
+      </div>
       </div>
     </div>
   );

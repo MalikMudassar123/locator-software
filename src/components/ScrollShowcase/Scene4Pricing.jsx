@@ -255,8 +255,13 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     >
     <div style={{
       position: 'relative',
+      width: W * scale, height: H * scale,
+      flexShrink: 0,
+    }}>
+    <div style={{
+      position: 'absolute', top: 0, left: 0,
       width: W, height: H,
-      transform: `scale(${scale})`, transformOrigin: 'top center',
+      transform: `scale(${scale})`, transformOrigin: 'top left',
     }}>
       <GlobalDefs/>
 
@@ -340,7 +345,7 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
         onMouseLeave={() => gsap.to(popupRef.current, { scale: 1, duration: 0.35, ease: 'power3.out', transformOrigin: 'left center' })}
         style={{
           position:'absolute',
-          left: FX - 75,
+          left: Math.max(0, FX - 30),
           top: FY + 83,
           width: 220,
           height: 48,
@@ -380,6 +385,7 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
           </div>
         </div>
       ))}
+    </div>
     </div>
     </div>
   );

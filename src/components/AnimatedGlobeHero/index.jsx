@@ -406,12 +406,14 @@ export default function AnimatedGlobeHero({
             />
           </filter>
 
-          {/* Ocean base — light sky-cyan to match background gradient */}
-          <radialGradient id="oceanBase" cx="42%" cy="35%" r="68%">
-            <stop offset="0%" stopColor="#a8d9ec" />
-            <stop offset="45%" stopColor="#7fc6e3" />
-            <stop offset="80%" stopColor="#4ba0cf" />
-            <stop offset="100%" stopColor="#3a8db8" />
+          {/* Ocean base — matched to hero sky gradient
+              (#1360ee → #0a84e3 → #3abede → #97def1) so the globe reads
+              as part of the surrounding sky, not a paler disc on top. */}
+          <radialGradient id="oceanBase" cx="42%" cy="32%" r="72%">
+            <stop offset="0%"   stopColor="#1f6ff0" />
+            <stop offset="40%"  stopColor="#0a84e3" />
+            <stop offset="75%"  stopColor="#3abede" />
+            <stop offset="100%" stopColor="#97def1" />
           </radialGradient>
 
           {/* Spherical shading — top-left highlight, bottom-right shadow */}
@@ -421,9 +423,9 @@ export default function AnimatedGlobeHero({
             <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
           </radialGradient>
           <radialGradient id="sphereShade" cx="70%" cy="78%" r="65%">
-            <stop offset="0%" stopColor="#1a5680" stopOpacity="0" />
-            <stop offset="65%" stopColor="#1a5680" stopOpacity="0.15" />
-            <stop offset="100%" stopColor="#1a5680" stopOpacity="0.35" />
+            <stop offset="0%" stopColor="#0d2fa5" stopOpacity="0" />
+            <stop offset="65%" stopColor="#0d2fa5" stopOpacity="0.12" />
+            <stop offset="100%" stopColor="#0d2fa5" stopOpacity="0.28" />
           </radialGradient>
 
           {/* Terminator — re-tuned to pale-ice cyan rim (matches hero palette) */}
@@ -507,7 +509,7 @@ export default function AnimatedGlobeHero({
             height={R * 2}
             viewBox={`0 0 ${R * 2} ${R * 2}`}
           >
-            <rect width={R * 2} height={R * 2} fill="#7fc6e3" />
+            <rect width={R * 2} height={R * 2} fill="#0a84e3" />
             <rect
               width={R * 2}
               height={R * 2}
@@ -715,9 +717,9 @@ export default function AnimatedGlobeHero({
             cy={CY}
             r={R - 0.5}
             fill="none"
-            stroke="#2e7ba8"
+            stroke="#0d2fa5"
             strokeWidth="1.5"
-            opacity="0.25"
+            opacity="0.22"
           />
         </g>
 

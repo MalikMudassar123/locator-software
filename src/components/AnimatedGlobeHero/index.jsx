@@ -225,6 +225,300 @@ function AnimatedNumber({ value, active, delay = 0, duration = 1600 }) {
 }
 
 /* ============================================================================
+ * PARTICLE FORMATION
+ * ----------------------------------------------------------------------------
+ * Cinematic scroll-triggered formation: a tiny energy core sparks at the
+ * center, then thousands of particles spawn in chaotic orbital motion and
+ * gradually converge onto the sphere surface — "drawing" the globe into
+ * existence. As particles land, the existing SVG globe fades in beneath
+ * them; the canvas then stays as a low-amplitude ambient layer so the
+ * surface always feels alive without ever obscuring the original render.
+ *
+ * Implementation notes:
+ *  - Canvas overlays the SVG (z-index 1) and is pointer-events: none.
+ *  - Particles each have a stable spherical target (theta, phi) plus a
+ *    randomized spawn ring + orbital speed. Position is interpolated with
+ *    easeOutCubic from spawn to target over ~1.6s, staggered by a per-
+ *    particle delay so the formation reads as a wave, not a snap.
+ *  - After landing, particles inherit a slow shared rotation that matches
+ *    the SVG earth-spin direction, plus per-particle radial wobble, giving
+ *    a "living surface" feel.
+ *  - Back-facing particles (z < 0 in the rotating sphere frame) are
+ *    drawn at sharply reduced opacity, which is what sells the 3D shape.
+ *  - Particle count is reduced on small viewports for mobile perf.
+ * ========================================================================== */
+
+function ParticleFormation({ active }) {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    if (!active) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+
+    const ctx = canvas.getContext("2d", { alpha: true });
+    const rnd = mulberry32(20260601);
+    const isSmall = window.innerWidth < 768;
+    const PARTICLE_COUNT = isSmall ? 1200 : 2000;
+
+    let dims = { w: 0, h: 0 };
+    let map = { scale: 1, offX: 0, offY: 0 };
+    let dpr = 1;
+
+    const setup = () => {
+      const rect = canvas.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.max(1, Math.round(rect.width * dpr));
+      canvas.height = Math.max(1, Math.round(rect.height * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      dims = { w: rect.width, h: rect.height };
+      // SVG uses preserveAspectRatio="xMidYMid slice" against VB_W x VB_H
+      const scale = Math.max(dims.w / VB_W, dims.h / VB_H);
+      map = {
+        scale,
+        offX: (dims.w - VB_W * scale) / 2,
+        offY: (dims.h - VB_H * scale) / 2,
+      };
+    };
+    setup();
+
+    const toScreenX = (x) => x * map.scale + map.offX;
+    const toScreenY = (y) => y * map.scale + map.offY;
+
+    // Pre-allocated particle pool.
+    // Every particle has a fixed (theta, phi) home on the sphere; the
+    // shell radius itself grows from ~0 to R, so the whole cluster scales
+    // up *as a unit* rather than spawning at full size and collapsing in.
+    const particles = new Array(PARTICLE_COUNT);
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      // Uniform points on a sphere
+      const u = rnd();
+      const v = rnd();
+      const theta = 2 * Math.PI * u;
+      const phi = Math.acos(2 * v - 1);
+      particles[i] = {
+        theta,
+        phi,
+        // Wider stagger so the core "blooms" gradually over ~0.6s instead
+        // of all particles appearing at the same instant.
+        spawnDelay: rnd() * 0.6,
+        // Gentler per-particle swirl — slow enough to read as cinematic
+        // motion across the longer formation window, not jittery noise.
+        swirlSpeed: 0.3 + rnd() * 0.7,
+        swirlPhase: rnd() * Math.PI * 2,
+        // Radial noise — large during formation, fades with the shell
+        wobbleAmp: 0.6 + rnd() * 1.4,
+        wobbleSpeed: 0.25 + rnd() * 0.7,
+        wobblePhase: rnd() * Math.PI * 2,
+        // Visuals
+        size: 0.55 + rnd() * 1.05,
+        tint: rnd(), // 0=cool white, 1=cyan
+      };
+    }
+
+    const onResize = () => setup();
+    window.addEventListener("resize", onResize, { passive: true });
+
+    /* ---- TIMELINE (seconds) ----
+       0.00 – 0.45  core ignites, particles bloom in a tight cluster (~3% R)
+       0.45 – 3.30  shell radius grows from tiny → full R, swirl + rotation
+                    visible throughout; SVG globe begins fading in at ~2.6s
+       3.30 – 3.60  particles at full shell, SVG globe completes underneath
+       3.60 – 4.40  particles fade smoothly to zero (no specks left behind)
+       4.40+        rAF loop exits — canvas is empty, SVG globe is alone.
+       ---------------------------------------- */
+    const GROW_START = 0.45;
+    const GROW_END = 3.30;
+    const DIM_START = 3.60;       // begin fading particles out
+    const DIM_END = 4.40;         // particles fully gone, rAF stops
+    const SHELL_MIN_FRAC = 0.03;  // initial cluster ~3% of full radius
+    let startTs = null;
+    let lastTs = null;
+    let rotAccum = 0; // integrated shared rotation
+    let rafId;
+
+    const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3);
+    const easeInOutQuad = (x) =>
+      x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+
+    const tick = (ts) => {
+      if (startTs === null) {
+        startTs = ts;
+        lastTs = ts;
+      }
+      const dt = Math.min(0.05, (ts - lastTs) / 1000); // clamp big frame gaps
+      lastTs = ts;
+      const t = (ts - startTs) / 1000;
+
+      ctx.clearRect(0, 0, dims.w, dims.h);
+
+      // Once formation is done and particles have fully faded out, stop
+      // drawing entirely. Keeping rAF alive forever runs the simulation
+      // alongside the SVG's CSS animations and can cause visible jitter
+      // on lower-end machines — and the user wants a clean globe after
+      // formation, so there's nothing left to draw.
+      if (t >= DIM_END) {
+        rafId = 0;
+        return;
+      }
+
+      const cx = toScreenX(CX);
+      const cy = toScreenY(CY);
+      const Rpx = R * map.scale;
+
+      // ---- Growth progress (shared, drives everything) ----
+      const growT = Math.max(
+        0,
+        Math.min(1, (t - GROW_START) / (GROW_END - GROW_START))
+      );
+      const growE = easeInOutQuad(growT); // gentle in/out for organic feel
+      const shellFrac = SHELL_MIN_FRAC + (1 - SHELL_MIN_FRAC) * growE;
+      const shellR = R * shellFrac;
+
+      // ---- Shared rotation — moderate while forming, settles to slow
+      // ambient as the shell finalizes. Tuned so the cluster sweeps
+      // through ~120-150° over the ~3s growth window — clearly visible
+      // motion without spinning so fast it looks frantic.
+      const fastRate = 0.9;  // rad/sec while forming
+      const slowRate = 0.18; // rad/sec ambient
+      const currentRate = fastRate + (slowRate - fastRate) * growE;
+      rotAccum += currentRate * dt;
+
+      /* ---- CORE GLOW ----
+         Sharp at ignition; fades out as the growing shell takes over.
+         Note: the visible "core" stays anchored as the shell expands
+         around it, so the eye reads continuous growth instead of a swap. */
+      // Core: rises over 0.4s, then fades over ~1.8s while the shell expands
+      const coreAlpha =
+        t < 0.4 ? t / 0.4 : Math.max(0, 1 - (t - 0.4) / 1.8);
+      if (coreAlpha > 0.01) {
+        const pulse = 1 + Math.sin(t * 6) * 0.2;
+        const coreR = Rpx * 0.05 * pulse;
+        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 9);
+        grad.addColorStop(0, `rgba(255,255,255,${0.95 * coreAlpha})`);
+        grad.addColorStop(0.25, `rgba(200,230,255,${0.55 * coreAlpha})`);
+        grad.addColorStop(0.6, `rgba(120,180,240,${0.18 * coreAlpha})`);
+        grad.addColorStop(1, "rgba(120,180,240,0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(cx - coreR * 9, cy - coreR * 9, coreR * 18, coreR * 18);
+
+        ctx.fillStyle = `rgba(255,255,255,${coreAlpha})`;
+        ctx.beginPath();
+        ctx.arc(cx, cy, coreR * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Global dim: full opacity during formation, smoothly to ZERO
+      // between DIM_START and DIM_END so nothing remains on the globe.
+      let globalAlpha;
+      if (t < DIM_START) {
+        globalAlpha = 1;
+      } else {
+        const x = (t - DIM_START) / (DIM_END - DIM_START);
+        globalAlpha = 1 - easeOutCubic(Math.min(1, x));
+      }
+      if (globalAlpha <= 0.005) {
+        rafId = requestAnimationFrame(tick);
+        return;
+      }
+
+      // While forming, more particles are front-lit (whole cluster glows);
+      // after forming, real 3D depth kicks in.
+      const depthMix = growE; // 0 = no depth (cluster), 1 = full 3D shading
+
+      ctx.globalCompositeOperation = "lighter";
+
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const p = particles[i];
+        const localT = t - p.spawnDelay;
+        if (localT < 0) continue;
+
+        // Per-particle swirl that fades as the shell forms — adds organic
+        // motion during growth without disrupting the final sphere shape.
+        const swirlAmp = 1 - growE;
+        const dTheta =
+          Math.cos(localT * p.swirlSpeed + p.swirlPhase) * swirlAmp * 0.55;
+        const dPhi =
+          Math.sin(localT * p.swirlSpeed + p.swirlPhase) * swirlAmp * 0.35;
+
+        const thetaR = p.theta + rotAccum + dTheta;
+        const phiR = p.phi + dPhi;
+
+        const sinPhi = Math.sin(phiR);
+        const x3 = sinPhi * Math.cos(thetaR);
+        const y3 = Math.cos(phiR);
+        const z3 = sinPhi * Math.sin(thetaR);
+
+        // Radial chaos: large during early formation, decays as the
+        // shell finalizes. Particles fade out shortly after, so no
+        // long-lived ambient wobble is needed.
+        const wob = Math.sin(localT * p.wobbleSpeed + p.wobblePhase);
+        const chaos = swirlAmp * p.wobbleAmp * R * 0.18;
+        const rNow = shellR + wob * chaos;
+
+        const vx = x3 * rNow;
+        const vy = y3 * rNow;
+
+        // Facing factor — soft hemisphere falloff (only matters once
+        // the shell has formed). Blend in via depthMix.
+        const trueFacing = Math.max(0, (z3 + 0.5) / 1.5);
+        const facing = 1 * (1 - depthMix) + trueFacing * depthMix;
+        if (facing < 0.04) continue;
+
+        // Alpha: luminous while forming, calmer once landed
+        const formingAlpha = 0.55 + Math.sin(localT * 6 + i) * 0.32;
+        const landedAlpha = 0.32 * trueFacing + 0.10;
+        const alpha =
+          (formingAlpha * (1 - growE) + landedAlpha * growE) *
+          globalAlpha *
+          0.95;
+        if (alpha < 0.015) continue;
+
+        const px = cx + vx * map.scale;
+        const py = cy + vy * map.scale;
+        const size =
+          p.size *
+          map.scale *
+          (1 + (1 - growE) * 0.45) *
+          (0.7 + facing * 0.5);
+
+        const r8 = Math.round(220 + 30 * (1 - p.tint));
+        const g8 = Math.round(235 + 18 * (1 - p.tint));
+        const b8 = 255;
+        ctx.fillStyle = `rgba(${r8},${g8},${b8},${alpha})`;
+        ctx.beginPath();
+        ctx.arc(px, py, size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.globalCompositeOperation = "source-over";
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [active]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="globe-hero__particles"
+      aria-hidden="true"
+    />
+  );
+}
+
+/* ============================================================================
  * COMPONENT
  * ========================================================================== */
 
@@ -291,6 +585,7 @@ export default function AnimatedGlobeHero({
       role="img"
       aria-label="Animated globe with global network connections"
     >
+      <ParticleFormation active={active} />
       <svg
         viewBox={`0 0 ${VB_W} ${VB_H}`}
         xmlns="http://www.w3.org/2000/svg"
@@ -943,7 +1238,7 @@ export default function AnimatedGlobeHero({
               key={i}
               className={`stat-card stat-card--${stat.side} stat-card--${stat.row}`}
               style={{
-                "--enter-delay": `${1.4 + i * 0.15}s`,
+                "--enter-delay": `${4.2 + i * 0.15}s`,
                 "--float-delay": `${i * 0.6}s`,
               }}
             >
@@ -952,7 +1247,7 @@ export default function AnimatedGlobeHero({
                   <AnimatedNumber
                     value={stat.value}
                     active={active}
-                    delay={(1.4 + i * 0.15) * 1000}
+                    delay={(4.2 + i * 0.15) * 1000}
                   />
                 </div>
                 <div className="stat-card__label">{stat.label}</div>
@@ -996,18 +1291,31 @@ export default function AnimatedGlobeHero({
         }
 
         .globe-hero.is-active :global(.globe-group) {
-          animation: globeReveal 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+          animation: globeReveal 1.3s cubic-bezier(0.16, 1, 0.3, 1) 2.6s forwards;
           transform-box: fill-box;
           transform-origin: ${CX}px ${CY}px;
         }
         .globe-hero.is-active :global(.city-nodes) {
-          animation: globeFadeIn 1s ease-out 1.3s forwards;
+          animation: globeFadeIn 0.9s ease-out 4.0s forwards;
         }
         .globe-hero.is-active :global(.arcs) {
-          animation: globeFadeIn 0.8s ease-out 1.5s forwards;
+          animation: globeFadeIn 0.8s ease-out 4.2s forwards;
         }
         .globe-hero.is-active :global(.orbital-layer) {
-          animation: globeFadeIn 1.2s ease-out 1s forwards;
+          animation: globeFadeIn 1.1s ease-out 3.6s forwards;
+        }
+
+        /* ----- Particle formation canvas -----
+           Sits between the SVG layers and the stat cards. Pointer-events
+           disabled so it never intercepts hover/click. */
+        .globe-hero__particles {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 1;
+          pointer-events: none;
+          display: block;
         }
         /* Keyframes (globeReveal, globeFadeIn, earthSpin, cloudSpin,
            haloBreatheIn, haloBreatheOut, horizonBreathe, ringPulse,

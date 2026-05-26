@@ -251,12 +251,12 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
         if (el) { el.__play = play; el.__stop = stop; }
         if (typeof ref === 'function') ref(el); else if (ref) ref.current = el;
       }}
-      style={{ position: 'relative', width: '100%', height: H * scale, overflow: 'visible' }}
+      style={{ position: 'relative', width: '100%', height: H * scale, overflow: 'visible', display:'flex', justifyContent:'center', alignItems:'flex-start' }}
     >
     <div style={{
-      position: 'absolute', top: 0, left: 0,
+      position: 'relative',
       width: W, height: H,
-      transform: `scale(${scale})`, transformOrigin: 'top left',
+      transform: `scale(${scale})`, transformOrigin: 'top center',
     }}>
       <GlobalDefs/>
 

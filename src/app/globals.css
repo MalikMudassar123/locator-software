@@ -832,7 +832,8 @@ h6 {
   padding: 0 24px;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  align-items: center;
+  justify-content: center;
 }
 .ss-anim-panel {
   order: 2;
@@ -854,8 +855,10 @@ h6 {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   padding-top: 12px;
   padding-bottom: 48px;
+  text-align: center;
 }
 @media (min-width: 480px) {
   .ss-anim-panel { height: 400px; }
@@ -867,7 +870,8 @@ h6 {
   .ss-row {
     flex-direction: row;
     padding: 0 48px;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: center;
   }
   .ss-anim-panel {
     order: unset;
@@ -890,6 +894,8 @@ h6 {
     padding-bottom: 80px;
     padding-left: 56px;
     padding-right: 0;
+    align-items: center;
+    text-align: center;
   }
   /* Zigzag: when animation is on right, text gets left side padding */
   .ss-row--anim-right .ss-anim-panel { order: 1; padding-left: 0; }
@@ -897,9 +903,9 @@ h6 {
 }
 
 /* Feature card grid — 1 col on mobile/tablet, 2 col on desktop */
-.ss-feature-grid { grid-template-columns: 1fr; }
+.ss-feature-grid { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; }
 @media (min-width: 1024px) {
-  .ss-feature-grid { grid-template-columns: repeat(2, 1fr); }
+  .ss-feature-grid { grid-template-columns: repeat(2, 1fr); max-width: 100%; }
 }
 
 /* Text selection — force ALL content inside the showcase text panel to be selectable.

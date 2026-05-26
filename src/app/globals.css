@@ -118,6 +118,15 @@ html {
   overflow-x: clip;
 }
 
+/* Defensive horizontal-overflow guard.
+   `clip` on html should be enough, but some mobile WebViews honor it inconsistently
+   when a descendant uses translate3d() with large percentages (e.g. the hero orbs).
+   Repeat the clip on body + main and pin the width to the viewport. */
+html, body {
+  max-width: 100vw;
+  overflow-x: clip;
+}
+
 body {
   background: hsl(var(--background));
   color: hsl(var(--foreground));
@@ -126,6 +135,19 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  overflow-x: clip;
+  max-width: 100vw;
+}
+
+/* Hero wrapper: clip horizontally at every breakpoint so the animated orbs
+   (which translate up to ±180% via translate3d keyframes) can't extend the page width.
+   overflow-y stays visible so absolutely-positioned descendants that intentionally
+   sit outside the bottom edge (e.g. the road blend) are unaffected. */
+.hero-section-wrapper {
+  overflow-x: clip !important;
 }
 
 /* Font Utility Classes */
@@ -983,6 +1005,8 @@ h6 {
   .hero-section-wrapper {
     height: 56vh !important;
     min-height: 340px !important;
+    /* Clip the orbs' off-canvas keyframes so the page doesn't scroll horizontally */
+    overflow-x: clip !important;
   }
   .hero-building-wrap {
     max-width: 92vw !important;

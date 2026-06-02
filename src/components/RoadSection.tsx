@@ -174,18 +174,40 @@ export default function RoadSection() {
         position: 'relative',
       }}
     >
-      {/* Horizon line — professional separator between hero sky and road */}
+      {/* Seamless blend — left side, fades inward smoothly */}
       <div
         style={{
           position: 'absolute',
-          top: 0,
+          top: -10,
           left: 0,
-          right: 0,
-          height: '2px',
-          zIndex: 15,
+          width: '36%',
+          height: '20px',
+          zIndex: 2,
           pointerEvents: 'none',
-          background:
-            'linear-gradient(90deg, transparent 0%, rgba(58,174,219,0.5) 12%, rgba(100,200,240,0.9) 35%, rgba(130,210,245,1) 50%, rgba(100,200,240,0.9) 65%, rgba(58,174,219,0.5) 88%, transparent 100%)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          maskImage: 'linear-gradient(to right, black 0%, black 50%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, black 0%, black 50%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 100%)',
+          maskComposite: 'intersect',
+          WebkitMaskComposite: 'source-in',
+        }}
+      />
+      {/* Seamless blend — right side, fades inward smoothly */}
+      <div
+        style={{
+          position: 'absolute',
+          top: -10,
+          right: 0,
+          width: '36%',
+          height: '20px',
+          zIndex: 2,
+          pointerEvents: 'none',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          maskImage: 'linear-gradient(to left, black 0%, black 50%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to left, black 0%, black 50%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 100%)',
+          maskComposite: 'intersect',
+          WebkitMaskComposite: 'source-in',
         }}
       />
 

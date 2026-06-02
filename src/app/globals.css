@@ -529,8 +529,16 @@ h6 {
   background:
     /* Lane 6 — soft cyan diagonal sweeper: top-right → bottom-left → back */
     radial-gradient(closest-side at 50% 50%, rgba(170, 225, 245, 0.8) 0%, rgba(170, 225, 245, 0) 72%),
-    radial-gradient(closest-side at 50% 50%, rgba(13, 47, 165, 0.95) 0%, rgba(13, 47, 165, 0) 65%),
-    radial-gradient(closest-side at 50% 50%, rgba(10, 132, 227, 0.9) 0%, rgba(10, 132, 227, 0) 68%),
+    /* Lane 1 — dark navy moving patch: COMMENTED OUT for now (transparent placeholder
+       keeps this layer slot so background-size / -position / keyframes stay index-aligned).
+       To restore: revert alpha back to 0.95 / 0 as below.
+       radial-gradient(closest-side at 50% 50%, rgba(13, 47, 165, 0.95) 0%, rgba(13, 47, 165, 0) 65%), */
+    radial-gradient(closest-side at 50% 50%, rgba(13, 47, 165, 0) 0%, rgba(13, 47, 165, 0) 65%),
+    /* Lane 2 — deeper blue moving patch: COMMENTED OUT for now (transparent placeholder
+       keeps this layer slot index-aligned).
+       To restore: revert alpha back to 0.9 / 0 as below.
+       radial-gradient(closest-side at 50% 50%, rgba(10, 132, 227, 0.9) 0%, rgba(10, 132, 227, 0) 68%), */
+    radial-gradient(closest-side at 50% 50%, rgba(10, 132, 227, 0) 0%, rgba(10, 132, 227, 0) 68%),
     radial-gradient(closest-side at 50% 50%, rgba(8, 178, 224, 0.92) 0%, rgba(8, 178, 224, 0) 66%),
     radial-gradient(closest-side at 50% 50%, rgba(193, 235, 247, 0.95) 0%, rgba(193, 235, 247, 0) 68%),
     radial-gradient(closest-side at 50% 50%, rgba(58, 190, 222, 0.9) 0%, rgba(58, 190, 222, 0) 70%),

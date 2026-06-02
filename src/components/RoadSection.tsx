@@ -12,7 +12,7 @@ const vehicles = [
     height: 65,
     bottom: '82%',
     left: '14%',
-    pinSize: 24,
+    pinSize: 60,
     pinBottom: '103%',
     pinLeft: '15.5%',
     zIndex: 10,
@@ -29,7 +29,7 @@ const vehicles = [
     height: 77,
     bottom: '78%',
     left: '30%',
-    pinSize: 26,
+    pinSize: 62,
     pinBottom: '101%',
     pinLeft: '32%',
     zIndex: 10,
@@ -46,7 +46,7 @@ const vehicles = [
     height: 67,
     bottom: '75%',
     left: '46%',
-    pinSize: 22,
+    pinSize: 58,
     pinBottom: '97%',
     pinLeft: '48%',
     zIndex: 10,
@@ -64,8 +64,8 @@ const vehicles = [
     height: 63,
     bottom: '84%',
     left: '57%',
-    pinSize: 22,
-    pinBottom: '112%',
+    pinSize: 58,
+    pinBottom: '100%',
     pinLeft: '59%',
     zIndex: 10,
     driverName: 'Arun Dev',
@@ -81,8 +81,8 @@ const vehicles = [
     height: 95,
     bottom: 'calc(80% + 8px)',
     left: '72%',
-    pinSize: 22,
-    pinBottom: 'calc(102% + 8px)',
+    pinSize: 58,
+    pinBottom: 'calc(95% + 8px)',
     pinLeft: '73%',
     zIndex: 10,
     driverName: 'Sami Zayd',
@@ -98,7 +98,7 @@ const vehicles = [
     height: 86,
     bottom: '70%',
     left: '80%',
-    pinSize: 28,
+    pinSize: 64,
     pinBottom: '97%',
     pinLeft: '82%',
     zIndex: 10,
@@ -361,8 +361,8 @@ export default function RoadSection() {
                 }}
               >
                 <Image
-                  src="/gps-pin.svg"
-                  alt="GPS Pin"
+                  src="/tracker icons.png"
+                  alt="Tracker"
                   width={v.pinSize}
                   height={v.pinSize}
                 />
@@ -575,7 +575,7 @@ export default function RoadSection() {
           className="absolute cursor-pointer group"
           style={{
             bottom: '85%',
-            left: '65%',
+            left: '63.5%',
             animation: 'iconEntrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both, iconFloat 5s ease-in-out 1.5s infinite',
             pointerEvents: 'auto',
           }}
@@ -591,7 +591,7 @@ export default function RoadSection() {
               transform: hoveredPin === 'scooter' ? 'scale(1.18) translateY(-4px)' : 'scale(1)',
             }}
           >
-            <Image src="/gps-pin.svg" alt="GPS Pin" width={24} height={24} />
+            <Image src="/tracker icons.png" alt="Tracker" width={60} height={60} />
           </div>
 
           {tooltipsEnabled && hoveredPin === 'scooter' && (

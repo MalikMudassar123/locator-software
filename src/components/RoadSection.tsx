@@ -77,12 +77,12 @@ const vehicles = [
     id: 'generator',
     src: '/generator.png',
     alt: 'Generator',
-    width: 58,
-    height: 58,
-    bottom: 'calc(64% + 8px)',
+    width: 95,
+    height: 95,
+    bottom: 'calc(80% + 8px)',
     left: '72%',
     pinSize: 22,
-    pinBottom: 'calc(84% + 8px)',
+    pinBottom: 'calc(102% + 8px)',
     pinLeft: '73%',
     zIndex: 10,
     driverName: 'Sami Zayd',
@@ -174,6 +174,21 @@ export default function RoadSection() {
         position: 'relative',
       }}
     >
+      {/* Horizon line — professional separator between hero sky and road */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '2px',
+          zIndex: 15,
+          pointerEvents: 'none',
+          background:
+            'linear-gradient(90deg, transparent 0%, rgba(58,174,219,0.5) 12%, rgba(100,200,240,0.9) 35%, rgba(130,210,245,1) 50%, rgba(100,200,240,0.9) 65%, rgba(58,174,219,0.5) 88%, transparent 100%)',
+        }}
+      />
+
       {/* Road surface */}
       <div className="absolute inset-0" style={{ zIndex: 1 }}>
         <Image

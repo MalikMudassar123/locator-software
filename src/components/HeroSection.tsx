@@ -141,7 +141,7 @@ export default function HeroSection() {
 
       {/* ─────────── DRIFTING PATCHES — bounce diagonally inside the sky ─────────── */}
       {/* Patch A — TOP-LEFT ↔ BOTTOM-RIGHT (deep navy, stays in bounds) */}
-      <div
+      {/* <div
         aria-hidden="true"
         className="hero-blue-orb-a"
         style={{
@@ -158,7 +158,7 @@ export default function HeroSection() {
             'radial-gradient(closest-side at 50% 50%, rgba(13, 47, 165, 0.9) 0%, rgba(13, 47, 165, 0.62) 32%, rgba(13, 47, 165, 0.32) 58%, rgba(13, 47, 165, 0.1) 80%, rgba(13, 47, 165, 0) 96%)',
           filter: 'blur(22px)',
         }}
-      />
+      /> */}
 
 
       {/* Bright white-gold halo behind the Burj — primary visible glow (low, near horizon) */}
@@ -311,7 +311,7 @@ export default function HeroSection() {
       </div>
 
       {/* Patch B — TOP-RIGHT ↔ BOTTOM-LEFT (rendered AFTER sky images so it shows over them) */}
-      <div
+      {/* <div
         aria-hidden="true"
         className="hero-blue-orb-b"
         style={{
@@ -328,7 +328,7 @@ export default function HeroSection() {
             'radial-gradient(closest-side at 50% 50%, rgba(13, 47, 165, 0.85) 0%, rgba(13, 47, 165, 0.58) 34%, rgba(13, 47, 165, 0.3) 60%, rgba(13, 47, 165, 0.09) 82%, rgba(13, 47, 165, 0) 96%)',
           filter: 'blur(24px)',
         }}
-      />
+      /> */}
 
       {/* ─────────── FOREGROUND CONTENT (unchanged) ─────────── */}
 

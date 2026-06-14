@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -19,6 +20,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
   const [ctaHover, setCtaHover] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const pathname = usePathname()
   const CTA_LINE_HEIGHT = 22
 
   useEffect(() => {
@@ -54,16 +56,25 @@ export default function Navbar() {
 
           {/* Nav Links — desktop only */}
           <ul className="hidden lg:flex items-center gap-6 list-none m-0 p-0">
-            {navLinks.map(l => (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  className="text-white font-semibold text-sm hover:opacity-80 transition-opacity whitespace-nowrap"
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
+            {navLinks.map(l => {
+              const isActive = l.href === '/' ? pathname === '/' : pathname.startsWith(l.href)
+              return (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className="text-white text-sm transition-all whitespace-nowrap"
+                    style={{
+                      fontWeight: isActive ? 800 : 600,
+                      opacity: isActive ? 1 : 0.82,
+                      borderBottom: isActive ? '2px solid rgba(255,255,255,0.85)' : '2px solid transparent',
+                      paddingBottom: '2px',
+                    }}
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
 
           {/* Right side */}
@@ -248,7 +259,9 @@ export default function Navbar() {
               zIndex: 2,
             }}
           >
-            {navLinks.map((l, i) => (
+            {navLinks.map((l, i) => {
+              const isActive = l.href === '/' ? pathname === '/' : pathname.startsWith(l.href)
+              return (
               <li
                 key={l.href}
                 className="mobile-drawer-item"
@@ -261,8 +274,8 @@ export default function Navbar() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    color: '#ffffff',
-                    fontWeight: 600,
+                    color: isActive ? '#ffffff' : 'rgba(255,255,255,0.82)',
+                    fontWeight: isActive ? 800 : 600,
                     padding: '16px 8px 16px 12px',
                     fontSize: '17px',
                     letterSpacing: '0.01em',
@@ -276,7 +289,8 @@ export default function Navbar() {
                   </svg>
                 </Link>
               </li>
-            ))}
+              )
+            })}
           </ul>
 
           {/* Bottom region — flag + CTA */}

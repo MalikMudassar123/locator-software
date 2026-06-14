@@ -217,7 +217,7 @@ export default function SoftwareFAQ() {
         <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
 
           {/* ── Header ── */}
-          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+          <div data-reveal style={{ textAlign: 'center', marginBottom: '48px' }}>
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: '7px',
               fontSize: '11px', fontWeight: 700, letterSpacing: '.08em',
@@ -241,6 +241,8 @@ export default function SoftwareFAQ() {
           {/* ── Main grid ── */}
           <div
             className="fq-grid"
+            data-reveal
+            data-reveal-delay="80"
             style={{ display: 'grid', gridTemplateColumns: '196px 1fr', gap: '28px', alignItems: 'start' }}
           >
 

@@ -16,8 +16,6 @@ const RAD = {
   badge: 99, amount: 3, photo: 10, check: 7,
 }
 
-const DELAY = { task: 0, expense: 450, service: 900, inspection: 1350 }
-
 export default function AnimatedModuleScene({ type, children }) {
   const cardRef  = useRef(null)
   const svgRef   = useRef(null)
@@ -127,8 +125,39 @@ export default function AnimatedModuleScene({ type, children }) {
       tl.to(cardRef.current, { opacity: 0, duration: 0.55, ease: 'power2.in' }, loopAt)
     }
 
-    const timer = setTimeout(play, DELAY[type] ?? 0)
-    return () => { clearTimeout(timer); kill() }
+    // Keep everything blank until the card scrolls into view, then build
+    // the wireframe from scratch — so the user always sees the full sequence.
+    reset()
+
+    let started = false
+    let startTimer
+    const target = cardRef.current
+
+    const begin = () => {
+      if (started) return
+      started = true
+      startTimer = setTimeout(play, 60)
+    }
+
+    let io
+    if (target && 'IntersectionObserver' in window) {
+      io = new IntersectionObserver(
+        (entries, obs) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              begin()
+              obs.disconnect()
+            }
+          }
+        },
+        { threshold: 0.18 },
+      )
+      io.observe(target)
+    } else {
+      begin()
+    }
+
+    return () => { io?.disconnect(); clearTimeout(startTimer); kill() }
   }, [model, type])
 
   const { w, paths } = model

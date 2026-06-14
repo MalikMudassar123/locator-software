@@ -428,7 +428,7 @@ export default function BenefitsSection() {
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
 
           {/* Header */}
-          <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 44px' }}>
+          <div data-reveal style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 44px' }}>
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
               fontSize: '11px', fontWeight: 700, letterSpacing: '.08em',
@@ -452,7 +452,7 @@ export default function BenefitsSection() {
           <div className="bf-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1.45fr', gap: '20px', alignItems: 'stretch' }}>
 
             {/* Left — numbered list */}
-            <div style={{ background: '#fff', border: '1px solid #e8e8eb', borderRadius: '20px', overflow: 'hidden', padding: '6px 0' }}>
+            <div data-reveal="left" style={{ background: '#fff', border: '1px solid #e8e8eb', borderRadius: '20px', overflow: 'hidden', padding: '6px 0' }}>
               {ITEMS.map((item, i) => (
                 <button key={i} onClick={() => setActive(i)} className={`bfr${active === i ? ' on' : ''}`}>
                   <span className="bfr-num">{String(i + 1).padStart(2, '0')}</span>
@@ -463,7 +463,7 @@ export default function BenefitsSection() {
             </div>
 
             {/* Right — stage */}
-            <div className="bf-stage" style={{ background: '#fff', border: '1px solid #e8e8eb', borderRadius: '20px', overflow: 'hidden', minHeight: '460px' }}>
+            <div className="bf-stage" data-reveal="right" data-reveal-delay="100" style={{ background: '#fff', border: '1px solid #e8e8eb', borderRadius: '20px', overflow: 'hidden', minHeight: '460px' }}>
               <div key={active} className="stage-in" style={{ height: '100%' }}>
                 <StageContent />
               </div>

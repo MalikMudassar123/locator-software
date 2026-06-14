@@ -287,6 +287,7 @@ export default function ModulesSection() {
                 {/* Text */}
                 <div
                   className={mod.flip ? 'feat-grid-flip-text' : ''}
+                  data-reveal={mod.flip ? 'right' : 'left'}
                   style={{ order: mod.flip ? 2 : 0 }}
                 >
                   <span style={{
@@ -325,7 +326,7 @@ export default function ModulesSection() {
                 </div>
 
                 {/* Viz card */}
-                <div style={{ order: mod.flip ? 0 : 2 }}>
+                <div data-reveal={mod.flip ? 'left' : 'right'} data-reveal-delay="120" style={{ order: mod.flip ? 0 : 2 }}>
                   {mod.vizType === 'inspection' ? (
                     <AnimatedModuleScene type="inspection">
                       <InspectionCard />

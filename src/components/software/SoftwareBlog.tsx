@@ -69,7 +69,7 @@ export default function SoftwareBlog() {
         <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
 
           {/* Header */}
-          <div style={{ textAlign: 'center', marginBottom: '44px' }}>
+          <div data-reveal style={{ textAlign: 'center', marginBottom: '44px' }}>
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
               fontSize: '11px', fontWeight: 700, letterSpacing: '.08em',
@@ -98,7 +98,7 @@ export default function SoftwareBlog() {
           {/* 3-col grid */}
           <div className="bc-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '20px' }}>
             {POSTS.map((post, i) => (
-              <Link key={i} href={post.href} className="bc">
+              <Link key={i} href={post.href} className="bc" data-reveal data-reveal-delay={`${i * 110}`}>
 
                 {/* Image with overlay */}
                 <div style={{ position: 'relative', height: '200px', overflow: 'hidden', flexShrink: 0, background: '#dde5f0' }}>

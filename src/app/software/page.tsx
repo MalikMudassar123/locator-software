@@ -6,6 +6,7 @@ import ModulesSection from '@/components/software/ModulesSection'
 import DashcamShowcase from '@/components/software/DashcamShowcase'
 import SoftwareBlog from '@/components/software/SoftwareBlog'
 import SoftwareCTA from '@/components/software/SoftwareCTA'
+import ScrollReveal from '@/components/software/ScrollReveal'
 import Footer from '@/components/layouts/Footer'
 
 const SoftwareFAQ = dynamic(() => import('@/components/software/SoftwareFAQ'))
@@ -19,6 +20,7 @@ export const metadata: Metadata = {
 export default function SoftwarePage() {
   return (
     <main style={{ background: '#ffffff', minHeight: '100vh' }}>
+      <ScrollReveal />
       <SoftwareHero />
       <BenefitsSection />
       <ModulesSection />

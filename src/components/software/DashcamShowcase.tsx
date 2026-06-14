@@ -125,7 +125,7 @@ export default function DashcamShowcase() {
               >
 
                 {/* ── Left: heading + stats ── */}
-                <div>
+                <div data-reveal="left">
                   <span style={{
                     display: 'inline-block', fontSize: '11.5px', fontWeight: 700,
                     letterSpacing: '.06em', color: 'rgba(255,255,255,.78)',
@@ -163,7 +163,7 @@ export default function DashcamShowcase() {
                 </div>
 
                 {/* ── Right: vertical card rows ── */}
-                <div style={{ background: 'rgba(255,255,255,.07)', borderRadius: '22px', border: '1px solid rgba(255,255,255,.14)', padding: '8px 24px 8px' }}>
+                <div data-reveal="right" data-reveal-delay="120" style={{ background: 'rgba(255,255,255,.07)', borderRadius: '22px', border: '1px solid rgba(255,255,255,.14)', padding: '8px 24px 8px' }}>
                   {CARDS.map((c, i) => (
                     <div key={i} className="dc-card-row">
                       <div className="dc-card-icon">{c.icon}</div>

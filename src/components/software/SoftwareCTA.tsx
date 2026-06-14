@@ -77,7 +77,7 @@ export default function SoftwareCTA() {
             <div className="cta-ring" style={{ width: '420px', height: '420px', right: '-120px', bottom: '-140px', animationDelay: '-6s' }} />
             <div className="cta-ring" style={{ width: '260px', height: '260px', right: '-60px', bottom: '-60px', animationDuration: '8s', animationDelay: '-2s' }} />
 
-            <div style={{ position: 'relative', zIndex: 1 }}>
+            <div data-reveal="zoom" style={{ position: 'relative', zIndex: 1 }}>
               {/* Tag */}
               <span style={{ display: 'inline-block', fontSize: '11.5px', fontWeight: 700, letterSpacing: '.06em', color: 'rgba(255,255,255,.78)', marginBottom: '20px', textTransform: 'uppercase', background: 'rgba(255,255,255,.15)', borderRadius: '999px', padding: '5px 16px', border: '1px solid rgba(255,255,255,.24)' }}>
                 Get Started Today

@@ -1,6 +1,13 @@
 'use client'
 import type { ReactNode } from 'react'
+import { useRef, useEffect } from 'react'
 import dynamic from 'next/dynamic'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger)
+}
 
 const AnimatedModuleScene = dynamic(() => import('./AnimatedModuleScene'), { ssr: false })
 
@@ -256,6 +263,102 @@ const MODULES: ModuleDef[] = [
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function ModulesSection() {
+  const rootRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const root = rootRef.current
+    if (!root) return
+
+    const sections = gsap.utils.toArray<HTMLElement>('.pm-section', root)
+
+    const mm = gsap.matchMedia()
+
+    mm.add(
+      {
+        isDesktop: '(min-width: 900px)',
+        isMobile: '(max-width: 899px)',
+        reduce: '(prefers-reduced-motion: reduce)',
+      },
+      (ctx) => {
+        const { isDesktop, reduce } = ctx.conditions as {
+          isDesktop: boolean
+          isMobile: boolean
+          reduce: boolean
+        }
+        // Reduced motion → leave everything in its natural, visible state.
+        if (reduce) return
+
+        sections.forEach((section) => {
+          const textEls = gsap.utils.toArray<HTMLElement>('.pm-anim', section)
+          const viz = section.querySelector<HTMLElement>('.pm-viz')
+          const pin = section.querySelector<HTMLElement>('.pm-pin')
+          const flip = section.dataset.flip === '1'
+
+          if (isDesktop) {
+            // ── Pinned, scroll-scrubbed storytelling ──
+            const tl = gsap.timeline({
+              defaults: { ease: 'power3.out' },
+              scrollTrigger: {
+                trigger: section,
+                start: 'top top',
+                end: '+=68%',
+                pin: pin,
+                scrub: 0.6,
+                anticipatePin: 1,
+                invalidateOnRefresh: true,
+              },
+            })
+
+            tl.from(
+              textEls,
+              { y: 36, autoAlpha: 0, duration: 0.55, stagger: 0.12 },
+              0,
+            )
+            if (viz) {
+              tl.from(
+                viz,
+                { x: flip ? -72 : 72, autoAlpha: 0, duration: 0.9 },
+                0.05,
+              )
+            }
+          } else {
+            // ── Mobile / tablet: no pin, clean play-once reveal ──
+            gsap.from(textEls, {
+              y: 28,
+              autoAlpha: 0,
+              duration: 0.6,
+              stagger: 0.1,
+              ease: 'power3.out',
+              scrollTrigger: { trigger: section, start: 'top 78%' },
+            })
+            if (viz) {
+              gsap.from(viz, {
+                y: 32,
+                autoAlpha: 0,
+                duration: 0.7,
+                ease: 'power3.out',
+                scrollTrigger: { trigger: viz, start: 'top 86%' },
+              })
+            }
+          }
+        })
+
+        ScrollTrigger.refresh()
+      },
+    )
+
+    // Recalculate once layout/fonts/dynamic viz have settled.
+    const onLoad = () => ScrollTrigger.refresh()
+    window.addEventListener('load', onLoad)
+    const t = window.setTimeout(() => ScrollTrigger.refresh(), 450)
+
+    return () => {
+      window.removeEventListener('load', onLoad)
+      window.clearTimeout(t)
+      mm.revert()
+    }
+  }, [])
+
   return (
     <>
       <style>{`
@@ -263,81 +366,97 @@ export default function ModulesSection() {
           .mrow-item:hover { background: #f6f8fc; transform: translateX(4px); }
         }
         .mrow-item { transition: background .25s cubic-bezier(.22,.61,.36,1), transform .25s cubic-bezier(.22,.61,.36,1); }
+
+        /* Pinned panel — fills the viewport so it reads as a true pin */
+        .pm-pin {
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          padding: clamp(48px,7vh,88px) 28px;
+          box-sizing: border-box;
+        }
+        .pm-viz { will-change: transform; }
+
+        @media (max-width: 899px) {
+          .pm-pin { min-height: auto; display: block; padding: clamp(40px,8vw,64px) 24px; }
+        }
         @media (max-width: 880px) {
           .feat-grid { grid-template-columns: 1fr !important; }
           .feat-grid-flip-text { order: 0 !important; }
         }
       `}</style>
 
-      <div id="modules">
+      <div id="modules" ref={rootRef}>
         {MODULES.map((mod, idx) => (
           <section
             key={idx}
+            className="pm-section"
+            data-flip={mod.flip ? '1' : '0'}
             style={{
-              padding: 'clamp(36px,4vw,52px) 28px',
               background: '#ffffff',
               borderTop: idx > 0 ? '1px solid #f0f0f3' : 'none',
             }}
           >
-            <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
-              <div
-                className="feat-grid"
-                style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'center' }}
-              >
-                {/* Text */}
+            <div className="pm-pin">
+              <div style={{ maxWidth: '1120px', margin: '0 auto', width: '100%' }}>
                 <div
-                  className={mod.flip ? 'feat-grid-flip-text' : ''}
-                  data-reveal={mod.flip ? 'right' : 'left'}
-                  style={{ order: mod.flip ? 2 : 0 }}
+                  className="feat-grid"
+                  style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'center' }}
                 >
-                  <span style={{
-                    display: 'inline-flex', alignItems: 'center', gap: '7px',
-                    fontSize: '11px', fontWeight: 700, letterSpacing: '.08em',
-                    color: '#1360ee', textTransform: 'uppercase' as const,
-                    marginBottom: '16px',
-                  }}>
-                    <span style={{ display: 'inline-block', width: '18px', height: '1.5px', background: '#1360ee', borderRadius: '2px' }} />
-                    {mod.tag}
-                    <span style={{ display: 'inline-block', width: '18px', height: '1.5px', background: '#1360ee', borderRadius: '2px' }} />
-                  </span>
-                  <h2 style={{ margin: 0, fontSize: 'clamp(26px,3.6vw,42px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-.025em', color: '#1d1d1f' }}>
-                    {mod.h2}{' '}
-                    <span style={{ color: '#1360ee' }}>{mod.h2Accent}</span>
-                  </h2>
-                  {mod.leads.map((p, pi) => (
-                    <p key={pi} style={{ marginTop: pi === 0 ? '20px' : '14px', fontSize: 'clamp(14px,1.45vw,16px)', lineHeight: 1.6, color: '#6e6e73', maxWidth: '460px' }}>
-                      {p}
-                    </p>
-                  ))}
-                  {mod.suitedLabel && (
-                    <>
-                      <p style={{ marginTop: '26px', fontSize: '11.5px', fontWeight: 700, letterSpacing: '.06em', color: '#1d1d1f', textTransform: 'uppercase' as const }}>
-                        {mod.suitedLabel}
+                  {/* Text */}
+                  <div
+                    className={`pm-text${mod.flip ? ' feat-grid-flip-text' : ''}`}
+                    style={{ order: mod.flip ? 2 : 0 }}
+                  >
+                    <span className="pm-anim" style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '7px',
+                      fontSize: '11px', fontWeight: 700, letterSpacing: '.08em',
+                      color: '#1360ee', textTransform: 'uppercase' as const,
+                      marginBottom: '16px',
+                    }}>
+                      <span style={{ display: 'inline-block', width: '18px', height: '1.5px', background: '#1360ee', borderRadius: '2px' }} />
+                      {mod.tag}
+                      <span style={{ display: 'inline-block', width: '18px', height: '1.5px', background: '#1360ee', borderRadius: '2px' }} />
+                    </span>
+                    <h2 className="pm-anim" style={{ margin: 0, fontSize: 'clamp(26px,3.6vw,42px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-.025em', color: '#1d1d1f' }}>
+                      {mod.h2}{' '}
+                      <span style={{ color: '#1360ee' }}>{mod.h2Accent}</span>
+                    </h2>
+                    {mod.leads.map((p, pi) => (
+                      <p key={pi} className="pm-anim" style={{ marginTop: pi === 0 ? '20px' : '14px', fontSize: 'clamp(14px,1.45vw,16px)', lineHeight: 1.6, color: '#6e6e73', maxWidth: '460px' }}>
+                        {p}
                       </p>
-                      <div style={{ marginTop: '14px', display: 'flex', flexWrap: 'wrap', gap: '9px' }}>
-                        {mod.suited!.map(s => (
-                          <span key={s} style={{ fontSize: '13.5px', fontWeight: 600, color: '#1d1d1f', background: '#fff', border: '1px solid #e3e3e6', padding: '8px 14px', borderRadius: '999px' }}>
-                            {s}
-                          </span>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </div>
+                    ))}
+                    {mod.suitedLabel && (
+                      <>
+                        <p className="pm-anim" style={{ marginTop: '26px', fontSize: '11.5px', fontWeight: 700, letterSpacing: '.06em', color: '#1d1d1f', textTransform: 'uppercase' as const }}>
+                          {mod.suitedLabel}
+                        </p>
+                        <div className="pm-anim" style={{ marginTop: '14px', display: 'flex', flexWrap: 'wrap', gap: '9px' }}>
+                          {mod.suited!.map(s => (
+                            <span key={s} style={{ fontSize: '13.5px', fontWeight: 600, color: '#1d1d1f', background: '#fff', border: '1px solid #e3e3e6', padding: '8px 14px', borderRadius: '999px' }}>
+                              {s}
+                            </span>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
 
-                {/* Viz card */}
-                <div data-reveal={mod.flip ? 'left' : 'right'} data-reveal-delay="120" style={{ order: mod.flip ? 0 : 2 }}>
-                  {mod.vizType === 'inspection' ? (
-                    <AnimatedModuleScene type="inspection">
-                      <InspectionCard />
-                    </AnimatedModuleScene>
-                  ) : mod.vizAnim ? (
-                    <AnimatedModuleScene type={mod.vizAnim}>
+                  {/* Viz card */}
+                  <div className="pm-viz" style={{ order: mod.flip ? 0 : 2 }}>
+                    {mod.vizType === 'inspection' ? (
+                      <AnimatedModuleScene type="inspection">
+                        <InspectionCard />
+                      </AnimatedModuleScene>
+                    ) : mod.vizAnim ? (
+                      <AnimatedModuleScene type={mod.vizAnim}>
+                        <VizCard title={mod.vizTitle} rows={mod.vizRows!} />
+                      </AnimatedModuleScene>
+                    ) : (
                       <VizCard title={mod.vizTitle} rows={mod.vizRows!} />
-                    </AnimatedModuleScene>
-                  ) : (
-                    <VizCard title={mod.vizTitle} rows={mod.vizRows!} />
-                  )}
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

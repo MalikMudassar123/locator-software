@@ -270,74 +270,64 @@ export default function ModulesSection() {
     if (!root) return
 
     const sections = gsap.utils.toArray<HTMLElement>('.pm-section', root)
-
     const mm = gsap.matchMedia()
 
     mm.add(
       {
         isDesktop: '(min-width: 900px)',
-        isMobile: '(max-width: 899px)',
-        reduce: '(prefers-reduced-motion: reduce)',
+        isMobile:  '(max-width: 899px)',
+        reduce:    '(prefers-reduced-motion: reduce)',
       },
       (ctx) => {
         const { isDesktop, reduce } = ctx.conditions as {
           isDesktop: boolean
-          isMobile: boolean
-          reduce: boolean
+          isMobile:  boolean
+          reduce:    boolean
         }
-        // Reduced motion → leave everything in its natural, visible state.
         if (reduce) return
 
         sections.forEach((section) => {
           const textEls = gsap.utils.toArray<HTMLElement>('.pm-anim', section)
-          const viz = section.querySelector<HTMLElement>('.pm-viz')
-          const pin = section.querySelector<HTMLElement>('.pm-pin')
-          const flip = section.dataset.flip === '1'
+          const viz     = section.querySelector<HTMLElement>('.pm-viz')
+          const pin     = section.querySelector<HTMLElement>('.pm-pin')
+          const flip    = section.dataset.flip === '1'
 
           if (isDesktop) {
-            // ── Pinned, scroll-scrubbed storytelling ──
+            // Pre-set hidden state immediately so there is never a flash of
+            // invisible content — the scrub drives them TO visible.
+            gsap.set(textEls, { y: 40, autoAlpha: 0 })
+            if (viz) gsap.set(viz, { x: flip ? -64 : 64, autoAlpha: 0 })
+
             const tl = gsap.timeline({
-              defaults: { ease: 'power3.out' },
+              defaults: { ease: 'power2.out' },
               scrollTrigger: {
-                trigger: section,
-                start: 'top top',
-                end: '+=68%',
-                pin: pin,
-                scrub: 0.6,
-                anticipatePin: 1,
+                trigger:           section,
+                start:             'top top',
+                end:               '+=90%',
+                pin:               pin,
+                scrub:             1.2,        // smooth lag so fast scroll never jumps
+                anticipatePin:     1,
                 invalidateOnRefresh: true,
+                fastScrollEnd:     true,       // snap to final state on fast fling
+                pinSpacing:        true,
               },
             })
 
-            tl.from(
-              textEls,
-              { y: 36, autoAlpha: 0, duration: 0.55, stagger: 0.12 },
-              0,
-            )
-            if (viz) {
-              tl.from(
-                viz,
-                { x: flip ? -72 : 72, autoAlpha: 0, duration: 0.9 },
-                0.05,
-              )
-            }
+            // Animate TO visible — reliable with scrub because end state is always defined
+            tl.to(textEls, { y: 0, autoAlpha: 1, duration: 0.5, stagger: 0.10 }, 0)
+            if (viz) tl.to(viz, { x: 0, autoAlpha: 1, duration: 0.75 }, 0.08)
+
           } else {
-            // ── Mobile / tablet: no pin, clean play-once reveal ──
+            // Mobile: simple play-once reveal, no pin
             gsap.from(textEls, {
-              y: 28,
-              autoAlpha: 0,
-              duration: 0.6,
-              stagger: 0.1,
+              y: 28, autoAlpha: 0, duration: 0.65, stagger: 0.09,
               ease: 'power3.out',
-              scrollTrigger: { trigger: section, start: 'top 78%' },
+              scrollTrigger: { trigger: section, start: 'top 80%', toggleActions: 'play none none none' },
             })
             if (viz) {
               gsap.from(viz, {
-                y: 32,
-                autoAlpha: 0,
-                duration: 0.7,
-                ease: 'power3.out',
-                scrollTrigger: { trigger: viz, start: 'top 86%' },
+                y: 32, autoAlpha: 0, duration: 0.75, ease: 'power3.out',
+                scrollTrigger: { trigger: viz, start: 'top 86%', toggleActions: 'play none none none' },
               })
             }
           }
@@ -347,10 +337,9 @@ export default function ModulesSection() {
       },
     )
 
-    // Recalculate once layout/fonts/dynamic viz have settled.
     const onLoad = () => ScrollTrigger.refresh()
     window.addEventListener('load', onLoad)
-    const t = window.setTimeout(() => ScrollTrigger.refresh(), 450)
+    const t = window.setTimeout(() => ScrollTrigger.refresh(), 500)
 
     return () => {
       window.removeEventListener('load', onLoad)
@@ -367,15 +356,14 @@ export default function ModulesSection() {
         }
         .mrow-item { transition: background .25s cubic-bezier(.22,.61,.36,1), transform .25s cubic-bezier(.22,.61,.36,1); }
 
-        /* Pinned panel — fills the viewport so it reads as a true pin */
         .pm-pin {
           min-height: 100vh;
           display: flex;
           align-items: center;
-          padding: clamp(48px,7vh,88px) 28px;
+          padding: clamp(24px,3vh,40px) 28px;
           box-sizing: border-box;
         }
-        .pm-viz { will-change: transform; }
+        .pm-viz { will-change: transform, opacity; }
 
         @media (max-width: 899px) {
           .pm-pin { min-height: auto; display: block; padding: clamp(40px,8vw,64px) 24px; }
@@ -419,8 +407,7 @@ export default function ModulesSection() {
                       <span style={{ display: 'inline-block', width: '18px', height: '1.5px', background: '#1360ee', borderRadius: '2px' }} />
                     </span>
                     <h2 className="pm-anim" style={{ margin: 0, fontSize: 'clamp(26px,3.6vw,42px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-.025em', color: '#1d1d1f' }}>
-                      {mod.h2}{' '}
-                      <span style={{ color: '#1360ee' }}>{mod.h2Accent}</span>
+                      {mod.h2} {mod.h2Accent}
                     </h2>
                     {mod.leads.map((p, pi) => (
                       <p key={pi} className="pm-anim" style={{ marginTop: pi === 0 ? '20px' : '14px', fontSize: 'clamp(14px,1.45vw,16px)', lineHeight: 1.6, color: '#6e6e73', maxWidth: '460px' }}>

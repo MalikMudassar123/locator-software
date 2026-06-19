@@ -9,38 +9,22 @@ export default function SoftwareCTA() {
           border-radius: 34px;
           overflow: hidden;
           isolation: isolate;
-          /* Same teal→blue gradient as the site footer */
-          background: linear-gradient(180deg, #97def1 0%, #3abede 22%, #0a84e3 55%, #1360ee 82%, #062a8a 100%);
+          background: #0f1117;
           padding: clamp(56px,7vw,88px) 32px;
           text-align: center;
           color: #fff;
         }
-        /* Radial accent stack matching the footer's glow patches */
-        .cta-wrap::before {
-          content: '';
-          position: absolute; inset: 0; pointer-events: none;
-          background:
-            radial-gradient(38% 34% at 6% 4%, rgba(193,235,247,0.55) 0%, rgba(193,235,247,0) 65%),
-            radial-gradient(34% 30% at 96% 6%, rgba(58,190,222,0.4) 0%, rgba(58,190,222,0) 65%),
-            radial-gradient(46% 42% at 4% 96%, rgba(13,47,165,0.4) 0%, rgba(13,47,165,0) 65%),
-            radial-gradient(38% 34% at 96% 96%, rgba(13,47,165,0.3) 0%, rgba(13,47,165,0) 65%);
-        }
-        /* Fine dot texture (matches footer grid) */
-        .cta-wrap::after {
-          content: '';
-          position: absolute; inset: 0; pointer-events: none;
-          background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
-          background-size: 28px 28px;
-        }
+        .cta-wrap::before { content: none; }
+        .cta-wrap::after { content: none; }
 
         /* Orbital ring decorations */
         @keyframes ctaRing {
-          0%,100% { opacity:.12; transform:scale(1) rotate(0deg); }
-          50%      { opacity:.22; transform:scale(1.05) rotate(180deg); }
+          0%,100% { opacity:.07; transform:scale(1) rotate(0deg); }
+          50%      { opacity:.13; transform:scale(1.05) rotate(180deg); }
         }
         .cta-ring {
           position: absolute; border-radius: 50%;
-          border: 1px solid rgba(255,255,255,.2);
+          border: 1px solid rgba(255,255,255,.12);
           pointer-events: none;
           animation: ctaRing 12s linear infinite;
         }
@@ -59,12 +43,11 @@ export default function SoftwareCTA() {
         }
         .cta-btn-primary:hover { background: #f0f4ff; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,.12); }
         .cta-btn-ghost {
-          background: rgba(255,255,255,.12);
+          background: rgba(255,255,255,.08);
           color: #fff;
-          border: 1px solid rgba(255,255,255,.3);
-          backdrop-filter: blur(8px);
+          border: 1px solid rgba(255,255,255,.2);
         }
-        .cta-btn-ghost:hover { background: rgba(255,255,255,.2); transform: translateY(-1px); }
+        .cta-btn-ghost:hover { background: rgba(255,255,255,.14); transform: translateY(-1px); }
       `}</style>
 
       <section style={{ padding: 'clamp(40px,5vw,56px) 28px clamp(56px,7vw,80px)' }}>
@@ -79,7 +62,7 @@ export default function SoftwareCTA() {
 
             <div data-reveal="zoom" style={{ position: 'relative', zIndex: 1 }}>
               {/* Tag */}
-              <span style={{ display: 'inline-block', fontSize: '11.5px', fontWeight: 700, letterSpacing: '.06em', color: 'rgba(255,255,255,.78)', marginBottom: '20px', textTransform: 'uppercase', background: 'rgba(255,255,255,.15)', borderRadius: '999px', padding: '5px 16px', border: '1px solid rgba(255,255,255,.24)' }}>
+              <span style={{ display: 'inline-block', fontSize: '11.5px', fontWeight: 700, letterSpacing: '.06em', color: 'rgba(255,255,255,.6)', marginBottom: '20px', textTransform: 'uppercase', background: 'rgba(255,255,255,.08)', borderRadius: '999px', padding: '5px 16px', border: '1px solid rgba(255,255,255,.14)' }}>
                 Get Started Today
               </span>
 

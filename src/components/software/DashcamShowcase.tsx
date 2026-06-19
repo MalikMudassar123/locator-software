@@ -51,36 +51,20 @@ export default function DashcamShowcase() {
           border-radius: 34px;
           overflow: hidden;
           isolation: isolate;
-          /* Same teal→blue gradient as the site footer */
-          background: linear-gradient(180deg, #97def1 0%, #3abede 22%, #0a84e3 55%, #1360ee 82%, #062a8a 100%);
+          background: #1A1E25;
           padding: clamp(52px,6vw,76px) clamp(28px,5vw,56px);
           color: #fff;
         }
-        /* Radial accent stack matching the footer's glow patches */
-        .dc-wrap::before {
-          content: '';
-          position: absolute; inset: 0; pointer-events: none;
-          background:
-            radial-gradient(38% 34% at 6% 4%, rgba(193,235,247,0.55) 0%, rgba(193,235,247,0) 65%),
-            radial-gradient(34% 30% at 96% 6%, rgba(58,190,222,0.4) 0%, rgba(58,190,222,0) 65%),
-            radial-gradient(46% 42% at 4% 96%, rgba(13,47,165,0.4) 0%, rgba(13,47,165,0) 65%),
-            radial-gradient(38% 34% at 96% 96%, rgba(13,47,165,0.3) 0%, rgba(13,47,165,0) 65%);
-        }
-        /* Fine dot texture (matches footer grid) */
-        .dc-wrap::after {
-          content: '';
-          position: absolute; inset: 0; pointer-events: none;
-          background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
-          background-size: 28px 28px;
-        }
+        .dc-wrap::before { content: none; }
+        .dc-wrap::after { content: none; }
 
         @keyframes dcRingPulse {
-          0%,100% { opacity: .15; transform: scale(1); }
-          50%      { opacity: .28; transform: scale(1.04); }
+          0%,100% { opacity: .08; transform: scale(1); }
+          50%      { opacity: .14; transform: scale(1.04); }
         }
         .dc-ring {
           position: absolute; border-radius: 50%;
-          border: 1px solid rgba(255,255,255,.22);
+          border: 1px solid rgba(255,255,255,.15);
           pointer-events: none;
           animation: dcRingPulse 6s ease-in-out infinite;
         }
@@ -148,7 +132,7 @@ export default function DashcamShowcase() {
                   </p>
 
                   {/* Stats */}
-                  <div style={{ display: 'flex', gap: '20px', marginTop: '32px', paddingTop: '28px', borderTop: '1px solid rgba(255,255,255,.16)' }}>
+                  <div style={{ display: 'flex', gap: '20px', marginTop: '32px', paddingTop: '28px', borderTop: '1px solid rgba(255,255,255,.10)' }}>
                     {[
                       { v: '4K', l: 'Camera resolution' },
                       { v: '24/7', l: 'Live monitoring' },
@@ -163,7 +147,7 @@ export default function DashcamShowcase() {
                 </div>
 
                 {/* ── Right: vertical card rows ── */}
-                <div data-reveal="right" data-reveal-delay="120" style={{ background: 'rgba(255,255,255,.07)', borderRadius: '22px', border: '1px solid rgba(255,255,255,.14)', padding: '8px 24px 8px' }}>
+                <div data-reveal="right" data-reveal-delay="120" style={{ background: '#2A2B2F', borderRadius: '22px', border: '1px solid rgba(255,255,255,.08)', padding: '8px 24px 8px' }}>
                   {CARDS.map((c, i) => (
                     <div key={i} className="dc-card-row">
                       <div className="dc-card-icon">{c.icon}</div>

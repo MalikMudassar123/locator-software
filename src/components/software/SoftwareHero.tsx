@@ -1,7 +1,7 @@
 // Server component — same Navbar as landing page, CSS-only animations
 import Image from 'next/image'
 import Link from 'next/link'
-import Navbar from '@/components/Navbar'
+import SoftwareNavbar from '@/components/software/SoftwareNavbar'
 
 export default function SoftwareHero() {
   return (
@@ -38,14 +38,13 @@ export default function SoftwareHero() {
           transition: .18s cubic-bezier(.22,.61,.36,1);
           display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
         }
-        .sw-btn-primary { background: #ffffff; color: #1360ee; }
-        .sw-btn-primary:hover { background: #f0f4ff; transform: translateY(-1px); }
+        .sw-btn-primary { background: #1360ee; color: #ffffff; }
+        .sw-btn-primary:hover { background: #0d4fd4; transform: translateY(-1px); }
         .sw-btn-ghost {
-          background: rgba(255,255,255,.14); color: #ffffff;
-          border: 1px solid rgba(255,255,255,.32);
-          backdrop-filter: blur(8px);
+          background: transparent; color: #1360ee;
+          border: none; padding-left: 4px; padding-right: 4px;
         }
-        .sw-btn-ghost:hover { background: rgba(255,255,255,.22); transform: translateY(-1px); }
+        .sw-btn-ghost:hover { color: #0d4fd4; transform: translateY(-1px); }
       `}</style>
 
       <section
@@ -54,29 +53,12 @@ export default function SoftwareHero() {
           width: '100%',
           overflow: 'hidden',
           isolation: 'isolate',
-          /* Same teal→blue gradient as the site footer */
-          background: 'linear-gradient(180deg, #97def1 0%, #3abede 22%, #0a84e3 55%, #1360ee 82%, #062a8a 100%)',
+          background: '#ffffff',
           paddingBottom: '0',
         }}
       >
-        {/* === Landing-page gradient layers (exact match) === */}
-        {/* L1 — right-side lightening */}
-        <div aria-hidden="true" style={{ position:'absolute', inset:0, zIndex:1, pointerEvents:'none', background:'linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 55%, rgba(255,255,255,0.08) 100%)' }} />
-        {/* L1a — top-right #6d99e4 zone */}
-        <div aria-hidden="true" style={{ position:'absolute', inset:0, zIndex:1, pointerEvents:'none', background:'radial-gradient(34% 28% at 96% 6%, rgba(109,153,228,0.7) 0%, rgba(109,153,228,0.35) 40%, rgba(109,153,228,0.1) 70%, rgba(109,153,228,0) 90%)' }} />
-        {/* L1b — upper-mid right */}
-        <div aria-hidden="true" style={{ position:'absolute', inset:0, zIndex:1, pointerEvents:'none', background:'radial-gradient(28% 22% at 82% 20%, rgba(49,131,228,0.45) 0%, rgba(49,131,228,0.18) 50%, rgba(49,131,228,0) 88%)' }} />
-        {/* L2 — mid-right pale highlight */}
-        <div aria-hidden="true" style={{ position:'absolute', inset:0, zIndex:1, pointerEvents:'none', background:'radial-gradient(32% 38% at 94% 42%, rgba(209,216,221,0.7) 0%, rgba(151,222,241,0.4) 40%, rgba(151,222,241,0.14) 70%, rgba(151,222,241,0) 92%)' }} />
-        {/* L2b — pale bottom-left wash */}
-        <div aria-hidden="true" style={{ position:'absolute', inset:0, zIndex:1, pointerEvents:'none', background:'radial-gradient(40% 30% at 6% 96%, rgba(194,209,221,0.55) 0%, rgba(100,174,221,0.28) 45%, rgba(100,174,221,0) 85%)' }} />
-        {/* L2c — bottom-right cyan */}
-        <div aria-hidden="true" style={{ position:'absolute', inset:0, zIndex:1, pointerEvents:'none', background:'radial-gradient(32% 26% at 96% 96%, rgba(121,223,250,0.6) 0%, rgba(121,223,250,0.28) 45%, rgba(121,223,250,0.08) 75%, rgba(121,223,250,0) 92%)' }} />
 
-        {/* Navbar — same component as landing page */}
-        <div style={{ position: 'relative', zIndex: 50 }}>
-          <Navbar />
-        </div>
+        <SoftwareNavbar />
 
         {/* Hero content */}
         <div
@@ -92,21 +74,14 @@ export default function SoftwareHero() {
           {/* Eyebrow */}
           <p
             style={{
-              fontSize: '11.5px',
+              fontSize: '14px',
               fontWeight: 700,
-              letterSpacing: '.08em',
-              textTransform: 'uppercase',
-              color: 'rgba(255,255,255,0.8)',
-              marginBottom: '14px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '10px',
+              letterSpacing: '.01em',
+              color: '#1360ee',
+              marginBottom: '16px',
             }}
           >
-            <span style={{ display: 'inline-block', width: '24px', height: '1.5px', background: 'rgba(255,255,255,0.5)', borderRadius: '2px' }} />
             Locator Fleet Telematics
-            <span style={{ display: 'inline-block', width: '24px', height: '1.5px', background: 'rgba(255,255,255,0.5)', borderRadius: '2px' }} />
           </p>
 
           {/* H1 */}
@@ -116,7 +91,7 @@ export default function SoftwareHero() {
               fontWeight: 800,
               lineHeight: 1.08,
               letterSpacing: '-.025em',
-              color: '#ffffff',
+              color: '#1d1d1f',
               maxWidth: '22ch',
               margin: '0 auto',
             }}
@@ -131,7 +106,7 @@ export default function SoftwareHero() {
               margin: '18px auto 0',
               fontSize: 'clamp(14px,1.45vw,16px)',
               lineHeight: 1.6,
-              color: 'rgba(255,255,255,0.82)',
+              color: '#3a3a3c',
               fontWeight: 400,
             }}
           >
@@ -148,7 +123,7 @@ export default function SoftwareHero() {
           <p style={{ marginTop: '22px' }}>
             <Link
               href="#dashcam"
-              style={{ color: 'rgba(255,255,255,0.75)', fontWeight: 700, fontSize: '15px', textDecoration: 'none' }}
+              style={{ color: '#1360ee', fontWeight: 700, fontSize: '15px', textDecoration: 'none' }}
             >
               Watch how it works ›
             </Link>

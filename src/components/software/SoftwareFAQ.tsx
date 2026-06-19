@@ -219,23 +219,15 @@ export default function SoftwareFAQ() {
           {/* ── Header ── */}
           <div data-reveal style={{ textAlign: 'center', marginBottom: '48px' }}>
             <span style={{
-              display: 'inline-flex', alignItems: 'center', gap: '7px',
-              fontSize: '11px', fontWeight: 700, letterSpacing: '.08em',
+              fontSize: '11px', fontWeight: 700, letterSpacing: '.09em',
               color: '#1360ee', textTransform: 'uppercase' as const,
-              marginBottom: '14px',
+              display: 'block', marginBottom: '14px',
             }}>
-              <span style={{ display: 'inline-block', width: '18px', height: '1.5px', background: '#1360ee', borderRadius: '2px' }} />
-              Frequently Asked Questions
-              <span style={{ display: 'inline-block', width: '18px', height: '1.5px', background: '#1360ee', borderRadius: '2px' }} />
+              FAQ
             </span>
-            <h2 style={{ margin: '0 0 16px', fontSize: 'clamp(28px,4vw,48px)', fontWeight: 800, lineHeight: 1.06, letterSpacing: '-.03em', color: '#1d1d1f' }}>
-              Got questions?{' '}
-              <span style={{ color: '#1360ee' }}>We have answers.</span>
+            <h2 style={{ margin: 0, fontSize: 'clamp(28px,4vw,52px)', fontWeight: 800, lineHeight: 1.06, letterSpacing: '-.03em', color: '#1d1d1f' }}>
+              Frequently asked questions
             </h2>
-            <p style={{ margin: '0 auto', maxWidth: '480px', fontSize: 'clamp(13.5px,1.25vw,15px)', lineHeight: 1.65, color: '#6e6e73' }}>
-              Everything you need to know about the Locator platform. Can't find what you're looking for?{' '}
-              <Link href="/contact" style={{ color: '#1360ee', fontWeight: 700, textDecoration: 'none' }}>Ask our team.</Link>
-            </p>
           </div>
 
           {/* ── Main grid ── */}

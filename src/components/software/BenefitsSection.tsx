@@ -4,16 +4,16 @@ import { useState, type ReactNode } from 'react'
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
 const ITEMS = [
-  { label: 'Live GPS Tracking',          short: 'Track every vehicle live on the map with real-time speed, location, and driver status.' },
-  { label: 'Dynamic Fleet Dashboard',    short: 'Central view of trips, vehicle health, performance scores, and daily activity.' },
-  { label: 'Instant Idle Alerts',        short: 'Get notified when a vehicle idles beyond your threshold — cut fuel waste instantly.' },
-  { label: 'After-Hours Vehicle Alerts', short: 'Instant alerts for any vehicle movement outside of operating hours.' },
-  { label: 'Daily Route History',        short: 'Replay full trip routes, view stop logs, driver activity, and delivery proof.' },
-  { label: 'Fleet Service Reminders',    short: 'Automated maintenance alerts for oil, tires, and scheduled service keep vehicles road-ready.' },
-  { label: 'Field Tasks Manager',        short: 'Dispatch tasks to field staff and monitor live completion status from the dashboard.' },
-  { label: 'Mobile Expense Manager',     short: 'Drivers upload bills on the go. Admins approve and report with one tap.' },
-  { label: 'Geofence & POI Monitoring',  short: 'Draw virtual zones around offices, depots, or customer sites and get entry/exit alerts.' },
-  { label: 'AI Route Optimization',      short: 'AI-powered routing reduces delays, cuts fuel costs, and improves delivery efficiency.' },
+  { label: 'Live GPS Tracking',          short: 'Track vehicles live, monitor drivers, improve road team control.' },
+  { label: 'Dynamic Fleet Dashboard',    short: 'Central dashboard for trip insights, vehicle status, performance overview.' },
+  { label: 'Instant Idle Alerts',        short: 'Detect long idle vehicles, reduce fuel waste, improve productivity.' },
+  { label: 'After-Hours Vehicle Alerts', short: 'Get alerts for unauthorized movement, secure fleet beyond office hours.' },
+  { label: 'Daily Route History',        short: 'Track routes, trip logs, driver activity, and delivery proof.' },
+  { label: 'Fleet Service Reminders',    short: 'Automated maintenance alerts for oil, tires, and service schedules.' },
+  { label: 'Field Tasks Manager',        short: 'Assign tasks to drivers, track progress, and monitor completion live.' },
+  { label: 'Mobile Expense Manager',     short: 'Log road team expenses, validate costs, and track spending instantly.' },
+  { label: 'Geofence & POI Monitoring',  short: 'Set virtual zones, get entry/exit alerts for office and customer sites.' },
+  { label: 'AI Route Optimization',      short: 'Optimize fleet routes with AI, cut delays, save fuel, improve operations.' },
 ]
 
 // ── Shared stage card chrome ─────────────────────────────────────────────────
@@ -388,92 +388,237 @@ const STAGES = [
   GeofenceStage, AIRouteStage,
 ]
 
+// index → video src (null = use stage component)
+const VIDEO_MAP: Record<number, string> = {
+  0: '/software_images/1781720706096317.mp4',
+  1: '/software_images/1781721807787704.mp4',
+  4: '/software_images/1781723086226131.mp4',
+}
+
 // ── Main export ──────────────────────────────────────────────────────────────
 
 export default function BenefitsSection() {
   const [active, setActive] = useState(0)
   const StageContent = STAGES[active]
+  const videoSrc = VIDEO_MAP[active] ?? null
+
+  const goUp   = () => setActive(p => Math.max(0, p - 1))
+  const goDown = () => setActive(p => Math.min(ITEMS.length - 1, p + 1))
 
   return (
     <>
       <style>{`
         @keyframes stageIn {
-          from { opacity: 0; transform: translateY(12px) scale(.99); }
+          from { opacity: 0; transform: translateY(10px) scale(.99); }
           to   { opacity: 1; transform: none; }
         }
-        .bfr {
-          display: flex; align-items: center; gap: 12px;
-          padding: 13px 16px; width: 100%;
-          background: none; border: none;
-          border-left: 2.5px solid transparent;
-          cursor: pointer; font-family: inherit; text-align: left;
-          transition: background .18s ${EASE}, border-color .18s ${EASE};
+        .stage-in { animation: stageIn .28s ${EASE} both; }
+
+        /* accordion item wrapper */
+        .bf-item {
+          border-radius: 12px;
+          overflow: hidden;
+          transition: background .15s ${EASE};
         }
-        .bfr:hover { background: #f5f5f7; }
-        .bfr.on { background: #eef3ff; border-left-color: #1360ee; }
-        .bfr-num { font-size: 10.5px; font-weight: 700; color: #c0c0c8; width: 20px; flex-shrink: 0; font-variant-numeric: tabular-nums; transition: color .18s ${EASE}; }
-        .bfr.on .bfr-num { color: #1360ee; }
-        .bfr-lbl { font-size: 13.5px; font-weight: 600; color: #1d1d1f; flex: 1; transition: color .18s ${EASE}; letter-spacing: -.01em; }
-        .bfr.on .bfr-lbl { color: #1360ee; font-weight: 700; }
-        .bfr-arr { font-size: 14px; color: #d8d8de; transition: color .18s ${EASE}, transform .18s ${EASE}; }
-        .bfr.on .bfr-arr { color: #1360ee; transform: translateX(2px); }
-        .stage-in { animation: stageIn .3s ${EASE} both; }
-        @media (max-width: 860px) {
-          .bf-grid { grid-template-columns: 1fr !important; }
-          .bf-stage { order: -1; min-height: 380px; }
+        .bf-item:hover { background: #f2f2f5; }
+        .bf-item.on    { background: #ebebef; }
+
+        /* pill trigger row */
+        .bf-pill {
+          display: flex; align-items: center; gap: 10px;
+          width: 100%; padding: 9px 12px;
+          background: none; border: none; border-radius: 12px;
+          cursor: pointer; font-family: inherit; text-align: left;
+        }
+        .bf-pill-icon {
+          width: 24px; height: 24px; border-radius: 50%;
+          border: 1.5px solid #c8c8d0;
+          display: grid; place-items: center;
+          flex-shrink: 0; color: #8888a0; font-size: 17px; line-height: 1;
+          transition: border-color .2s ${EASE}, color .2s ${EASE}, transform .35s cubic-bezier(.34,1.3,.64,1);
+        }
+        .bf-item.on .bf-pill-icon {
+          border-color: #1360ee; color: #1360ee;
+          transform: rotate(45deg);
+        }
+        .bf-pill-lbl {
+          font-size: 13.5px; font-weight: 600; color: #3a3a3c;
+          letter-spacing: -.01em; transition: color .15s;
+        }
+        .bf-item.on .bf-pill-lbl { color: #1d1d1f; font-weight: 700; }
+
+        /* accordion body — CSS grid-rows for smooth height */
+        .bf-acc-body {
+          display: grid; grid-template-rows: 0fr;
+          transition: grid-template-rows .32s ${EASE};
+        }
+        .bf-item.on .bf-acc-body { grid-template-rows: 1fr; }
+        .bf-acc-inner { overflow: hidden; min-height: 0; }
+        .bf-acc-desc {
+          padding: 0 12px 11px 46px;
+          font-size: 12.5px; line-height: 1.6; color: #6e6e73;
+          opacity: 0; transform: translateY(-4px);
+          transition: opacity .18s, transform .22s ${EASE};
+        }
+        .bf-item.on .bf-acc-desc {
+          opacity: 1; transform: translateY(0);
+          transition: opacity .26s .08s, transform .3s .06s ${EASE};
+        }
+
+        /* nav arrow buttons */
+        .bf-arrow {
+          width: 34px; height: 34px; border-radius: 50%;
+          border: 1.5px solid #e0e0e4; background: #fff;
+          display: grid; place-items: center;
+          cursor: pointer; color: #6e6e73;
+          transition: border-color .15s, color .15s, background .15s;
+        }
+        .bf-arrow:hover:not(:disabled) { border-color: #1360ee; color: #1360ee; background: #f0f4ff; }
+        .bf-arrow:disabled { opacity: .3; cursor: default; }
+
+        @media (max-width: 900px) {
+          .bf-outer { flex-direction: column !important; }
+          .bf-left  { width: 100% !important; border-right: none !important; border-bottom: 1px solid #e8e8eb; }
+          .bf-right { min-height: 360px; }
+          .bf-arrows { flex-direction: row !important; position: static !important; margin: 0 auto 16px !important; }
         }
       `}</style>
 
-      <section id="benefits" style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#ffffff' }}>
+      <section id="benefits" style={{ padding: 'clamp(56px,7vw,80px) 28px 24px', background: '#ffffff' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
 
-          {/* Header */}
-          <div data-reveal style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 44px' }}>
+          {/* ── Header — centered ── */}
+          <div data-reveal style={{ marginBottom: '36px', textAlign: 'center' }}>
             <span style={{
-              display: 'inline-flex', alignItems: 'center', gap: '8px',
-              fontSize: '11px', fontWeight: 700, letterSpacing: '.08em',
+              fontSize: '11px', fontWeight: 700, letterSpacing: '.09em',
               color: '#1360ee', textTransform: 'uppercase' as const,
-              marginBottom: '16px',
+              display: 'block', marginBottom: '14px',
             }}>
-              <span style={{ display: 'inline-block', width: '20px', height: '1.5px', background: '#1360ee', borderRadius: '2px' }} />
-              Platform Benefits
-              <span style={{ display: 'inline-block', width: '20px', height: '1.5px', background: '#1360ee', borderRadius: '2px' }} />
+              Benefits
             </span>
-            <h2 style={{ margin: '0 0 16px', fontSize: 'clamp(26px,3.6vw,42px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-.025em', color: '#1d1d1f' }}>
-              Everything your fleet needs,{' '}
-              <span style={{ color: '#1360ee' }}>in one platform</span>
+            <h2 style={{
+              margin: '0 auto',
+              fontSize: 'clamp(26px,3.4vw,42px)',
+              fontWeight: 800, lineHeight: 1.08,
+              letterSpacing: '-.025em', color: '#1d1d1f',
+              maxWidth: '600px',
+            }}>
+              AI-Driven GPS Tracking &amp; Fleet Telematics Benefits
             </h2>
-            <p style={{ margin: 0, fontSize: 'clamp(13.5px,1.25vw,15px)', lineHeight: 1.65, color: '#6e6e73' }}>
-              From live GPS tracking to AI dashcam, task management, and maintenance — all connected in a single platform built for modern fleets.
-            </p>
           </div>
 
-          {/* Grid */}
-          <div className="bf-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1.45fr', gap: '20px', alignItems: 'stretch' }}>
+          {/* ── Main card + arrows row ── */}
+          <div style={{ display: 'flex', alignItems: 'stretch', gap: '14px' }}>
 
-            {/* Left — numbered list */}
-            <div data-reveal="left" style={{ background: '#fff', border: '1px solid #e8e8eb', borderRadius: '20px', overflow: 'hidden', padding: '6px 0' }}>
-              {ITEMS.map((item, i) => (
-                <button key={i} onClick={() => setActive(i)} className={`bfr${active === i ? ' on' : ''}`}>
-                  <span className="bfr-num">{String(i + 1).padStart(2, '0')}</span>
-                  <span className="bfr-lbl">{item.label}</span>
-                  <span className="bfr-arr">›</span>
-                </button>
-              ))}
+            {/* Up / Down arrows — left of card */}
+            <div className="bf-arrows" style={{
+              display: 'flex', flexDirection: 'column',
+              justifyContent: 'center', gap: '8px', flexShrink: 0,
+            }}>
+              <button className="bf-arrow" onClick={goUp} disabled={active === 0} aria-label="Previous">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="18 15 12 9 6 15" />
+                </svg>
+              </button>
+              <button className="bf-arrow" onClick={goDown} disabled={active === ITEMS.length - 1} aria-label="Next">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
             </div>
 
-            {/* Right — stage */}
-            <div className="bf-stage" data-reveal="right" data-reveal-delay="100" style={{ background: '#fff', border: '1px solid #e8e8eb', borderRadius: '20px', overflow: 'hidden', minHeight: '460px' }}>
-              <div key={active} className="stage-in" style={{ height: '100%' }}>
-                <StageContent />
+            {/* ── Big card ── */}
+            <div
+              className="bf-outer"
+              data-reveal
+              style={{
+                flex: 1,
+                display: 'flex',
+                border: '1px solid #e4e4e8',
+                borderRadius: '22px',
+                overflow: 'hidden',
+                background: '#fff',
+                minHeight: '520px',
+                boxShadow: '0 2px 16px rgba(0,0,0,.05)',
+              }}
+            >
+              {/* Left — pill list + description */}
+              <div
+                className="bf-left"
+                style={{
+                  width: '270px',
+                  flexShrink: 0,
+                  borderRight: '1px solid #e4e4e8',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  padding: '20px 14px 16px',
+                  gap: '4px',
+                }}
+              >
+                {ITEMS.map((item, i) => (
+                  <div
+                    key={i}
+                    className={`bf-item${active === i ? ' on' : ''}`}
+                  >
+                    {/* Trigger row */}
+                    <button
+                      className="bf-pill"
+                      onClick={() => setActive(i)}
+                    >
+                      <span className="bf-pill-icon">+</span>
+                      <span className="bf-pill-lbl">{item.label}</span>
+                    </button>
+
+                    {/* Accordion body */}
+                    <div className="bf-acc-body">
+                      <div className="bf-acc-inner">
+                        <p className="bf-acc-desc">
+                          <strong style={{ color: '#1d1d1f', fontWeight: 700 }}>{item.label}.</strong>{' '}
+                          {item.short}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Right — video or stage panel */}
+              <div
+                className="bf-right"
+                style={{
+                  flex: 1,
+                  background: videoSrc ? '#000' : '#f0f0f7',
+                  overflow: 'hidden',
+                  position: 'relative',
+                }}
+              >
+                {videoSrc ? (
+                  <video
+                    key={videoSrc}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      display: 'block',
+                    }}
+                  >
+                    <source src={videoSrc} type="video/mp4" />
+                  </video>
+                ) : (
+                  <div key={active} className="stage-in" style={{ height: '100%' }}>
+                    <StageContent />
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Active item description below */}
-          <p style={{ textAlign: 'center', marginTop: '20px', fontSize: 'clamp(13px,1.2vw,15px)', color: '#6e6e73', lineHeight: 1.55, maxWidth: '520px', margin: '20px auto 0' }}>
-            {ITEMS[active].short}
-          </p>
         </div>
       </section>
     </>

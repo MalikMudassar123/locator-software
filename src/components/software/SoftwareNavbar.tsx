@@ -35,27 +35,72 @@ export default function SoftwareNavbar() {
     <>
       <style>{`
         .swn-root {
-          position: sticky;
-          top: 0;
+          position: fixed;
+          top: clamp(3px, 0.8vw, 9px);
           left: 0;
           right: 0;
-          z-index: 60;
+          z-index: 1000;
           width: 100%;
-          background: #ffffff;
-          border-bottom: 1px solid #e8e8eb;
-          box-shadow: 0 1px 6px rgba(0,0,0,.06);
+          padding: 0 clamp(12px, 4vw, 40px);
+        }
+        /* Reserves the navbar's space in the hero flow, since the bar itself is
+           portaled to <body> as a fixed element (so backdrop-filter can blur
+           the real page — the hero's .sw-pin clips/isolates it otherwise). */
+        .swn-spacer {
+          height: calc(58px + clamp(6px, 1.6vw, 18px));
         }
         .swn-inner {
           max-width: 1280px;
           margin: 0 auto;
-          padding: 0 clamp(20px, 4vw, 48px);
-          height: 68px;
+          padding: 0 clamp(16px, 3vw, 36px);
+          height: 58px;
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 16px;
+          /* Frosted glass built into the panel (the ancestor .sw-pin's
+             overflow:hidden + isolation defeats backdrop-filter sampling, so a
+             plain translucent fill reads as flat white). A faint cool tint +
+             diagonal sheen make it read as real glass even over a white page,
+             while the blur still frosts content where it works. */
+          background:
+            linear-gradient(135deg,
+              rgba(255, 255, 255, 0.62) 0%,
+              rgba(238, 242, 252, 0.42) 48%,
+              rgba(255, 255, 255, 0.55) 100%);
+          -webkit-backdrop-filter: blur(20px) saturate(185%);
+          backdrop-filter: blur(20px) saturate(185%);
+          border: 1px solid rgba(255, 255, 255, 0.75);
+          border-radius: clamp(14px, 1.6vw, 22px);
+          /* Soft floating shadow + glossy top highlight + faint inner depth. */
+          box-shadow:
+            0 12px 40px rgba(15, 23, 42, 0.14),
+            0 1px 2px rgba(15, 23, 42, 0.05),
+            inset 0 1px 0 rgba(255, 255, 255, 0.95),
+            inset 0 -8px 18px rgba(15, 23, 42, 0.03);
+          /* Own compositing layer — avoids the black-backdrop glitch caused by
+             the ancestor (overflow:hidden + isolation on .sw-pin). */
+          transform: translateZ(0);
         }
+        /* Browsers without backdrop-filter get a clean opaque-white bar. */
+        @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+          .swn-inner { background: rgba(255, 255, 255, 0.9); }
+        }
+        @media (max-width: 600px) {
+          .swn-root { padding-left: 10px; padding-right: 10px; }
+          .swn-inner { border-radius: 14px; }
+        }
+        /* Classy entrance: the whole bar eases down on load */
+        @media (prefers-reduced-motion: no-preference) {
+          .swn-root { animation: swnDrop .7s cubic-bezier(.22,.61,.36,1) both; }
+        }
+        @keyframes swnDrop {
+          from { opacity: 0; transform: translateY(-18px); }
+          to   { opacity: 1; transform: none; }
+        }
+
         .swn-link {
+          position: relative;
           font-size: 13.5px;
           font-weight: 600;
           color: #52525e;
@@ -63,35 +108,95 @@ export default function SoftwareNavbar() {
           padding: 7px 14px;
           border-radius: 999px;
           text-decoration: none;
-          transition: color .15s, background .15s;
+          transition: color .2s ease, background .2s ease;
         }
-        .swn-link:hover { color: #1d1d1f; background: #f2f2f5; }
+        /* Animated underline that grows from the centre */
+        .swn-link::after {
+          content: '';
+          position: absolute;
+          left: 50%;
+          bottom: 2px;
+          width: 0;
+          height: 2px;
+          border-radius: 2px;
+          background: linear-gradient(90deg, #1f6dff, #0d4fd4);
+          transform: translateX(-50%);
+          transition: width .28s cubic-bezier(.22,.61,.36,1);
+        }
+        .swn-link:hover { color: #1d1d1f; background: rgba(19,96,238,.06); }
+        .swn-link:hover::after { width: 55%; }
         .swn-link.active {
           color: #1360ee;
           background: rgba(19,96,238,.10);
           font-weight: 700;
         }
+        .swn-link.active::after { width: 55%; }
+
+        /* Logo + flag micro-interactions */
+        .swn-logo { transition: transform .25s cubic-bezier(.22,.61,.36,1); }
+        .swn-logo:hover { transform: scale(1.05); }
+        .swn-flag {
+          transition: transform .25s cubic-bezier(.22,.61,.36,1), box-shadow .25s ease;
+          cursor: pointer;
+        }
+        .swn-flag:hover {
+          transform: scale(1.12) rotate(4deg);
+          box-shadow: 0 3px 10px rgba(15, 23, 42, 0.2);
+        }
         .swn-cta {
+          position: relative;
+          overflow: hidden;
+          isolation: isolate;
           font-size: 14px;
           font-weight: 700;
           cursor: pointer;
           padding: 10px 22px;
           border-radius: 999px;
           border: none;
-          background: #1360ee;
+          background: linear-gradient(135deg, #1f6dff 0%, #1360ee 55%, #0d4fd4 100%);
           color: #fff;
           font-family: inherit;
           white-space: nowrap;
-          transition: background .15s, transform .15s;
+          box-shadow: 0 4px 14px rgba(19, 96, 238, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+          transition: transform .25s cubic-bezier(.22,.61,.36,1), box-shadow .25s ease;
         }
-        .swn-cta:hover { background: #0d4fd4; transform: translateY(-1px); }
+        /* Glossy light sweep that glides across on hover */
+        .swn-cta::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          z-index: -1;
+          background: linear-gradient(110deg, transparent 20%, rgba(255,255,255,0.45) 50%, transparent 80%);
+          transform: translateX(-130%);
+          transition: transform .6s cubic-bezier(.22,.61,.36,1);
+        }
+        .swn-cta:hover {
+          animation: none;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 22px rgba(19, 96, 238, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+        }
+        .swn-cta:hover::before { transform: translateX(130%); }
+        .swn-cta:active { transform: translateY(0) scale(.97); }
+        @media (prefers-reduced-motion: no-preference) {
+          .swn-cta {
+            animation: swnCtaGlow 2.8s ease-in-out infinite;
+          }
+        }
+        @keyframes swnCtaGlow {
+          0%, 100% { box-shadow: 0 4px 14px rgba(19, 96, 238, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25); }
+          50%      { box-shadow: 0 6px 20px rgba(19, 96, 238, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
+        }
         @media (max-width: 900px) { .swn-pills { display: none !important; } .swn-hamburger { display: flex !important; } }
       `}</style>
 
+      {/* Keeps the hero layout intact; the real bar is portaled out of flow. */}
+      <div className="swn-spacer" aria-hidden="true" />
+
+      {mounted && createPortal(
       <nav className="swn-root">
         <div className="swn-inner">
           {/* Logo */}
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', flexShrink: 0, textDecoration: 'none' }}>
+          <Link href="/" className="swn-logo" style={{ display: 'flex', alignItems: 'center', flexShrink: 0, textDecoration: 'none' }}>
             <Image src="/logo.png" alt="Locator" width={100} height={32} style={{ width: 'auto', height: '32px', objectFit: 'contain' }} priority />
           </Link>
 
@@ -109,7 +214,7 @@ export default function SoftwareNavbar() {
 
           {/* Right: flag + CTA + hamburger */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
-            <Image src="/uae-flag.svg" alt="UAE" width={28} height={28} style={{ borderRadius: '50%', display: 'block' }} />
+            <Image src="/uae-flag.svg" alt="UAE" width={28} height={28} className="swn-flag" style={{ borderRadius: '50%', display: 'block' }} />
             <button className="swn-cta">Get a quote</button>
 
             {/* Hamburger */}
@@ -137,7 +242,9 @@ export default function SoftwareNavbar() {
             </button>
           </div>
         </div>
-      </nav>
+      </nav>,
+        document.body
+      )}
 
       {/* Mobile drawer */}
       {open && mounted && createPortal(

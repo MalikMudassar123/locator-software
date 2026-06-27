@@ -477,10 +477,13 @@ export default function BenefitsSection() {
         .bf-arrow:disabled { opacity: .3; cursor: default; }
 
         @media (max-width: 900px) {
+          /* Stack the arrows above the full-width card instead of beside it,
+             so the card no longer gets squeezed into a narrow column. */
+          .bf-row   { flex-direction: column !important; gap: 0 !important; }
           .bf-outer { flex-direction: column !important; }
           .bf-left  { width: 100% !important; border-right: none !important; border-bottom: 1px solid #e8e8eb; }
           .bf-right { min-height: 360px; }
-          .bf-arrows { flex-direction: row !important; position: static !important; margin: 0 auto 16px !important; }
+          .bf-arrows { flex-direction: row !important; position: static !important; margin: 0 auto 14px !important; }
         }
       `}</style>
 
@@ -508,7 +511,7 @@ export default function BenefitsSection() {
           </div>
 
           {/* ── Main card + arrows row ── */}
-          <div style={{ display: 'flex', alignItems: 'stretch', gap: '14px' }}>
+          <div className="bf-row" style={{ display: 'flex', alignItems: 'stretch', gap: '14px' }}>
 
             {/* Up / Down arrows — left of card */}
             <div className="bf-arrows" style={{

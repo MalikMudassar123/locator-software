@@ -58,8 +58,26 @@ export default function ModuleShowcaseStyles() {
       .tm-detail-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
 
       /* ── Phone shell (shared by all mobile apps) ───────────────── */
-      .tm-phone { width: 288px; height: 590px; background: #111; border-radius: 38px; padding: 7px; box-shadow: 0 30px 60px -12px rgba(0,0,0,.22), 0 18px 36px -18px rgba(0,0,0,.28), inset 0 0 0 1.5px rgba(255,255,255,.08); position: relative; flex-shrink: 0; }
-      .tm-phone-screen { width: 100%; height: 100%; background: #f0f4f8; border-radius: 30px; overflow: hidden; display: flex; flex-direction: column; position: relative; }
+      .tm-phone {
+        width: 288px; height: 590px;
+        background: linear-gradient(155deg, #62656a 0%, rgb(72, 75, 76) 50%, #393b3d 100%);
+        border-radius: 42px; padding: 8px;
+        box-shadow:
+          0 34px 66px -14px rgba(0,0,0,.34),
+          0 16px 34px -18px rgba(0,0,0,.32),
+          inset 0 0 0 2px rgba(255,255,255,.10),
+          inset 0 1.5px 1px rgba(255,255,255,.24),
+          inset 0 -3px 5px rgba(0,0,0,.40);
+        position: relative; flex-shrink: 0;
+      }
+      /* Subtle metallic side buttons for a more realistic handset */
+      .tm-phone::before, .tm-phone::after {
+        content: ''; position: absolute; left: -2px; width: 3px; border-radius: 3px 0 0 3px;
+        background: linear-gradient(180deg, #4a4d4e, #2f3132);
+      }
+      .tm-phone::before { top: 116px; height: 30px; }
+      .tm-phone::after  { top: 158px; height: 54px; box-shadow: 0 70px 0 0 #3a3c3d; }
+      .tm-phone-screen { width: 100%; height: 100%; background: #f0f4f8; border-radius: 34px; overflow: hidden; display: flex; flex-direction: column; position: relative; }
 
       /* Phone inner scroll areas: slim, unobtrusive scrollbar + no horizontal bar */
       .tm-phone-screen [style*="overflow-y"] { overflow-x: hidden; scrollbar-width: thin; scrollbar-color: rgba(100,116,139,.32) transparent; }

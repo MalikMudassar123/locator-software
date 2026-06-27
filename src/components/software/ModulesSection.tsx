@@ -72,7 +72,7 @@ export default function ModulesSection() {
           color: #1360ee; text-transform: uppercase; margin-bottom: 14px;
         }
         .pm-tag span { display: inline-block; width: 18px; height: 1.5px; background: #1360ee; border-radius: 2px; }
-        .pm-h2 { margin: 0; font-size: clamp(26px,3.2vw,40px); font-weight: 800; line-height: 1.08; letter-spacing: -.025em; color: #1d1d1f; }
+        .pm-h2 { margin: 0; font-size: clamp(26px,3.2vw,40px); font-weight: 800; line-height: 1.08; letter-spacing: -.025em; color: rgb(72, 75, 76); }
         .pm-lead { margin: 18px 0 0; font-size: clamp(14px,1.45vw,16px); line-height: 1.62; color: #6e6e73; max-width: 46ch; }
         .pm-suited-label { margin: 22px 0 0; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: #1d1d1f; text-transform: uppercase; }
         .pm-suited { margin: 14px 0 0; display: flex; flex-wrap: wrap; gap: 9px; }

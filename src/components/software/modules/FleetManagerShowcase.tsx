@@ -239,10 +239,10 @@ export default function FleetManagerShowcase() {
           {rows.map((row, ri) => {
             const isSel = selectedRow === ri; const isHov = hoverRow === ri
             const rowBg = isSel ? '#EAF1FF' : isHov ? '#f0f5ff' : row.overdue ? '#fef2f2' : '#fff'
-            const rowBorder = isSel ? '1px solid #bfdbfe' : row.overdue ? '1px solid #fecaca' : isHov ? '1px solid #c7d2fe' : '1px solid #e8ecf2'
+            const rowBorderColor = isSel ? '#bfdbfe' : row.overdue ? '#fecaca' : isHov ? '#c7d2fe' : '#e8ecf2'
             return (
               <div key={ri} onClick={() => setSelectedRow(isSel ? null : ri)} onMouseEnter={() => setHoverRow(ri)} onMouseLeave={() => setHoverRow(null)}
-                style={{ background: rowBg, borderRadius: 8, marginBottom: 6, padding: '10px 12px', border: rowBorder, borderLeftWidth: 3, borderLeftStyle: 'solid', borderLeftColor: row.overdue ? '#dc2626' : isSel ? '#2563eb' : 'transparent', cursor: 'pointer', transition: 'background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease', boxShadow: isHov && !isSel ? '0 2px 8px rgba(0,0,0,0.06)' : isSel ? '0 2px 10px rgba(37,99,235,0.1)' : 'none' }}>
+                style={{ background: rowBg, borderRadius: 8, marginBottom: 6, padding: '10px 12px', borderStyle: 'solid', borderTopWidth: 1, borderRightWidth: 1, borderBottomWidth: 1, borderTopColor: rowBorderColor, borderRightColor: rowBorderColor, borderBottomColor: rowBorderColor, borderLeftWidth: 3, borderLeftColor: row.overdue ? '#dc2626' : isSel ? '#2563eb' : 'transparent', cursor: 'pointer', transition: 'background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease', boxShadow: isHov && !isSel ? '0 2px 8px rgba(0,0,0,0.06)' : isSel ? '0 2px 10px rgba(37,99,235,0.1)' : 'none' }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
                   <div style={{ flex: 1, display: 'grid', gridTemplateColumns: `repeat(${cols.length}, 1fr)`, gap: 8 }}>
                     {cols.map((col, ci) => (

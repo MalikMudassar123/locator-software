@@ -65,11 +65,11 @@ export default function SoftwareNavbar() {
              while the blur still frosts content where it works. */
           background:
             linear-gradient(135deg,
-              rgba(255, 255, 255, 0.62) 0%,
-              rgba(238, 242, 252, 0.42) 48%,
-              rgba(255, 255, 255, 0.55) 100%);
-          -webkit-backdrop-filter: blur(20px) saturate(185%);
-          backdrop-filter: blur(20px) saturate(185%);
+              rgba(255, 255, 255, 0.72) 0%,
+              rgba(238, 242, 252, 0.56) 48%,
+              rgba(255, 255, 255, 0.66) 100%);
+          -webkit-backdrop-filter: blur(14px) saturate(160%);
+          backdrop-filter: blur(14px) saturate(160%);
           border: 1px solid rgba(255, 255, 255, 0.75);
           border-radius: clamp(14px, 1.6vw, 22px);
           /* Soft floating shadow + glossy top highlight + faint inner depth. */

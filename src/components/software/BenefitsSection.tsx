@@ -414,6 +414,10 @@ export default function BenefitsSection() {
         }
         .stage-in { animation: stageIn .28s ${EASE} both; }
 
+        /* Media eases in on load instead of snapping from a black box. */
+        @keyframes bfMediaIn { from { opacity: 0; } to { opacity: 1; } }
+        .bf-video { animation: bfMediaIn .5s ${EASE} both; }
+
         /* accordion item wrapper */
         .bf-item {
           border-radius: 12px;
@@ -598,10 +602,12 @@ export default function BenefitsSection() {
                 {videoSrc ? (
                   <video
                     key={videoSrc}
+                    className="bf-video"
                     autoPlay
                     muted
                     loop
                     playsInline
+                    preload="metadata"
                     style={{
                       position: 'absolute',
                       inset: 0,

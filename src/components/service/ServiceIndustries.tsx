@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
@@ -8,7 +9,17 @@ const BLUE = '#1360ee'
 
 // ── Industry data (all 12 from servicepage.md) ───────────────────────────────
 
-const INDUSTRIES = [
+interface Industry {
+  id: string
+  num: string
+  title: string
+  desc: string
+  vehicles: string[]
+  count: number
+  image?: string   // real screenshot; falls back to the built-in map card
+}
+
+const INDUSTRIES: Industry[] = [
   {
     id: 'fmcg',
     num: '01',
@@ -16,6 +27,7 @@ const INDUSTRIES = [
     desc: 'GPS fleet telematics helps vans, pickups, mini-trucks, delivery bikes track distributors and supermarket deliveries live. It reduces fuel loss, improves route planning, automates maintenance, monitors drivers, and prevents delivery delays, giving FMCG companies in UAE full control over sales teams and daily stock movement.',
     vehicles: ['Delivery vans', 'Pickups', 'Mini-trucks', 'Delivery bikes'],
     count: 8,
+    image: '/service_page/FMCG D1.png',
   },
   {
     id: 'transport',
@@ -108,9 +120,9 @@ const INDUSTRIES = [
 ]
 
 const N = INDUSTRIES.length
-const PER_SLIDE = 460                 // px of scroll dwell per industry
-const TOTAL_SCROLL = N * PER_SLIDE
-const STEP_MS = 190                   // min time between one-at-a-time slide steps
+// Each industry occupies one full viewport of scroll; a hidden snap anchor per
+// slide (scroll-snap-stop: always) makes the browser stop on every one, so a
+// single gesture advances exactly one industry — no skipping on a hard flick.
 
 // ── Easing helpers ───────────────────────────────────────────────────────────
 
@@ -223,64 +235,50 @@ function FleetMapCard({ count }: { count: number }) {
 // ── Main scroll-driven component ──────────────────────────────────────────────
 
 export default function ServiceIndustries() {
-  const wrapRef = useRef<HTMLDivElement>(null)
-  const numRef  = useRef<HTMLDivElement>(null)   // bg number — continuous parallax
-  const mapPxRef = useRef<HTMLDivElement>(null)  // map inner — continuous parallax
-  const fillRef = useRef<HTMLDivElement>(null)   // progress fill — transform only
+  const wrapRef  = useRef<HTMLDivElement>(null)
+  const numRef   = useRef<HTMLDivElement>(null)   // bg number — continuous parallax
+  const mapPxRef = useRef<HTMLDivElement>(null)   // map inner — continuous parallax
+  const fillRef  = useRef<HTMLDivElement>(null)   // progress fill — transform only
 
-  // `displayIdx` selects which industry is shown. Scroll only changes the
-  // *index*; the visible slide always animates in to full opacity and settles
-  // there — so pausing mid-scroll can never leave content stuck half-faded.
-  const [displayIdx, setDisplayIdx] = useState(0)  // slide currently shown
+  const [displayIdx, setDisplayIdx] = useState(0)   // industry currently shown
   const [dirDown,    setDirDown]    = useState(true) // last scroll direction
 
-  const activeRef   = useRef(0)   // mirror of displayIdx for the stepper
-  const targetRef   = useRef(0)   // slide the scroll position points at
-  const steppingRef = useRef(false)
-  const dirRef      = useRef<1 | -1>(1)
-  const lastYRef    = useRef(0)
-  const stepTimer   = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const idxRef   = useRef(0)
+  const dirRef   = useRef<1 | -1>(1)
+  const lastYRef = useRef(0)
 
   useEffect(() => {
     const wrap = wrapRef.current
     if (!wrap) return
     lastYRef.current = window.scrollY
 
-    // Advance one slide at a time toward the target, so a fast flick steps
-    // through 1 → 2 → 3 … instead of jumping straight to 3 or 5.
-    const step = () => {
-      if (activeRef.current === targetRef.current) { steppingRef.current = false; return }
-      steppingRef.current = true
-      activeRef.current += targetRef.current > activeRef.current ? 1 : -1
-      setDisplayIdx(activeRef.current)
-      stepTimer.current = setTimeout(step, STEP_MS)
-    }
-    const kick = () => { if (!steppingRef.current) step() }
+    // Enable scroll snapping only while this section is mounted. Combined with
+    // the per-slide anchors (scroll-snap-stop: always) the browser is *forced*
+    // to stop on every industry, so one gesture = one slide — even a hard flick
+    // or trackpad inertia cannot skip ahead. This is native, so momentum works
+    // correctly on every device (no preventDefault fighting the browser).
+    const html = document.documentElement
+    const prevSnap = html.style.scrollSnapType
+    html.style.scrollSnapType = 'y proximity'
 
     let raf = 0
     const apply = () => {
       raf = 0
-      const rect     = wrap.getBoundingClientRect()
-      const scrolled = Math.min(Math.max(-rect.top, 0), TOTAL_SCROLL)
-      const p        = scrolled / TOTAL_SCROLL          // 0 → 1 across section
-      const idx      = Math.min(Math.floor(p * N), N - 1)
-      const t        = clamp01(p * N - idx)             // 0 → 1 within slide
+      const rect  = wrap.getBoundingClientRect()
+      const vh    = window.innerHeight
+      const range = (N - 1) * vh                        // scroll distance across slides
+      const scrolled = Math.min(Math.max(-rect.top, 0), range)
+      const p = range > 0 ? scrolled / range : 0        // 0 → 1 across the section
+      const f = scrolled / vh                            // fractional slide position
+      const idx = Math.min(Math.max(Math.round(f), 0), N - 1)
+      const t = clamp01(f - Math.floor(f))               // 0 → 1 within the slide
 
       // Transform-only parallax (never touches opacity → never disappears).
       if (numRef.current)   numRef.current.style.transform   = `translateY(calc(-58% + ${(t - 0.5) * -38}px))`
       if (mapPxRef.current) mapPxRef.current.style.transform = `translateY(${(t - 0.5) * -26}px)`
       if (fillRef.current)  fillRef.current.style.transform  = `scaleX(${p.toFixed(4)})`
 
-      if (idx !== targetRef.current) {
-        targetRef.current = idx
-        const inView = rect.top < window.innerHeight && rect.bottom > 0
-        if (inView) {
-          kick()                                        // step through visibly
-        } else {
-          activeRef.current = idx                        // off-screen → snap
-          setDisplayIdx(idx)
-        }
-      }
+      if (idx !== idxRef.current) { idxRef.current = idx; setDisplayIdx(idx) }
     }
 
     const onScroll = () => {
@@ -298,8 +296,8 @@ export default function ServiceIndustries() {
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onScroll)
     return () => {
+      html.style.scrollSnapType = prevSnap
       if (raf) cancelAnimationFrame(raf)
-      if (stepTimer.current) clearTimeout(stepTimer.current)
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
     }
@@ -307,15 +305,14 @@ export default function ServiceIndustries() {
 
   const ind = INDUSTRIES[displayIdx]
 
-  // Skip in the direction the user is travelling: scrolling down jumps to the
-  // next section, scrolling up jumps back to the previous section.
+  // Skip past the whole section in the direction the user is travelling.
   const handleSkip = () => {
     const wrap = wrapRef.current
     if (!wrap) return
     const absTop = wrap.getBoundingClientRect().top + window.scrollY
     const target = dirRef.current < 0
-      ? absTop - window.innerHeight - 2                       // up → previous section
-      : absTop + wrap.offsetHeight - window.innerHeight + 2   // down → next section
+      ? absTop - window.innerHeight - 2   // up → previous section
+      : absTop + wrap.offsetHeight + 2    // down → next section
     window.scrollTo({ top: Math.max(target, 0), behavior: 'smooth' })
   }
 
@@ -324,6 +321,11 @@ export default function ServiceIndustries() {
       <style>{`
         .ind-strip { overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
         .ind-strip::-webkit-scrollbar { display: none; }
+
+        /* Hidden scroll-snap anchors — one full-viewport stop per industry.
+           scroll-snap-stop: always forces the browser to halt on every one. */
+        .ind-anchors { position: relative; z-index: 0; margin-top: -100vh; }
+        .ind-anchor  { height: 100vh; scroll-snap-align: start; scroll-snap-stop: always; }
 
         /* Skip control */
         .ind-skip {
@@ -405,22 +407,23 @@ export default function ServiceIndustries() {
         }
       `}</style>
 
-      {/* Tall wrapper supplies the scroll distance */}
+      {/* Section height comes from the snap anchors below (N × 100vh) */}
       <section
         ref={wrapRef}
         id="industries"
         aria-label="Industries we serve"
-        style={{ position: 'relative', height: `calc(100vh + ${TOTAL_SCROLL}px)` }}
+        style={{ position: 'relative' }}
       >
-        {/* Sticky panel fills the viewport while the section is scrolled through */}
+        {/* Sticky panel fills the viewport while the anchors scroll past */}
         <div style={{
           position: 'sticky', top: 0,
-          height: '100svh',
+          height: '100vh',
           overflow: 'hidden',
           background: 'linear-gradient(180deg, #ffffff 0%, #f5f8fd 26%, #eef4fc 60%, #f6f9fd 84%, #ffffff 100%)',
           display: 'flex',
           flexDirection: 'column',
           isolation: 'isolate',
+          zIndex: 1,
         }}>
 
           {/* Top bar */}
@@ -545,7 +548,27 @@ export default function ServiceIndustries() {
             {/* Right — visual (keyed enter animation + inner parallax) */}
             <div key={displayIdx} className="ind-viz-in ind-right-col" style={{ flex: 1, minWidth: 0 }}>
               <div ref={mapPxRef} style={{ willChange: 'transform' }}>
-                <FleetMapCard count={ind.count} />
+                {ind.image ? (
+                  <div style={{
+                    position: 'relative',
+                    height: 'clamp(340px, 52vh, 580px)',
+                    borderRadius: '20px',
+                    overflow: 'hidden',
+                    border: '1px solid #e4e4e8',
+                    boxShadow: '0 30px 70px -28px rgba(20,40,90,.24), 0 4px 14px rgba(20,40,90,.06)',
+                    background: '#eef3fb',
+                  }}>
+                    <Image
+                      src={ind.image}
+                      alt={`${ind.title.replace('\n', ' ')} dashboard`}
+                      fill
+                      sizes="(max-width: 800px) 0px, 46vw"
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </div>
+                ) : (
+                  <FleetMapCard count={ind.count} />
+                )}
               </div>
             </div>
           </div>
@@ -571,6 +594,14 @@ export default function ServiceIndustries() {
             />
           </div>
 
+        </div>
+
+        {/* Snap anchors (behind the panel): one per industry, pulled up under it
+            so each defines a full-viewport scroll stop. */}
+        <div className="ind-anchors" aria-hidden="true">
+          {INDUSTRIES.map((_, i) => (
+            <div key={i} className="ind-anchor" />
+          ))}
         </div>
       </section>
     </>

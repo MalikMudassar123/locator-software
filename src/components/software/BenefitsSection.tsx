@@ -1,5 +1,5 @@
 'use client'
-import { useState, type ReactNode } from 'react'
+import { useState, useEffect, useRef, type ReactNode } from 'react'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
@@ -394,6 +394,8 @@ const VIDEO_MAP: Record<number, string> = {
   1: '/software_images/1781721807787704.mp4',
   4: '/software_images/1781723086226131.mp4',
 }
+// Flat list so every video can stay mounted + preloaded (no re-mount flash).
+const VIDEO_LIST = Object.entries(VIDEO_MAP).map(([idx, src]) => ({ idx: Number(idx), src }))
 
 // ── Main export ──────────────────────────────────────────────────────────────
 
@@ -401,6 +403,20 @@ export default function BenefitsSection() {
   const [active, setActive] = useState(0)
   const StageContent = STAGES[active]
   const videoSrc = VIDEO_MAP[active] ?? null
+
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
+
+  // Only the active video plays; the others stay paused holding their first
+  // frame (already buffered), so switching tabs reveals a frame instantly
+  // instead of a black box waiting for a fresh element to load.
+  useEffect(() => {
+    VIDEO_LIST.forEach(({ idx }, i) => {
+      const v = videoRefs.current[i]
+      if (!v) return
+      if (idx === active) v.play().catch(() => {})
+      else v.pause()
+    })
+  }, [active])
 
   const goUp   = () => setActive(p => Math.max(0, p - 1))
   const goDown = () => setActive(p => Math.min(ITEMS.length - 1, p + 1))
@@ -413,10 +429,6 @@ export default function BenefitsSection() {
           to   { opacity: 1; transform: none; }
         }
         .stage-in { animation: stageIn .28s ${EASE} both; }
-
-        /* Media eases in on load instead of snapping from a black box. */
-        @keyframes bfMediaIn { from { opacity: 0; } to { opacity: 1; } }
-        .bf-video { animation: bfMediaIn .5s ${EASE} both; }
 
         /* accordion item wrapper */
         .bf-item {
@@ -599,15 +611,16 @@ export default function BenefitsSection() {
                   position: 'relative',
                 }}
               >
-                {videoSrc ? (
+                {/* All videos stay mounted + preloaded and simply cross-fade,
+                    so opening a tab shows a frame immediately (no black flash). */}
+                {VIDEO_LIST.map(({ idx, src }, i) => (
                   <video
-                    key={videoSrc}
-                    className="bf-video"
-                    autoPlay
+                    key={src}
+                    ref={el => { videoRefs.current[i] = el }}
                     muted
                     loop
                     playsInline
-                    preload="metadata"
+                    preload="auto"
                     style={{
                       position: 'absolute',
                       inset: 0,
@@ -615,12 +628,19 @@ export default function BenefitsSection() {
                       height: '100%',
                       objectFit: 'cover',
                       display: 'block',
+                      opacity: active === idx ? 1 : 0,
+                      zIndex: active === idx ? 2 : 1,
+                      pointerEvents: active === idx ? 'auto' : 'none',
+                      transition: 'opacity .3s ' + EASE,
                     }}
                   >
-                    <source src={videoSrc} type="video/mp4" />
+                    <source src={src} type="video/mp4" />
                   </video>
-                ) : (
-                  <div key={active} className="stage-in" style={{ height: '100%' }}>
+                ))}
+
+                {/* Wireframe stage for tabs that have no video */}
+                {!videoSrc && (
+                  <div key={active} className="stage-in" style={{ position: 'relative', zIndex: 3, height: '100%' }}>
                     <StageContent />
                   </div>
                 )}

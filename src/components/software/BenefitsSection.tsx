@@ -405,10 +405,15 @@ export default function BenefitsSection() {
   const videoSrc = VIDEO_MAP[active] ?? null
 
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
+  // Which videos actually have a frame decoded. Until a video is "ready" we keep
+  // it transparent and show a light placeholder — so a not-yet-loaded video
+  // (first load / mobile, where preload is ignored) never renders as black.
+  const [ready, setReady] = useState<Record<string, boolean>>({})
+  const markReady = (src: string) =>
+    setReady(r => (r[src] ? r : { ...r, [src]: true }))
 
-  // Only the active video plays; the others stay paused holding their first
-  // frame (already buffered), so switching tabs reveals a frame instantly
-  // instead of a black box waiting for a fresh element to load.
+  // Only the active video plays; the others stay paused holding their frame,
+  // so switching tabs reveals a frame instantly.
   useEffect(() => {
     VIDEO_LIST.forEach(({ idx }, i) => {
       const v = videoRefs.current[i]
@@ -417,6 +422,8 @@ export default function BenefitsSection() {
       else v.pause()
     })
   }, [active])
+
+  const activeReady = videoSrc ? !!ready[videoSrc] : true
 
   const goUp   = () => setActive(p => Math.max(0, p - 1))
   const goDown = () => setActive(p => Math.min(ITEMS.length - 1, p + 1))
@@ -429,6 +436,15 @@ export default function BenefitsSection() {
           to   { opacity: 1; transform: none; }
         }
         .stage-in { animation: stageIn .28s ${EASE} both; }
+
+        /* Light loading placeholder for videos (never a black box) */
+        @keyframes bfShimmer { 0% { background-position: -160% 0; } 100% { background-position: 160% 0; } }
+        .bf-skeleton {
+          position: absolute; inset: 0; z-index: 1;
+          background: linear-gradient(100deg, #eef2f8 30%, #f7faff 50%, #eef2f8 70%);
+          background-size: 200% 100%;
+          animation: bfShimmer 1.4s ${EASE} infinite;
+        }
 
         /* accordion item wrapper */
         .bf-item {
@@ -606,37 +622,48 @@ export default function BenefitsSection() {
                 className="bf-right"
                 style={{
                   flex: 1,
-                  background: videoSrc ? '#000' : '#f0f0f7',
+                  background: '#eef2f8',   // light placeholder — never a black box
                   overflow: 'hidden',
                   position: 'relative',
                 }}
               >
-                {/* All videos stay mounted + preloaded and simply cross-fade,
-                    so opening a tab shows a frame immediately (no black flash). */}
-                {VIDEO_LIST.map(({ idx, src }, i) => (
-                  <video
-                    key={src}
-                    ref={el => { videoRefs.current[i] = el }}
-                    muted
-                    loop
-                    playsInline
-                    preload="auto"
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      display: 'block',
-                      opacity: active === idx ? 1 : 0,
-                      zIndex: active === idx ? 2 : 1,
-                      pointerEvents: active === idx ? 'auto' : 'none',
-                      transition: 'opacity .3s ' + EASE,
-                    }}
-                  >
-                    <source src={src} type="video/mp4" />
-                  </video>
-                ))}
+                {/* Light shimmer shown while the active video has no frame yet
+                    (first load / mobile), instead of a black screen. */}
+                {videoSrc && !activeReady && (
+                  <div className="bf-skeleton" aria-hidden="true" />
+                )}
+
+                {/* All videos stay mounted and cross-fade; each only becomes
+                    visible once it actually has a decoded frame. */}
+                {VIDEO_LIST.map(({ idx, src }, i) => {
+                  const show = active === idx && !!ready[src]
+                  return (
+                    <video
+                      key={src}
+                      ref={el => { videoRefs.current[i] = el }}
+                      muted
+                      loop
+                      playsInline
+                      preload="auto"
+                      onLoadedData={() => markReady(src)}
+                      onCanPlay={() => markReady(src)}
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                        opacity: show ? 1 : 0,
+                        zIndex: active === idx ? 2 : 1,
+                        pointerEvents: active === idx ? 'auto' : 'none',
+                        transition: 'opacity .4s ' + EASE,
+                      }}
+                    >
+                      <source src={src} type="video/mp4" />
+                    </video>
+                  )
+                })}
 
                 {/* Wireframe stage for tabs that have no video */}
                 {!videoSrc && (

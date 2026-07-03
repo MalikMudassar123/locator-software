@@ -125,6 +125,12 @@ const INDUSTRIES: Industry[] = [
 ]
 
 const N = INDUSTRIES.length
+// Every industry photo, so we can eagerly preload them all up front (below the
+// fold) — by the time the user scrolls here each one is cached and appears
+// instantly instead of loading in with a white box.
+const IMAGE_LIST = INDUSTRIES.map(i => i.image).filter((s): s is string => !!s)
+const IMG_SIZES = '(max-width: 800px) 0px, 46vw'
+
 // Each industry occupies one full viewport of scroll; a hidden snap anchor per
 // slide (scroll-snap-stop: always) makes the browser stop on every one, so a
 // single gesture advances exactly one industry — no skipping on a hard flick.
@@ -247,6 +253,8 @@ export default function ServiceIndustries() {
 
   const [displayIdx, setDisplayIdx] = useState(0)   // industry currently shown
   const [dirDown,    setDirDown]    = useState(true) // last scroll direction
+  const [loaded,     setLoaded]     = useState<Record<string, boolean>>({}) // decoded images
+  const markLoaded = (src: string) => setLoaded(l => (l[src] ? l : { ...l, [src]: true }))
 
   const idxRef   = useRef(0)
   const dirRef   = useRef<1 | -1>(1)
@@ -331,6 +339,15 @@ export default function ServiceIndustries() {
            scroll-snap-stop: always forces the browser to halt on every one. */
         .ind-anchors { position: relative; z-index: 0; margin-top: -100vh; }
         .ind-anchor  { height: 100vh; scroll-snap-align: start; scroll-snap-stop: always; }
+
+        /* Light shimmer placeholder for photos (never a blank white box) */
+        @keyframes indShimmer { 0% { background-position: -160% 0; } 100% { background-position: 160% 0; } }
+        .ind-skeleton {
+          position: absolute; inset: 0; z-index: 1;
+          background: linear-gradient(100deg, #e7edf6 30%, #f4f8fd 50%, #e7edf6 70%);
+          background-size: 200% 100%;
+          animation: indShimmer 1.4s ${EASE} infinite;
+        }
 
         /* Skip control */
         .ind-skip {
@@ -419,6 +436,14 @@ export default function ServiceIndustries() {
         aria-label="Industries we serve"
         style={{ position: 'relative' }}
       >
+        {/* Eagerly preload every industry photo off-screen so each slide is
+            already cached and appears instantly when scrolled to. */}
+        <div aria-hidden="true" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', opacity: 0, pointerEvents: 'none', top: 0, left: -9999 }}>
+          {IMAGE_LIST.map(src => (
+            <Image key={src} src={src} alt="" width={880} height={560} sizes={IMG_SIZES} loading="eager" onLoad={() => markLoaded(src)} />
+          ))}
+        </div>
+
         {/* Sticky panel fills the viewport while the anchors scroll past */}
         <div style={{
           position: 'sticky', top: 0,
@@ -563,12 +588,19 @@ export default function ServiceIndustries() {
                     boxShadow: '0 30px 70px -28px rgba(20,40,90,.24), 0 4px 14px rgba(20,40,90,.06)',
                     background: '#eef3fb',
                   }}>
+                    {/* Light shimmer until the photo is decoded — never a white box */}
+                    {!loaded[ind.image] && <div className="ind-skeleton" aria-hidden="true" />}
                     <Image
                       src={ind.image}
-                      alt={`${ind.title.replace('\n', ' ')} dashboard`}
+                      alt={`${ind.title.replace('\n', ' ')} fleet`}
                       fill
-                      sizes="(max-width: 800px) 0px, 46vw"
-                      style={{ objectFit: 'cover' }}
+                      sizes={IMG_SIZES}
+                      onLoad={() => ind.image && markLoaded(ind.image)}
+                      style={{
+                        objectFit: 'cover',
+                        opacity: loaded[ind.image] ? 1 : 0,
+                        transition: 'opacity .4s ' + EASE,
+                      }}
                     />
                   </div>
                 ) : (

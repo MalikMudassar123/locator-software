@@ -17,6 +17,10 @@ interface Industry {
   vehicles: string[]
   count: number
   image?: string   // real screenshot; falls back to the built-in map card
+  // When set, the photo is shown at its natural aspect ratio (no crop) using
+  // these intrinsic dimensions; otherwise it fills a fixed-height cover frame.
+  imageW?: number
+  imageH?: number
 }
 
 const INDUSTRIES: Industry[] = [
@@ -27,7 +31,9 @@ const INDUSTRIES: Industry[] = [
     desc: 'GPS fleet telematics helps vans, pickups, mini-trucks, delivery bikes track distributors and supermarket deliveries live. It reduces fuel loss, improves route planning, automates maintenance, monitors drivers, and prevents delivery delays, giving FMCG companies in UAE full control over sales teams and daily stock movement.',
     vehicles: ['Delivery vans', 'Pickups', 'Mini-trucks', 'Delivery bikes'],
     count: 8,
-    image: '/service_page/FMCG D1.png',
+    image: '/service_page/FMCG_2.png',
+    imageW: 1790,
+    imageH: 879,
   },
   {
     id: 'transport',
@@ -37,6 +43,8 @@ const INDUSTRIES: Industry[] = [
     vehicles: ['Cars', 'Vans', 'Trucks', 'Buses', 'Bikes', 'Yachts'],
     count: 12,
     image: '/service_page/Transport  Logistics 2.png',
+    imageW: 1786,
+    imageH: 880,
   },
   {
     id: 'construction',
@@ -46,6 +54,8 @@ const INDUSTRIES: Industry[] = [
     vehicles: ['Trucks', 'Generators', 'Forklifts', 'Bulldozers', 'Boom loaders', 'JCBs'],
     count: 10,
     image: '/service_page/Construction Site Fleet.png',
+    imageW: 1790,
+    imageH: 879,
   },
   {
     id: 'facility',
@@ -55,6 +65,8 @@ const INDUSTRIES: Industry[] = [
     vehicles: ['Service vans', 'Cars', 'Pickup trucks', 'Forklifts', 'Generators', 'Boom loaders'],
     count: 9,
     image: '/service_page/Facility Management Fleet.png',
+    imageW: 1789,
+    imageH: 879,
   },
   {
     id: 'healthcare',
@@ -64,6 +76,8 @@ const INDUSTRIES: Industry[] = [
     vehicles: ['Ambulances', 'Cars', 'Vans', 'Delivery bikes', 'Mobile medical units'],
     count: 6,
     image: '/service_page/Healthcare Fleet Monitoring.png',
+    imageW: 1790,
+    imageH: 879,
   },
   {
     id: 'travel',
@@ -73,6 +87,8 @@ const INDUSTRIES: Industry[] = [
     vehicles: ['Tourist cars', 'Vans', 'Buses', 'Bikes', 'Yachts', 'Boats'],
     count: 7,
     image: '/service_page/Travel & Tourism.png',
+    imageW: 1790,
+    imageH: 879,
   },
   {
     id: 'rental',
@@ -81,6 +97,9 @@ const INDUSTRIES: Industry[] = [
     desc: 'Fleet telematics supports leased cars, vans, buses, bikes, trucks and boats. It tracks vehicle usage, monitors unauthorized trips, sends service alerts, and retrieves incident logs instantly. Rental companies in UAE benefit from reduced fraud, better asset utilization, improved maintenance scheduling, and faster claims resolution.',
     vehicles: ['Cars', 'Vans', 'Buses', 'Bikes', 'Trucks', 'Boats'],
     count: 15,
+    image: '/service_page/Rental Leasing.png',
+    imageW: 1790,
+    imageH: 879,
   },
   {
     id: 'petroleum',
@@ -579,30 +598,59 @@ export default function ServiceIndustries() {
             <div key={displayIdx} className="ind-viz-in ind-right-col" style={{ flex: 1, minWidth: 0 }}>
               <div ref={mapPxRef} style={{ willChange: 'transform' }}>
                 {ind.image ? (
-                  <div style={{
-                    position: 'relative',
-                    height: 'clamp(340px, 52vh, 580px)',
-                    borderRadius: '20px',
-                    overflow: 'hidden',
-                    border: '1px solid #e4e4e8',
-                    boxShadow: '0 30px 70px -28px rgba(20,40,90,.24), 0 4px 14px rgba(20,40,90,.06)',
-                    background: '#eef3fb',
-                  }}>
-                    {/* Light shimmer until the photo is decoded — never a white box */}
-                    {!loaded[ind.image] && <div className="ind-skeleton" aria-hidden="true" />}
-                    <Image
-                      src={ind.image}
-                      alt={`${ind.title.replace('\n', ' ')} fleet`}
-                      fill
-                      sizes={IMG_SIZES}
-                      onLoad={() => ind.image && markLoaded(ind.image)}
-                      style={{
-                        objectFit: 'cover',
-                        opacity: loaded[ind.image] ? 1 : 0,
-                        transition: 'opacity .4s ' + EASE,
-                      }}
-                    />
-                  </div>
+                  ind.imageW && ind.imageH ? (
+                    /* Natural aspect ratio — full photo, no crop (FMCG) */
+                    <div style={{
+                      position: 'relative',
+                      borderRadius: '20px',
+                      overflow: 'hidden',
+                      border: '1px solid #e4e4e8',
+                      boxShadow: '0 30px 70px -28px rgba(20,40,90,.24), 0 4px 14px rgba(20,40,90,.06)',
+                      background: '#eef3fb',
+                    }}>
+                      {!loaded[ind.image] && <div className="ind-skeleton" aria-hidden="true" />}
+                      <Image
+                        src={ind.image}
+                        alt={`${ind.title.replace('\n', ' ')} fleet`}
+                        width={ind.imageW}
+                        height={ind.imageH}
+                        sizes={IMG_SIZES}
+                        onLoad={() => ind.image && markLoaded(ind.image)}
+                        style={{
+                          width: '100%',
+                          height: 'auto',
+                          display: 'block',
+                          opacity: loaded[ind.image] ? 1 : 0,
+                          transition: 'opacity .4s ' + EASE,
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    /* Fixed-height cover frame — every other industry */
+                    <div style={{
+                      position: 'relative',
+                      height: 'clamp(340px, 52vh, 580px)',
+                      borderRadius: '20px',
+                      overflow: 'hidden',
+                      border: '1px solid #e4e4e8',
+                      boxShadow: '0 30px 70px -28px rgba(20,40,90,.24), 0 4px 14px rgba(20,40,90,.06)',
+                      background: '#eef3fb',
+                    }}>
+                      {!loaded[ind.image] && <div className="ind-skeleton" aria-hidden="true" />}
+                      <Image
+                        src={ind.image}
+                        alt={`${ind.title.replace('\n', ' ')} fleet`}
+                        fill
+                        sizes={IMG_SIZES}
+                        onLoad={() => ind.image && markLoaded(ind.image)}
+                        style={{
+                          objectFit: 'cover',
+                          opacity: loaded[ind.image] ? 1 : 0,
+                          transition: 'opacity .4s ' + EASE,
+                        }}
+                      />
+                    </div>
+                  )
                 ) : (
                   <FleetMapCard count={ind.count} />
                 )}

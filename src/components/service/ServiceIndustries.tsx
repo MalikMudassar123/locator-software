@@ -36,6 +36,7 @@ const INDUSTRIES: Industry[] = [
     desc: 'LOCATOR GPS fleet systems support cars, vans, trucks, buses, bikes, yachts used for cargo, courier, and staff transport. It enables live trip tracking, driver behavior alerts, geofencing, and route history, helping UAE logistics companies reduce accidents, optimize delivery schedules, improve dispatch, and resolve claims faster with data proof.',
     vehicles: ['Cars', 'Vans', 'Trucks', 'Buses', 'Bikes', 'Yachts'],
     count: 12,
+    image: '/service_page/Transport  Logistics 2.png',
   },
   {
     id: 'construction',
@@ -44,6 +45,7 @@ const INDUSTRIES: Industry[] = [
     desc: 'Fleet telematics tracks site cars, pickups, trucks, generators, forklifts, bulldozers, boom loaders, JCBs and loaders. It improves machine utilization, validates site activity, prevents unauthorized use, sends service reminders, and optimizes routes, helping UAE construction firms reduce equipment damage, delays, and fuel waste.',
     vehicles: ['Trucks', 'Generators', 'Forklifts', 'Bulldozers', 'Boom loaders', 'JCBs'],
     count: 10,
+    image: '/service_page/Construction Site Fleet.png',
   },
   {
     id: 'facility',
@@ -52,6 +54,7 @@ const INDUSTRIES: Industry[] = [
     desc: 'GPS telematics gives real-time oversight on service vans, cars, pickup trucks, forklifts, generators, boom loaders and field machines. It improves task dispatch, idle control, geofence alerts, expense logging, and maintenance planning, helping UAE facility companies solve road team chaos, reduce response time, and validate service completion instantly.',
     vehicles: ['Service vans', 'Cars', 'Pickup trucks', 'Forklifts', 'Generators', 'Boom loaders'],
     count: 9,
+    image: '/service_page/Facility Management Fleet.png',
   },
   {
     id: 'healthcare',
@@ -60,6 +63,7 @@ const INDUSTRIES: Industry[] = [
     desc: 'For ambulances, cars, vans, pickup trucks, delivery bikes, and mobile medical units, GPS telematics ensures live tracking, driver safety alerts, geofence hospitals, and automate service schedules. It improves emergency dispatch, reduces fleet downtime, and provides accurate trip logs, helping UAE healthcare providers deliver faster and safer medical support.',
     vehicles: ['Ambulances', 'Cars', 'Vans', 'Delivery bikes', 'Mobile medical units'],
     count: 6,
+    image: '/service_page/Healthcare Fleet Monitoring.png',
   },
   {
     id: 'travel',
@@ -68,6 +72,7 @@ const INDUSTRIES: Industry[] = [
     desc: 'GPS fleet systems track tourist cars, vans, buses, bikes, yachts, and boats operating on UAE roads and waters. It improves guest transport scheduling, geofencing attractions, tracking trips, and monitoring drivers, helping tourism companies reduce delays, ensure safety, improve driver training, and provide better customer experience.',
     vehicles: ['Tourist cars', 'Vans', 'Buses', 'Bikes', 'Yachts', 'Boats'],
     count: 7,
+    image: '/service_page/Travel & Tourism.png',
   },
   {
     id: 'rental',

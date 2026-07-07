@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
+import { REGULATORY_PRODUCTS } from '@/components/regulatory/data'
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -12,7 +13,7 @@ const navLinks = [
   { href: '/software', label: 'Software' },
   { href: '/service', label: 'Service' },
   { href: '/industries', label: 'Industries' },
-  { href: '/regulatory', label: 'Regulatory GPS Certificate' },
+  { href: '/regulatory', label: 'Regulatory GPS Certifications' },
   { href: '/contact', label: 'Contact' },
 ]
 
@@ -37,6 +38,54 @@ export default function Navbar() {
 
   return (
     <>
+      <style>{`
+        /* ── Regulatory hover dropdown (home navbar) ── */
+        .hn-dd-wrap { position: relative; }
+        .hn-chev { transition: transform .28s cubic-bezier(.22,.61,.36,1); flex-shrink: 0; }
+        .hn-dd-wrap:hover .hn-chev, .hn-dd-wrap:focus-within .hn-chev { transform: rotate(180deg); }
+        .hn-dd {
+          position: absolute; top: calc(100% + 12px); left: 50%;
+          transform: translateX(-50%) translateY(6px) scale(.97);
+          width: 290px; padding: 6px;
+          background: #fff;
+          border: 1px solid #e9ecf3;
+          border-radius: 16px;
+          box-shadow: 0 20px 50px -20px rgba(6,42,138,.5), 0 2px 8px rgba(6,42,138,.15);
+          opacity: 0; pointer-events: none;
+          transition: opacity .18s ease, transform .26s cubic-bezier(.22,.61,.36,1);
+          z-index: 50;
+        }
+        .hn-dd::before { content: ''; position: absolute; top: -14px; left: 0; right: 0; height: 14px; }
+        .hn-dd::after {
+          content: ''; position: absolute; top: -5px; left: 50%;
+          transform: translateX(-50%) rotate(45deg);
+          width: 9px; height: 9px; background: #fff; border-radius: 2px;
+        }
+        .hn-dd-wrap:hover .hn-dd, .hn-dd-wrap:focus-within .hn-dd {
+          opacity: 1; pointer-events: auto;
+          transform: translateX(-50%) translateY(0) scale(1);
+        }
+        .hn-dd-item {
+          display: flex; align-items: center; gap: 11px;
+          padding: 9px 10px; border-radius: 11px;
+          text-decoration: none;
+          transition: background .16s ease;
+        }
+        .hn-dd-item:hover { background: rgba(19,96,238,.06); }
+        .hn-dd-icon {
+          width: 32px; height: 32px; border-radius: 9px;
+          display: grid; place-items: center; flex-shrink: 0;
+        }
+        .hn-dd-icon svg { width: 17px; height: 17px; }
+        .hn-dd-name { display: block; font-size: 13px; font-weight: 700; color: #1d1d1f; line-height: 1.25; }
+        .hn-dd-tag {
+          display: block; font-size: 11px; color: #8e8e93; line-height: 1.3; margin-top: 1px;
+          white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 190px;
+        }
+        .hn-dd-go { margin-left: auto; color: #c4c4d0; opacity: 0; transform: translateX(-4px); transition: .18s ease; flex-shrink: 0; }
+        .hn-dd-item:hover .hn-dd-go { opacity: 1; transform: none; color: #1360ee; }
+      `}</style>
+
       <nav
         className="absolute top-0 left-0 right-0 z-10 h-16 md:h-20"
         style={{ paddingLeft: 'clamp(20px, 4vw, 50px)', paddingRight: 'clamp(20px, 4vw, 50px)' }}
@@ -58,8 +107,9 @@ export default function Navbar() {
           <ul className="hidden lg:flex items-center gap-6 list-none m-0 p-0">
             {navLinks.map(l => {
               const isActive = l.href === '/' ? pathname === '/' : pathname.startsWith(l.href)
+              const isRegulatory = l.href === '/regulatory'
               return (
-                <li key={l.href}>
+                <li key={l.href} className={isRegulatory ? 'hn-dd-wrap' : undefined}>
                   <Link
                     href={l.href}
                     className="text-white text-sm transition-all whitespace-nowrap"
@@ -68,10 +118,36 @@ export default function Navbar() {
                       opacity: isActive ? 1 : 0.82,
                       borderBottom: isActive ? '2px solid rgba(255,255,255,0.85)' : '2px solid transparent',
                       paddingBottom: '2px',
+                      display: isRegulatory ? 'inline-flex' : undefined,
+                      alignItems: isRegulatory ? 'center' : undefined,
+                      gap: isRegulatory ? '4px' : undefined,
                     }}
                   >
                     {l.label}
+                    {isRegulatory && (
+                      <svg className="hn-chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    )}
                   </Link>
+                  {isRegulatory && (
+                    <div className="hn-dd" role="menu" aria-label="Regulatory GPS Certifications">
+                      {REGULATORY_PRODUCTS.map(p => (
+                        <Link key={p.slug} href={`/${p.slug}`} className="hn-dd-item" role="menuitem">
+                          <span className="hn-dd-icon" style={{ background: `${p.accent}14`, color: p.accent }}>
+                            {p.icon}
+                          </span>
+                          <span style={{ minWidth: 0 }}>
+                            <span className="hn-dd-name">{p.name}</span>
+                            <span className="hn-dd-tag">{p.tagline}</span>
+                          </span>
+                          <svg className="hn-dd-go" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                          </svg>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </li>
               )
             })}
@@ -288,6 +364,25 @@ export default function Navbar() {
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </Link>
+                {l.href === '/regulatory' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', padding: '2px 0 8px 22px', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
+                    {REGULATORY_PRODUCTS.map(p => (
+                      <Link
+                        key={p.slug}
+                        href={`/${p.slug}`}
+                        onClick={() => setOpen(false)}
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: '10px',
+                          padding: '11px 4px', fontSize: '15px', fontWeight: 600,
+                          color: 'rgba(255,255,255,0.78)', textDecoration: 'none',
+                        }}
+                      >
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.7)', flexShrink: 0 }} />
+                        {p.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </li>
               )
             })}

@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
+import { REGULATORY_PRODUCTS } from '@/components/regulatory/data'
 
 const NAV_LINKS = [
   { href: '/',           label: 'Home' },
@@ -12,7 +13,7 @@ const NAV_LINKS = [
   { href: '/software',   label: 'Software' },
   { href: '/service',    label: 'Service' },
   { href: '/industries', label: 'Industries' },
-  { href: '/regulatory', label: 'Regulatory GPS Certificate' },
+  { href: '/regulatory', label: 'Regulatory GPS Certifications' },
   { href: '/contact',    label: 'Contact' },
 ]
 
@@ -90,14 +91,6 @@ export default function SoftwareNavbar() {
           .swn-root { padding-left: 10px; padding-right: 10px; }
           .swn-inner { border-radius: 14px; }
         }
-        /* Classy entrance: the whole bar eases down on load */
-        @media (prefers-reduced-motion: no-preference) {
-          .swn-root { animation: swnDrop .7s cubic-bezier(.22,.61,.36,1) both; }
-        }
-        @keyframes swnDrop {
-          from { opacity: 0; transform: translateY(-18px); }
-          to   { opacity: 1; transform: none; }
-        }
 
         .swn-link {
           position: relative;
@@ -131,6 +124,56 @@ export default function SoftwareNavbar() {
           font-weight: 700;
         }
         .swn-link.active::after { width: 55%; }
+
+        /* ── Regulatory hover dropdown ── */
+        .swn-dd-wrap { position: relative; }
+        .swn-dd-wrap .swn-link { display: inline-flex; align-items: center; gap: 4px; }
+        .swn-chev { transition: transform .28s cubic-bezier(.22,.61,.36,1); flex-shrink: 0; }
+        .swn-dd-wrap:hover .swn-chev, .swn-dd-wrap:focus-within .swn-chev { transform: rotate(180deg); }
+        .swn-dd {
+          position: absolute; top: calc(100% + 10px); left: 50%;
+          transform: translateX(-50%) translateY(6px) scale(.97);
+          width: 290px; padding: 6px;
+          background: #fff;
+          border: 1px solid #e9ecf3;
+          border-radius: 16px;
+          box-shadow: 0 20px 50px -20px rgba(15,23,42,.3), 0 2px 8px rgba(15,23,42,.05);
+          opacity: 0; pointer-events: none;
+          transition: opacity .18s ease, transform .26s cubic-bezier(.22,.61,.36,1);
+          z-index: 1001;
+        }
+        /* invisible hover bridge so the pointer can travel from link to panel */
+        .swn-dd::before { content: ''; position: absolute; top: -12px; left: 0; right: 0; height: 12px; }
+        /* caret */
+        .swn-dd::after {
+          content: ''; position: absolute; top: -5px; left: 50%;
+          transform: translateX(-50%) rotate(45deg);
+          width: 9px; height: 9px; background: #fff; border-radius: 2px;
+          border-left: 1px solid #e9ecf3; border-top: 1px solid #e9ecf3;
+        }
+        .swn-dd-wrap:hover .swn-dd, .swn-dd-wrap:focus-within .swn-dd {
+          opacity: 1; pointer-events: auto;
+          transform: translateX(-50%) translateY(0) scale(1);
+        }
+        .swn-dd-item {
+          display: flex; align-items: center; gap: 11px;
+          padding: 9px 10px; border-radius: 11px;
+          text-decoration: none;
+          transition: background .16s ease;
+        }
+        .swn-dd-item:hover { background: rgba(19,96,238,.06); }
+        .swn-dd-icon {
+          width: 32px; height: 32px; border-radius: 9px;
+          display: grid; place-items: center; flex-shrink: 0;
+        }
+        .swn-dd-icon svg { width: 17px; height: 17px; }
+        .swn-dd-name { display: block; font-size: 13px; font-weight: 700; color: #1d1d1f; line-height: 1.25; }
+        .swn-dd-tag {
+          display: block; font-size: 11px; color: #8e8e93; line-height: 1.3; margin-top: 1px;
+          white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 190px;
+        }
+        .swn-dd-go { margin-left: auto; color: #c4c4d0; opacity: 0; transform: translateX(-4px); transition: .18s ease; flex-shrink: 0; }
+        .swn-dd-item:hover .swn-dd-go { opacity: 1; transform: none; color: #1360ee; }
 
         /* Logo + flag micro-interactions */
         .swn-logo { transition: transform .25s cubic-bezier(.22,.61,.36,1); }
@@ -192,7 +235,11 @@ export default function SoftwareNavbar() {
       {/* Keeps the hero layout intact; the real bar is portaled out of flow. */}
       <div className="swn-spacer" aria-hidden="true" />
 
-      {mounted && createPortal(
+      {/* Server-rendered inline so the bar paints immediately; after hydration
+          it moves to a <body> portal (needed for backdrop blur on the pinned
+          heroes). */}
+      {(() => {
+        const bar = (
       <nav className="swn-root">
         <div className="swn-inner">
           {/* Logo */}
@@ -204,6 +251,34 @@ export default function SoftwareNavbar() {
           <div className="swn-pills" style={{ display: 'flex', alignItems: 'center', gap: '2px', flex: 1, justifyContent: 'center' }}>
             {NAV_LINKS.map(l => {
               const isActive = l.href === '/' ? pathname === '/' : pathname.startsWith(l.href)
+              if (l.href === '/regulatory') {
+                return (
+                  <div key={l.href} className="swn-dd-wrap">
+                    <Link href={l.href} className={`swn-link${isActive ? ' active' : ''}`}>
+                      {l.label}
+                      <svg className="swn-chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </Link>
+                    <div className="swn-dd" role="menu" aria-label="Regulatory GPS Certifications">
+                      {REGULATORY_PRODUCTS.map(p => (
+                        <Link key={p.slug} href={`/${p.slug}`} className="swn-dd-item" role="menuitem">
+                          <span className="swn-dd-icon" style={{ background: `${p.accent}14`, color: p.accent }}>
+                            {p.icon}
+                          </span>
+                          <span style={{ minWidth: 0 }}>
+                            <span className="swn-dd-name">{p.name}</span>
+                            <span className="swn-dd-tag">{p.tagline}</span>
+                          </span>
+                          <svg className="swn-dd-go" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                          </svg>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )
+              }
               return (
                 <Link key={l.href} href={l.href} className={`swn-link${isActive ? ' active' : ''}`}>
                   {l.label}
@@ -242,9 +317,10 @@ export default function SoftwareNavbar() {
             </button>
           </div>
         </div>
-      </nav>,
-        document.body
-      )}
+      </nav>
+        )
+        return mounted ? createPortal(bar, document.body) : bar
+      })()}
 
       {/* Mobile drawer */}
       {open && mounted && createPortal(
@@ -290,6 +366,25 @@ export default function SoftwareNavbar() {
                       <polyline points="9 18 15 12 9 6" />
                     </svg>
                   </Link>
+                  {l.href === '/regulatory' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', padding: '2px 0 8px 14px', borderBottom: '1px solid #e3e3e6' }}>
+                      {REGULATORY_PRODUCTS.map(p => (
+                        <Link
+                          key={p.slug}
+                          href={`/${p.slug}`}
+                          onClick={() => setOpen(false)}
+                          style={{
+                            display: 'flex', alignItems: 'center', gap: '10px',
+                            padding: '11px 4px', fontSize: '14.5px', fontWeight: 600,
+                            color: '#52525e', textDecoration: 'none',
+                          }}
+                        >
+                          <span style={{ width: 6, height: 6, borderRadius: '50%', background: p.accent, flexShrink: 0 }} />
+                          {p.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </li>
               )
             })}

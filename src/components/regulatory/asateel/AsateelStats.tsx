@@ -1,7 +1,7 @@
 const REASONS = [
   {
     title: 'Competitive Pricing',
-    desc: 'As one of the leading GPS providers, we offer aggressively priced solutions for your ASATEEL certification.',
+    desc: 'As one of the leading GPS providers, LOCATOR offer the most aggressively priced solutions for your ASATEEL Certification.',
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="9" /><path d="M9 9.5a2.5 2 0 0 1 5 0c0 1.5-2.5 1.5-2.5 3M12 16.5v.01" />
@@ -10,7 +10,7 @@ const REASONS = [
   },
   {
     title: 'Exceptional Support',
-    desc: "Our team is dedicated to a great customer experience, ensuring your installed GPS tracker flawlessly updates on the ASATEEL platform.",
+    desc: "You'll be confident to trust us with your business. Our team is dedicated to providing the best possible experience for our customers, and we'll work tirelessly to ensure that the installed GPS tracker flawlessly updates in the ASATEEL platform.",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M3 18v-6a9 9 0 0 1 18 0v6" /><path d="M21 19a2 2 0 0 1-2 2h-1v-6h3z" /><path d="M3 19a2 2 0 0 0 2 2h1v-6H3z" />
@@ -19,7 +19,7 @@ const REASONS = [
   },
   {
     title: 'Seamless Software Integrations',
-    desc: "We understand the importance of integrating your installed GPS tracker with other tools — including LOCATOR or any other ERP.",
+    desc: "But that's not all - we understand the importance of integrating the installed GPS tracker to another platform such as LOCATOR or any other ERP. That's why we've assembled a powerful team of experts to ensure that ASATEEL GPS Tracker can easily integrate with the other tools and services.",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M8 3H5a2 2 0 0 0-2 2v3" /><path d="M21 8V5a2 2 0 0 0-2-2h-3" /><path d="M16 21h3a2 2 0 0 0 2-2v-3" /><path d="M3 16v3a2 2 0 0 0 2 2h3" />
@@ -29,10 +29,10 @@ const REASONS = [
 ]
 
 const STATS = [
-  { value: '10+', label: 'Years in Business', accent: '#1360ee' },
-  { value: '1,000+', label: 'Happy Customers', accent: '#13923f' },
-  { value: '20,000+', label: 'Tracked Devices', accent: '#7c3aed' },
-  { value: '1,000,000+', label: 'Data Points Daily', accent: '#c2740a' },
+  { value: '10+', label: 'Years in Business', bg: '#1360ee', color: '#fff' },
+  { value: '1,000+', label: 'Happy Customers', bg: '#fff', color: '#1360ee' },
+  { value: '20,000+', label: 'Tracked Devices', bg: '#fff', color: '#1360ee' },
+  { value: '1,000,000+', label: 'Data points Daily', bg: '#f15a24', color: '#fff' },
 ]
 
 export default function AsateelStats() {
@@ -42,10 +42,9 @@ export default function AsateelStats() {
         .asa-stats-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: clamp(32px,5vw,56px); align-items: start; }
         @media (max-width: 860px) { .asa-stats-grid { grid-template-columns: 1fr; } }
         .asa-stat-box {
-          border-radius: 16px; padding: clamp(20px,2.4vw,26px);
+          border-radius: 12px; padding: clamp(20px,2.4vw,26px);
           display: flex; flex-direction: column; gap: 6px; justify-content: center;
-          min-height: 108px; background: #fff; border: 1px solid #e4e4e8;
-          box-shadow: 0 2px 12px rgba(0,0,0,.04);
+          min-height: 108px;
         }
         .asa-stat-mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
       `}</style>
@@ -64,12 +63,12 @@ export default function AsateelStats() {
                   <div style={{
                     width: 44, height: 44, borderRadius: 12, flexShrink: 0,
                     display: 'grid', placeItems: 'center',
-                    background: 'rgba(19,96,238,.10)', color: '#1360ee',
+                    background: '#f7f9fc', border: '1px solid #eef0f4', color: '#1360ee',
                   }}>
                     {r.icon}
                   </div>
                   <div>
-                    <h3 style={{ margin: '0 0 6px', fontSize: '16px', fontWeight: 800, color: '#1d1d1f' }}>{r.title}</h3>
+                    <h3 style={{ margin: '0 0 6px', fontSize: '16px', fontWeight: 800, color: '#1360ee' }}>{r.title}</h3>
                     <p style={{ margin: 0, fontSize: '13.5px', lineHeight: 1.65, color: '#6e6e73' }}>{r.desc}</p>
                   </div>
                 </div>
@@ -78,9 +77,9 @@ export default function AsateelStats() {
 
             <div data-reveal="right" className="asa-stat-mini-grid">
               {STATS.map(s => (
-                <div key={s.label} className="asa-stat-box">
-                  <span style={{ fontSize: 'clamp(20px,2.4vw,26px)', fontWeight: 800, letterSpacing: '-.02em', color: s.accent }}>{s.value}</span>
-                  <span style={{ fontSize: '12.5px', fontWeight: 600, color: '#6e6e73' }}>{s.label}</span>
+                <div key={s.label} className="asa-stat-box" style={{ background: s.bg, boxShadow: s.bg === '#fff' ? '0 2px 12px rgba(0,0,0,.06)' : '0 10px 26px rgba(19,96,238,.18)' }}>
+                  <span style={{ fontSize: 'clamp(20px,2.4vw,26px)', fontWeight: 800, letterSpacing: '-.02em', color: s.color }}>{s.value}</span>
+                  <span style={{ fontSize: '13px', fontWeight: 600, color: s.bg === '#fff' ? '#1d1d1f' : 'rgba(255,255,255,.9)' }}>{s.label}</span>
                 </div>
               ))}
             </div>

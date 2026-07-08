@@ -2,12 +2,12 @@ import type { Metadata } from 'next'
 import ScrollReveal from '@/components/software/ScrollReveal'
 import AsateelHero from '@/components/regulatory/asateel/AsateelHero'
 import AsateelExplainer from '@/components/regulatory/asateel/AsateelExplainer'
-import AsateelInstallation from '@/components/regulatory/asateel/AsateelInstallation'
 import AsateelSteps from '@/components/regulatory/asateel/AsateelSteps'
+import AsateelInstallation from '@/components/regulatory/asateel/AsateelInstallation'
 import AsateelStats from '@/components/regulatory/asateel/AsateelStats'
-import SoftwareBlog from '@/components/software/SoftwareBlog'
-import AsateelFAQ from '@/components/regulatory/asateel/AsateelFAQ'
-import AsateelCTA from '@/components/regulatory/asateel/AsateelCTA'
+import AsateelHireUsNow from '@/components/regulatory/asateel/AsateelHireUsNow'
+import AsateelVideo from '@/components/regulatory/asateel/AsateelVideo'
+import RegulatoryBlogFeed from '@/components/regulatory/RegulatoryBlogFeed'
 import Footer from '@/components/layouts/Footer'
 
 export const metadata: Metadata = {
@@ -30,12 +30,12 @@ export default function AsateelCertifiedObuPage() {
       <ScrollReveal />
       <AsateelHero />
       <AsateelExplainer />
-      <AsateelInstallation />
       <AsateelSteps />
+      <AsateelInstallation />
       <AsateelStats />
-      <SoftwareBlog />
-      <AsateelFAQ />
-      <AsateelCTA />
+      <AsateelHireUsNow />
+      <AsateelVideo />
+      <RegulatoryBlogFeed />
       <Footer />
     </main>
   )

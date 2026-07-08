@@ -2,12 +2,12 @@ import type { Metadata } from 'next'
 import ScrollReveal from '@/components/software/ScrollReveal'
 import ShahinHero from '@/components/regulatory/shahin/ShahinHero'
 import ShahinExplainer from '@/components/regulatory/shahin/ShahinExplainer'
-import ShahinBenefits from '@/components/regulatory/shahin/ShahinBenefits'
-import ShahinSteps from '@/components/regulatory/shahin/ShahinSteps'
 import ShahinCrossSell from '@/components/regulatory/shahin/ShahinCrossSell'
-import SoftwareBlog from '@/components/software/SoftwareBlog'
+import ShahinSteps from '@/components/regulatory/shahin/ShahinSteps'
 import ShahinFAQ from '@/components/regulatory/shahin/ShahinFAQ'
-import ShahinCTA from '@/components/regulatory/shahin/ShahinCTA'
+import ShahinConclusion from '@/components/regulatory/shahin/ShahinConclusion'
+import ShahinVideo from '@/components/regulatory/shahin/ShahinVideo'
+import RegulatoryBlogFeed from '@/components/regulatory/RegulatoryBlogFeed'
 import Footer from '@/components/layouts/Footer'
 
 export const metadata: Metadata = {
@@ -30,12 +30,12 @@ export default function ShahinPage() {
       <ScrollReveal />
       <ShahinHero />
       <ShahinExplainer />
-      <ShahinBenefits />
-      <ShahinSteps />
       <ShahinCrossSell />
-      <SoftwareBlog />
+      <ShahinSteps />
       <ShahinFAQ />
-      <ShahinCTA />
+      <ShahinConclusion />
+      <ShahinVideo />
+      <RegulatoryBlogFeed />
       <Footer />
     </main>
   )

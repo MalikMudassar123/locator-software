@@ -1,0 +1,61 @@
+'use client'
+
+import { useState } from 'react'
+
+const YOUTUBE_ID = 'hwqB52vVUig' // "LOCATOR - Effective Vehicle Tracking System." — LOCATOR Media
+
+export default function SecurepathPremiumVideo() {
+  const [playing, setPlaying] = useState(false)
+
+  return (
+    <section style={{ padding: '0 28px clamp(56px,7vw,80px)', background: '#fff' }}>
+      <div data-reveal style={{ maxWidth: '900px', margin: '0 auto' }}>
+        <div style={{
+          position: 'relative', borderRadius: '16px', overflow: 'hidden',
+          aspectRatio: '16 / 9', background: '#0f1117',
+          boxShadow: '0 20px 50px -20px rgba(15,23,42,.35)',
+        }}>
+          {playing ? (
+            <iframe
+              src={`https://www.youtube.com/embed/${YOUTUBE_ID}?autoplay=1`}
+              title="LOCATOR - Effective Vehicle Tracking System"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0 }}
+            />
+          ) : (
+            <button
+              onClick={() => setPlaying(true)}
+              aria-label="Play video: LOCATOR - Effective Vehicle Tracking System"
+              style={{
+                position: 'absolute', inset: 0, width: '100%', height: '100%',
+                border: 'none', cursor: 'pointer', background: 'none', padding: 0,
+              }}
+            >
+              <img
+                src={`https://i.ytimg.com/vi/${YOUTUBE_ID}/maxresdefault.jpg`}
+                alt=""
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+              <span style={{
+                position: 'absolute', inset: 0,
+                display: 'grid', placeItems: 'center',
+                background: 'rgba(15,17,23,.28)',
+              }}>
+                <span style={{
+                  width: 72, height: 72, borderRadius: '50%',
+                  background: '#fff', display: 'grid', placeItems: 'center',
+                  boxShadow: '0 10px 30px rgba(0,0,0,.3)',
+                }}>
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="#1360ee" style={{ marginLeft: 3 }}>
+                    <polygon points="6 3 20 12 6 21" />
+                  </svg>
+                </span>
+              </span>
+            </button>
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}

@@ -2,12 +2,10 @@ import type { Metadata } from 'next'
 import ScrollReveal from '@/components/software/ScrollReveal'
 import SecurepathHero from '@/components/regulatory/securepath/SecurepathHero'
 import SecurepathExplainer from '@/components/regulatory/securepath/SecurepathExplainer'
-import SecurepathFeatures from '@/components/regulatory/securepath/SecurepathFeatures'
 import SecurepathBenefits from '@/components/regulatory/securepath/SecurepathBenefits'
-import SecurepathUseCases from '@/components/regulatory/securepath/SecurepathUseCases'
 import SecurepathProcess from '@/components/regulatory/securepath/SecurepathProcess'
 import SecurepathFAQ from '@/components/regulatory/securepath/SecurepathFAQ'
-import SecurepathCTA from '@/components/regulatory/securepath/SecurepathCTA'
+import SecurepathConclusion from '@/components/regulatory/securepath/SecurepathConclusion'
 import Footer from '@/components/layouts/Footer'
 
 export const metadata: Metadata = {
@@ -30,12 +28,10 @@ export default function SecurepathPage() {
       <ScrollReveal />
       <SecurepathHero />
       <SecurepathExplainer />
-      <SecurepathFeatures />
       <SecurepathBenefits />
-      <SecurepathUseCases />
       <SecurepathProcess />
       <SecurepathFAQ />
-      <SecurepathCTA />
+      <SecurepathConclusion />
       <Footer />
     </main>
   )

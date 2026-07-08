@@ -7,8 +7,9 @@ import SecurepathPremiumVehicleList from '@/components/regulatory/securepath-pre
 import SecurepathPremiumCertification from '@/components/regulatory/securepath-premium/SecurepathPremiumCertification'
 import SecurepathPremiumDevice from '@/components/regulatory/securepath-premium/SecurepathPremiumDevice'
 import SecurepathPremiumFAQ from '@/components/regulatory/securepath-premium/SecurepathPremiumFAQ'
-import SecurepathPremiumCTA from '@/components/regulatory/securepath-premium/SecurepathPremiumCTA'
-import SoftwareBlog from '@/components/software/SoftwareBlog'
+import SecurepathPremiumConclusion from '@/components/regulatory/securepath-premium/SecurepathPremiumConclusion'
+import SecurepathPremiumVideo from '@/components/regulatory/securepath-premium/SecurepathPremiumVideo'
+import RegulatoryBlogFeed from '@/components/regulatory/RegulatoryBlogFeed'
 import Footer from '@/components/layouts/Footer'
 
 export const metadata: Metadata = {
@@ -36,8 +37,9 @@ export default function SecurepathPremiumPage() {
       <SecurepathPremiumCertification />
       <SecurepathPremiumDevice />
       <SecurepathPremiumFAQ />
-      <SecurepathPremiumCTA />
-      <SoftwareBlog />
+      <SecurepathPremiumConclusion />
+      <SecurepathPremiumVideo />
+      <RegulatoryBlogFeed />
       <Footer />
     </main>
   )

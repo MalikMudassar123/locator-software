@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
@@ -109,18 +108,11 @@ export default function SecurepathPremiumFAQ() {
             }),
           }}
         />
-        <div style={{ maxWidth: '760px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '1080px', margin: '0 auto' }}>
 
-          <div data-reveal style={{ textAlign: 'center', marginBottom: '40px' }}>
-            <span style={{
-              fontSize: '11px', fontWeight: 700, letterSpacing: '.09em',
-              color: '#1360ee', textTransform: 'uppercase' as const,
-              display: 'block', marginBottom: '14px',
-            }}>
-              FAQ
-            </span>
-            <h2 style={{ margin: 0, fontSize: 'clamp(26px,3.6vw,44px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-.03em', color: '#1d1d1f' }}>
-              Frequently Asked Questions
+          <div data-reveal style={{ marginBottom: '32px' }}>
+            <h2 style={{ margin: 0, fontSize: 'clamp(22px,2.8vw,30px)', fontWeight: 800, lineHeight: 1.15, letterSpacing: '-.02em', color: '#1d1d1f' }}>
+              Frequently Asked Questions (FAQ)
             </h2>
           </div>
 
@@ -144,14 +136,6 @@ export default function SecurepathPremiumFAQ() {
               </div>
             ))}
           </div>
-
-          <p data-reveal style={{ margin: '24px 0 0', textAlign: 'center', fontSize: '13px', color: '#a1a1a6', lineHeight: 1.55 }}>
-            Can&apos;t find what you&apos;re looking for?{' '}
-            <Link href="/contact" style={{ color: '#1360ee', fontWeight: 700, textDecoration: 'none' }}>
-              Contact our team
-            </Link>
-            {' '}— we&apos;re happy to help.
-          </p>
 
         </div>
       </section>

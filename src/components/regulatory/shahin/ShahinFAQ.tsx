@@ -1,26 +1,25 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
 const FAQS = [
   {
     q: 'What is SHAHIN?',
-    a: "SHAHIN is a GPS-tracking regulation introduced by Dubai's Security Industry Regulatory Agency (SIRA) to improve the security and traceability of cargo-carrying vehicles operating in the emirate.",
+    a: "SHAHIN, is an innovative system implemented by the Security Industry Regulatory Agency (SIRA) in Dubai. The implementation of SHAHIN aligns with Dubai's vision to enhance the overall security for transport vehicles operating within the city.",
   },
   {
     q: 'Is SHAHIN registration mandatory for all vehicles in Dubai?',
-    a: 'SHAHIN applies specifically to trucks and cargo vehicles registered in Dubai — or operating through a Dubai port — that carry freight. Not every private vehicle falls under this mandate.',
+    a: 'SHAHIN registration is mandatory for all trucks carrying cargo that are registered in Dubai or operating through any Dubai port. Not every vehicle in Dubai falls under this mandate — it specifically targets cargo and freight transport vehicles.',
   },
   {
-    q: 'How long does SHAHIN registration take?',
-    a: 'Once your documents are submitted and a certified GPS device is installed, most fleets are registered and fully compliant within a few working days.',
+    q: 'When is the due date for completing the SHAHIN registration process?',
+    a: 'There is no single fixed due date — vehicles must be SHAHIN-compliant before they begin operating on Dubai\'s roads. We recommend starting the registration process as early as possible to avoid operational delays or penalties.',
   },
   {
-    q: 'Is there a specific portal to register through?',
-    a: 'Yes — registration is completed through the official SHAHIN portal. Our team can guide you through document submission and device installation from start to finish.',
+    q: 'Is there a specific portal or website to register in Dubai?',
+    a: 'Yes — registration is completed through the official SHAHIN portal at shahin.securepath.ae. Our team can guide you through the entire submission and installation process.',
   },
 ]
 
@@ -113,18 +112,11 @@ export default function ShahinFAQ() {
             }),
           }}
         />
-        <div style={{ maxWidth: '760px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
 
-          <div data-reveal style={{ textAlign: 'center', marginBottom: '40px' }}>
-            <span style={{
-              fontSize: '11px', fontWeight: 700, letterSpacing: '.09em',
-              color: '#1360ee', textTransform: 'uppercase' as const,
-              display: 'block', marginBottom: '14px',
-            }}>
-              FAQ
-            </span>
-            <h2 style={{ margin: 0, fontSize: 'clamp(26px,3.6vw,44px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-.03em', color: '#1d1d1f' }}>
-              Frequently Asked Questions
+          <div data-reveal style={{ marginBottom: '28px' }}>
+            <h2 style={{ margin: 0, fontSize: 'clamp(22px,2.8vw,30px)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-.02em', color: '#1d1d1f' }}>
+              Frequently Asked Questions (FAQ)
             </h2>
           </div>
 
@@ -148,14 +140,6 @@ export default function ShahinFAQ() {
               </div>
             ))}
           </div>
-
-          <p data-reveal style={{ margin: '24px 0 0', textAlign: 'center', fontSize: '13px', color: '#a1a1a6', lineHeight: 1.55 }}>
-            Can&apos;t find what you&apos;re looking for?{' '}
-            <Link href="/contact" style={{ color: '#1360ee', fontWeight: 700, textDecoration: 'none' }}>
-              Contact our team
-            </Link>
-            {' '}— we&apos;re happy to help.
-          </p>
 
         </div>
       </section>

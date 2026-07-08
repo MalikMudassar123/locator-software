@@ -1,0 +1,106 @@
+import Image from 'next/image'
+import Link from 'next/link'
+
+const POSTS = [
+  {
+    day: '12',
+    month: 'Aug',
+    title: 'Fleet Tracking Software: The Smart Way to Manage Vehicles in Real-Time',
+    excerpt: "Whether you're managing delivery vans, heavy trucks, or service vehicles, staying in control of operations is crucial. Today's fleet tracking software does far more than just show vehicle locations — it gives you full control of your mobile workforce in real-time.",
+    img: '/blog/fleet tracking.png',
+    imgW: 1600,
+    imgH: 1079,
+    href: '/blog/ai-dashcams-collision-rates',
+  },
+  {
+    day: '18',
+    month: 'July',
+    title: 'The Tracking Edge – Optimized GPS & Field Tools',
+    excerpt: "Whether you're managing delivery fleets, service vehicles, or mobile field teams, staying in control of operations is key to success. Modern GPS tracking is no longer just about showing vehicle locations — it's about managing your entire field workflow smarter and faster.",
+    img: '/blog/Optimized GPS.png',
+    imgW: 900,
+    imgH: 506,
+    href: '/blog/reducing-idle-fuel-waste',
+  },
+]
+
+export default function RegulatoryBlogFeed() {
+  return (
+    <>
+      <style>{`
+        .rbf-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 24px; }
+        @media (max-width: 760px) { .rbf-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 560px) { .rbf-card { flex-direction: column !important; } .rbf-media { width: 100% !important; } }
+        .rbf-card {
+          display: flex; gap: 20px; align-items: flex-start;
+          background: #fff; border: 1px solid #eef0f4; border-radius: 20px;
+          padding: 24px; box-shadow: 0 2px 14px rgba(15,23,42,.05);
+          transition: transform .22s cubic-bezier(.22,.61,.36,1), box-shadow .22s cubic-bezier(.22,.61,.36,1);
+        }
+        .rbf-card:hover { transform: translateY(-3px); box-shadow: 0 14px 32px rgba(15,23,42,.1); }
+        .rbf-media { position: relative; flex-shrink: 0; width: 42%; }
+        .rbf-date {
+          position: absolute; top: -12px; left: -12px; z-index: 1;
+          background: #fff; border-radius: 10px; padding: 6px 11px;
+          box-shadow: 0 6px 18px rgba(15,23,42,.14);
+          text-align: center; line-height: 1.1;
+        }
+        .rbf-date-day { display: block; font-size: 16px; font-weight: 800; color: #1d1d1f; }
+        .rbf-date-month { display: block; font-size: 10.5px; font-weight: 600; color: #8e8e93; }
+        .rbf-img-wrap { border-radius: 12px; overflow: hidden; }
+        .rbf-read {
+          color: #1360ee; font-weight: 700; font-size: 13.5px;
+          text-decoration: underline; text-underline-offset: 2px;
+        }
+      `}</style>
+
+      <section style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#fff' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+
+          <div data-reveal style={{ textAlign: 'center', marginBottom: '44px' }}>
+            <div style={{
+              width: 52, height: 52, borderRadius: 14, margin: '0 auto 18px',
+              display: 'grid', placeItems: 'center', background: 'rgba(19,96,238,.10)', color: '#1360ee',
+            }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+              </svg>
+            </div>
+            <h2 style={{ margin: '0 0 12px', fontSize: 'clamp(24px,3vw,34px)', fontWeight: 700, color: '#1d1d1f' }}>
+              From Our Blog List Latest Feed
+            </h2>
+            <p style={{ margin: '0 auto', maxWidth: '520px', fontSize: '15px', color: '#8e8e93', lineHeight: 1.6 }}>
+              We are right here to share the valuable insights on our area of Expertise. We help you to master on managing your Vehicle &amp; Team.
+            </p>
+          </div>
+
+          <div className="rbf-grid" data-reveal>
+            {POSTS.map((p, i) => (
+              <Link key={p.title} href={p.href} className="rbf-card" data-reveal data-reveal-delay={String(i * 90)} style={{ textDecoration: 'none' }}>
+                <div className="rbf-media">
+                  <span className="rbf-date">
+                    <span className="rbf-date-day">{p.day}</span>
+                    <span className="rbf-date-month">{p.month}</span>
+                  </span>
+                  <div className="rbf-img-wrap">
+                    <Image src={p.img} alt={p.title} width={p.imgW} height={p.imgH} style={{ width: '100%', height: 'auto', display: 'block' }} />
+                  </div>
+                </div>
+                <div>
+                  <h3 style={{ margin: '0 0 10px', fontSize: '16.5px', fontWeight: 700, lineHeight: 1.35, color: '#1d1d1f' }}>
+                    {p.title}
+                  </h3>
+                  <p style={{ margin: '0 0 14px', fontSize: '13.5px', lineHeight: 1.7, color: '#6e6e73' }}>
+                    {p.excerpt}
+                  </p>
+                  <span className="rbf-read">Read More</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+        </div>
+      </section>
+    </>
+  )
+}

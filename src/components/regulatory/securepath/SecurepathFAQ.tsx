@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
@@ -25,10 +24,10 @@ const FAQS = [
 ]
 
 const STATS = [
-  { value: '10+', label: 'Years in Business', accent: '#1360ee' },
-  { value: '1,000+', label: 'Happy Customers', accent: '#13923f' },
-  { value: '20,000+', label: 'Tracked Devices', accent: '#7c3aed' },
-  { value: '1,000,000+', label: 'Data Points Daily', accent: '#c2740a' },
+  { value: '10+', label: 'Years in Business', bg: '#1360ee', color: '#fff' },
+  { value: '1,000+', label: 'Happy Customers', bg: '#fff', color: '#1360ee' },
+  { value: '20,000+', label: 'Tracked Devices', bg: '#fff', color: '#1360ee' },
+  { value: '1,000,000+', label: 'Data points Daily', bg: '#f15a24', color: '#fff' },
 ]
 
 export default function SecurepathFAQ() {
@@ -106,10 +105,9 @@ export default function SecurepathFAQ() {
         .sp-faqstats-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: clamp(28px,4vw,48px); align-items: start; }
         @media (max-width: 900px) { .sp-faqstats-grid { grid-template-columns: 1fr; } }
         .sp-stat-box {
-          border-radius: 16px; padding: clamp(20px,2.4vw,26px);
+          border-radius: 12px; padding: clamp(20px,2.4vw,26px);
           display: flex; flex-direction: column; gap: 6px; justify-content: center;
-          min-height: 108px; background: #fff; border: 1px solid #e4e4e8;
-          box-shadow: 0 2px 12px rgba(0,0,0,.04);
+          min-height: 108px;
         }
         .sp-stat-mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
       `}</style>
@@ -132,16 +130,9 @@ export default function SecurepathFAQ() {
         />
         <div style={{ maxWidth: '1080px', margin: '0 auto' }}>
 
-          <div data-reveal style={{ textAlign: 'center', marginBottom: '40px' }}>
-            <span style={{
-              fontSize: '11px', fontWeight: 700, letterSpacing: '.09em',
-              color: '#1360ee', textTransform: 'uppercase' as const,
-              display: 'block', marginBottom: '14px',
-            }}>
-              FAQ
-            </span>
-            <h2 style={{ margin: 0, fontSize: 'clamp(26px,3.6vw,44px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-.03em', color: '#1d1d1f' }}>
-              Frequently Asked Questions
+          <div data-reveal style={{ marginBottom: '32px' }}>
+            <h2 style={{ margin: 0, fontSize: 'clamp(22px,2.8vw,30px)', fontWeight: 800, lineHeight: 1.15, letterSpacing: '-.02em', color: '#1d1d1f' }}>
+              Frequently Asked Questions (FAQ)
             </h2>
           </div>
 
@@ -165,21 +156,13 @@ export default function SecurepathFAQ() {
                   </div>
                 </div>
               ))}
-
-              <p style={{ margin: '17px 0 0', fontSize: '13px', color: '#a1a1a6', lineHeight: 1.55 }}>
-                Can&apos;t find what you&apos;re looking for?{' '}
-                <Link href="/contact" style={{ color: '#1360ee', fontWeight: 700, textDecoration: 'none' }}>
-                  Contact our team
-                </Link>
-                {' '}— we&apos;re happy to help.
-              </p>
             </div>
 
             <div data-reveal="right" className="sp-stat-mini-grid">
               {STATS.map(s => (
-                <div key={s.label} className="sp-stat-box">
-                  <span style={{ fontSize: 'clamp(20px,2.4vw,26px)', fontWeight: 800, letterSpacing: '-.02em', color: s.accent }}>{s.value}</span>
-                  <span style={{ fontSize: '12.5px', fontWeight: 600, color: '#6e6e73' }}>{s.label}</span>
+                <div key={s.label} className="sp-stat-box" style={{ background: s.bg, boxShadow: s.bg === '#fff' ? '0 2px 12px rgba(0,0,0,.06)' : '0 10px 26px rgba(19,96,238,.18)' }}>
+                  <span style={{ fontSize: 'clamp(20px,2.4vw,26px)', fontWeight: 800, letterSpacing: '-.02em', color: s.color }}>{s.value}</span>
+                  <span style={{ fontSize: '13px', fontWeight: 600, color: s.bg === '#fff' ? '#1d1d1f' : 'rgba(255,255,255,.9)' }}>{s.label}</span>
                 </div>
               ))}
             </div>

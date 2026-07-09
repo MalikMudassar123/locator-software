@@ -43,14 +43,16 @@ export default function SecurepathPremiumHero() {
           display: flex; align-items: center; gap: 12px; text-decoration: none;
           flex: 1 1 0; min-width: 0;
         }
-        .spp-btn-primary { background: #f15a24; color: #fff; box-shadow: 0 10px 24px rgba(241,90,36,.28); }
-        .spp-btn-primary:hover { background: #d94a17; transform: translateY(-1px); box-shadow: 0 12px 28px rgba(241,90,36,.38); }
-        .spp-btn-secondary { background: #1360ee; color: #fff; box-shadow: 0 10px 24px rgba(19,96,238,.28); }
-        .spp-btn-secondary:hover { background: #0d4fd4; transform: translateY(-1px); box-shadow: 0 12px 28px rgba(19,96,238,.38); }
+        .spp-btn-primary { background: #1360ee; color: #fff; box-shadow: 0 10px 24px rgba(19,96,238,.28); }
+        .spp-btn-primary:hover { background: #0d4fd4; transform: translateY(-1px); box-shadow: 0 12px 28px rgba(19,96,238,.38); }
+        .spp-btn-secondary { background: #fff; color: #1360ee; border: 1.5px solid #dbe4fb; box-shadow: 0 2px 10px rgba(0,0,0,.04); }
+        .spp-btn-secondary:hover { border-color: #1360ee; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(19,96,238,.15); }
         .spp-btn-icon {
           width: clamp(30px,3.2vw,36px); height: clamp(30px,3.2vw,36px); border-radius: 10px; flex-shrink: 0;
-          display: grid; place-items: center; background: rgba(255,255,255,.22);
+          display: grid; place-items: center;
         }
+        .spp-btn-primary .spp-btn-icon { background: rgba(255,255,255,.22); color: #fff; }
+        .spp-btn-secondary .spp-btn-icon { background: rgba(19,96,238,.1); color: #1360ee; }
         .spp-btn-icon svg { width: 15px; height: 15px; }
         .spp-btn-text { font-size: clamp(13.5px,1.15vw,15px); line-height: 1.35; text-align: left; }
         @media (max-width: 640px) {
@@ -82,7 +84,7 @@ export default function SecurepathPremiumHero() {
             </Link>
 
             <h1 style={{ margin: 0, maxWidth: '620px', fontSize: 'clamp(32px,4.4vw,58px)', fontWeight: 800, lineHeight: 1.14, letterSpacing: '-.025em', color: '#1d1d1f' }}>
-              <span style={{ color: '#f15a24' }}>SecurePath Premium:</span> Your Hassle-Free and Reliable GPS Solution Provider in Dubai
+              <span style={{ color: '#1360ee' }}>SecurePath Premium:</span> Your Hassle-Free and Reliable GPS Solution Provider in Dubai
             </h1>
 
             <div className="spp-hero-cta-row" style={{ display: 'flex', gap: '14px', marginTop: '32px', maxWidth: '620px' }}>

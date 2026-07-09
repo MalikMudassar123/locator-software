@@ -83,7 +83,7 @@ export default function SecurepathHero() {
             </Link>
 
             <h1 style={{ margin: 0, maxWidth: '620px', fontSize: 'clamp(32px,4.4vw,58px)', fontWeight: 700, lineHeight: 1.14, color: '#fff' }}>
-              <span style={{ color: '#f15a24', fontWeight: 800 }}>SecurePath:</span> Your Trusted and Approved Vendor for Reliable GPS Solutions
+              <span style={{ color: '#fff', fontWeight: 800 }}>SecurePath:</span> Your Trusted and Approved Vendor for Reliable GPS Solutions
             </h1>
 
             <p style={{ margin: '20px 0 0', maxWidth: '460px', fontSize: 'clamp(14px,1.3vw,16px)', lineHeight: 1.6, color: 'rgba(255,255,255,.82)' }}>

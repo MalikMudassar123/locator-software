@@ -84,7 +84,7 @@ export default function AsateelHero() {
             </Link>
 
             <h1 style={{ margin: 0, fontSize: 'clamp(28px,3.8vw,44px)', fontWeight: 700, lineHeight: 1.14, color: '#fff' }}>
-              A Reliable <span style={{ color: '#f15a24', fontWeight: 800 }}>ASATEEL</span> Certified OBU Installation Company
+              A Reliable <span style={{ color: '#fff', fontWeight: 800 }}>ASATEEL</span> Certified OBU Installation Company
             </h1>
 
             <div className="asa-hero-cta-row" style={{ display: 'flex', gap: '14px', marginTop: '32px', maxWidth: '620px' }}>

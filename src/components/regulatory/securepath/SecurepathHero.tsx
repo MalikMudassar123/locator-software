@@ -30,7 +30,7 @@ export default function SecurepathHero() {
         @media (max-width: 940px) {
           .sph-grid { grid-template-columns: 1fr; }
           .sph-grid > div:first-child { text-align: center; }
-          .sph-hero-cta-row { justify-content: center; }
+          .sph-hero-cta-row { justify-content: center; margin-left: auto !important; margin-right: auto !important; }
         }
 
         .sph-back {
@@ -42,16 +42,22 @@ export default function SecurepathHero() {
         .sph-back:hover { color: #fff; gap: 9px; }
 
         .sph-btn {
-          font-family: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer;
-          padding: 13px 18px; border-radius: 10px; border: none;
+          font-family: inherit; font-weight: 700; cursor: pointer;
+          padding: clamp(14px,1.6vw,18px) clamp(20px,2.4vw,28px); border-radius: 12px; border: none;
           transition: .18s ${EASE};
-          display: inline-flex; align-items: center; gap: 9px; white-space: nowrap;
+          display: inline-flex; align-items: center; gap: 12px; white-space: nowrap;
           text-decoration: none; background: #fff; color: #1d1d1f;
         }
         .sph-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0,0,0,.18); }
         .sph-btn-icon {
-          width: 22px; height: 22px; border-radius: 5px; flex-shrink: 0;
+          width: clamp(30px,3.2vw,36px); height: clamp(30px,3.2vw,36px); border-radius: 10px; flex-shrink: 0;
           display: grid; place-items: center; background: rgba(19,96,238,.12); color: #1360ee;
+        }
+        .sph-btn-icon svg { width: 15px; height: 15px; }
+        .sph-btn-text { font-size: clamp(14px,1.2vw,16px); }
+        @media (max-width: 640px) {
+          .sph-hero-cta-row { flex-direction: column; align-items: stretch; }
+          .sph-btn { justify-content: center; }
         }
       `}</style>
 
@@ -76,30 +82,30 @@ export default function SecurepathHero() {
               Regulatory GPS Certifications
             </Link>
 
-            <h1 style={{ margin: 0, fontSize: 'clamp(28px,3.8vw,44px)', fontWeight: 700, lineHeight: 1.14, color: '#fff' }}>
+            <h1 style={{ margin: 0, maxWidth: '620px', fontSize: 'clamp(32px,4.4vw,58px)', fontWeight: 700, lineHeight: 1.14, color: '#fff' }}>
               <span style={{ color: '#f15a24', fontWeight: 800 }}>SecurePath:</span> Your Trusted and Approved Vendor for Reliable GPS Solutions
             </h1>
 
-            <p style={{ margin: '18px 0 0', maxWidth: '460px', fontSize: 'clamp(14px,1.3vw,16px)', lineHeight: 1.6, color: 'rgba(255,255,255,.82)' }}>
+            <p style={{ margin: '20px 0 0', maxWidth: '460px', fontSize: 'clamp(14px,1.3vw,16px)', lineHeight: 1.6, color: 'rgba(255,255,255,.82)' }}>
               Try Out SecurePath GPS System from LOCATOR Today
             </p>
 
-            <div className="sph-hero-cta-row" style={{ display: 'flex', gap: '12px', marginTop: '28px', flexWrap: 'wrap' }}>
+            <div className="sph-hero-cta-row" style={{ display: 'flex', gap: '14px', marginTop: '32px' }}>
               <Link href="/contact" className="sph-btn">
                 <span className="sph-btn-icon">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="4" y="4" width="16" height="16" rx="2" /><path d="M4 10h16M10 4v16" />
                   </svg>
                 </span>
-                Get a Free Quote
+                <span className="sph-btn-text">Get a Free Quote</span>
               </Link>
               <Link href="/contact" className="sph-btn">
                 <span className="sph-btn-icon">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <polygon points="5 3 19 12 5 21 5 3" />
                   </svg>
                 </span>
-                Get a Free Demo
+                <span className="sph-btn-text">Get a Free Demo</span>
               </Link>
             </div>
           </div>

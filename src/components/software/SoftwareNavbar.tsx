@@ -102,6 +102,10 @@ export default function SoftwareNavbar() {
           border-radius: 999px;
           text-decoration: none;
           transition: color .2s ease, background .2s ease;
+          background: none;
+          border: none;
+          font-family: inherit;
+          cursor: pointer;
         }
         /* Animated underline that grows from the centre */
         .swn-link::after {
@@ -254,12 +258,12 @@ export default function SoftwareNavbar() {
               if (l.href === '/regulatory') {
                 return (
                   <div key={l.href} className="swn-dd-wrap">
-                    <Link href={l.href} className={`swn-link${isActive ? ' active' : ''}`}>
+                    <button type="button" className={`swn-link${isActive ? ' active' : ''}`} aria-haspopup="menu">
                       {l.label}
                       <svg className="swn-chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <polyline points="6 9 12 15 18 9" />
                       </svg>
-                    </Link>
+                    </button>
                     <div className="swn-dd" role="menu" aria-label="Regulatory GPS Certifications">
                       {REGULATORY_PRODUCTS.map(p => (
                         <Link key={p.slug} href={`/${p.slug}`} className="swn-dd-item" role="menuitem">
@@ -346,26 +350,42 @@ export default function SoftwareNavbar() {
           <ul style={{ listStyle: 'none', margin: 0, padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: 0, overflowY: 'auto' }}>
             {NAV_LINKS.map(l => {
               const isActive = l.href === '/' ? pathname === '/' : pathname.startsWith(l.href)
+              const isRegulatory = l.href === '/regulatory'
               return (
                 <li key={l.href}>
-                  <Link
-                    href={l.href}
-                    onClick={() => setOpen(false)}
-                    style={{
-                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                      padding: '16px 4px',
-                      borderBottom: '1px solid #e3e3e6',
-                      fontSize: '17px',
-                      fontWeight: isActive ? 700 : 600,
-                      color: isActive ? '#1360ee' : '#1d1d1f',
-                      textDecoration: 'none',
-                    }}
-                  >
-                    <span>{l.label}</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.4 }}>
-                      <polyline points="9 18 15 12 9 6" />
-                    </svg>
-                  </Link>
+                  {isRegulatory ? (
+                    <div
+                      style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                        padding: '16px 4px',
+                        borderBottom: '1px solid #e3e3e6',
+                        fontSize: '17px',
+                        fontWeight: 600,
+                        color: '#1d1d1f',
+                      }}
+                    >
+                      <span>{l.label}</span>
+                    </div>
+                  ) : (
+                    <Link
+                      href={l.href}
+                      onClick={() => setOpen(false)}
+                      style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                        padding: '16px 4px',
+                        borderBottom: '1px solid #e3e3e6',
+                        fontSize: '17px',
+                        fontWeight: isActive ? 700 : 600,
+                        color: isActive ? '#1360ee' : '#1d1d1f',
+                        textDecoration: 'none',
+                      }}
+                    >
+                      <span>{l.label}</span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.4 }}>
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                    </Link>
+                  )}
                   {l.href === '/regulatory' && (
                     <div style={{ display: 'flex', flexDirection: 'column', padding: '2px 0 8px 14px', borderBottom: '1px solid #e3e3e6' }}>
                       {REGULATORY_PRODUCTS.map(p => (

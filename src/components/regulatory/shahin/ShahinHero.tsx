@@ -33,22 +33,29 @@ export default function ShahinHero() {
         @media (max-width: 940px) {
           .shn-grid { grid-template-columns: 1fr; }
           .shn-grid > div:first-child { text-align: center; }
-          .shn-hero-cta-row { justify-content: center; }
+          .shn-hero-cta-row { justify-content: center; margin-left: auto !important; margin-right: auto !important; }
         }
 
         .shn-btn {
-          font-family: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer;
-          padding: 13px 18px; border-radius: 10px; border: none;
+          font-family: inherit; font-weight: 700; cursor: pointer;
+          padding: clamp(14px,1.6vw,18px) clamp(16px,2vw,22px); border-radius: 12px; border: none;
           transition: .18s ${EASE};
-          display: inline-flex; align-items: center; gap: 9px; white-space: nowrap; text-decoration: none;
+          display: flex; align-items: center; gap: 12px; text-decoration: none;
+          flex: 1 1 0; min-width: 0;
         }
         .shn-btn-primary { background: #f15a24; color: #fff; box-shadow: 0 10px 24px rgba(241,90,36,.28); }
         .shn-btn-primary:hover { background: #d94a17; transform: translateY(-1px); box-shadow: 0 12px 28px rgba(241,90,36,.38); }
         .shn-btn-secondary { background: #1360ee; color: #fff; box-shadow: 0 10px 24px rgba(19,96,238,.28); }
         .shn-btn-secondary:hover { background: #0d4fd4; transform: translateY(-1px); box-shadow: 0 12px 28px rgba(19,96,238,.38); }
         .shn-btn-icon {
-          width: 22px; height: 22px; border-radius: 5px; flex-shrink: 0;
+          width: clamp(30px,3.2vw,36px); height: clamp(30px,3.2vw,36px); border-radius: 10px; flex-shrink: 0;
           display: grid; place-items: center; background: rgba(255,255,255,.22);
+        }
+        .shn-btn-icon svg { width: 15px; height: 15px; }
+        .shn-btn-text { font-size: clamp(13.5px,1.15vw,15px); line-height: 1.35; text-align: left; }
+        @media (max-width: 640px) {
+          .shn-hero-cta-row { flex-direction: column; }
+          .shn-btn { flex: none; width: 100%; }
         }
       `}</style>
 
@@ -74,26 +81,26 @@ export default function ShahinHero() {
               Regulatory GPS Certifications
             </Link>
 
-            <h1 style={{ margin: 0, fontSize: 'clamp(28px,3.8vw,46px)', fontWeight: 800, lineHeight: 1.14, letterSpacing: '-.025em', color: '#1d1d1f' }}>
+            <h1 style={{ margin: 0, maxWidth: '620px', fontSize: 'clamp(32px,4.4vw,58px)', fontWeight: 800, lineHeight: 1.14, letterSpacing: '-.025em', color: '#1d1d1f' }}>
               <span style={{ color: '#f15a24' }}>SHAHIN:</span> Your Reliable and Effective GPS Provider for Seamless Registration
             </h1>
 
-            <div className="shn-hero-cta-row" style={{ display: 'flex', gap: '12px', marginTop: '28px', flexWrap: 'wrap' }}>
+            <div className="shn-hero-cta-row" style={{ display: 'flex', gap: '14px', marginTop: '32px', maxWidth: '620px' }}>
               <Link href="/contact" className="shn-btn shn-btn-primary">
                 <span className="shn-btn-icon">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="4" y="4" width="16" height="16" rx="2" /><path d="M4 10h16M10 4v16" />
                   </svg>
                 </span>
-                Get a Free Quote for SHAHIN Implementation
+                <span className="shn-btn-text">Get a Free Quote for SHAHIN Implementation</span>
               </Link>
               <Link href="/contact" className="shn-btn shn-btn-secondary">
                 <span className="shn-btn-icon">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <polygon points="5 3 19 12 5 21 5 3" />
                   </svg>
                 </span>
-                Get an Advice on SHAHIN Registration
+                <span className="shn-btn-text">Get an Advice on SHAHIN Registration</span>
               </Link>
             </div>
           </div>

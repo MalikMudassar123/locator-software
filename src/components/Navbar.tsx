@@ -110,26 +110,49 @@ export default function Navbar() {
               const isRegulatory = l.href === '/regulatory'
               return (
                 <li key={l.href} className={isRegulatory ? 'hn-dd-wrap' : undefined}>
-                  <Link
-                    href={l.href}
-                    className="text-white text-sm transition-all whitespace-nowrap"
-                    style={{
-                      fontWeight: isActive ? 800 : 600,
-                      opacity: isActive ? 1 : 0.82,
-                      borderBottom: isActive ? '2px solid rgba(255,255,255,0.85)' : '2px solid transparent',
-                      paddingBottom: '2px',
-                      display: isRegulatory ? 'inline-flex' : undefined,
-                      alignItems: isRegulatory ? 'center' : undefined,
-                      gap: isRegulatory ? '4px' : undefined,
-                    }}
-                  >
-                    {l.label}
-                    {isRegulatory && (
+                  {isRegulatory ? (
+                    <button
+                      type="button"
+                      aria-haspopup="menu"
+                      className="text-white text-sm transition-all whitespace-nowrap"
+                      style={{
+                        fontWeight: isActive ? 800 : 600,
+                        opacity: isActive ? 1 : 0.82,
+                        borderBottom: isActive ? '2px solid rgba(255,255,255,0.85)' : '2px solid transparent',
+                        paddingBottom: '2px',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        background: 'none',
+                        borderLeft: 'none',
+                        borderRight: 'none',
+                        borderTop: 'none',
+                        paddingTop: 0,
+                        paddingLeft: 0,
+                        paddingRight: 0,
+                        cursor: 'pointer',
+                        fontFamily: 'inherit',
+                      }}
+                    >
+                      {l.label}
                       <svg className="hn-chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <polyline points="6 9 12 15 18 9" />
                       </svg>
-                    )}
-                  </Link>
+                    </button>
+                  ) : (
+                    <Link
+                      href={l.href}
+                      className="text-white text-sm transition-all whitespace-nowrap"
+                      style={{
+                        fontWeight: isActive ? 800 : 600,
+                        opacity: isActive ? 1 : 0.82,
+                        borderBottom: isActive ? '2px solid rgba(255,255,255,0.85)' : '2px solid transparent',
+                        paddingBottom: '2px',
+                      }}
+                    >
+                      {l.label}
+                    </Link>
+                  )}
                   {isRegulatory && (
                     <div className="hn-dd" role="menu" aria-label="Regulatory GPS Certifications">
                       {REGULATORY_PRODUCTS.map(p => (
@@ -337,33 +360,52 @@ export default function Navbar() {
           >
             {navLinks.map((l, i) => {
               const isActive = l.href === '/' ? pathname === '/' : pathname.startsWith(l.href)
+              const isRegulatory = l.href === '/regulatory'
               return (
               <li
                 key={l.href}
                 className="mobile-drawer-item"
                 style={{ animationDelay: `${0.05 + i * 0.06}s` }}
               >
-                <Link
-                  href={l.href}
-                  onClick={() => setOpen(false)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    color: isActive ? '#ffffff' : 'rgba(255,255,255,0.82)',
-                    fontWeight: isActive ? 800 : 600,
-                    padding: '16px 8px 16px 12px',
-                    fontSize: '17px',
-                    letterSpacing: '0.01em',
-                    borderBottom: '1px solid rgba(255,255,255,0.12)',
-                    textDecoration: 'none',
-                  }}
-                >
-                  <span>{l.label}</span>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.55 }}>
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
-                </Link>
+                {isRegulatory ? (
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      color: 'rgba(255,255,255,0.82)',
+                      fontWeight: 600,
+                      padding: '16px 8px 16px 12px',
+                      fontSize: '17px',
+                      letterSpacing: '0.01em',
+                      borderBottom: '1px solid rgba(255,255,255,0.12)',
+                    }}
+                  >
+                    <span>{l.label}</span>
+                  </div>
+                ) : (
+                  <Link
+                    href={l.href}
+                    onClick={() => setOpen(false)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      color: isActive ? '#ffffff' : 'rgba(255,255,255,0.82)',
+                      fontWeight: isActive ? 800 : 600,
+                      padding: '16px 8px 16px 12px',
+                      fontSize: '17px',
+                      letterSpacing: '0.01em',
+                      borderBottom: '1px solid rgba(255,255,255,0.12)',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    <span>{l.label}</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.55 }}>
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </Link>
+                )}
                 {l.href === '/regulatory' && (
                   <div style={{ display: 'flex', flexDirection: 'column', padding: '2px 0 8px 22px', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
                     {REGULATORY_PRODUCTS.map(p => (

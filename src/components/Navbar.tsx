@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { REGULATORY_PRODUCTS } from '@/components/regulatory/data'
+import { ABOUT_PAGES } from '@/components/about/data'
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -108,9 +109,14 @@ export default function Navbar() {
             {navLinks.map(l => {
               const isActive = l.href === '/' ? pathname === '/' : pathname.startsWith(l.href)
               const isRegulatory = l.href === '/regulatory'
+              const isAbout = l.href === '/about'
+              const isDropdown = isRegulatory || isAbout
+              const dropdownItems = isRegulatory ? REGULATORY_PRODUCTS : ABOUT_PAGES
+              const dropdownHref = isRegulatory ? (slug: string) => `/${slug}` : (slug: string) => `/about/${slug}`
+              const dropdownLabel = isRegulatory ? 'Regulatory GPS Certifications' : 'About Locator'
               return (
-                <li key={l.href} className={isRegulatory ? 'hn-dd-wrap' : undefined}>
-                  {isRegulatory ? (
+                <li key={l.href} className={isDropdown ? 'hn-dd-wrap' : undefined}>
+                  {isDropdown ? (
                     <button
                       type="button"
                       aria-haspopup="menu"
@@ -153,10 +159,10 @@ export default function Navbar() {
                       {l.label}
                     </Link>
                   )}
-                  {isRegulatory && (
-                    <div className="hn-dd" role="menu" aria-label="Regulatory GPS Certifications">
-                      {REGULATORY_PRODUCTS.map(p => (
-                        <Link key={p.slug} href={`/${p.slug}`} className="hn-dd-item" role="menuitem">
+                  {isDropdown && (
+                    <div className="hn-dd" role="menu" aria-label={dropdownLabel}>
+                      {dropdownItems.map(p => (
+                        <Link key={p.slug} href={dropdownHref(p.slug)} className="hn-dd-item" role="menuitem">
                           <span className="hn-dd-icon" style={{ background: `${p.accent}14`, color: p.accent }}>
                             {p.icon}
                           </span>
@@ -361,13 +367,15 @@ export default function Navbar() {
             {navLinks.map((l, i) => {
               const isActive = l.href === '/' ? pathname === '/' : pathname.startsWith(l.href)
               const isRegulatory = l.href === '/regulatory'
+              const isAbout = l.href === '/about'
+              const isDropdown = isRegulatory || isAbout
               return (
               <li
                 key={l.href}
                 className="mobile-drawer-item"
                 style={{ animationDelay: `${0.05 + i * 0.06}s` }}
               >
-                {isRegulatory ? (
+                {isDropdown ? (
                   <div
                     style={{
                       display: 'flex',
@@ -412,6 +420,25 @@ export default function Navbar() {
                       <Link
                         key={p.slug}
                         href={`/${p.slug}`}
+                        onClick={() => setOpen(false)}
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: '10px',
+                          padding: '11px 4px', fontSize: '15px', fontWeight: 600,
+                          color: 'rgba(255,255,255,0.78)', textDecoration: 'none',
+                        }}
+                      >
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.7)', flexShrink: 0 }} />
+                        {p.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+                {l.href === '/about' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', padding: '2px 0 8px 22px', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
+                    {ABOUT_PAGES.map(p => (
+                      <Link
+                        key={p.slug}
+                        href={`/about/${p.slug}`}
                         onClick={() => setOpen(false)}
                         style={{
                           display: 'flex', alignItems: 'center', gap: '10px',

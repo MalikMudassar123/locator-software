@@ -114,11 +114,8 @@ export default function AboutValues() {
             <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '.09em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '14px' }}>
               What we stand for
             </span>
-            <h2 style={{ margin: 0, fontSize: 'clamp(28px,3.4vw,44px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-.025em', color: '#1d1d1f' }}>
-              Our Core Values
-            </h2>
-            <p style={{ margin: '18px 0 0', maxWidth: '360px', fontSize: 'clamp(14px,1.35vw,16px)', color: '#6e6e73', lineHeight: 1.65 }}>
-              The principles behind every product we ship and every relationship we build.
+            <p style={{ margin: 0, maxWidth: '360px', fontSize: 'clamp(19px,2vw,24px)', fontWeight: 700, lineHeight: 1.4, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+              Six principles behind every product we ship and every relationship we build.
             </p>
             <div style={{ marginTop: '22px', height: '4px', width: '72px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#7c3aed)' }} />
           </aside>

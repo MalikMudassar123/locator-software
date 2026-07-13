@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { REGULATORY_PRODUCTS } from '@/components/regulatory/data'
+import { ABOUT_PAGES } from '@/components/about/data'
 
 const NAV_LINKS = [
   { href: '/',           label: 'Home' },
@@ -283,6 +284,34 @@ export default function SoftwareNavbar() {
                   </div>
                 )
               }
+              if (l.href === '/about') {
+                return (
+                  <div key={l.href} className="swn-dd-wrap">
+                    <button type="button" className={`swn-link${isActive ? ' active' : ''}`} aria-haspopup="menu">
+                      {l.label}
+                      <svg className="swn-chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </button>
+                    <div className="swn-dd" role="menu" aria-label="About Locator">
+                      {ABOUT_PAGES.map(p => (
+                        <Link key={p.slug} href={`/about/${p.slug}`} className="swn-dd-item" role="menuitem">
+                          <span className="swn-dd-icon" style={{ background: `${p.accent}14`, color: p.accent }}>
+                            {p.icon}
+                          </span>
+                          <span style={{ minWidth: 0 }}>
+                            <span className="swn-dd-name">{p.name}</span>
+                            <span className="swn-dd-tag">{p.tagline}</span>
+                          </span>
+                          <svg className="swn-dd-go" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                          </svg>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )
+              }
               return (
                 <Link key={l.href} href={l.href} className={`swn-link${isActive ? ' active' : ''}`}>
                   {l.label}
@@ -351,9 +380,10 @@ export default function SoftwareNavbar() {
             {NAV_LINKS.map(l => {
               const isActive = l.href === '/' ? pathname === '/' : pathname.startsWith(l.href)
               const isRegulatory = l.href === '/regulatory'
+              const isAbout = l.href === '/about'
               return (
                 <li key={l.href}>
-                  {isRegulatory ? (
+                  {isRegulatory || isAbout ? (
                     <div
                       style={{
                         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -392,6 +422,25 @@ export default function SoftwareNavbar() {
                         <Link
                           key={p.slug}
                           href={`/${p.slug}`}
+                          onClick={() => setOpen(false)}
+                          style={{
+                            display: 'flex', alignItems: 'center', gap: '10px',
+                            padding: '11px 4px', fontSize: '14.5px', fontWeight: 600,
+                            color: '#52525e', textDecoration: 'none',
+                          }}
+                        >
+                          <span style={{ width: 6, height: 6, borderRadius: '50%', background: p.accent, flexShrink: 0 }} />
+                          {p.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                  {l.href === '/about' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', padding: '2px 0 8px 14px', borderBottom: '1px solid #e3e3e6' }}>
+                      {ABOUT_PAGES.map(p => (
+                        <Link
+                          key={p.slug}
+                          href={`/about/${p.slug}`}
                           onClick={() => setOpen(false)}
                           style={{
                             display: 'flex', alignItems: 'center', gap: '10px',

@@ -4,7 +4,12 @@ import { siteUrl } from "@/config/site";
 // Every live route. Add new entries here as routes are added.
 const ROUTES: { path: string; priority: number }[] = [
   { path: "", priority: 1 },
-  { path: "/about", priority: 0.8 },
+  { path: "/about/purpose", priority: 0.8 },
+  { path: "/about/vision", priority: 0.8 },
+  { path: "/about/mission", priority: 0.8 },
+  { path: "/about/core-values", priority: 0.8 },
+  { path: "/about/newsroom", priority: 0.6 },
+  { path: "/about/career", priority: 0.6 },
   { path: "/software", priority: 0.9 },
   { path: "/service", priority: 0.9 },
   { path: "/regulatory", priority: 0.8 },

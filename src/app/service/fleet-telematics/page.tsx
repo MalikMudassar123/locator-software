@@ -22,12 +22,20 @@ const SERVICE_STATS = [
 ]
 
 export const metadata: Metadata = {
-  title: 'Service — GPS Tracking & Fleet Telematics',
+  title: 'Fleet Telematics — Service',
   description:
     'Improve fleet operations with real-time GPS tracking and telematics. Manage drivers, routes, and road operations with ease across all UAE industries.',
+  alternates: { canonical: '/service/fleet-telematics' },
+  openGraph: {
+    title: 'Fleet Telematics | Locator',
+    description:
+      'Real-time GPS tracking and telematics for fleets across the UAE.',
+    url: '/service/fleet-telematics',
+    type: 'website',
+  },
 }
 
-export default function ServicePage() {
+export default function FleetTelematicsPage() {
   return (
     <main style={{ background: '#ffffff', minHeight: '100vh' }}>
       <ScrollReveal />

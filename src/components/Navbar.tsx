@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { REGULATORY_PRODUCTS } from '@/components/regulatory/data'
 import { ABOUT_PAGES } from '@/components/about/data'
+import { SERVICE_PAGES } from '@/components/service/data'
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -17,6 +18,14 @@ const navLinks = [
   { href: '/regulatory', label: 'Regulatory GPS Certifications' },
   { href: '/contact', label: 'Contact' },
 ]
+
+// Nav items that open a hover dropdown instead of navigating directly.
+type NavDropdownItem = { slug: string; name: string; tagline: string; accent: string; icon: React.ReactNode }
+const NAV_DROPDOWNS: Record<string, { items: NavDropdownItem[]; base: string; label: string }> = {
+  '/regulatory': { items: REGULATORY_PRODUCTS, base: '',        label: 'Regulatory GPS Certifications' },
+  '/about':      { items: ABOUT_PAGES,         base: '/about',  label: 'About Locator' },
+  '/service':    { items: SERVICE_PAGES,       base: '/service', label: 'Locator Services' },
+}
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
@@ -108,12 +117,11 @@ export default function Navbar() {
           <ul className="hidden lg:flex items-center gap-6 list-none m-0 p-0">
             {navLinks.map(l => {
               const isActive = l.href === '/' ? pathname === '/' : pathname.startsWith(l.href)
-              const isRegulatory = l.href === '/regulatory'
-              const isAbout = l.href === '/about'
-              const isDropdown = isRegulatory || isAbout
-              const dropdownItems = isRegulatory ? REGULATORY_PRODUCTS : ABOUT_PAGES
-              const dropdownHref = isRegulatory ? (slug: string) => `/${slug}` : (slug: string) => `/about/${slug}`
-              const dropdownLabel = isRegulatory ? 'Regulatory GPS Certifications' : 'About Locator'
+              const dd = NAV_DROPDOWNS[l.href]
+              const isDropdown = !!dd
+              const dropdownItems = dd?.items ?? []
+              const dropdownHref = (slug: string) => `${dd?.base ?? ''}/${slug}`
+              const dropdownLabel = dd?.label ?? ''
               return (
                 <li key={l.href} className={isDropdown ? 'hn-dd-wrap' : undefined}>
                   {isDropdown ? (
@@ -366,9 +374,8 @@ export default function Navbar() {
           >
             {navLinks.map((l, i) => {
               const isActive = l.href === '/' ? pathname === '/' : pathname.startsWith(l.href)
-              const isRegulatory = l.href === '/regulatory'
-              const isAbout = l.href === '/about'
-              const isDropdown = isRegulatory || isAbout
+              const dd = NAV_DROPDOWNS[l.href]
+              const isDropdown = !!dd
               return (
               <li
                 key={l.href}
@@ -414,31 +421,12 @@ export default function Navbar() {
                     </svg>
                   </Link>
                 )}
-                {l.href === '/regulatory' && (
+                {dd && (
                   <div style={{ display: 'flex', flexDirection: 'column', padding: '2px 0 8px 22px', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
-                    {REGULATORY_PRODUCTS.map(p => (
+                    {dd.items.map(p => (
                       <Link
                         key={p.slug}
-                        href={`/${p.slug}`}
-                        onClick={() => setOpen(false)}
-                        style={{
-                          display: 'flex', alignItems: 'center', gap: '10px',
-                          padding: '11px 4px', fontSize: '15px', fontWeight: 600,
-                          color: 'rgba(255,255,255,0.78)', textDecoration: 'none',
-                        }}
-                      >
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.7)', flexShrink: 0 }} />
-                        {p.name}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-                {l.href === '/about' && (
-                  <div style={{ display: 'flex', flexDirection: 'column', padding: '2px 0 8px 22px', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
-                    {ABOUT_PAGES.map(p => (
-                      <Link
-                        key={p.slug}
-                        href={`/about/${p.slug}`}
+                        href={`${dd.base}/${p.slug}`}
                         onClick={() => setOpen(false)}
                         style={{
                           display: 'flex', alignItems: 'center', gap: '10px',

@@ -8,7 +8,7 @@ export default function VideoTelematicsVideo() {
   const [playing, setPlaying] = useState(false)
 
   return (
-    <section style={{ padding: '0 28px clamp(56px,7vw,80px)', background: '#f5f7fa' }}>
+    <section style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#f5f7fa' }}>
       <div data-reveal style={{ maxWidth: '900px', margin: '0 auto' }}>
         <div style={{
           position: 'relative', borderRadius: '16px', overflow: 'hidden',

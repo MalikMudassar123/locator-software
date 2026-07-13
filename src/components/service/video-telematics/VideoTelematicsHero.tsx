@@ -59,12 +59,6 @@ export default function VideoTelematicsHero() {
           .vt-hero-cta-row { flex-direction: column; }
           .vt-btn { flex: none; width: 100%; }
         }
-
-        .vt-frame {
-          position: relative; border-radius: 20px; overflow: hidden;
-          border: 1px solid #e7ebf3; background: #fff;
-          box-shadow: 0 40px 80px -30px rgba(20,40,90,.35), 0 4px 16px rgba(20,40,90,.08);
-        }
       `}</style>
 
       <section className="vt-hero">
@@ -124,17 +118,15 @@ export default function VideoTelematicsHero() {
             </div>
           </div>
 
-          <div data-reveal="right">
-            <div className="vt-frame">
-              <Image
-                src="/block 1/video teleframe.png"
-                alt="Locator video telematics — live multi-camera fleet dashcam feeds"
-                width={1598}
-                height={984}
-                style={{ width: '100%', height: 'auto', display: 'block' }}
-                priority
-              />
-            </div>
+          <div data-reveal="right" style={{ position: 'relative' }}>
+            <Image
+              src="/blog/fleet tracking.png"
+              alt="Locator video telematics — connected fleet with AI dash cameras"
+              width={1600}
+              height={1079}
+              style={{ width: '100%', height: 'auto', display: 'block' }}
+              priority
+            />
           </div>
         </div>
       </section>

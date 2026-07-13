@@ -32,8 +32,8 @@ export default function VideoTelematicsPage() {
       <VideoTelematicsDescription />
       <VideoTelematicsShowcase />
       <VideoTelematicsIndustries />
-      <VideoTelematicsFAQ />
       <VideoTelematicsVideo />
+      <VideoTelematicsFAQ />
       <VideoTelematicsBlog />
       <SoftwareCTA />
       <Footer />

@@ -120,7 +120,7 @@ export default function VideoTelematicsHero() {
 
           <div data-reveal="right" style={{ position: 'relative' }}>
             <Image
-              src="/blog/fleet tracking.png"
+              src="/service_page/video_banner.png"
               alt="Locator video telematics — connected fleet with AI dash cameras"
               width={1600}
               height={1079}

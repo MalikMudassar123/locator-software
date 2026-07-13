@@ -1,37 +1,47 @@
 import type { Metadata } from 'next'
 import ScrollReveal from '@/components/software/ScrollReveal'
-import AboutPillarHero from '@/components/about/AboutPillarHero'
-import PurposePillars from '@/components/about/PurposePillars'
-import AboutPillarNav from '@/components/about/AboutPillarNav'
-import SoftwareCTA from '@/components/software/SoftwareCTA'
+import WhoWeAreHero from '@/components/about/who-we-are/WhoWeAreHero'
+import WhoWeArePurpose from '@/components/about/who-we-are/WhoWeArePurpose'
+import WhoWeAreNumbers from '@/components/about/who-we-are/WhoWeAreNumbers'
+import WhoWeAreJourney from '@/components/about/who-we-are/WhoWeAreJourney'
+import WhoWeAreServices from '@/components/about/who-we-are/WhoWeAreServices'
+import ServiceIndustries from '@/components/service/ServiceIndustries'
+import WhoWeAreTechnology from '@/components/about/who-we-are/WhoWeAreTechnology'
+import WhoWeAreWhyChoose from '@/components/about/who-we-are/WhoWeAreWhyChoose'
+import WhoWeAreVideo from '@/components/about/who-we-are/WhoWeAreVideo'
+import WhoWeAreFAQ from '@/components/about/who-we-are/WhoWeAreFAQ'
+import SoftwareBlog from '@/components/software/SoftwareBlog'
 import Footer from '@/components/layouts/Footer'
 
 export const metadata: Metadata = {
-  title: 'Our Purpose — About Locator',
+  title: 'Who We Are — About Locator',
   description:
-    'We exist to help businesses transform underutilized vehicles, assets, and field teams into engines of intelligent growth through AI-powered IoT technology.',
+    'LOCATOR is a technology company building intelligent fleet telematics and IoT solutions — connecting vehicles and assets and turning real-time data into actionable business intelligence across the UAE.',
   alternates: { canonical: '/about/purpose' },
   openGraph: {
-    title: 'Our Purpose | Locator',
+    title: 'Who We Are | Locator',
     description:
-      'AI-powered IoT technology that brings greater control, efficiency, safety, and transparency to operations.',
+      'More than a GPS provider — a connected mobility company shaping the future of fleet telematics and IoT.',
     url: '/about/purpose',
     type: 'website',
   },
 }
 
-export default function AboutPurposePage() {
+export default function WhoWeArePage() {
   return (
     <main style={{ background: '#ffffff', minHeight: '100vh' }}>
       <ScrollReveal />
-      <AboutPillarHero
-        slug="purpose"
-        title="Our Purpose"
-        lead="We exist to help businesses transform underutilized vehicles, assets, and field teams into engines of intelligent growth. Through AI-powered IoT technology, we bring greater control, efficiency, safety, and transparency to operations — reducing costs, improving profitability, and enabling businesses to grow with purpose."
-      />
-      <PurposePillars />
-      <AboutPillarNav current="purpose" />
-      <SoftwareCTA />
+      <WhoWeAreHero />
+      <WhoWeArePurpose />
+      <WhoWeAreNumbers />
+      <WhoWeAreJourney />
+      <WhoWeAreServices />
+      <ServiceIndustries />
+      <WhoWeAreTechnology />
+      <WhoWeAreWhyChoose />
+      <WhoWeAreVideo />
+      <WhoWeAreFAQ />
+      <SoftwareBlog />
       <Footer />
     </main>
   )

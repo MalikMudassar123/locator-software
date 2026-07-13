@@ -11,14 +11,13 @@ export type AboutPage = {
 export const ABOUT_PAGES: AboutPage[] = [
   {
     slug: 'purpose',
-    name: 'Purpose',
-    tagline: 'Why we exist',
+    name: 'Who We Are',
+    tagline: 'Get to know LOCATOR',
     accent: '#1360ee',
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-        <circle cx="14" cy="14" r="9" stroke="currentColor" strokeWidth="1.8" />
-        <circle cx="14" cy="14" r="5" stroke="currentColor" strokeWidth="1.8" />
-        <circle cx="14" cy="14" r="1.4" fill="currentColor" />
+        <circle cx="14" cy="10" r="4" stroke="currentColor" strokeWidth="1.8" />
+        <path d="M6 23c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
       </svg>
     ),
   },

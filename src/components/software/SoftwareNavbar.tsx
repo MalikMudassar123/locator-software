@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation'
 import { REGULATORY_PRODUCTS } from '@/components/regulatory/data'
 import { ABOUT_PAGES } from '@/components/about/data'
 import { SERVICE_PAGES } from '@/components/service/data'
+import { SOFTWARE_MODULES } from '@/components/software/modules-data'
 
 const NAV_LINKS = [
   { href: '/',           label: 'Home' },
@@ -21,11 +22,15 @@ const NAV_LINKS = [
 
 // Nav items that open the shutter mega-menu instead of navigating directly.
 type NavDropdownItem = { slug: string; name: string; tagline: string; accent: string; icon: React.ReactNode }
-const DROPDOWNS: Record<string, { items: NavDropdownItem[]; base: string; label: string; blurb: string }> = {
+const DROPDOWNS: Record<string, { items: NavDropdownItem[]; base: string; label: string; blurb: string; hash?: boolean }> = {
   '/regulatory': { items: REGULATORY_PRODUCTS, base: '',         label: 'Regulatory GPS Certifications', blurb: 'Certified GPS & OBU solutions built to meet UAE regulatory requirements.' },
   '/about':      { items: ABOUT_PAGES,         base: '/about',   label: 'About Locator',                 blurb: 'Who we are, where we’re headed, and the people behind the platform.' },
+  '/software':   { items: SOFTWARE_MODULES,    base: '/software', label: 'Software Platform',            blurb: 'Jump straight to any module of the Locator fleet platform.', hash: true },
   '/service':    { items: SERVICE_PAGES,       base: '/service', label: 'Locator Services',              blurb: 'End-to-end fleet, video, and IoT services for every operation.' },
 }
+
+const itemHref = (dd: { base: string; hash?: boolean }, slug: string) =>
+  dd.hash ? `${dd.base}#${slug}` : `${dd.base}/${slug}`
 
 export default function SoftwareNavbar() {
   const [open, setOpen]       = useState(false)      // mobile drawer
@@ -309,7 +314,7 @@ export default function SoftwareNavbar() {
                 </div>
                 <div className="swn-mega-grid">
                   {activeDD.items.map(p => (
-                    <Link key={p.slug} href={`${activeDD.base}/${p.slug}`} className="swn-mega-card" role="menuitem" onClick={() => setActiveMenu(null)}>
+                    <Link key={p.slug} href={itemHref(activeDD, p.slug)} className="swn-mega-card" role="menuitem" onClick={() => setActiveMenu(null)}>
                       <span className="swn-mega-ic" style={{ background: `${p.accent}14`, color: p.accent }}>{p.icon}</span>
                       <span style={{ minWidth: 0 }}>
                         <span className="swn-mega-name">{p.name}</span>
@@ -378,7 +383,7 @@ export default function SoftwareNavbar() {
                       {dd.items.map(p => (
                         <Link
                           key={p.slug}
-                          href={`${dd.base}/${p.slug}`}
+                          href={itemHref(dd, p.slug)}
                           onClick={() => setOpen(false)}
                           style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '11px 4px', fontSize: '14.5px', fontWeight: 600, color: '#52525e', textDecoration: 'none' }}
                         >

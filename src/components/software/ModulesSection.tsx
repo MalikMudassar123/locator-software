@@ -9,6 +9,7 @@ const InspectionShowcase = dynamic(() => import('./modules/InspectionShowcase'),
 const FleetManagerShowcase = dynamic(() => import('./modules/FleetManagerShowcase'), { ssr: false })
 
 interface ModuleDef {
+  slug: string
   h2: string
   h2Accent: string
   leads: string[]
@@ -19,24 +20,28 @@ interface ModuleDef {
 
 const MODULES: ModuleDef[] = [
   {
+    slug: 'task-manager',
     h2: 'Task', h2Accent: 'Manager', Showcase: TaskManagerShowcase,
     leads: ['Assign tasks directly to field staff through the app. Admin users can dispatch jobs, track live progress, collect custom field data, capture inspection reports, and monitor payment status. Integration with CRM/ERP ensures real-time sync, eliminating duplicate entries and improving team efficiency.'],
     suitedLabel: 'Best suited for',
     suited: ['FMCG delivery vans', 'Logistics trucks', 'Facility service cars', 'Healthcare fleets', 'Sales executive vehicles'],
   },
   {
+    slug: 'expense-manager',
     h2: 'Expense', h2Accent: 'Manager', Showcase: ExpenseManagerShowcase,
     leads: ['Field teams can upload fuel bills, parking receipts, toll charges, or ad-hoc expenses through the mobile app. Admin users can review, approve, and generate expense trend reports from the web platform. This reduces paper-based reimbursement delays and gives better financial control.'],
     suitedLabel: 'Best suited for',
     suited: ['FMCG delivery vans', 'Logistics trucks', 'Facility service cars', 'Healthcare fleets', 'Sales executive vehicles'],
   },
   {
+    slug: 'inspection',
     h2: 'Inspection', h2Accent: 'Module', Showcase: InspectionShowcase,
     leads: ['Conduct vehicle, machine, or equipment inspections with customizable checklists, photos, and condition attributes. It ensures tool availability, tracks condition during handovers, and assigns damage responsibility accurately, strengthening accountability and operational compliance for UAE fleets.'],
     suitedLabel: 'Useful for',
     suited: ['Company vehicles', 'Construction machines', 'Rental fleets', 'School buses', 'Facility generators', 'Boom loaders & bulldozers'],
   },
   {
+    slug: 'fleet-manager',
     h2: 'Fleet', h2Accent: 'Manager', Showcase: FleetManagerShowcase,
     leads: ['Manage your entire fleet operations with comprehensive tracking for vehicle documents, service schedules, fuel consumption, and other expenses. Ensure compliance, reduce downtime, and maintain accurate cost records for all fleet vehicles across UAE operations.'],
     suitedLabel: 'Useful for',
@@ -49,7 +54,7 @@ export default function ModulesSection() {
     <>
       <ModuleShowcaseStyles />
       <style>{`
-        .pm-sec { padding: clamp(40px,5vw,76px) clamp(24px,6vw,96px); border-top: 1px solid #f0f0f3; }
+        .pm-sec { padding: clamp(40px,5vw,76px) clamp(24px,6vw,96px); border-top: 1px solid #f0f0f3; scroll-margin-top: 84px; }
         .pm-sec:nth-child(even) { background: #f7f9fc; }
 
         /* ── Desktop: text + showcase side by side, showcase dominant ── */
@@ -96,7 +101,7 @@ export default function ModulesSection() {
           const { Showcase } = mod
           const flip = idx % 2 === 1
           return (
-            <section key={mod.h2} className="pm-sec">
+            <section key={mod.h2} id={mod.slug} className="pm-sec">
               <div className={`pm-grid${flip ? ' flip' : ''}`}>
                 <div className="pm-text" data-reveal={flip ? 'right' : 'left'}>
                   <span className="pm-tag"><span />MODULE<span /></span>

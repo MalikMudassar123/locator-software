@@ -94,7 +94,7 @@ export default function DashcamShowcase() {
         }
       `}</style>
 
-      <section id="dashcam" style={{ padding: 'clamp(40px,5vw,56px) 28px' }}>
+      <section id="dashcam" style={{ padding: 'clamp(40px,5vw,56px) 28px', scrollMarginTop: '84px' }}>
         <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
           <div className="dc-wrap">
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -19,20 +19,29 @@ const NAV_LINKS = [
   { href: '/contact',    label: 'Contact' },
 ]
 
-// Nav items that open a hover dropdown instead of navigating directly.
+// Nav items that open the shutter mega-menu instead of navigating directly.
 type NavDropdownItem = { slug: string; name: string; tagline: string; accent: string; icon: React.ReactNode }
-const DROPDOWNS: Record<string, { items: NavDropdownItem[]; base: string; label: string }> = {
-  '/regulatory': { items: REGULATORY_PRODUCTS, base: '', label: 'Regulatory GPS Certifications' },
-  '/about':      { items: ABOUT_PAGES,         base: '/about', label: 'About Locator' },
-  '/service':    { items: SERVICE_PAGES,       base: '/service', label: 'Locator Services' },
+const DROPDOWNS: Record<string, { items: NavDropdownItem[]; base: string; label: string; blurb: string }> = {
+  '/regulatory': { items: REGULATORY_PRODUCTS, base: '',         label: 'Regulatory GPS Certifications', blurb: 'Certified GPS & OBU solutions built to meet UAE regulatory requirements.' },
+  '/about':      { items: ABOUT_PAGES,         base: '/about',   label: 'About Locator',                 blurb: 'Who we are, where we’re headed, and the people behind the platform.' },
+  '/service':    { items: SERVICE_PAGES,       base: '/service', label: 'Locator Services',              blurb: 'End-to-end fleet, video, and IoT services for every operation.' },
 }
 
 export default function SoftwareNavbar() {
-  const [open, setOpen]       = useState(false)
+  const [open, setOpen]       = useState(false)      // mobile drawer
   const [mounted, setMounted] = useState(false)
+  const [activeMenu, setActiveMenu] = useState<string | null>(null) // open mega-menu href
+  const [renderMenu, setRenderMenu] = useState<string | null>(null) // content kept during close anim
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pathname = usePathname()
 
   useEffect(() => { setMounted(true) }, [])
+
+  // Keep the last menu rendered so the close animation still shows content.
+  useEffect(() => { if (activeMenu) setRenderMenu(activeMenu) }, [activeMenu])
+
+  // Close everything on route change.
+  useEffect(() => { setActiveMenu(null); setOpen(false) }, [pathname])
 
   useEffect(() => {
     if (open) {
@@ -42,297 +51,281 @@ export default function SoftwareNavbar() {
     }
   }, [open])
 
+  const openMega = (href: string) => {
+    if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null }
+    setActiveMenu(href)
+  }
+  const scheduleClose = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current)
+    closeTimer.current = setTimeout(() => setActiveMenu(null), 130)
+  }
+  const cancelClose = () => {
+    if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null }
+  }
+
+  const activeDD = renderMenu ? DROPDOWNS[renderMenu] : null
+
   return (
     <>
       <style>{`
+        /* ── Full-width flat bar ───────────────────────────────────────────── */
         .swn-root {
-          position: fixed;
-          top: clamp(3px, 0.8vw, 9px);
-          left: 0;
-          right: 0;
-          z-index: 1000;
-          width: 100%;
-          padding: 0 clamp(12px, 4vw, 40px);
+          position: fixed; top: 0; left: 0; right: 0; width: 100%;
+          z-index: 1002;
+          background: rgba(255,255,255,0.82);
+          -webkit-backdrop-filter: blur(16px) saturate(180%);
+          backdrop-filter: blur(16px) saturate(180%);
+          border-bottom: 1px solid rgba(15,23,42,0.08);
         }
-        /* Reserves the navbar's space in the hero flow, since the bar itself is
-           portaled to <body> as a fixed element (so backdrop-filter can blur
-           the real page — the hero's .sw-pin clips/isolates it otherwise). */
-        .swn-spacer {
-          height: calc(58px + clamp(6px, 1.6vw, 18px));
-        }
-        .swn-inner {
-          max-width: 1280px;
-          margin: 0 auto;
-          padding: 0 clamp(16px, 3vw, 36px);
-          height: 58px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 16px;
-          /* Frosted glass built into the panel (the ancestor .sw-pin's
-             overflow:hidden + isolation defeats backdrop-filter sampling, so a
-             plain translucent fill reads as flat white). A faint cool tint +
-             diagonal sheen make it read as real glass even over a white page,
-             while the blur still frosts content where it works. */
-          background:
-            linear-gradient(135deg,
-              rgba(255, 255, 255, 0.72) 0%,
-              rgba(238, 242, 252, 0.56) 48%,
-              rgba(255, 255, 255, 0.66) 100%);
-          -webkit-backdrop-filter: blur(14px) saturate(160%);
-          backdrop-filter: blur(14px) saturate(160%);
-          border: 1px solid rgba(255, 255, 255, 0.75);
-          border-radius: clamp(14px, 1.6vw, 22px);
-          /* Soft floating shadow + glossy top highlight + faint inner depth. */
-          box-shadow:
-            0 12px 40px rgba(15, 23, 42, 0.14),
-            0 1px 2px rgba(15, 23, 42, 0.05),
-            inset 0 1px 0 rgba(255, 255, 255, 0.95),
-            inset 0 -8px 18px rgba(15, 23, 42, 0.03);
-          /* Own compositing layer — avoids the black-backdrop glitch caused by
-             the ancestor (overflow:hidden + isolation on .sw-pin). */
-          transform: translateZ(0);
-        }
-        /* Browsers without backdrop-filter get a clean opaque-white bar. */
         @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-          .swn-inner { background: rgba(255, 255, 255, 0.9); }
+          .swn-root { background: rgba(255,255,255,0.96); }
         }
-        @media (max-width: 600px) {
-          .swn-root { padding-left: 10px; padding-right: 10px; }
-          .swn-inner { border-radius: 14px; }
+        /* Bar turns solid while a mega-menu is open so the panel reads clean. */
+        .swn-root.menu-open { background: #ffffff; }
+
+        .swn-spacer { height: 64px; }
+
+        .swn-bar {
+          max-width: 1600px; margin: 0 auto;
+          padding: 0 clamp(16px, 3.5vw, 48px);
+          height: 64px;
+          display: flex; align-items: center; justify-content: space-between; gap: 16px;
         }
 
         .swn-link {
           position: relative;
-          font-size: 13.5px;
-          font-weight: 600;
-          color: #52525e;
+          font-size: 14px; font-weight: 600; color: #3a3a44;
           white-space: nowrap;
-          padding: 7px 14px;
-          border-radius: 999px;
-          text-decoration: none;
+          padding: 8px 14px; border-radius: 10px;
+          text-decoration: none; background: none; border: none;
+          font-family: inherit; cursor: pointer;
+          display: inline-flex; align-items: center; gap: 5px;
           transition: color .2s ease, background .2s ease;
-          background: none;
-          border: none;
-          font-family: inherit;
-          cursor: pointer;
         }
-        /* Animated underline that grows from the centre */
         .swn-link::after {
-          content: '';
-          position: absolute;
-          left: 50%;
-          bottom: 2px;
-          width: 0;
-          height: 2px;
-          border-radius: 2px;
+          content: ''; position: absolute; left: 14px; right: 14px; bottom: 3px;
+          height: 2px; border-radius: 2px;
           background: linear-gradient(90deg, #1f6dff, #0d4fd4);
-          transform: translateX(-50%);
-          transition: width .28s cubic-bezier(.22,.61,.36,1);
+          transform: scaleX(0); transform-origin: center;
+          transition: transform .28s cubic-bezier(.22,.61,.36,1);
         }
-        .swn-link:hover { color: #1d1d1f; background: rgba(19,96,238,.06); }
-        .swn-link:hover::after { width: 55%; }
-        .swn-link.active {
-          color: #1360ee;
-          background: rgba(19,96,238,.10);
-          font-weight: 700;
-        }
-        .swn-link.active::after { width: 55%; }
+        .swn-link:hover { color: #1360ee; }
+        .swn-link:hover::after { transform: scaleX(1); }
+        .swn-link.active { color: #1360ee; }
+        .swn-link.active::after { transform: scaleX(1); }
+        .swn-link.menu-current { color: #1360ee; background: rgba(19,96,238,.07); }
 
-        /* ── Regulatory hover dropdown ── */
-        .swn-dd-wrap { position: relative; }
-        .swn-dd-wrap .swn-link { display: inline-flex; align-items: center; gap: 4px; }
-        .swn-chev { transition: transform .28s cubic-bezier(.22,.61,.36,1); flex-shrink: 0; }
-        .swn-dd-wrap:hover .swn-chev, .swn-dd-wrap:focus-within .swn-chev { transform: rotate(180deg); }
-        .swn-dd {
-          position: absolute; top: calc(100% + 10px); left: 50%;
-          transform: translateX(-50%) translateY(6px) scale(.97);
-          width: 290px; padding: 6px;
-          background: #fff;
-          border: 1px solid #e9ecf3;
-          border-radius: 16px;
-          box-shadow: 0 20px 50px -20px rgba(15,23,42,.3), 0 2px 8px rgba(15,23,42,.05);
+        .swn-chev { transition: transform .3s cubic-bezier(.22,.61,.36,1); flex-shrink: 0; }
+        .swn-link.menu-current .swn-chev { transform: rotate(180deg); }
+
+        /* ── Shutter mega-menu (drops from the top, full width) ─────────────── */
+        .swn-backdrop {
+          position: fixed; inset: 64px 0 0 0; z-index: 1000;
+          background: rgba(15,23,42,0.14);
           opacity: 0; pointer-events: none;
-          transition: opacity .18s ease, transform .26s cubic-bezier(.22,.61,.36,1);
-          z-index: 1001;
+          transition: opacity .32s ease;
         }
-        /* invisible hover bridge so the pointer can travel from link to panel */
-        .swn-dd::before { content: ''; position: absolute; top: -12px; left: 0; right: 0; height: 12px; }
-        /* caret */
-        .swn-dd::after {
-          content: ''; position: absolute; top: -5px; left: 50%;
-          transform: translateX(-50%) rotate(45deg);
-          width: 9px; height: 9px; background: #fff; border-radius: 2px;
-          border-left: 1px solid #e9ecf3; border-top: 1px solid #e9ecf3;
-        }
-        .swn-dd-wrap:hover .swn-dd, .swn-dd-wrap:focus-within .swn-dd {
-          opacity: 1; pointer-events: auto;
-          transform: translateX(-50%) translateY(0) scale(1);
-        }
-        .swn-dd-item {
-          display: flex; align-items: center; gap: 11px;
-          padding: 9px 10px; border-radius: 11px;
-          text-decoration: none;
-          transition: background .16s ease;
-        }
-        .swn-dd-item:hover { background: rgba(19,96,238,.06); }
-        .swn-dd-icon {
-          width: 32px; height: 32px; border-radius: 9px;
-          display: grid; place-items: center; flex-shrink: 0;
-        }
-        .swn-dd-icon svg { width: 17px; height: 17px; }
-        .swn-dd-name { display: block; font-size: 13px; font-weight: 700; color: #1d1d1f; line-height: 1.25; }
-        .swn-dd-tag {
-          display: block; font-size: 11px; color: #8e8e93; line-height: 1.3; margin-top: 1px;
-          white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 190px;
-        }
-        .swn-dd-go { margin-left: auto; color: #c4c4d0; opacity: 0; transform: translateX(-4px); transition: .18s ease; flex-shrink: 0; }
-        .swn-dd-item:hover .swn-dd-go { opacity: 1; transform: none; color: #1360ee; }
+        .swn-backdrop.open { opacity: 1; pointer-events: auto; }
 
-        /* Logo + flag micro-interactions */
+        .swn-mega {
+          position: fixed; top: 64px; left: 0; right: 0; z-index: 1001;
+          background: #ffffff;
+          border-bottom: 1px solid #ececf1;
+          box-shadow: 0 40px 60px -34px rgba(15,23,42,.30);
+          display: grid; grid-template-rows: 0fr;
+          opacity: 0; pointer-events: none;
+          transition: grid-template-rows .52s cubic-bezier(.16,1,.3,1),
+                      opacity .34s ease,
+                      box-shadow .5s ease;
+          will-change: grid-template-rows;
+        }
+        .swn-mega.open { grid-template-rows: 1fr; opacity: 1; pointer-events: auto; }
+        .swn-mega-clip { overflow: hidden; min-height: 0; }
+
+        /* Inner content lifts + fades as the shutter unfolds (layered depth) */
+        .swn-mega-inner {
+          max-width: 1200px; margin: 0 auto;
+          padding: clamp(26px,3vw,40px) clamp(20px,4vw,48px) clamp(32px,3.4vw,46px);
+          opacity: 0; transform: translateY(-10px);
+          transition: opacity .4s ease .04s, transform .55s cubic-bezier(.16,1,.3,1) .04s;
+        }
+        .swn-mega.open .swn-mega-inner { opacity: 1; transform: none; }
+
+        .swn-mega-head { margin-bottom: 22px; }
+        .swn-mega-label { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1360ee; }
+        .swn-mega-blurb { margin: 6px 0 0; font-size: 14px; color: #6e6e73; max-width: 560px; line-height: 1.5; }
+
+        /* Adaptive grid — fixed responsive columns so any number of items wraps
+           cleanly into even rows (add more items → they flow into new rows). */
+        .swn-mega-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; }
+        @media (max-width: 1160px) { .swn-mega-grid { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+        @media (max-width: 1000px) { .swn-mega-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+
+        .swn-mega-card {
+          display: flex; align-items: center; gap: 13px;
+          padding: 13px 14px; border-radius: 14px;
+          text-decoration: none; border: 1px solid transparent;
+          transition: background .2s cubic-bezier(.22,.61,.36,1), border-color .2s ease, transform .2s cubic-bezier(.22,.61,.36,1), box-shadow .2s ease;
+        }
+        .swn-mega-card:hover { background: #f6f8fd; border-color: #e6ebf5; transform: translateY(-2px); box-shadow: 0 12px 26px -14px rgba(20,40,90,.3); }
+        .swn-mega-ic {
+          width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
+          display: grid; place-items: center;
+          transition: transform .22s cubic-bezier(.34,1.3,.64,1);
+        }
+        .swn-mega-card:hover .swn-mega-ic { transform: scale(1.08) rotate(-3deg); }
+        .swn-mega-ic svg { width: 21px; height: 21px; }
+        .swn-mega-name { display: block; font-size: 14.5px; font-weight: 700; color: #1d1d1f; line-height: 1.25; }
+        .swn-mega-tag { display: block; font-size: 12px; color: #8e8e93; line-height: 1.35; margin-top: 2px; }
+        .swn-mega-go { margin-left: auto; color: #cfd3dc; flex-shrink: 0; opacity: 0; transform: translateX(-4px); transition: transform .2s ease, color .2s ease, opacity .2s ease; }
+        .swn-mega-card:hover .swn-mega-go { color: #1360ee; transform: translateX(0); opacity: 1; }
+
+        /* Staggered card reveal each time the shutter opens */
+        @keyframes swnCardIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+        .swn-mega.open .swn-mega-card { animation: swnCardIn .5s cubic-bezier(.16,1,.3,1) both; }
+        .swn-mega.open .swn-mega-card:nth-child(1) { animation-delay: .06s; }
+        .swn-mega.open .swn-mega-card:nth-child(2) { animation-delay: .10s; }
+        .swn-mega.open .swn-mega-card:nth-child(3) { animation-delay: .14s; }
+        .swn-mega.open .swn-mega-card:nth-child(4) { animation-delay: .18s; }
+        .swn-mega.open .swn-mega-card:nth-child(5) { animation-delay: .22s; }
+        .swn-mega.open .swn-mega-card:nth-child(6) { animation-delay: .26s; }
+        .swn-mega.open .swn-mega-card:nth-child(7) { animation-delay: .30s; }
+        .swn-mega.open .swn-mega-card:nth-child(8) { animation-delay: .34s; }
+        @media (prefers-reduced-motion: reduce) {
+          .swn-mega { transition: opacity .2s ease; }
+          .swn-mega-inner { transition: opacity .2s ease; transform: none; }
+          .swn-mega.open .swn-mega-card { animation: none; }
+        }
+
         .swn-logo { transition: transform .25s cubic-bezier(.22,.61,.36,1); }
-        .swn-logo:hover { transform: scale(1.05); }
+        .swn-logo:hover { transform: scale(1.04); }
         .swn-flag {
-          transition: transform .25s cubic-bezier(.22,.61,.36,1), box-shadow .25s ease;
-          cursor: pointer;
+          transition: transform .25s cubic-bezier(.22,.61,.36,1), box-shadow .25s ease; cursor: pointer;
         }
-        .swn-flag:hover {
-          transform: scale(1.12) rotate(4deg);
-          box-shadow: 0 3px 10px rgba(15, 23, 42, 0.2);
-        }
+        .swn-flag:hover { transform: scale(1.12) rotate(4deg); box-shadow: 0 3px 10px rgba(15,23,42,0.2); }
+
         .swn-cta {
-          position: relative;
-          overflow: hidden;
-          isolation: isolate;
-          font-size: 14px;
-          font-weight: 700;
-          cursor: pointer;
-          padding: 10px 22px;
-          border-radius: 999px;
-          border: none;
+          position: relative; overflow: hidden; isolation: isolate;
+          font-size: 14px; font-weight: 700; cursor: pointer;
+          padding: 10px 22px; border-radius: 999px; border: none;
           background: linear-gradient(135deg, #1f6dff 0%, #1360ee 55%, #0d4fd4 100%);
-          color: #fff;
-          font-family: inherit;
-          white-space: nowrap;
-          box-shadow: 0 4px 14px rgba(19, 96, 238, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+          color: #fff; font-family: inherit; white-space: nowrap;
+          box-shadow: 0 4px 14px rgba(19,96,238,0.35), inset 0 1px 0 rgba(255,255,255,0.25);
           transition: transform .25s cubic-bezier(.22,.61,.36,1), box-shadow .25s ease;
         }
-        /* Glossy light sweep that glides across on hover */
         .swn-cta::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          z-index: -1;
+          content: ''; position: absolute; inset: 0; z-index: -1;
           background: linear-gradient(110deg, transparent 20%, rgba(255,255,255,0.45) 50%, transparent 80%);
-          transform: translateX(-130%);
-          transition: transform .6s cubic-bezier(.22,.61,.36,1);
+          transform: translateX(-130%); transition: transform .6s cubic-bezier(.22,.61,.36,1);
         }
-        .swn-cta:hover {
-          animation: none;
-          transform: translateY(-2px);
-          box-shadow: 0 8px 22px rgba(19, 96, 238, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.35);
-        }
+        .swn-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(19,96,238,0.5), inset 0 1px 0 rgba(255,255,255,0.35); }
         .swn-cta:hover::before { transform: translateX(130%); }
         .swn-cta:active { transform: translateY(0) scale(.97); }
-        @media (prefers-reduced-motion: no-preference) {
-          .swn-cta {
-            animation: swnCtaGlow 2.8s ease-in-out infinite;
-          }
-        }
-        @keyframes swnCtaGlow {
-          0%, 100% { box-shadow: 0 4px 14px rgba(19, 96, 238, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25); }
-          50%      { box-shadow: 0 6px 20px rgba(19, 96, 238, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
-        }
-        @media (max-width: 900px) { .swn-pills { display: none !important; } .swn-hamburger { display: flex !important; } }
+
+        @media (max-width: 980px) { .swn-pills { display: none !important; } .swn-hamburger { display: flex !important; } .swn-cta { display: none !important; } }
       `}</style>
 
-      {/* Keeps the hero layout intact; the real bar is portaled out of flow. */}
+      {/* Reserves the fixed bar's height in the page flow. */}
       <div className="swn-spacer" aria-hidden="true" />
 
-      {/* Server-rendered inline so the bar paints immediately; after hydration
-          it moves to a <body> portal (needed for backdrop blur on the pinned
-          heroes). */}
       {(() => {
         const bar = (
-      <nav className="swn-root">
-        <div className="swn-inner">
-          {/* Logo */}
-          <Link href="/" className="swn-logo" style={{ display: 'flex', alignItems: 'center', flexShrink: 0, textDecoration: 'none' }}>
-            <Image src="/logo.png" alt="Locator" width={100} height={32} style={{ width: 'auto', height: '32px', objectFit: 'contain' }} priority />
-          </Link>
+      <>
+        <nav className={`swn-root${activeMenu ? ' menu-open' : ''}`} onMouseLeave={scheduleClose}>
+          <div className="swn-bar">
+            {/* Logo */}
+            <Link href="/" className="swn-logo" onMouseEnter={() => setActiveMenu(null)} style={{ display: 'flex', alignItems: 'center', flexShrink: 0, textDecoration: 'none' }}>
+              <Image src="/Untitled-1.png" alt="Locator" width={2617} height={911} style={{ width: 'auto', height: '30px', objectFit: 'contain' }} priority />
+            </Link>
 
-          {/* Nav links */}
-          <div className="swn-pills" style={{ display: 'flex', alignItems: 'center', gap: '2px', flex: 1, justifyContent: 'center' }}>
-            {NAV_LINKS.map(l => {
-              const isActive = l.href === '/' ? pathname === '/' : pathname.startsWith(l.href)
-              const dd = DROPDOWNS[l.href]
-              if (dd) {
-                return (
-                  <div key={l.href} className="swn-dd-wrap">
-                    <button type="button" className={`swn-link${isActive ? ' active' : ''}`} aria-haspopup="menu">
+            {/* Nav links */}
+            <div className="swn-pills" style={{ display: 'flex', alignItems: 'center', gap: '2px', flex: 1, justifyContent: 'center' }}>
+              {NAV_LINKS.map(l => {
+                const isActive = l.href === '/' ? pathname === '/' : pathname.startsWith(l.href)
+                const dd = DROPDOWNS[l.href]
+                if (dd) {
+                  const isCurrent = activeMenu === l.href
+                  return (
+                    <button
+                      key={l.href}
+                      type="button"
+                      className={`swn-link${isActive ? ' active' : ''}${isCurrent ? ' menu-current' : ''}`}
+                      aria-haspopup="menu"
+                      aria-expanded={isCurrent}
+                      onMouseEnter={() => openMega(l.href)}
+                      onClick={() => (isCurrent ? setActiveMenu(null) : openMega(l.href))}
+                    >
                       {l.label}
                       <svg className="swn-chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <polyline points="6 9 12 15 18 9" />
                       </svg>
                     </button>
-                    <div className="swn-dd" role="menu" aria-label={dd.label}>
-                      {dd.items.map(p => (
-                        <Link key={p.slug} href={`${dd.base}/${p.slug}`} className="swn-dd-item" role="menuitem">
-                          <span className="swn-dd-icon" style={{ background: `${p.accent}14`, color: p.accent }}>
-                            {p.icon}
-                          </span>
-                          <span style={{ minWidth: 0 }}>
-                            <span className="swn-dd-name">{p.name}</span>
-                            <span className="swn-dd-tag">{p.tagline}</span>
-                          </span>
-                          <svg className="swn-dd-go" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                            <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
-                          </svg>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
+                  )
+                }
+                return (
+                  <Link key={l.href} href={l.href} className={`swn-link${isActive ? ' active' : ''}`} onMouseEnter={() => setActiveMenu(null)}>
+                    {l.label}
+                  </Link>
                 )
-              }
-              return (
-                <Link key={l.href} href={l.href} className={`swn-link${isActive ? ' active' : ''}`}>
-                  {l.label}
-                </Link>
-              )
-            })}
+              })}
+            </div>
+
+            {/* Right: flag + CTA + hamburger */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }} onMouseEnter={() => setActiveMenu(null)}>
+              <Image src="/uae-flag.svg" alt="UAE" width={28} height={28} className="swn-flag" style={{ borderRadius: '50%', display: 'block' }} />
+              <button className="swn-cta">Get a quote</button>
+
+              <button
+                onClick={() => setOpen(true)}
+                aria-label="Open navigation"
+                className="swn-hamburger"
+                style={{ display: 'none', alignItems: 'center', justifyContent: 'center', width: '38px', height: '38px', background: 'none', border: 'none', cursor: 'pointer', color: '#1d1d1f' }}
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+              </button>
+            </div>
           </div>
+        </nav>
 
-          {/* Right: flag + CTA + hamburger */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
-            <Image src="/uae-flag.svg" alt="UAE" width={28} height={28} className="swn-flag" style={{ borderRadius: '50%', display: 'block' }} />
-            <button className="swn-cta">Get a quote</button>
+        {/* Backdrop dim behind the shutter */}
+        <div className={`swn-backdrop${activeMenu ? ' open' : ''}`} onMouseEnter={scheduleClose} onClick={() => setActiveMenu(null)} aria-hidden="true" />
 
-            {/* Hamburger */}
-            <button
-              onClick={() => setOpen(true)}
-              aria-label="Open navigation"
-              className="swn-hamburger"
-              style={{
-                display: 'none',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '38px',
-                height: '38px',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                color: '#1d1d1f',
-              }}
-            >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="18" x2="21" y2="18" />
-              </svg>
-            </button>
+        {/* Shutter mega-menu */}
+        <div
+          className={`swn-mega${activeMenu ? ' open' : ''}`}
+          role="menu"
+          aria-label={activeDD?.label}
+          onMouseEnter={cancelClose}
+          onMouseLeave={scheduleClose}
+        >
+          <div className="swn-mega-clip">
+            {activeDD && (
+              <div className="swn-mega-inner">
+                <div className="swn-mega-head">
+                  <span className="swn-mega-label">{activeDD.label}</span>
+                  <p className="swn-mega-blurb">{activeDD.blurb}</p>
+                </div>
+                <div className="swn-mega-grid">
+                  {activeDD.items.map(p => (
+                    <Link key={p.slug} href={`${activeDD.base}/${p.slug}`} className="swn-mega-card" role="menuitem" onClick={() => setActiveMenu(null)}>
+                      <span className="swn-mega-ic" style={{ background: `${p.accent}14`, color: p.accent }}>{p.icon}</span>
+                      <span style={{ minWidth: 0 }}>
+                        <span className="swn-mega-name">{p.name}</span>
+                        <span className="swn-mega-tag">{p.tagline}</span>
+                      </span>
+                      <svg className="swn-mega-go" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                      </svg>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
-      </nav>
+      </>
         )
         return mounted ? createPortal(bar, document.body) : bar
       })()}
@@ -346,7 +339,7 @@ export default function SoftwareNavbar() {
           display: 'flex', flexDirection: 'column',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 24px', borderBottom: '1px solid #e3e3e6' }}>
-            <Image src="/logo.png" alt="Locator" width={96} height={30} style={{ width: 'auto', height: '30px' }} />
+            <Image src="/Untitled-1.png" alt="Locator" width={2617} height={911} style={{ width: 'auto', height: '28px' }} />
             <button
               onClick={() => setOpen(false)}
               aria-label="Close"
@@ -365,31 +358,14 @@ export default function SoftwareNavbar() {
               return (
                 <li key={l.href}>
                   {dd ? (
-                    <div
-                      style={{
-                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                        padding: '16px 4px',
-                        borderBottom: '1px solid #e3e3e6',
-                        fontSize: '17px',
-                        fontWeight: 600,
-                        color: '#1d1d1f',
-                      }}
-                    >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 4px', borderBottom: '1px solid #e3e3e6', fontSize: '17px', fontWeight: 600, color: '#1d1d1f' }}>
                       <span>{l.label}</span>
                     </div>
                   ) : (
                     <Link
                       href={l.href}
                       onClick={() => setOpen(false)}
-                      style={{
-                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                        padding: '16px 4px',
-                        borderBottom: '1px solid #e3e3e6',
-                        fontSize: '17px',
-                        fontWeight: isActive ? 700 : 600,
-                        color: isActive ? '#1360ee' : '#1d1d1f',
-                        textDecoration: 'none',
-                      }}
+                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 4px', borderBottom: '1px solid #e3e3e6', fontSize: '17px', fontWeight: isActive ? 700 : 600, color: isActive ? '#1360ee' : '#1d1d1f', textDecoration: 'none' }}
                     >
                       <span>{l.label}</span>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.4 }}>
@@ -404,11 +380,7 @@ export default function SoftwareNavbar() {
                           key={p.slug}
                           href={`${dd.base}/${p.slug}`}
                           onClick={() => setOpen(false)}
-                          style={{
-                            display: 'flex', alignItems: 'center', gap: '10px',
-                            padding: '11px 4px', fontSize: '14.5px', fontWeight: 600,
-                            color: '#52525e', textDecoration: 'none',
-                          }}
+                          style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '11px 4px', fontSize: '14.5px', fontWeight: 600, color: '#52525e', textDecoration: 'none' }}
                         >
                           <span style={{ width: 6, height: 6, borderRadius: '50%', background: p.accent, flexShrink: 0 }} />
                           {p.name}

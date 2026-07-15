@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -19,24 +19,43 @@ const navLinks = [
   { href: '/contact', label: 'Contact' },
 ]
 
-// Nav items that open a hover dropdown instead of navigating directly.
+// Nav items that open the shutter mega-menu instead of navigating directly.
 type NavDropdownItem = { slug: string; name: string; tagline: string; accent: string; icon: React.ReactNode }
-const NAV_DROPDOWNS: Record<string, { items: NavDropdownItem[]; base: string; label: string }> = {
-  '/regulatory': { items: REGULATORY_PRODUCTS, base: '',        label: 'Regulatory GPS Certifications' },
-  '/about':      { items: ABOUT_PAGES,         base: '/about',  label: 'About Locator' },
-  '/service':    { items: SERVICE_PAGES,       base: '/service', label: 'Locator Services' },
+const NAV_DROPDOWNS: Record<string, { items: NavDropdownItem[]; base: string; label: string; blurb: string }> = {
+  '/regulatory': { items: REGULATORY_PRODUCTS, base: '',        label: 'Regulatory GPS Certifications', blurb: 'Certified GPS & OBU solutions built to meet UAE regulatory requirements.' },
+  '/about':      { items: ABOUT_PAGES,         base: '/about',  label: 'About Locator',                 blurb: 'Who we are, where we’re headed, and the people behind the platform.' },
+  '/service':    { items: SERVICE_PAGES,       base: '/service', label: 'Locator Services',              blurb: 'End-to-end fleet, video, and IoT services for every operation.' },
 }
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const [ctaHover, setCtaHover] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [activeMenu, setActiveMenu] = useState<string | null>(null) // open shutter mega-menu
+  const [renderMenu, setRenderMenu] = useState<string | null>(null) // kept during close anim
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pathname = usePathname()
   const CTA_LINE_HEIGHT = 22
 
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  useEffect(() => { if (activeMenu) setRenderMenu(activeMenu) }, [activeMenu])
+  useEffect(() => { setActiveMenu(null); setOpen(false) }, [pathname])
+
+  const openMega = (href: string) => {
+    if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null }
+    setActiveMenu(href)
+  }
+  const scheduleClose = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current)
+    closeTimer.current = setTimeout(() => setActiveMenu(null), 130)
+  }
+  const cancelClose = () => {
+    if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null }
+  }
+  const activeDD = renderMenu ? NAV_DROPDOWNS[renderMenu] : null
 
   useEffect(() => {
     if (open) {
@@ -49,60 +68,89 @@ export default function Navbar() {
   return (
     <>
       <style>{`
-        /* ── Regulatory hover dropdown (home navbar) ── */
-        .hn-dd-wrap { position: relative; }
-        .hn-chev { transition: transform .28s cubic-bezier(.22,.61,.36,1); flex-shrink: 0; }
-        .hn-dd-wrap:hover .hn-chev, .hn-dd-wrap:focus-within .hn-chev { transform: rotate(180deg); }
-        .hn-dd {
-          position: absolute; top: calc(100% + 12px); left: 50%;
-          transform: translateX(-50%) translateY(6px) scale(.97);
-          width: 290px; padding: 6px;
-          background: #fff;
-          border: 1px solid #e9ecf3;
-          border-radius: 16px;
-          box-shadow: 0 20px 50px -20px rgba(6,42,138,.5), 0 2px 8px rgba(6,42,138,.15);
+        .hn-chev { transition: transform .3s cubic-bezier(.22,.61,.36,1); flex-shrink: 0; }
+
+        /* ── Shutter mega-menu (drops from the top, full width) ─────────────── */
+        .hn-backdrop {
+          position: fixed; inset: 80px 0 0 0; z-index: 1000;
+          background: rgba(6,20,60,0.22);
           opacity: 0; pointer-events: none;
-          transition: opacity .18s ease, transform .26s cubic-bezier(.22,.61,.36,1);
-          z-index: 50;
+          transition: opacity .32s ease;
         }
-        .hn-dd::before { content: ''; position: absolute; top: -14px; left: 0; right: 0; height: 14px; }
-        .hn-dd::after {
-          content: ''; position: absolute; top: -5px; left: 50%;
-          transform: translateX(-50%) rotate(45deg);
-          width: 9px; height: 9px; background: #fff; border-radius: 2px;
+        .hn-backdrop.open { opacity: 1; pointer-events: auto; }
+
+        .hn-mega {
+          position: fixed; top: 80px; left: 0; right: 0; z-index: 1001;
+          background: #ffffff;
+          border-bottom: 1px solid #ececf1;
+          box-shadow: 0 40px 60px -34px rgba(15,23,42,.32);
+          display: grid; grid-template-rows: 0fr;
+          opacity: 0; pointer-events: none;
+          transition: grid-template-rows .52s cubic-bezier(.16,1,.3,1),
+                      opacity .34s ease;
+          will-change: grid-template-rows;
         }
-        .hn-dd-wrap:hover .hn-dd, .hn-dd-wrap:focus-within .hn-dd {
-          opacity: 1; pointer-events: auto;
-          transform: translateX(-50%) translateY(0) scale(1);
+        .hn-mega.open { grid-template-rows: 1fr; opacity: 1; pointer-events: auto; }
+        .hn-mega-clip { overflow: hidden; min-height: 0; }
+        .hn-mega-inner {
+          max-width: 1200px; margin: 0 auto;
+          padding: clamp(26px,3vw,40px) clamp(20px,4vw,48px) clamp(32px,3.4vw,46px);
+          opacity: 0; transform: translateY(-10px);
+          transition: opacity .4s ease .04s, transform .55s cubic-bezier(.16,1,.3,1) .04s;
         }
-        .hn-dd-item {
-          display: flex; align-items: center; gap: 11px;
-          padding: 9px 10px; border-radius: 11px;
-          text-decoration: none;
-          transition: background .16s ease;
+        .hn-mega.open .hn-mega-inner { opacity: 1; transform: none; }
+        .hn-mega-head { margin-bottom: 22px; }
+        .hn-mega-label { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1360ee; }
+        .hn-mega-blurb { margin: 6px 0 0; font-size: 14px; color: #6e6e73; max-width: 560px; line-height: 1.5; }
+
+        .hn-mega-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; }
+        @media (max-width: 1160px) { .hn-mega-grid { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+        @media (max-width: 1000px) { .hn-mega-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+
+        .hn-mega-card {
+          display: flex; align-items: center; gap: 13px;
+          padding: 13px 14px; border-radius: 14px;
+          text-decoration: none; border: 1px solid transparent;
+          transition: background .2s cubic-bezier(.22,.61,.36,1), border-color .2s ease, transform .2s cubic-bezier(.22,.61,.36,1), box-shadow .2s ease;
         }
-        .hn-dd-item:hover { background: rgba(19,96,238,.06); }
-        .hn-dd-icon {
-          width: 32px; height: 32px; border-radius: 9px;
-          display: grid; place-items: center; flex-shrink: 0;
+        .hn-mega-card:hover { background: #f6f8fd; border-color: #e6ebf5; transform: translateY(-2px); box-shadow: 0 12px 26px -14px rgba(20,40,90,.3); }
+        .hn-mega-ic {
+          width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
+          display: grid; place-items: center;
+          transition: transform .22s cubic-bezier(.34,1.3,.64,1);
         }
-        .hn-dd-icon svg { width: 17px; height: 17px; }
-        .hn-dd-name { display: block; font-size: 13px; font-weight: 700; color: #1d1d1f; line-height: 1.25; }
-        .hn-dd-tag {
-          display: block; font-size: 11px; color: #8e8e93; line-height: 1.3; margin-top: 1px;
-          white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 190px;
+        .hn-mega-card:hover .hn-mega-ic { transform: scale(1.08) rotate(-3deg); }
+        .hn-mega-ic svg { width: 21px; height: 21px; }
+        .hn-mega-name { display: block; font-size: 14.5px; font-weight: 700; color: #1d1d1f; line-height: 1.25; }
+        .hn-mega-tag { display: block; font-size: 12px; color: #8e8e93; line-height: 1.35; margin-top: 2px; }
+        .hn-mega-go { margin-left: auto; color: #cfd3dc; flex-shrink: 0; opacity: 0; transform: translateX(-4px); transition: transform .2s ease, color .2s ease, opacity .2s ease; }
+        .hn-mega-card:hover .hn-mega-go { color: #1360ee; transform: translateX(0); opacity: 1; }
+
+        @keyframes hnCardIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+        .hn-mega.open .hn-mega-card { animation: hnCardIn .5s cubic-bezier(.16,1,.3,1) both; }
+        .hn-mega.open .hn-mega-card:nth-child(1) { animation-delay: .06s; }
+        .hn-mega.open .hn-mega-card:nth-child(2) { animation-delay: .10s; }
+        .hn-mega.open .hn-mega-card:nth-child(3) { animation-delay: .14s; }
+        .hn-mega.open .hn-mega-card:nth-child(4) { animation-delay: .18s; }
+        .hn-mega.open .hn-mega-card:nth-child(5) { animation-delay: .22s; }
+        .hn-mega.open .hn-mega-card:nth-child(6) { animation-delay: .26s; }
+        .hn-mega.open .hn-mega-card:nth-child(7) { animation-delay: .30s; }
+        .hn-mega.open .hn-mega-card:nth-child(8) { animation-delay: .34s; }
+        @media (prefers-reduced-motion: reduce) {
+          .hn-mega { transition: opacity .2s ease; }
+          .hn-mega-inner { transition: opacity .2s ease; transform: none; }
+          .hn-mega.open .hn-mega-card { animation: none; }
         }
-        .hn-dd-go { margin-left: auto; color: #c4c4d0; opacity: 0; transform: translateX(-4px); transition: .18s ease; flex-shrink: 0; }
-        .hn-dd-item:hover .hn-dd-go { opacity: 1; transform: none; color: #1360ee; }
       `}</style>
 
       <nav
         className="absolute top-0 left-0 right-0 z-10 h-16 md:h-20"
         style={{ paddingLeft: 'clamp(20px, 4vw, 50px)', paddingRight: 'clamp(20px, 4vw, 50px)' }}
+        onMouseLeave={scheduleClose}
       >
         <div className="h-full flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center" onMouseEnter={() => setActiveMenu(null)}>
             <Image
               src="/logo.png"
               alt="Locator"
@@ -118,22 +166,21 @@ export default function Navbar() {
             {navLinks.map(l => {
               const isActive = l.href === '/' ? pathname === '/' : pathname.startsWith(l.href)
               const dd = NAV_DROPDOWNS[l.href]
-              const isDropdown = !!dd
-              const dropdownItems = dd?.items ?? []
-              const dropdownHref = (slug: string) => `${dd?.base ?? ''}/${slug}`
-              const dropdownLabel = dd?.label ?? ''
+              const isCurrent = activeMenu === l.href
               return (
-                <li key={l.href} className={isDropdown ? 'hn-dd-wrap' : undefined}>
-                  {isDropdown ? (
+                <li key={l.href}>
+                  {dd ? (
                     <button
                       type="button"
                       aria-haspopup="menu"
+                      aria-expanded={isCurrent}
+                      onMouseEnter={() => openMega(l.href)}
+                      onClick={() => (isCurrent ? setActiveMenu(null) : openMega(l.href))}
                       className="text-white text-sm transition-all whitespace-nowrap"
                       style={{
                         fontWeight: isActive ? 800 : 600,
-                        opacity: isActive ? 1 : 0.82,
+                        opacity: isActive || isCurrent ? 1 : 0.82,
                         borderBottom: isActive ? '2px solid rgba(255,255,255,0.85)' : '2px solid transparent',
-                        paddingBottom: '2px',
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '4px',
@@ -142,6 +189,7 @@ export default function Navbar() {
                         borderRight: 'none',
                         borderTop: 'none',
                         paddingTop: 0,
+                        paddingBottom: '2px',
                         paddingLeft: 0,
                         paddingRight: 0,
                         cursor: 'pointer',
@@ -149,13 +197,14 @@ export default function Navbar() {
                       }}
                     >
                       {l.label}
-                      <svg className="hn-chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <svg className="hn-chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ transform: isCurrent ? 'rotate(180deg)' : 'none' }}>
                         <polyline points="6 9 12 15 18 9" />
                       </svg>
                     </button>
                   ) : (
                     <Link
                       href={l.href}
+                      onMouseEnter={() => setActiveMenu(null)}
                       className="text-white text-sm transition-all whitespace-nowrap"
                       style={{
                         fontWeight: isActive ? 800 : 600,
@@ -167,31 +216,13 @@ export default function Navbar() {
                       {l.label}
                     </Link>
                   )}
-                  {isDropdown && (
-                    <div className="hn-dd" role="menu" aria-label={dropdownLabel}>
-                      {dropdownItems.map(p => (
-                        <Link key={p.slug} href={dropdownHref(p.slug)} className="hn-dd-item" role="menuitem">
-                          <span className="hn-dd-icon" style={{ background: `${p.accent}14`, color: p.accent }}>
-                            {p.icon}
-                          </span>
-                          <span style={{ minWidth: 0 }}>
-                            <span className="hn-dd-name">{p.name}</span>
-                            <span className="hn-dd-tag">{p.tagline}</span>
-                          </span>
-                          <svg className="hn-dd-go" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                            <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
-                          </svg>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
                 </li>
               )
             })}
           </ul>
 
           {/* Right side */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3" onMouseEnter={() => setActiveMenu(null)}>
             <Image
               src="/uae-flag.svg"
               alt="UAE"
@@ -272,6 +303,46 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
+
+      {/* Shutter mega-menu — portaled to <body> so it overlays the hero cleanly */}
+      {mounted && createPortal(
+        <>
+          <div className={`hn-backdrop${activeMenu ? ' open' : ''}`} onMouseEnter={scheduleClose} onClick={() => setActiveMenu(null)} aria-hidden="true" />
+          <div
+            className={`hn-mega${activeMenu ? ' open' : ''}`}
+            role="menu"
+            aria-label={activeDD?.label}
+            onMouseEnter={cancelClose}
+            onMouseLeave={scheduleClose}
+          >
+            <div className="hn-mega-clip">
+              {activeDD && (
+                <div className="hn-mega-inner">
+                  <div className="hn-mega-head">
+                    <span className="hn-mega-label">{activeDD.label}</span>
+                    <p className="hn-mega-blurb">{activeDD.blurb}</p>
+                  </div>
+                  <div className="hn-mega-grid">
+                    {activeDD.items.map(p => (
+                      <Link key={p.slug} href={`${activeDD.base}/${p.slug}`} className="hn-mega-card" role="menuitem" onClick={() => setActiveMenu(null)}>
+                        <span className="hn-mega-ic" style={{ background: `${p.accent}14`, color: p.accent }}>{p.icon}</span>
+                        <span style={{ minWidth: 0 }}>
+                          <span className="hn-mega-name">{p.name}</span>
+                          <span className="hn-mega-tag">{p.tagline}</span>
+                        </span>
+                        <svg className="hn-mega-go" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                          <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                        </svg>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </>,
+        document.body
+      )}
 
       {/* Mobile drawer — rendered via portal to escape any ancestor containing block */}
       {open && mounted && createPortal(

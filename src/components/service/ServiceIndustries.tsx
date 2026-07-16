@@ -108,6 +108,9 @@ const INDUSTRIES: Industry[] = [
     desc: 'For tankers, trucks, pickups, cars, generator units, cranes, bulldozers, forklifts, boats and energy assets, GPS telematics tracks fuel transport, field teams, and machines live. It reduces fuel theft, monitors driver safety, geofences depots, and automates maintenance, helping UAE energy companies improve compliance and prevent asset misuse.',
     vehicles: ['Tankers', 'Trucks', 'Cranes', 'Bulldozers', 'Forklifts', 'Boats'],
     count: 11,
+    image: '/service_page/Petroleum & Energy Fleet Intelligence.png',
+    imageW: 1790,
+    imageH: 879,
   },
   {
     id: 'vet',
@@ -116,6 +119,9 @@ const INDUSTRIES: Industry[] = [
     desc: 'Fleet telematics tracks cars, service vans, bikes, pickup trucks, boats and mobile pet-care units used for rescue and home services. It improves dispatch, monitors drivers, geofences clinics, and retrieves trip logs, helping UAE pet-care providers reduce delays, improve training, validate service, and enhance customer trust.',
     vehicles: ['Cars', 'Service vans', 'Bikes', 'Pickup trucks', 'Boats'],
     count: 4,
+    image: '/service_page/Veterinary & Pet Care Fleet Monitoring.png',
+    imageW: 1790,
+    imageH: 879,
   },
   {
     id: 'government',

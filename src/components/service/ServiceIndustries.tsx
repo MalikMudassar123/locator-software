@@ -124,6 +124,9 @@ const INDUSTRIES: Industry[] = [
     desc: 'For cars, pickup trucks, vans, buses, patrol boats, bikes, forklifts, loaders, generators and government machines, GPS telematics ensures live asset tracking, route audit, geofencing, and automated service reminders. It improves road-team coordination, enforces compliance, reduces downtime, and helps UAE public services operate faster and transparently.',
     vehicles: ['Cars', 'Vans', 'Buses', 'Patrol boats', 'Forklifts', 'Generators'],
     count: 14,
+    image: '/service_page/Public & Government Fleet.png',
+    imageW: 1752,
+    imageH: 898,
   },
   {
     id: 'waste',
@@ -132,6 +135,9 @@ const INDUSTRIES: Industry[] = [
     desc: 'GPS fleet systems track garbage trucks, pickup fleets, vans, forklifts, loaders, generators and depot machines. It monitors trips, idle time, driver behavior, and geofences yards, helping UAE waste companies improve driver training, resolve complaints faster, reduce vehicle damage, prevent fraud, and enhance daily collection operations.',
     vehicles: ['Garbage trucks', 'Pickup fleets', 'Vans', 'Forklifts', 'Loaders', 'Generators'],
     count: 8,
+    image: '/service_page/Waste Management Fleet Visibility.png',
+    imageW: 1790,
+    imageH: 879,
   },
   {
     id: 'school',
@@ -140,6 +146,9 @@ const INDUSTRIES: Industry[] = [
     desc: 'Fleet telematics tracks school buses, vans, cars, bikes, boats and campus machines like generators and forklifts. It monitors student pickup trips, stop-arm violations, driver behavior, and geofence campuses, helping UAE schools improve safety, reduce road incidents, enforce compliance, and retrieve video or trip evidence quickly.',
     vehicles: ['School buses', 'Vans', 'Cars', 'Bikes', 'Boats', 'Generators'],
     count: 6,
+    image: '/service_page/School & Educational Fleet Monitoring.png',
+    imageW: 1790,
+    imageH: 879,
   },
 ]
 

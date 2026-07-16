@@ -5,6 +5,8 @@ import BenefitsSection from '@/components/software/BenefitsSection'
 import ServiceIndustries from '@/components/service/ServiceIndustries'
 import ServiceProcess from '@/components/service/ServiceProcess'
 import AnimatedGlobeHero from '@/components/AnimatedGlobeHero'
+import ServiceVideo from '@/components/service/ServiceVideo'
+import ServiceWhyChoose from '@/components/service/ServiceWhyChoose'
 import DashcamShowcase from '@/components/software/DashcamShowcase'
 import SoftwareBlog from '@/components/software/SoftwareBlog'
 import SoftwareCTA from '@/components/software/SoftwareCTA'
@@ -44,6 +46,8 @@ export default function FleetTelematicsPage() {
       <ServiceIndustries />
       <ServiceProcess />
       <AnimatedGlobeHero stats={SERVICE_STATS} />
+      <ServiceVideo />
+      <ServiceWhyChoose />
       <DashcamShowcase />
       <SoftwareBlog />
       <ServiceFAQ />

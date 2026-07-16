@@ -1,25 +1,35 @@
 import type { Metadata } from 'next'
 import ScrollReveal from '@/components/software/ScrollReveal'
-import ServicePillarHero from '@/components/service/ServicePillarHero'
-import ServiceComingSoon from '@/components/service/ServiceComingSoon'
+import SmartIotHero from '@/components/service/smart-iot/SmartIotHero'
+import SmartIotShowcase from '@/components/service/smart-iot/SmartIotShowcase'
+import SmartIotFeatures from '@/components/service/smart-iot/SmartIotFeatures'
+import SmartIotFAQ from '@/components/service/smart-iot/SmartIotFAQ'
+import SoftwareCTA from '@/components/software/SoftwareCTA'
 import Footer from '@/components/layouts/Footer'
 
 export const metadata: Metadata = {
-  title: 'Smart IoT & Asset Intelligence Solutions — Service',
-  description: 'Connected IoT sensors and asset intelligence solutions from Locator — coming soon.',
+  title: 'Smart IoT & GPS Asset Tracking Solutions UAE — Service',
+  description:
+    'Real-time visibility for road teams, machines, and business assets. GPS asset tracking, heavy machinery monitoring, and custom IoT sensor & telemetry projects across the UAE.',
   alternates: { canonical: '/service/smart-iot' },
+  openGraph: {
+    title: 'Smart IoT & Asset Intelligence | Locator',
+    description:
+      'GPS asset tracking, industrial telematics, and IoT sensor projects — unified in one connected LOCATOR dashboard.',
+    url: '/service/smart-iot',
+    type: 'website',
+  },
 }
 
 export default function SmartIotPage() {
   return (
     <main style={{ background: '#ffffff', minHeight: '100vh' }}>
       <ScrollReveal />
-      <ServicePillarHero
-        slug="smart-iot"
-        title="Smart IoT & Asset Intelligence Solutions"
-        lead="Connected sensors and intelligence for the assets that keep your business running — beyond the vehicle."
-      />
-      <ServiceComingSoon accent="#7c3aed" />
+      <SmartIotHero />
+      <SmartIotShowcase />
+      <SmartIotFeatures />
+      <SmartIotFAQ />
+      <SoftwareCTA />
       <Footer />
     </main>
   )

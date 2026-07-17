@@ -22,10 +22,10 @@ const NAV_LINKS = [
 
 // Nav items that open the shutter mega-menu instead of navigating directly.
 type NavDropdownItem = { slug: string; name: string; tagline: string; accent: string; icon: React.ReactNode }
-const DROPDOWNS: Record<string, { items: NavDropdownItem[]; base: string; label: string; blurb: string; hash?: boolean }> = {
+const DROPDOWNS: Record<string, { items: NavDropdownItem[]; base: string; label: string; blurb: string; hash?: boolean; navigable?: boolean }> = {
   '/regulatory': { items: REGULATORY_PRODUCTS, base: '',         label: 'Regulatory GPS Certifications', blurb: 'Certified GPS & OBU solutions built to meet UAE regulatory requirements.' },
   '/about':      { items: ABOUT_PAGES,         base: '/about',   label: 'About Locator',                 blurb: 'Who we are, where we’re headed, and the people behind the platform.' },
-  '/software':   { items: SOFTWARE_MODULES,    base: '/software', label: 'Software Platform',            blurb: 'Jump straight to any module of the Locator fleet platform.', hash: true },
+  '/software':   { items: SOFTWARE_MODULES,    base: '/software', label: 'Software Platform',            blurb: 'Jump straight to any module of the Locator fleet platform.', hash: true, navigable: true },
   '/service':    { items: SERVICE_PAGES,       base: '/service', label: 'Locator Services',              blurb: 'End-to-end fleet, video, and IoT services for every operation.' },
 }
 
@@ -250,6 +250,28 @@ export default function SoftwareNavbar() {
                 const dd = DROPDOWNS[l.href]
                 if (dd) {
                   const isCurrent = activeMenu === l.href
+                  const chev = (
+                    <svg className="swn-chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  )
+                  // Navigable dropdowns (e.g. Software) link to their real page on
+                  // click while still opening the shutter on hover.
+                  if (dd.navigable) {
+                    return (
+                      <Link
+                        key={l.href}
+                        href={l.href}
+                        className={`swn-link${isActive ? ' active' : ''}${isCurrent ? ' menu-current' : ''}`}
+                        aria-haspopup="menu"
+                        aria-expanded={isCurrent}
+                        onMouseEnter={() => openMega(l.href)}
+                        onClick={() => setActiveMenu(null)}
+                      >
+                        {l.label}{chev}
+                      </Link>
+                    )
+                  }
                   return (
                     <button
                       key={l.href}
@@ -260,10 +282,7 @@ export default function SoftwareNavbar() {
                       onMouseEnter={() => openMega(l.href)}
                       onClick={() => (isCurrent ? setActiveMenu(null) : openMega(l.href))}
                     >
-                      {l.label}
-                      <svg className="swn-chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <polyline points="6 9 12 15 18 9" />
-                      </svg>
+                      {l.label}{chev}
                     </button>
                   )
                 }

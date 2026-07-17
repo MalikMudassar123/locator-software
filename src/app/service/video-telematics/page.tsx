@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import ScrollReveal from '@/components/software/ScrollReveal'
 import VideoTelematicsHero from '@/components/service/video-telematics/VideoTelematicsHero'
 import VideoTelematicsDescription from '@/components/service/video-telematics/VideoTelematicsDescription'
+import VideoTelematicsAlertsScroll from '@/components/service/video-telematics/VideoTelematicsAlertsScroll'
 import VideoTelematicsShowcase from '@/components/service/video-telematics/VideoTelematicsShowcase'
 import VideoTelematicsIndustries from '@/components/service/video-telematics/VideoTelematicsIndustries'
 import VideoTelematicsFAQ from '@/components/service/video-telematics/VideoTelematicsFAQ'
@@ -30,6 +31,7 @@ export default function VideoTelematicsPage() {
       <ScrollReveal />
       <VideoTelematicsHero />
       <VideoTelematicsDescription />
+      <VideoTelematicsAlertsScroll />
       <VideoTelematicsShowcase />
       <VideoTelematicsIndustries />
       <VideoTelematicsVideo />

@@ -64,7 +64,7 @@ export default function SecurepathExplainer() {
 
           <div data-reveal="right" style={{ position: 'sticky', top: '110px' }}>
             <Image
-              src="/regulatory/securepath/SecurePath-certification.png"
+              src="/regulatory/securepath/SecurePath-certification.webp"
               alt="SecurePath GPS tracking route on map illustration"
               width={1200}
               height={1022}

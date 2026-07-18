@@ -241,7 +241,7 @@ function IMDetailScreen({ onRecords }: { onRecords: () => void }) {
   return (
     <div style={{ flex: 1, overflowY: 'auto', background: '#F0F4F7' }}>
       <div style={{ margin: 14, background: '#fff', borderRadius: 16, padding: 16, position: 'relative', boxShadow: '0 1px 4px rgba(0,0,0,.04)' }}>
-        <img src="/cars/car-top.png" alt="car top" style={{ width: '100%', maxHeight: 160, objectFit: 'contain' }} />
+        <img src="/cars/car-top.webp" alt="car top" style={{ width: '100%', maxHeight: 160, objectFit: 'contain' }} />
         <div style={{ position: 'absolute', top: 12, right: 12, width: 52, height: 52, borderRadius: '50%', background: '#22c55e', display: 'grid', placeItems: 'center', color: '#fff', fontSize: 20, fontWeight: 800, boxShadow: '0 2px 8px rgba(34,197,94,.4)' }}>83</div>
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 10 }}>
@@ -316,7 +316,7 @@ function IMNewInspectionForm({ onBack, onSave }: { onBack: () => void; onSave: (
         <IMCollapsible title="Mandatory" items={IM_MANDATORY} mode="form" checked={formChecked} onToggle={toggleCheck} />
         <IMCollapsible title="Optional" items={IM_OPTIONAL} mode="form" checked={formChecked} onToggle={toggleCheck} />
         <div style={{ background: '#fff', borderRadius: 14, padding: 16, marginBottom: 12, position: 'relative', border: '1px solid #f0f0f0' }}>
-          <img src="/cars/car-left.png" alt="car side" style={{ width: '100%', maxHeight: 140, objectFit: 'contain' }} />
+          <img src="/cars/car-left.webp" alt="car side" style={{ width: '100%', maxHeight: 140, objectFit: 'contain' }} />
           <button style={{ position: 'absolute', bottom: 12, right: 12, width: 40, height: 40, borderRadius: 8, background: '#2563eb', border: 'none', color: '#fff', cursor: 'pointer', display: 'grid', placeItems: 'center', boxShadow: '0 2px 8px rgba(37,99,235,.3)' }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z" /></svg>
           </button>

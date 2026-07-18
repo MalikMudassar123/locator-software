@@ -42,7 +42,7 @@ export default function ShahinExplainer() {
 
           <div data-reveal="right">
             <Image
-              src="/regulatory/shahin/shahin_second_image-industrysection.png"
+              src="/regulatory/shahin/shahin_second_image-industrysection.webp"
               alt="SHAHIN cargo tracking — industrial and logistics facility illustration"
               width={1400}
               height={930}

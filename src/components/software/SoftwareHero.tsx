@@ -8,11 +8,11 @@ import { useEffect, useRef } from 'react'
 import SoftwareNavbar from '@/components/software/SoftwareNavbar'
 
 const PHONES = [
-  { src: '/hero/mobile-graphical-report.png', alt: 'Locator app — graphical report', cls: 'sw-ph-2' },
+  { src: '/hero/mobile-graphical-report.webp', alt: 'Locator app — graphical report', cls: 'sw-ph-2' },
   { src: '/hero/mobile-notifications.png',    alt: 'Locator app — notifications',     cls: 'sw-ph-1' },
-  { src: '/hero/mobile-dashboard.png',        alt: 'Locator app — live dashboard',    cls: 'sw-ph-0' },
-  { src: '/hero/mobile-summary.png',          alt: 'Locator app — vehicle summary',   cls: 'sw-ph-1 sw-ph-r' },
-  { src: '/hero/mobile-map-view.png',         alt: 'Locator app — live map view',     cls: 'sw-ph-2 sw-ph-r' },
+  { src: '/hero/mobile-dashboard.webp',        alt: 'Locator app — live dashboard',    cls: 'sw-ph-0' },
+  { src: '/hero/mobile-summary.webp',          alt: 'Locator app — vehicle summary',   cls: 'sw-ph-1 sw-ph-r' },
+  { src: '/hero/mobile-map-view.webp',         alt: 'Locator app — live map view',     cls: 'sw-ph-2 sw-ph-r' },
 ]
 
 const clamp = (v: number, a = 0, b = 1) => Math.min(Math.max(v, a), b)
@@ -211,10 +211,10 @@ export default function SoftwareHero() {
                     <Image src="/hero/web-graphical-report.png" alt="Locator web — graphical reports" fill sizes="(max-width: 820px) 0px, 30vw" />
                   </div>
                   <div className="sw-wb sw-wb-c">
-                    <Image src="/hero/web-live-map.png" alt="Locator web — live fleet map with alerts" fill sizes="(max-width: 820px) 92vw, 42vw" />
+                    <Image src="/hero/web-live-map.webp" alt="Locator web — live fleet map with alerts" fill sizes="(max-width: 820px) 92vw, 42vw" />
                   </div>
                   <div className="sw-wb sw-wb-r">
-                    <Image src="/hero/web-route-playback.png" alt="Locator web — route playback" fill sizes="(max-width: 820px) 0px, 30vw" />
+                    <Image src="/hero/web-route-playback.webp" alt="Locator web — route playback" fill sizes="(max-width: 820px) 0px, 30vw" />
                   </div>
                 </div>
               </div>

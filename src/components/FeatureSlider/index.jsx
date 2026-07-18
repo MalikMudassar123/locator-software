@@ -780,7 +780,7 @@ const SceneTaskManager = forwardRef(function SceneTaskManager(_, ref) {
         }}>
           <BrowserBar/>
           <div style={{ position:'relative', flex:1 }}>
-            <Image src="/software images/software images/Task Manager/jkliului.png"
+            <Image src="/software images/software images/Task Manager/jkliului.webp"
               alt="Task Manager" fill sizes={`${DT_W}px`}
               style={{ objectFit:'contain', objectPosition:'left top' }}/>
           </div>
@@ -891,7 +891,7 @@ const SceneExpense = forwardRef(function SceneExpense(_, ref) {
           <BrowserBar/>
           <div style={{ position:'relative', width:'100%', aspectRatio:'1448 / 1060', overflow:'hidden' }}>
             <Image
-              src="/software images/software images/Expense Manager/main.png"
+              src="/software images/software images/Expense Manager/main.webp"
               alt="Expense Manager"
               width={1448}
               height={1086}
@@ -917,7 +917,7 @@ const SceneExpense = forwardRef(function SceneExpense(_, ref) {
         }}
       >
         <Image
-          src="/software images/software images/Expense Manager/yijlkjlkj.png"
+          src="/software images/software images/Expense Manager/yijlkjlkj.webp"
           alt="Expense Manager mobile"
           width={155}
           height={285}
@@ -995,7 +995,7 @@ const SceneInspection = forwardRef(function SceneInspection(_, ref) {
           <BrowserBar/>
           <div style={{ position:'relative', flex:1 }}>
             <Image
-              src="/software images/software images/Inspection/kjiuguy.png"
+              src="/software images/software images/Inspection/kjiuguy.webp"
               alt="Inspection"
               fill sizes="700px"
               style={{ objectFit:'contain', objectPosition:'left top' }}
@@ -1019,7 +1019,7 @@ const SceneInspection = forwardRef(function SceneInspection(_, ref) {
         }}
       >
         <Image
-          src="/software images/software images/Inspection/hjgjbjkkj.png"
+          src="/software images/software images/Inspection/hjgjbjkkj.webp"
           alt="Inspection mobile"
           width={155}
           height={285}
@@ -1072,7 +1072,7 @@ const SceneFleet = forwardRef(function SceneFleet(_, ref) {
           <BrowserBar/>
           <div style={{ position:'relative', flex:1 }}>
             <Image
-              src="/software images/software images/Fleet Manager/hyuiuyku.png"
+              src="/software images/software images/Fleet Manager/hyuiuyku.webp"
               alt="Fleet Manager"
               fill sizes="700px"
               style={{ objectFit:'contain', objectPosition:'center top' }}

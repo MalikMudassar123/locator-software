@@ -40,7 +40,7 @@ export default function SecurepathProcess() {
 
           <div data-reveal="right">
             <Image
-              src="/regulatory/securepath/Secure-Path-GPS.png"
+              src="/regulatory/securepath/Secure-Path-GPS.webp"
               alt="SecurePath dashboard and reporting illustration"
               width={1200}
               height={1205}

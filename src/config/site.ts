@@ -1,18 +1,36 @@
 // Canonical site URL. Set NEXT_PUBLIC_SITE_URL in the deployment environment
-// (e.g. https://yourdomain.com). The localhost fallback is dev-only — metadata,
+// (e.g. https://locator.ae). The localhost fallback is dev-only — metadata,
 // canonical URLs, sitemap and robots all derive from this, so a wrong value
 // here silently breaks SEO in production.
 export const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "http://localhost:3000";
 
 export const siteConfig = {
-  name: "Next.js Production App",
-  description: "A production-ready Next.js application with modern best practices",
+  // Used as the title-template suffix on every page — keep it short.
+  name: "LOCATOR",
+  title: "LOCATOR — Fleet Telematics, GPS Tracking & Video Telematics UAE",
+  description:
+    "LOCATOR delivers GPS fleet tracking, AI video telematics, smart IoT asset monitoring, and RTA-certified solutions across the UAE. Real-time visibility for vehicles, drivers, and business assets.",
   url: siteUrl,
-  ogImage: "/og-image.jpg",
+  ogImage: "/og-image.png",
+  locale: "en_AE",
+  phone: "+971508746688",
+  phoneDisplay: "050 874 66 88",
+  keywords: [
+    "fleet management UAE",
+    "GPS tracking Dubai",
+    "vehicle tracking system UAE",
+    "video telematics",
+    "AI dashcam UAE",
+    "fleet telematics Dubai",
+    "IoT asset tracking UAE",
+    "Asateel certified OBU",
+    "Shahin RTA tracking",
+    "SecurePath Dubai Police",
+    "fleet management software",
+  ],
   links: {
-    github: "https://github.com",
-    twitter: "https://twitter.com",
+    website: "https://locator.ae",
   },
 };
 

@@ -110,7 +110,7 @@ export default function ShahinHero() {
           {/* Right: illustration */}
           <div data-reveal="right" style={{ position: 'relative' }}>
             <Image
-              src="/regulatory/shahin/shahin_hero-image.png"
+              src="/regulatory/shahin/shahin_hero-image.webp"
               alt="SHAHIN GPS tracking — fleet dispatch and city delivery illustration"
               width={1588}
               height={1214}

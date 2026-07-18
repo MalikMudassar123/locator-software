@@ -112,7 +112,7 @@ export default function SecurepathHero() {
 
           <div data-reveal="right">
             <Image
-              src="/regulatory/securepath/vehicle tracker.png"
+              src="/regulatory/securepath/vehicle tracker.webp"
               alt="SecurePath GPS tracking — Dubai fleet monitoring illustration"
               width={1839}
               height={1086}

@@ -110,7 +110,7 @@ export default function SecurepathPremiumHero() {
           {/* Right: illustration */}
           <div data-reveal="right" style={{ position: 'relative' }}>
             <Image
-              src="/regulatory/Secure_path_preimume/SecurePath-Premium.png"
+              src="/regulatory/Secure_path_preimume/SecurePath-Premium.webp"
               alt="SecurePath Premium GPS tracking — commercial fleet illustration"
               width={1344}
               height={959}

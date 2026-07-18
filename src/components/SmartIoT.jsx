@@ -37,7 +37,7 @@ const DEFAULT_FEATURES = [
     description:
       "LOCATOR Task Manager digitizes field and road operations by dispatching tasks to staff via mobile app, with real-time CRM/ERP integration to eliminate duplicate work and improve efficiency.",
     preview: "map",
-    previewImage: "/real time/map.png",
+    previewImage: "/real time/map.webp",
     href: "/service/smart-iot#gps-asset-tracking",
     cta: "Explore GPS Asset Tracking",
   },
@@ -48,7 +48,7 @@ const DEFAULT_FEATURES = [
     description:
       "LOCATOR delivers industrial telematics and IoT equipment tracking with real-time usage, idle monitoring, and service alerts to improve uptime, safety, and job-site control.",
     preview: "telemetry",
-    previewImage: "/real time/graph.png",
+    previewImage: "/real time/graph.webp",
     href: "/service/smart-iot#iot-sensors",
     cta: "Explore IoT Sensors",
   },
@@ -59,7 +59,7 @@ const DEFAULT_FEATURES = [
     description:
       "LOCATOR delivers custom IoT sensors with real-time telemetry to monitor temperature, fuel, movement, and equipment health—improving compliance, reliability, and operational efficiency.",
     preview: "excavator",
-    previewImage: "/real time/percentage.png",
+    previewImage: "/real time/percentage.webp",
     href: "/service/smart-iot#equipment-machinery",
     cta: "Explore Machinery Monitoring",
   },

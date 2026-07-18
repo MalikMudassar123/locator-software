@@ -10,32 +10,32 @@ const INDUSTRIES = [
   {
     title: 'Transportation & Logistics',
     desc: 'Prevent cargo loss with AI theft detection and HD video proof, speeding claims, reducing fraud disputes, and improving fleet safety across deliveries and loading hubs.',
-    image: '/service_page/Transport  Logistics 2.png',
+    image: '/service_page/Transport  Logistics 2.webp',
   },
   {
     title: 'Warehouse',
     desc: 'Enable 24/7 AI video monitoring for forklifts and machines, preventing equipment damage, boosting operator accountability, and strengthening warehouse incident reporting.',
-    image: '/service_page/Facility Management Fleet.png',
+    image: '/service_page/Facility Management Fleet.webp',
   },
   {
     title: 'Construction',
     desc: 'Improve site visibility with AI camera tracking and workforce monitoring, validating discrepancies, enhancing safety compliance, and optimizing job-site transport operations.',
-    image: '/service_page/Construction Site Fleet.png',
+    image: '/service_page/Construction Site Fleet.webp',
   },
   {
     title: 'School Districts',
     desc: 'Protect students and drivers with AI behavior monitoring and stop-arm violation evidence, improving road safety, driver training, and regulatory enforcement.',
-    image: '/service_page/School & Educational Fleet Monitoring.png',
+    image: '/service_page/School & Educational Fleet Monitoring.webp',
   },
   {
     title: 'Waste Management',
     desc: 'Resolve complaints faster using real-time HD video and portal retrieval, improving driver coaching, service quality, and customer issue resolution.',
-    image: '/service_page/Waste Management Fleet Visibility.png',
+    image: '/service_page/Waste Management Fleet Visibility.webp',
   },
   {
     title: 'Field Services & Recovery',
     desc: 'Provide premium safety assurance with AI-protected video telematics for high-value vehicle transport, validating service completion and adding customer trust through recorded proof.',
-    image: '/service_page/Rental Leasing.png',
+    image: '/service_page/Rental Leasing.webp',
   },
 ]
 

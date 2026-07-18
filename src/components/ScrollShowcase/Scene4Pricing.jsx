@@ -329,7 +329,7 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
         <BrowserChrome />
         <div style={{ position:'relative', flex:1, background:'#fff' }}>
           <Image
-            src="/block 1/video teleframe.png"
+            src="/block 1/video teleframe.webp"
             alt="Video telematics dashboard"
             fill
             sizes={`${FW}px`}
@@ -358,7 +358,7 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
         }}
       >
         <Image
-          src="/block 1/fdghgyhjhk.png"
+          src="/block 1/fdghgyhjhk.webp"
           alt="Vehicle hover popup"
           fill
           sizes="250px"

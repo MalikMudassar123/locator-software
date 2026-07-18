@@ -14,7 +14,7 @@ export default function AsateelExplainer() {
 
           <div data-reveal="left">
             <Image
-              src="/regulatory/asateel-certified/LOCATOR-ASATEEL.png"
+              src="/regulatory/asateel-certified/LOCATOR-ASATEEL.webp"
               alt="ASATEEL fleet management dashboard illustration"
               width={636}
               height={649}

@@ -81,7 +81,7 @@ export default function ServiceWhyChoose() {
           {/* Right: LOCATOR dashboard illustration */}
           <div data-reveal="right" style={{ position: 'relative' }}>
             <Image
-              src="/service_page/Best-GPS-Tracker for-Vehicle.png"
+              src="/service_page/Best-GPS-Tracker for-Vehicle.webp"
               alt="LOCATOR GPS tracking dashboard — the best GPS tracker for vehicles"
               width={1198}
               height={1078}

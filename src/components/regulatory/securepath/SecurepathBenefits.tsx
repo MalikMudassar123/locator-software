@@ -16,7 +16,7 @@ export default function SecurepathBenefits() {
 
           <div data-reveal="left">
             <Image
-              src="/regulatory/securepath/securepath-tracking.png"
+              src="/regulatory/securepath/securepath-tracking.webp"
               alt="SecurePath laptop dashboard illustration"
               width={780}
               height={812}

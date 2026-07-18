@@ -19,7 +19,7 @@ export default function ShahinSteps() {
 
           <div data-reveal="left">
             <Image
-              src="/regulatory/shahin/shahin_third_how_to_section.png"
+              src="/regulatory/shahin/shahin_third_how_to_section.webp"
               alt="How to register your business to SHAHIN — meeting illustration"
               width={1400}
               height={1078}

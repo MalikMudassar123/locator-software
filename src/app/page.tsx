@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import HeroSection from "@/components/HeroSection";
 import RoadSection from "@/components/RoadSection";
@@ -16,6 +17,20 @@ const TestimonialCarousel = dynamic(
 );
 const LogoMarquee = dynamic(() => import("@/components/Logomarquee"));
 const BlogSection = dynamic(() => import("@/components/BlogSection"));
+
+export const metadata: Metadata = {
+  title: "Fleet Telematics, GPS Tracking & Video Telematics UAE",
+  description:
+    "LOCATOR delivers GPS fleet tracking, AI video telematics, smart IoT asset monitoring, and RTA-certified solutions across the UAE. Real-time visibility for vehicles, drivers, and business assets.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "LOCATOR — Fleet Telematics & GPS Tracking UAE",
+    description:
+      "Real-time visibility for vehicles, drivers, and business assets across the UAE.",
+    url: "/",
+    type: "website",
+  },
+};
 
 export default function Home() {
   return (

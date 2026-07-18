@@ -37,7 +37,7 @@ function rp(x, y, w, h, r = 0) {
   return `M${x+r} ${y}H${x+w-r}Q${x+w} ${y} ${x+w} ${y+r}V${y+h-r}Q${x+w} ${y+h} ${x+w-r} ${y+h}H${x+r}Q${x} ${y+h} ${x} ${y+h-r}V${y+r}Q${x} ${y} ${x+r} ${y}Z`;
 }
 
-// Calibrated to /block 1/mobile.png (1535×3378) under objectFit:cover, center-top.
+// Calibrated to /block 1/mobile.webp (1535×3378) under objectFit:cover, center-top.
 // Vertical scale orig→box ≈ 0.16938; offsets below are measured from the PNG.
 const WIRE = [
   // 1. Header bar — full blue "Vehicles - Live View" bar (matches PNG top region)
@@ -474,7 +474,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
         }}
       >
         <Image
-          src="/block 1/mobile.png"
+          src="/block 1/mobile.webp"
           alt="Mobile app interface"
           fill
           sizes={`${PHONE_W}px`}
@@ -505,7 +505,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
         <BrowserChrome />
         <div style={{ position:'relative', flex:1, background:'#fff' }}>
           <Image
-            src="/block 1/werertrttr.png"
+            src="/block 1/werertrttr.webp"
             alt="Desktop dashboard interface"
             fill
             sizes={`${DT_W}px`}
@@ -534,7 +534,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
         }}
       >
         <Image
-          src="/block 1/fdghgyhjhk.png"
+          src="/block 1/fdghgyhjhk.webp"
           alt="Vehicle hover popup"
           fill
           sizes="250px"

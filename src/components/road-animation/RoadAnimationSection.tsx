@@ -223,7 +223,7 @@ export default function RoadAnimationSection() {
                 }}
               >
                 <Image
-                  src="/block 1/mobile view.png"
+                  src="/block 1/mobile.webp"
                   alt="Fleet Tracking Mobile App"
                   width={280}
                   height={600}

@@ -11,8 +11,6 @@ interface Alert {
   id: string
   num: string
   title: string
-  desc: string
-  signals: string[]
   image: string
   imageW: number
   imageH: number
@@ -23,8 +21,6 @@ const ALERTS: Alert[] = [
     id: 'yawning',
     num: '01',
     title: 'Frequent\nYawning',
-    desc: 'The driver-facing AI camera detects repeated yawning as an early warning sign of fatigue, alerting the driver in-cab and flagging the event for the fleet manager before tiredness turns into a road incident.',
-    signals: ['In-cab audio alert', 'Fatigue event log', 'Manager notified'],
     image: '/block 1/video teleframe.png',
     imageW: 1598,
     imageH: 984,
@@ -33,8 +29,6 @@ const ALERTS: Alert[] = [
     id: 'seatbelt',
     num: '02',
     title: 'Not Wearing\nSeatbelt',
-    desc: 'AI recognises when the seatbelt is not fastened while the vehicle is in motion and triggers an immediate audible reminder, with the violation recorded as video evidence for safety compliance and driver coaching.',
-    signals: ['Instant reminder', 'Video evidence', 'Compliance record'],
     image: '/block 1/video teleframe.png',
     imageW: 1598,
     imageH: 984,
@@ -43,8 +37,6 @@ const ALERTS: Alert[] = [
     id: 'smoking',
     num: '03',
     title: 'Smoking\nin the Cabin',
-    desc: 'Smoking inside the vehicle is detected and logged with timestamped footage, helping companies enforce in-cab safety policies, protect vehicle condition, and maintain standards across the whole fleet.',
-    signals: ['Policy enforcement', 'Timestamped clip', 'Driver report'],
     image: '/block 1/video teleframe.png',
     imageW: 1598,
     imageH: 984,
@@ -53,8 +45,6 @@ const ALERTS: Alert[] = [
     id: 'nodding',
     num: '04',
     title: 'Nodding\nOff',
-    desc: 'Micro-sleep and head-nodding are identified the moment they begin, waking the driver with an instant audible alert — one of the highest-risk behaviours AI dashcams are built to prevent on long UAE routes.',
-    signals: ['Critical alert', 'Micro-sleep detection', 'Priority escalation'],
     image: '/block 1/video teleframe.png',
     imageW: 1598,
     imageH: 984,
@@ -63,8 +53,6 @@ const ALERTS: Alert[] = [
     id: 'droopy-eyes',
     num: '05',
     title: 'Droopy\nEyes',
-    desc: 'Continuous eye-closure tracking measures drowsiness in real time, warning the driver early and giving managers the data to adjust shifts, rest breaks, and route planning before fatigue becomes dangerous.',
-    signals: ['Eye-closure tracking', 'Early warning', 'Shift insights'],
     image: '/block 1/video teleframe.png',
     imageW: 1598,
     imageH: 984,
@@ -73,8 +61,6 @@ const ALERTS: Alert[] = [
     id: 'talking',
     num: '06',
     title: 'Talking\n& Distraction',
-    desc: 'Distracted conversation behind the wheel is identified and logged, giving fleet managers objective, data-backed evidence to coach safer, more focused driving habits across the team.',
-    signals: ['Distraction event', 'Coaching data', 'Trend reporting'],
     image: '/block 1/video teleframe.png',
     imageW: 1598,
     imageH: 984,
@@ -83,8 +69,6 @@ const ALERTS: Alert[] = [
     id: 'texting',
     num: '07',
     title: 'Texting on\na Phone',
-    desc: 'Phone handling and texting while driving are detected instantly, triggering a real-time alert and capturing undeniable recorded proof that protects the business in disputes and insurance claims.',
-    signals: ['Real-time alert', 'Recorded proof', 'Claim protection'],
     image: '/block 1/video teleframe.png',
     imageW: 1598,
     imageH: 984,
@@ -93,8 +77,6 @@ const ALERTS: Alert[] = [
     id: 'looking-away',
     num: '08',
     title: 'Looking\nAway',
-    desc: 'The AI notices the moment a driver’s attention leaves the road ahead and issues an immediate distraction alert, reducing collision risk across deliveries, loading hubs, and daily commercial routes.',
-    signals: ['Attention tracking', 'Collision prevention', 'Instant alert'],
     image: '/block 1/video teleframe.png',
     imageW: 1598,
     imageH: 984,
@@ -109,7 +91,6 @@ const clamp01 = (v: number) => Math.min(Math.max(v, 0), 1)
 
 export default function VideoTelematicsAlertsScroll() {
   const wrapRef  = useRef<HTMLDivElement>(null)
-  const numRef   = useRef<HTMLDivElement>(null)
   const vizPxRef = useRef<HTMLDivElement>(null)
   const fillRef  = useRef<HTMLDivElement>(null)
 
@@ -143,7 +124,6 @@ export default function VideoTelematicsAlertsScroll() {
       const idx = Math.min(Math.max(Math.round(f), 0), N - 1)
       const t = clamp01(f - Math.floor(f))
 
-      if (numRef.current)   numRef.current.style.transform   = `translateY(calc(-58% + ${(t - 0.5) * -38}px))`
       if (vizPxRef.current) vizPxRef.current.style.transform = `translateY(${(t - 0.5) * -26}px)`
       if (fillRef.current)  fillRef.current.style.transform  = `scaleX(${p.toFixed(4)})`
 
@@ -173,6 +153,14 @@ export default function VideoTelematicsAlertsScroll() {
   }, [])
 
   const alert = ALERTS[displayIdx]
+
+  // Jump straight to a behaviour's anchor — one viewport per alert.
+  const jumpTo = (i: number) => {
+    const wrap = wrapRef.current
+    if (!wrap) return
+    const absTop = wrap.getBoundingClientRect().top + window.scrollY
+    window.scrollTo({ top: Math.max(absTop + i * window.innerHeight, 0), behavior: 'smooth' })
+  }
 
   const handleSkip = () => {
     const wrap = wrapRef.current
@@ -240,20 +228,119 @@ export default function VideoTelematicsAlertsScroll() {
         .vta-stagger > *:nth-child(4) { animation-delay: .17s; }
         .vta-stagger > *:nth-child(5) { animation-delay: .22s; }
 
-        .vta-signal {
-          font-size: 12.5px; font-weight: 600; color: #3a3a3c;
-          background: rgba(255,255,255,.8);
-          border: 1px solid rgba(0,0,0,.1);
-          padding: 6px 14px; border-radius: 999px;
-          backdrop-filter: blur(4px);
-          transition: background .18s ${EASE}, border-color .18s ${EASE}, transform .18s ${EASE};
+        /* ── Persistent section heading — centred, with the meta parked to the
+           right so it never competes with the title for horizontal space. ── */
+        .vta-top {
+          position: relative; flex-shrink: 0; text-align: center;
+          padding: clamp(16px,2.4vh,26px) clamp(24px,5vw,64px);
+          border-bottom: 1px solid rgba(0,0,0,.06);
         }
-        .vta-signal:hover { background: #fff; border-color: ${BLUE}; color: ${BLUE}; transform: translateY(-1px); }
+        .vta-section-h {
+          margin: 0 auto; max-width: 40ch;
+          font-size: clamp(17px,2.1vw,28px); font-weight: 800;
+          letter-spacing: -.025em; color: #1d1d1f; line-height: 1.25;
+          text-wrap: balance;
+        }
+        .vta-section-h span { color: ${BLUE}; }
+
+        .vta-top-meta {
+          position: absolute; top: 50%; right: clamp(24px,5vw,64px);
+          transform: translateY(-50%);
+          display: flex; align-items: center; gap: 14px;
+        }
+        @media (max-width: 1000px) { .vta-top-meta { display: none; } }
+
+        .vta-eyebrow {
+          display: inline-flex; align-items: center; gap: 8px;
+          font-size: 10.5px; font-weight: 700; letter-spacing: .13em;
+          text-transform: uppercase; color: #8b93a3; margin-bottom: clamp(14px,1.8vw,20px);
+        }
+        .vta-eyebrow-dot {
+          width: 6px; height: 6px; border-radius: 50%; background: ${BLUE};
+          box-shadow: 0 0 0 3px rgba(19,96,238,.16);
+        }
+
+        /* ── Display type: outlined numeral + behaviour name ── */
+        .vta-display { display: flex; align-items: flex-start; gap: clamp(12px,1.6vw,22px); }
+        .vta-big-num {
+          font-size: clamp(60px,7.4vw,116px); font-weight: 800; line-height: .82;
+          letter-spacing: -.05em; flex-shrink: 0;
+          color: transparent;
+          -webkit-text-stroke: 1.6px rgba(19,96,238,.4);
+          font-variant-numeric: tabular-nums; user-select: none;
+        }
+        .vta-title {
+          margin: 0; padding-top: clamp(2px,.6vw,8px);
+          font-size: clamp(32px,4.4vw,58px);
+          font-weight: 800; line-height: 1.02;
+          letter-spacing: -.035em; color: #1d1d1f;
+        }
+
+        /* ── AI detection HUD over the feed ── */
+        .vta-hud { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+        .vta-hud-c { position: absolute; width: 26px; height: 26px; border: 2px solid ${BLUE}; opacity: .85; }
+        .vta-hud-tl { top: 14px; left: 14px; border-right: 0; border-bottom: 0; border-radius: 6px 0 0 0; }
+        .vta-hud-tr { top: 14px; right: 14px; border-left: 0; border-bottom: 0; border-radius: 0 6px 0 0; }
+        .vta-hud-bl { bottom: 14px; left: 14px; border-right: 0; border-top: 0; border-radius: 0 0 0 6px; }
+        .vta-hud-br { bottom: 14px; right: 14px; border-left: 0; border-top: 0; border-radius: 0 0 6px 0; }
+        .vta-hud-tag {
+          position: absolute; left: 14px; bottom: 14px;
+          display: inline-flex; align-items: center; gap: 8px;
+          padding: 7px 12px; border-radius: 8px;
+          background: rgba(13,20,38,.82);
+          -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+          color: #fff; font-size: 11px; font-weight: 700; letter-spacing: .04em;
+          white-space: nowrap;
+        }
+        .vta-hud-live {
+          width: 6px; height: 6px; border-radius: 50%; background: #34d399;
+          animation: vtaPulse 1.6s ${EASE} infinite;
+        }
+        @keyframes vtaPulse { 0%,100% { opacity: 1 } 50% { opacity: .25 } }
+        @media (max-width: 900px) { .vta-hud-tag { font-size: 10px; padding: 6px 10px; } }
+
+        /* ── Live index rail ── every behaviour listed, active one lit.
+           Type and a moving indicator do the work; no chips, no fills. */
+        .vta-rail {
+          margin-top: clamp(24px,3vw,38px);
+          display: grid; grid-template-columns: 1fr 1fr;
+          gap: 2px 18px; max-width: 440px;
+        }
+        .vta-rail-item {
+          display: flex; align-items: baseline; gap: 10px;
+          padding: 7px 0 7px 12px; position: relative;
+          background: none; border: 0; cursor: pointer;
+          font-family: inherit; text-align: left;
+          transition: color .3s ${EASE}, transform .3s ${EASE};
+          color: #9aa2b1;
+        }
+        /* Left marker grows into a bar on the active row. */
+        .vta-rail-item::before {
+          content: ''; position: absolute; left: 0; top: 50%;
+          width: 2px; height: 0; border-radius: 2px;
+          background: ${BLUE}; transform: translateY(-50%);
+          transition: height .3s ${EASE};
+        }
+        .vta-rail-item:hover { color: #4a5262; }
+        .vta-rail-item[aria-current="true"] { color: #1d1d1f; transform: translateX(3px); }
+        .vta-rail-item[aria-current="true"]::before { height: 70%; }
+        .vta-rail-num {
+          font-size: 10.5px; font-weight: 700; letter-spacing: .04em;
+          font-variant-numeric: tabular-nums; color: inherit; opacity: .55;
+        }
+        .vta-rail-item[aria-current="true"] .vta-rail-num { color: ${BLUE}; opacity: 1; }
+        .vta-rail-name {
+          font-size: clamp(12.5px,1.15vw,14px); font-weight: 600;
+          line-height: 1.35; color: inherit;
+        }
+        .vta-rail-item[aria-current="true"] .vta-rail-name { font-weight: 800; }
+        @media (max-width: 1100px) { .vta-rail { grid-template-columns: 1fr; gap: 0; max-width: 300px; } }
 
         @media (prefers-reduced-motion: reduce) {
           .vta-text-in, .vta-viz-in, .vta-stagger > * {
             animation: none !important; opacity: 1 !important; transform: none !important;
           }
+          .vta-hud-live { animation: none; }
         }
 
         @media (max-width: 800px) {
@@ -281,16 +368,12 @@ export default function VideoTelematicsAlertsScroll() {
         }}>
 
           {/* Top bar */}
-          <div style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: '0 clamp(24px,5vw,64px)',
-            height: '54px', flexShrink: 0,
-            borderBottom: '1px solid rgba(0,0,0,.06)',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <span style={{ fontSize: '10.5px', fontWeight: 700, letterSpacing: '.1em', color: BLUE, textTransform: 'uppercase' }}>
-                AI Dashcam Alerts
-              </span>
+          <div className="vta-top">
+            <h2 className="vta-section-h">
+              Prevent Road Incidents with <span>AI-Powered Dashcam Alerts</span>
+            </h2>
+
+            <div className="vta-top-meta">
               <div className="vta-strip" style={{ display: 'flex', gap: '5px', maxWidth: '210px' }}>
                 {ALERTS.map((_, i) => (
                   <div key={i} style={{
@@ -301,12 +384,11 @@ export default function VideoTelematicsAlertsScroll() {
                   }} />
                 ))}
               </div>
-            </div>
-
-            <div style={{ fontSize: '13px', fontWeight: 700, color: '#a1a1a6', letterSpacing: '.04em', fontVariantNumeric: 'tabular-nums' }}>
-              <span style={{ color: BLUE, fontSize: '15px' }}>{alert.num}</span>
-              <span style={{ margin: '0 4px' }}>/</span>
-              {String(N).padStart(2, '0')}
+              <div style={{ fontSize: '13px', fontWeight: 700, color: '#a1a1a6', letterSpacing: '.04em', fontVariantNumeric: 'tabular-nums' }}>
+                <span style={{ color: BLUE, fontSize: '15px' }}>{alert.num}</span>
+                <span style={{ margin: '0 4px' }}>/</span>
+                {String(N).padStart(2, '0')}
+              </div>
             </div>
           </div>
 
@@ -319,67 +401,40 @@ export default function VideoTelematicsAlertsScroll() {
           }}>
             {/* Left — text */}
             <div className="vta-left-col" style={{ flex: '0 0 auto', width: 'min(50%, 540px)', position: 'relative' }}>
-              <div
-                ref={numRef}
-                aria-hidden="true"
-                style={{
-                  position: 'absolute', top: '50%', left: '-10px',
-                  transform: 'translateY(-58%)',
-                  fontSize: 'clamp(100px,14vw,180px)', fontWeight: 900,
-                  color: BLUE, opacity: .06, lineHeight: 1,
-                  letterSpacing: '-.06em', userSelect: 'none',
-                  pointerEvents: 'none', zIndex: 0, willChange: 'transform',
-                }}
-              >
-                {alert.num}
-              </div>
-
               <div key={displayIdx} className="vta-stagger" style={{ position: 'relative', zIndex: 1 }}>
-                <div style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '7px',
-                  fontSize: '10.5px', fontWeight: 700, letterSpacing: '.08em',
-                  color: BLUE, textTransform: 'uppercase', marginBottom: '14px',
-                }}>
-                  <span style={{ display: 'inline-block', width: '20px', height: '1.5px', background: BLUE, borderRadius: '2px' }} />
-                  Prevent Road Incidents
+                <div className="vta-eyebrow">
+                  <span className="vta-eyebrow-dot" />
+                  Detected behaviour
                 </div>
 
-                <h2 style={{
-                  margin: '0 0 18px',
-                  fontSize: 'clamp(30px,3.8vw,52px)',
-                  fontWeight: 800, lineHeight: 1.06,
-                  letterSpacing: '-.03em', color: '#1d1d1f',
-                }}>
-                  {alert.title.split('\n').map((line, i) => (
-                    <span key={i} style={{ display: 'block' }}>{line}</span>
-                  ))}
-                </h2>
-
-                <div style={{ width: '44px', height: '3px', borderRadius: '2px', background: BLUE, marginBottom: '20px' }} />
-
-                <p style={{
-                  margin: '0 0 26px',
-                  fontSize: 'clamp(13.5px,1.3vw,15.5px)',
-                  lineHeight: 1.72, color: '#52525e', maxWidth: '48ch',
-                }}>
-                  {alert.desc}
-                </p>
-
-                <div>
-                  <p style={{
-                    margin: '0 0 10px',
-                    fontSize: '10px', fontWeight: 700,
-                    letterSpacing: '.09em', color: '#1d1d1f', textTransform: 'uppercase',
-                  }}>
-                    What LOCATOR does
-                  </p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '7px' }}>
-                    {alert.signals.map(s => (
-                      <span key={s} className="vta-signal">{s}</span>
+                {/* Outlined numeral sits alongside the name — the index becomes
+                    part of the display type rather than a label above it. */}
+                <div className="vta-display">
+                  <span className="vta-big-num" aria-hidden="true">{alert.num}</span>
+                  <h3 className="vta-title">
+                    {alert.title.split('\n').map((line, i) => (
+                      <span key={i} style={{ display: 'block' }}>{line}</span>
                     ))}
-                  </div>
+                  </h3>
                 </div>
               </div>
+
+              {/* Live index — every behaviour visible at once, active one lit.
+                  Sits outside the keyed block so it persists instead of
+                  re-animating on each slide. */}
+              <nav className="vta-rail" aria-label="Driver behaviours">
+                {ALERTS.map((a, i) => (
+                  <button
+                    key={a.id}
+                    className="vta-rail-item"
+                    aria-current={i === displayIdx}
+                    onClick={() => jumpTo(i)}
+                  >
+                    <span className="vta-rail-num">{a.num}</span>
+                    <span className="vta-rail-name">{a.title.replace('\n', ' ')}</span>
+                  </button>
+                ))}
+              </nav>
             </div>
 
             {/* Right — image */}
@@ -394,6 +449,18 @@ export default function VideoTelematicsAlertsScroll() {
                   background: '#eef3fb',
                 }}>
                   {!loaded[alert.image] && <div className="vta-skeleton" aria-hidden="true" />}
+
+                  {/* AI detection frame — corner brackets + live label. */}
+                  <div className="vta-hud" aria-hidden="true">
+                    <span className="vta-hud-c vta-hud-tl" />
+                    <span className="vta-hud-c vta-hud-tr" />
+                    <span className="vta-hud-c vta-hud-bl" />
+                    <span className="vta-hud-c vta-hud-br" />
+                    <span className="vta-hud-tag">
+                      <span className="vta-hud-live" />
+                      AI Detection · {alert.title.replace('\n', ' ')}
+                    </span>
+                  </div>
                   <Image
                     src={alert.image}
                     alt={`${alert.title.replace('\n', ' ')} — AI dashcam driver monitoring`}

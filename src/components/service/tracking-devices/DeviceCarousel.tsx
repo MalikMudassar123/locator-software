@@ -9,9 +9,13 @@ import { DEVICES } from './devices-data'
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 const DRAG_THRESHOLD = 60
 
+const AUTOPLAY_MS = 4200
+
 export default function DeviceCarousel() {
   const [active, setActive] = useState(0)
   const [lightbox, setLightbox] = useState(false)
+  const [paused, setPaused] = useState(false)
+  const [inView, setInView] = useState(true)
   const stageRef = useRef<HTMLDivElement>(null)
   const overlayRef = useRef<HTMLDivElement>(null)
   const dragStart = useRef<number | null>(null)
@@ -53,6 +57,25 @@ export default function DeviceCarousel() {
     el.addEventListener('keydown', onKey)
     return () => el.removeEventListener('keydown', onKey)
   }, [prev, next])
+
+  // Autoplay — paused on hover/focus, while the lightbox is open, when the
+  // section is off-screen, or when the user prefers reduced motion.
+  useEffect(() => {
+    if (paused || lightbox || !inView) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const id = window.setInterval(() => setActive((a) => (a + 1) % count), AUTOPLAY_MS)
+    return () => window.clearInterval(id)
+  }, [paused, lightbox, inView, count])
+
+  // Don't burn cycles advancing a carousel nobody is looking at.
+  useEffect(() => {
+    const el = stageRef.current
+    if (!el || typeof IntersectionObserver === 'undefined') return
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.35 })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
 
   useEffect(() => {
     if (!lightbox) return
@@ -100,23 +123,28 @@ export default function DeviceCarousel() {
         /* ── Full-width stage ────────────────────────────────── */
         .dv-stage {
           position: relative; width: 100%;
-          height: clamp(380px,38vw,500px);
+          height: clamp(430px,42vw,570px);
           perspective: 1800px; touch-action: pan-y;
           cursor: grab; outline: none;
         }
         .dv-stage:active { cursor: grabbing; }
 
+        /* Card is deliberately portrait-ish: the products are square, so a wide
+           card leaves the shot height-constrained and the product looks small. */
         .dv-item {
           position: absolute; top: 50%; left: 50%;
-          width: clamp(280px,40vw,560px); height: clamp(330px,31vw,430px);
+          width: clamp(280px,34vw,480px); height: clamp(390px,38vw,510px);
           transform-style: preserve-3d;
           transition: transform .66s ${EASE}, opacity .66s ${EASE};
           will-change: transform, opacity;
         }
+        /* Column layout: the shot takes the space the panel doesn't, so the
+           product is always fully visible no matter how tall the panel grows. */
         .dv-card {
           position: relative; width: 100%; height: 100%;
           border-radius: 26px; background: #fff;
           border: 1px solid #e3e9f4; overflow: hidden;
+          display: flex; flex-direction: column;
         }
         .dv-item[data-pos="0"] .dv-card { box-shadow: 0 44px 88px -30px rgba(20,40,90,.5); border-color: #fff; }
         .dv-item:not([data-pos="0"]) { cursor: pointer; }
@@ -125,12 +153,21 @@ export default function DeviceCarousel() {
         .dv-item[data-hidden="true"] { opacity: 0; pointer-events: none; }
 
         /* Product fills the card; detail panel overlays the lower band. */
-        /* Bottom inset keeps the product clear of the detail panel instead of behind it. */
         .dv-shot {
-          position: absolute; top: 0; left: 0; right: 0; bottom: 40%;
-          display: grid; place-items: center; padding: clamp(16px,2.2vw,32px);
+          /* Floor the image area so a tall panel can never squeeze it away. */
+          position: relative; flex: 1 1 auto; min-height: 55%;
+          box-sizing: border-box; overflow: hidden;
         }
-        .dv-shot img { width: 100%; height: 100%; object-fit: contain; }
+        /* Absolute positioning resolves the percentages against .dv-shot, which is
+           definite once flex lays it out. As a static flex child, height:100% had
+           an indefinite parent, so the image fell back to its intrinsic 600px and
+           got clipped. Padding is inside the 100% thanks to global border-box. */
+        .dv-shot img {
+          position: absolute; inset: 0;
+          width: 100%; height: 100%;
+          padding: clamp(8px,1.1vw,16px);
+          object-fit: contain; object-position: center;
+        }
 
         .dv-index {
           position: absolute; top: clamp(16px,2vw,26px); left: clamp(18px,2.2vw,30px);
@@ -143,26 +180,54 @@ export default function DeviceCarousel() {
           width: 40px; height: 40px; border-radius: 12px;
           border: 1px solid #e2e8f4; background: rgba(255,255,255,.9);
           backdrop-filter: blur(6px);
-          display: grid; place-items: center; cursor: pointer; color: #1d1d1f;
+          display: grid; place-items: center; cursor: pointer; color: #1360ee;
           transition: .2s ${EASE};
+          animation: dv-blink 2.4s ${EASE} infinite;
         }
-        .dv-eye:hover { color: #1360ee; border-color: #1360ee; transform: scale(1.06); }
+        /* Pulsing halo so the "view image" affordance is noticed. */
+        .dv-eye::after {
+          content: ''; position: absolute; inset: -1px; border-radius: 12px;
+          border: 1.5px solid #1360ee; opacity: 0; pointer-events: none;
+          animation: dv-ring 2.4s ${EASE} infinite;
+        }
+        @keyframes dv-blink {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(19,96,238,0); }
+          45% { box-shadow: 0 0 0 6px rgba(19,96,238,.14); }
+          70% { box-shadow: 0 0 0 0 rgba(19,96,238,0); }
+        }
+        @keyframes dv-ring {
+          0% { opacity: 0; transform: scale(1); }
+          45% { opacity: .85; transform: scale(1); }
+          100% { opacity: 0; transform: scale(1.22); }
+        }
+        .dv-eye:hover { background: #1360ee; color: #fff; border-color: #1360ee; transform: scale(1.08); animation: none; }
+        .dv-eye:hover::after { animation: none; opacity: 0; }
 
         /* ── Detail panel, inside the card ───────────────────── */
         .dv-panel {
-          position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+          position: relative; flex: 0 0 auto; z-index: 2;
+          box-sizing: border-box;
           padding: clamp(16px,1.9vw,22px) clamp(18px,2.2vw,26px);
-          background: rgba(255,255,255,.9);
-          backdrop-filter: blur(18px) saturate(160%);
+          background: #fff;
           border-top: 1px solid #eaeef6;
-          display: flex; align-items: flex-end; justify-content: space-between;
-          gap: clamp(12px,2vw,24px);
+          /* Column, not row: the CTA gets its own line so it can never collide
+             with the nowrap spec block. */
+          display: flex; flex-direction: column;
+          gap: clamp(12px,1.5vw,16px);
         }
-        @media (max-width: 720px) { .dv-panel { flex-direction: column; align-items: stretch; gap: 14px; } }
 
         .dv-panel-l { min-width: 0; }
+        /* Specs left, CTA right — both on one line, each free to size itself. */
+        .dv-panel-b {
+          display: flex; align-items: flex-end; justify-content: space-between;
+          gap: 14px; min-width: 0;
+        }
         .dv-kicker { display: block; font-size: 10px; font-weight: 700; letter-spacing: .09em; color: #1360ee; text-transform: uppercase; margin-bottom: 7px; }
-        .dv-name { margin: 0 0 6px; font-size: clamp(19px,2.1vw,26px); font-weight: 800; line-height: 1.1; letter-spacing: -.025em; color: #1d1d1f; }
+        .dv-name {
+          margin: 0 0 6px; font-size: clamp(18px,2vw,25px); font-weight: 800;
+          line-height: 1.14; letter-spacing: -.025em; color: #1d1d1f;
+          display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
         /* Two lines max, so a long tagline can never push the panel past the card. */
         .dv-tag {
           margin: 0; max-width: 42ch; font-size: clamp(12.5px,1.05vw,13.5px);
@@ -170,7 +235,7 @@ export default function DeviceCarousel() {
           display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
 
-        .dv-specs { display: flex; gap: 0; margin-top: 12px; }
+        .dv-specs { display: flex; gap: 0; min-width: 0; overflow: hidden; }
         .dv-spec { padding: 0 clamp(10px,1.2vw,16px); border-left: 1px solid #e2e8f4; white-space: nowrap; }
         .dv-spec:first-child { border-left: none; padding-left: 0; }
         .dv-spec-l { display: block; font-size: 9.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: #9aa2b1; margin-bottom: 3px; }
@@ -261,6 +326,7 @@ export default function DeviceCarousel() {
 
         @media (prefers-reduced-motion: reduce) {
           .dv-item, .dv-fill, .dv-nav, .dv-thumb, .dv-lb, .dv-lb-inner { transition: none; animation: none; }
+          .dv-eye, .dv-eye::after { animation: none; }
         }
       `}</style>
 
@@ -284,7 +350,10 @@ export default function DeviceCarousel() {
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
-          onPointerLeave={onPointerUp}
+          onPointerLeave={() => { onPointerUp(); setPaused(false) }}
+          onMouseEnter={() => setPaused(true)}
+          onFocus={() => setPaused(true)}
+          onBlur={() => setPaused(false)}
         >
           <button className="dv-nav dv-prev" onClick={prev} aria-label="Previous device">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -357,8 +426,11 @@ export default function DeviceCarousel() {
                       <h3 className="dv-name" data-anim>{d.name}</h3>
                       <p className="dv-tag" data-anim>{d.tagline}</p>
 
-                      {d.specs && d.specs.length > 0 && (
-                        <div className="dv-specs" data-anim>
+                    </div>
+
+                    <div className="dv-panel-b" data-anim>
+                      {d.specs && d.specs.length > 0 ? (
+                        <div className="dv-specs">
                           {d.specs.slice(0, 2).map((s) => (
                             <div key={s.label} className="dv-spec">
                               <span className="dv-spec-l">{s.label}</span>
@@ -366,10 +438,10 @@ export default function DeviceCarousel() {
                             </div>
                           ))}
                         </div>
+                      ) : (
+                        <span />
                       )}
-                    </div>
 
-                    <div data-anim>
                       {d.comingSoon ? (
                         <span className="dv-soon">Coming shortly</span>
                       ) : (

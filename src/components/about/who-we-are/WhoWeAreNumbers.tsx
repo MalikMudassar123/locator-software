@@ -5,10 +5,10 @@ import { useEffect, useRef, useState } from 'react'
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
 const STATS = [
-  { target: 10, suffix: '+', label: 'Years of Industry Experience', desc: 'Delivering trusted fleet telematics and IoT solutions.', accent: '#1360ee' },
-  { target: 1000, suffix: '+', label: 'Businesses Empowered', desc: 'Helping organizations optimize fleet operations across the UAE.', accent: '#13923f' },
-  { target: 20000, suffix: '+', label: 'Connected Vehicles & Assets', desc: 'Monitored through our intelligent GPS and IoT platform.', accent: '#7c3aed' },
-  { target: 1, suffix: 'M+', label: 'Data Points Processed Daily', desc: 'Turning real-time operational data into actionable insights.', accent: '#c2740a' },
+  { target: 10, suffix: '+', label: 'Years of Industry Experience', desc: 'Delivering trusted fleet telematics and IoT solutions.' },
+  { target: 1000, suffix: '+', label: 'Businesses Empowered', desc: 'Helping organizations optimize fleet operations across the UAE.' },
+  { target: 20000, suffix: '+', label: 'Connected Vehicles & Assets', desc: 'Monitored through our intelligent GPS and IoT platform.' },
+  { target: 1, suffix: 'M+', label: 'Data Points Processed Daily', desc: 'Turning real-time operational data into actionable insights.' },
 ]
 
 function formatValue(n: number, target: number) {
@@ -16,7 +16,7 @@ function formatValue(n: number, target: number) {
   return String(Math.round(n))
 }
 
-function StatCard({ stat, start }: { stat: typeof STATS[number]; start: boolean }) {
+function StatCard({ stat, start, index }: { stat: typeof STATS[number]; start: boolean; index: number }) {
   const [val, setVal] = useState(0)
 
   useEffect(() => {
@@ -36,9 +36,10 @@ function StatCard({ stat, start }: { stat: typeof STATS[number]; start: boolean 
   }, [start, stat.target])
 
   return (
-    <div className="wwn-card" style={{ '--wwn-accent': stat.accent } as React.CSSProperties}>
-      <div className="wwn-value" style={{ color: stat.accent }}>
-        {formatValue(val, stat.target)}{stat.suffix}
+    <div className="wwn-item" style={{ transitionDelay: `${index * 90}ms` }}>
+      <span className="wwn-rule" aria-hidden="true" />
+      <div className="wwn-value">
+        {formatValue(val, stat.target)}<span className="wwn-suffix">{stat.suffix}</span>
       </div>
       <div className="wwn-label">{stat.label}</div>
       <p className="wwn-desc">{stat.desc}</p>
@@ -64,44 +65,86 @@ export default function WhoWeAreNumbers() {
   return (
     <>
       <style>{`
-        .wwn-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: clamp(16px,2vw,22px); }
-        @media (max-width: 900px) { .wwn-grid { grid-template-columns: repeat(2,1fr); } }
-        @media (max-width: 520px) { .wwn-grid { grid-template-columns: 1fr; } }
+        /* Dark slab inside the white page — the same surface language as the
+           industry panels, so the two sections read as one system. */
+        .wwn-slab {
+          max-width: 1180px; margin: 0 auto;
+          background: #0d1426;
+          border-radius: clamp(20px,2.4vw,30px);
+          padding: clamp(36px,4.6vw,68px) clamp(24px,3.4vw,56px);
+          box-shadow: 0 50px 100px -46px rgba(13,20,38,.6);
+        }
 
-        .wwn-card {
-          position: relative; overflow: hidden;
-          background: #fff; border: 1px solid #e8ecf4; border-radius: 20px;
-          padding: clamp(24px,2.8vw,32px);
-          box-shadow: 0 2px 14px rgba(20,40,90,.05);
-          transition: transform .26s ${EASE}, box-shadow .26s ${EASE};
+        .wwn-head { text-align: center; max-width: 720px; margin: 0 auto clamp(36px,4.4vw,56px); }
+        .wwn-eyebrow {
+          display: inline-flex; align-items: center; gap: 12px;
+          font-size: clamp(12.5px,1.15vw,15px); font-weight: 700; letter-spacing: .12em;
+          color: #6ea2ff; text-transform: uppercase; margin-bottom: 18px;
         }
-        .wwn-card::before {
-          content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-          background: var(--wwn-accent);
+        .wwn-eyebrow::before, .wwn-eyebrow::after {
+          content: ''; width: 26px; height: 2px; background: rgba(110,162,255,.55); border-radius: 2px;
         }
-        .wwn-card:hover { transform: translateY(-5px); box-shadow: 0 24px 48px -22px rgba(20,40,90,.28); }
+        .wwn-h2 {
+          margin: 0; font-size: clamp(30px,4vw,50px); font-weight: 800;
+          line-height: 1.08; letter-spacing: -.03em; color: #fff; text-wrap: balance;
+        }
+
+        /* Hairline-divided columns, no cards. */
+        .wwn-grid { display: grid; grid-template-columns: repeat(4,1fr); }
+        @media (max-width: 900px) { .wwn-grid { grid-template-columns: repeat(2,1fr); row-gap: 34px; } }
+        @media (max-width: 520px) { .wwn-grid { grid-template-columns: 1fr; row-gap: 30px; } }
+
+        .wwn-item {
+          position: relative;
+          padding: 0 clamp(16px,2vw,28px);
+          border-left: 1px solid rgba(255,255,255,.1);
+          opacity: 0; transform: translateY(16px);
+          transition: opacity .6s ${EASE}, transform .6s ${EASE};
+        }
+        .wwn-grid[data-in="true"] .wwn-item { opacity: 1; transform: none; }
+        .wwn-item:first-child { border-left: 0; padding-left: 0; }
+        @media (max-width: 900px) {
+          .wwn-item:nth-child(odd) { border-left: 0; padding-left: 0; }
+        }
+        @media (max-width: 520px) {
+          .wwn-item { border-left: 0; padding-left: 0; }
+        }
+
+        /* Accent tick that draws in above each figure. */
+        .wwn-rule {
+          display: block; width: 26px; height: 2px; border-radius: 2px;
+          background: #1360ee; margin-bottom: clamp(16px,1.8vw,22px);
+          transform: scaleX(0); transform-origin: left;
+          transition: transform .7s ${EASE} .2s;
+        }
+        .wwn-grid[data-in="true"] .wwn-rule { transform: scaleX(1); }
+
         .wwn-value {
-          font-size: clamp(34px,4vw,52px); font-weight: 800; line-height: 1;
-          letter-spacing: -.03em; font-variant-numeric: tabular-nums;
-          margin-bottom: 12px;
+          font-size: clamp(36px,4.4vw,58px); font-weight: 800; line-height: 1;
+          letter-spacing: -.04em; font-variant-numeric: tabular-nums;
+          color: #fff; margin-bottom: 14px;
         }
-        .wwn-label { font-size: clamp(14px,1.3vw,16px); font-weight: 800; color: #1d1d1f; letter-spacing: -.01em; margin-bottom: 8px; }
-        .wwn-desc { margin: 0; font-size: 13px; line-height: 1.6; color: #6e6e73; }
+        .wwn-suffix { color: #4d8cff; }
+        .wwn-label {
+          font-size: clamp(14px,1.25vw,15.5px); font-weight: 700;
+          color: #fff; letter-spacing: -.01em; line-height: 1.3; margin-bottom: 9px;
+        }
+        .wwn-desc { margin: 0; font-size: 13px; line-height: 1.65; color: rgba(255,255,255,.55); }
+
+        @media (prefers-reduced-motion: reduce) {
+          .wwn-item, .wwn-rule { transition: none; opacity: 1; transform: none; }
+        }
       `}</style>
 
       <section style={{ padding: 'clamp(56px,7vw,92px) 28px', background: '#fff' }}>
-        <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
-          <div data-reveal style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto clamp(40px,5vw,56px)' }}>
-            <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '.09em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '14px' }}>
-              LOCATOR in Numbers
-            </span>
-            <h2 style={{ margin: 0, fontSize: 'clamp(26px,3.4vw,40px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.025em', color: '#1d1d1f' }}>
-              Trusted at scale across the UAE
-            </h2>
+        <div className="wwn-slab" data-reveal>
+          <div className="wwn-head">
+            <span className="wwn-eyebrow">LOCATOR in Numbers</span>
+            <h2 className="wwn-h2">Trusted at scale across the UAE</h2>
           </div>
 
-          <div className="wwn-grid" ref={ref} data-reveal>
-            {STATS.map(s => <StatCard key={s.label} stat={s} start={start} />)}
+          <div className="wwn-grid" ref={ref} data-in={start}>
+            {STATS.map((s, i) => <StatCard key={s.label} stat={s} start={start} index={i} />)}
           </div>
         </div>
       </section>

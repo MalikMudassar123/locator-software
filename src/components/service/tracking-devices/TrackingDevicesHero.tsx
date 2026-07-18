@@ -35,26 +35,19 @@ export default function TrackingDevicesHero() {
 
         .td-grid {
           position: relative; z-index: 1;
-          display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(28px,4vw,64px);
-          align-items: center; max-width: 1280px; margin: 0 auto;
+          display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px,2.5vw,36px);
+          align-items: center; max-width: 1240px; margin: 0 auto;
           padding-bottom: clamp(40px,5vw,64px);
         }
         @media (max-width: 940px) { .td-grid { grid-template-columns: 1fr; gap: 36px; } }
 
-        .td-eyebrow {
-          display: inline-flex; align-items: center; gap: 8px;
-          font-size: 11px; font-weight: 700; letter-spacing: .09em;
-          color: #1360ee; text-transform: uppercase; margin-bottom: 16px;
-        }
-        .td-eyebrow::before { content: ''; width: 20px; height: 2px; background: #1360ee; border-radius: 2px; }
-
         .td-h1 {
-          margin: 0; font-size: clamp(30px,4.2vw,52px); font-weight: 800;
-          line-height: 1.08; letter-spacing: -.028em; color: #1d1d1f;
+          margin: 0; font-size: clamp(30px,3.8vw,48px); font-weight: 800;
+          line-height: 1.1; letter-spacing: -.03em; color: #1d1d1f;
         }
         .td-lead {
-          margin: 20px 0 0; max-width: 50ch;
-          font-size: clamp(14px,1.3vw,16.5px); line-height: 1.7; color: #52525e;
+          margin: 18px 0 0; max-width: 46ch;
+          font-size: clamp(14px,1.25vw,16px); line-height: 1.7; color: #52525e;
         }
 
         .td-cta-row { display: flex; gap: 14px; margin-top: 30px; }
@@ -73,11 +66,19 @@ export default function TrackingDevicesHero() {
         @media (max-width: 560px) { .td-cta-row { flex-direction: column; } .td-btn { justify-content: center; } }
 
         /* ── Montage: staggered product tiles fill the right column ── */
-        .td-montage { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(12px,1.6vw,20px); }
+        /* Capped so square tiles don't blow out the hero height, pulled to the
+           left of its column to close the gap, and dropped down for offset. */
+        .td-montage {
+          display: grid; grid-template-columns: 1fr 1fr; gap: clamp(10px,1.3vw,16px);
+          width: 100%; max-width: 520px;
+          margin-right: auto; margin-left: 0;
+          margin-top: clamp(28px,4vw,64px);
+        }
+        @media (max-width: 940px) { .td-montage { margin: 0 auto; max-width: 460px; } }
         .td-tile {
-          position: relative; aspect-ratio: 1 / 1; border-radius: 20px;
-          background: #f7f9fd; border: 1px solid #e7ebf3;
-          display: grid; place-items: center; padding: clamp(14px,2vw,26px);
+          position: relative; aspect-ratio: 1 / 1; border-radius: 22px;
+          background: #f6f8fd; border: 1px solid #e9edf6;
+          display: grid; place-items: center; padding: clamp(10px,1.3vw,18px);
           transition: transform .4s ${EASE}, box-shadow .4s ${EASE}, border-color .4s ${EASE};
         }
         /* Offset the second column to break the flat grid. */
@@ -124,8 +125,6 @@ export default function TrackingDevicesHero() {
               </svg>
               Service
             </Link>
-
-            <span className="td-eyebrow">Tracking Devices &amp; Accessories</span>
 
             <h1 className="td-h1">The hardware behind every Locator install.</h1>
 

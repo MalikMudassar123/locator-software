@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 
 /**
  * IoTFeaturesSection
@@ -37,6 +38,8 @@ const DEFAULT_FEATURES = [
       "LOCATOR Task Manager digitizes field and road operations by dispatching tasks to staff via mobile app, with real-time CRM/ERP integration to eliminate duplicate work and improve efficiency.",
     preview: "map",
     previewImage: "/real time/map.png",
+    href: "/service/smart-iot#gps-asset-tracking",
+    cta: "Explore GPS Asset Tracking",
   },
   {
     id: "iot",
@@ -46,6 +49,8 @@ const DEFAULT_FEATURES = [
       "LOCATOR delivers industrial telematics and IoT equipment tracking with real-time usage, idle monitoring, and service alerts to improve uptime, safety, and job-site control.",
     preview: "telemetry",
     previewImage: "/real time/graph.png",
+    href: "/service/smart-iot#iot-sensors",
+    cta: "Explore IoT Sensors",
   },
   {
     id: "machinery",
@@ -55,6 +60,8 @@ const DEFAULT_FEATURES = [
       "LOCATOR delivers custom IoT sensors with real-time telemetry to monitor temperature, fuel, movement, and equipment health—improving compliance, reliability, and operational efficiency.",
     preview: "excavator",
     previewImage: "/real time/percentage.png",
+    href: "/service/smart-iot#equipment-machinery",
+    cta: "Explore Machinery Monitoring",
   },
 ];
 
@@ -296,7 +303,79 @@ function FeatureCard({ feature, delay }) {
         <FeaturePreview type={feature.preview} customImage={feature.previewImage} />
       </div>
 
+      {/* CTA — deep-links to this topic's block on the Smart IoT page */}
+      {feature.href && (
+        <Link href={feature.href} className="fc__cta">
+          <span>{feature.cta}</span>
+          <span className="fc__cta-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </span>
+        </Link>
+      )}
+
       <style jsx>{`
+        /* :global — styled-jsx only auto-scopes DOM tags, not the <Link>
+           component, so a scoped .fc__cta selector would never match. */
+        :global(.fc__cta) {
+          margin-top: clamp(18px, 2vw, 24px);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 14px;
+          padding: 10px 10px 10px 20px;
+          border-radius: 14px;
+          background: #ffffff;
+          border: 1px solid #e2e8f4;
+          color: #0f1e35;
+          font-size: 14.5px;
+          font-weight: 700;
+          line-height: 1.25;
+          text-decoration: none;
+          box-shadow:
+            0 1px 0 rgba(255, 255, 255, 0.9) inset,
+            0 6px 18px -10px rgba(70, 100, 140, 0.35);
+          transition:
+            background 0.28s cubic-bezier(0.22, 0.61, 0.36, 1),
+            border-color 0.28s cubic-bezier(0.22, 0.61, 0.36, 1),
+            color 0.28s cubic-bezier(0.22, 0.61, 0.36, 1),
+            transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1),
+            box-shadow 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        :global(.fc__cta:hover) {
+          background: #1360ee;
+          border-color: #1360ee;
+          color: #ffffff;
+          transform: translateY(-2px);
+          box-shadow: 0 16px 32px -12px rgba(19, 96, 238, 0.6);
+        }
+
+        /* Arrow rides in its own tile that inverts with the button. */
+        :global(.fc__cta-arrow) {
+          flex-shrink: 0;
+          width: 38px;
+          height: 38px;
+          border-radius: 11px;
+          display: grid;
+          place-items: center;
+          background: rgba(19, 96, 238, 0.1);
+          color: #1360ee;
+          transition:
+            background 0.28s cubic-bezier(0.22, 0.61, 0.36, 1),
+            color 0.28s cubic-bezier(0.22, 0.61, 0.36, 1),
+            transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        :global(.fc__cta:hover .fc__cta-arrow) {
+          background: rgba(255, 255, 255, 0.18);
+          color: #ffffff;
+          transform: translateX(3px);
+        }
+        :global(.fc__cta:focus-visible) {
+          outline: 2px solid #1360ee;
+          outline-offset: 3px;
+        }
+
         .fc {
           position: relative;
           background: linear-gradient(165deg, #f7f9fc 0%, #eef2f7 100%);

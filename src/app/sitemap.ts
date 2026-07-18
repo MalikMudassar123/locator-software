@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteUrl } from "@/config/site";
+import { DEVICES } from "@/components/service/tracking-devices/devices-data";
 
 // Every live route. Add new entries here as routes are added.
 const ROUTES: { path: string; priority: number }[] = [
@@ -16,6 +17,7 @@ const ROUTES: { path: string; priority: number }[] = [
   { path: "/service/smart-iot", priority: 0.6 },
   { path: "/service/task-manager", priority: 0.6 },
   { path: "/service/tracking-devices", priority: 0.6 },
+  ...DEVICES.map((d) => ({ path: `/service/tracking-devices/${d.slug}`, priority: 0.5 })),
   { path: "/regulatory", priority: 0.8 },
   { path: "/shahin", priority: 0.8 },
   { path: "/asateel-certified-obu", priority: 0.8 },

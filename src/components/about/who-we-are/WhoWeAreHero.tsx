@@ -19,12 +19,18 @@ export default function WhoWeAreHero() {
         @keyframes wwaRise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
         @media (prefers-reduced-motion: no-preference) { .wwa-anim { opacity: 0; animation: wwaRise .8s ${EASE} forwards; } }
 
+        /* Rule sits on its own line above the label, so a wrapping label can
+           never leave it stranded beside the middle of a two-line block. */
         .wwa-eyebrow {
-          display: inline-flex; align-items: center; gap: 8px;
-          font-size: 12px; font-weight: 700; letter-spacing: .09em;
+          display: block;
+          font-size: clamp(22px,2.8vw,32px); font-weight: 800; letter-spacing: .04em;
           color: #1360ee; text-transform: uppercase;
         }
-        .wwa-eyebrow span { display: inline-block; width: 22px; height: 2px; background: #1360ee; border-radius: 2px; }
+        .wwa-eyebrow span {
+          display: block; width: 34px; height: 3px;
+          background: #1360ee; border-radius: 2px;
+          margin: 0 auto 12px;
+        }
 
         .wwa-btn {
           font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
@@ -56,7 +62,7 @@ export default function WhoWeAreHero() {
             <span /> Who We Are
           </span>
 
-          <h1 className="wwa-anim" style={{ animationDelay: '.12s', margin: '18px auto 0', maxWidth: '18ch', fontSize: 'clamp(30px,4.4vw,54px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.03em', color: '#1d1d1f' }}>
+          <h1 className="wwa-anim" style={{ animationDelay: '.12s', margin: '18px auto 0', maxWidth: '26ch', fontSize: 'clamp(21px,2.5vw,28px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
             Shaping the future of <span style={{ color: '#1360ee' }}>connected mobility</span>
           </h1>
 

@@ -111,16 +111,15 @@ export default function DashcamShowcase() {
                 {/* ── Left: heading + stats ── */}
                 <div data-reveal="left">
                   <span style={{
-                    display: 'inline-block', fontSize: '11.5px', fontWeight: 700,
-                    letterSpacing: '.06em', color: 'rgba(255,255,255,.78)',
+                    display: 'block', fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800,
+                    letterSpacing: '.04em', color: 'rgba(255,255,255,.85)',
                     marginBottom: '16px', textTransform: 'uppercase' as const,
-                    background: 'rgba(255,255,255,.15)', borderRadius: '999px',
-                    padding: '5px 14px', border: '1px solid rgba(255,255,255,.22)',
                   }}>
+                    <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: 'rgba(255,255,255,.5)', borderRadius: '2px' }} /></span>
                     AI Video Telematics
                   </span>
 
-                  <h2 style={{ fontSize: 'clamp(26px,3.6vw,42px)', fontWeight: 800, letterSpacing: '-.025em', lineHeight: 1.08, color: '#fff', margin: '0 0 18px' }}>
+                  <h2 style={{ fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, letterSpacing: '-.015em', lineHeight: 1.25, color: '#fff', margin: '0 0 18px' }}>
                     AI-Powered Dash Cameras &amp; MDVR
                   </h2>
 

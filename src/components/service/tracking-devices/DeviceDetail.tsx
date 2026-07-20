@@ -32,13 +32,16 @@ export default function DeviceDetail({ device }: { device: Device }) {
         .dd-shot-empty { color: #c3cbd9; font-size: 12px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
 
         .dd-eyebrow {
-          display: inline-flex; align-items: center; gap: 8px;
-          font-size: 11px; font-weight: 700; letter-spacing: .09em;
-          color: #1360ee; text-transform: uppercase; margin-bottom: 14px;
+          display: block;
+          font-size: clamp(22px,2.8vw,32px); font-weight: 800; letter-spacing: .04em;
+          color: #1360ee; text-transform: uppercase; margin-bottom: 16px;
         }
-        .dd-eyebrow::before { content: ''; width: 20px; height: 2px; background: #1360ee; border-radius: 2px; }
+        .dd-eyebrow::before {
+          content: ''; display: block; width: 34px; height: 3px;
+          background: #1360ee; border-radius: 2px; margin-bottom: 12px;
+        }
 
-        .dd-name { margin: 0 0 14px; font-size: clamp(28px,4vw,46px); font-weight: 800; line-height: 1.1; letter-spacing: -.025em; color: #1d1d1f; }
+        .dd-name { margin: 0 0 14px; font-size: clamp(21px,2.5vw,28px); font-weight: 800; line-height: 1.18; letter-spacing: -.015em; color: #1d1d1f; }
         .dd-tag { margin: 0 0 20px; font-size: clamp(15px,1.5vw,18px); font-weight: 700; line-height: 1.45; color: #1d1d1f; }
         .dd-body { margin: 0; font-size: clamp(14px,1.3vw,16px); line-height: 1.8; color: #52525e; }
 

@@ -40,7 +40,10 @@ export default function VisionRoadmap() {
           <div className="vr-stat-wrap" data-reveal="zoom">
             <div className="vr-ring" style={{ width: 420, height: 420, left: -140, top: -140 }} />
             <div className="vr-ring" style={{ width: 320, height: 320, right: -100, bottom: -120, animationDelay: '-6s' }} />
-            <span style={{ position: 'relative', zIndex: 1, display: 'inline-block', fontSize: '11.5px', fontWeight: 700, letterSpacing: '.08em', color: 'rgba(255,255,255,.6)', textTransform: 'uppercase', marginBottom: '18px' }}>
+            <span style={{ position: 'relative', zIndex: 1, display: 'block', fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: 'rgba(255,255,255,.85)', textTransform: 'uppercase', marginBottom: '16px' }}>
+              <span style={{ display: 'block', marginBottom: '12px' }}>
+                <span style={{ display: 'inline-block', width: '34px', height: '3px', background: 'rgba(255,255,255,.5)', borderRadius: '2px' }} />
+              </span>
               By 2035
             </span>
             <div className="vr-num">1,000,000+</div>

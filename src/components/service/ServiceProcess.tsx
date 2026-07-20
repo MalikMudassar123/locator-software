@@ -141,17 +141,18 @@ export default function ServiceProcess() {
           {/* Header */}
           <div data-reveal style={{ textAlign: 'center', marginBottom: '48px' }}>
             <span style={{
-              fontSize: '11px', fontWeight: 700, letterSpacing: '.09em',
+              fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em',
               color: '#1360ee', textTransform: 'uppercase' as const,
-              display: 'block', marginBottom: '14px',
+              display: 'block', marginBottom: '16px',
             }}>
+              <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
               How it works
             </span>
             <h2 style={{
               margin: '0 auto',
-              fontSize: 'clamp(26px,3.4vw,42px)',
+              fontSize: 'clamp(19px,2.2vw,26px)',
               fontWeight: 800, lineHeight: 1.08,
-              letterSpacing: '-.025em', color: '#1d1d1f',
+              letterSpacing: '-.015em', color: '#1d1d1f',
               maxWidth: '560px',
             }}>
               Up and Running in 4 Simple Steps

@@ -62,11 +62,14 @@ export default function SoftwareCTA() {
 
             <div data-reveal="zoom" style={{ position: 'relative', zIndex: 1 }}>
               {/* Tag */}
-              <span style={{ display: 'inline-block', fontSize: '11.5px', fontWeight: 700, letterSpacing: '.06em', color: 'rgba(255,255,255,.6)', marginBottom: '20px', textTransform: 'uppercase', background: 'rgba(255,255,255,.08)', borderRadius: '999px', padding: '5px 16px', border: '1px solid rgba(255,255,255,.14)' }}>
+              <span style={{ display: 'block', fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: 'rgba(255,255,255,.85)', marginBottom: '16px', textTransform: 'uppercase' }}>
+                <span style={{ display: 'block', marginBottom: '12px' }}>
+                  <span style={{ display: 'inline-block', width: '34px', height: '3px', background: 'rgba(255,255,255,.5)', borderRadius: '2px' }} />
+                </span>
                 Get Started Today
               </span>
 
-              <h2 style={{ fontSize: 'clamp(26px,3.6vw,42px)', fontWeight: 800, letterSpacing: '-.025em', color: '#fff', lineHeight: 1.08, maxWidth: '18ch', margin: '0 auto 16px' }}>
+              <h2 style={{ fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, letterSpacing: '-.015em', color: '#fff', lineHeight: 1.25, maxWidth: '26ch', margin: '0 auto 16px' }}>
                 Put your whole fleet on one platform.
               </h2>
 

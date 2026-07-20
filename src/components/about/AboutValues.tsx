@@ -111,10 +111,11 @@ export default function AboutValues() {
       <section id="values" style={{ padding: 'clamp(56px,7vw,96px) 28px', background: '#fff' }}>
         <div className="val-wrap">
           <aside className="val-aside" data-reveal="left">
-            <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '.09em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '14px' }}>
+            <span style={{ display: 'block', fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', marginBottom: '16px' }}>
+              <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
               What we stand for
             </span>
-            <p style={{ margin: 0, maxWidth: '360px', fontSize: 'clamp(19px,2vw,24px)', fontWeight: 700, lineHeight: 1.4, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+            <p style={{ margin: 0, maxWidth: '360px', fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 700, lineHeight: 1.4, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               Six principles behind every product we ship and every relationship we build.
             </p>
             <div style={{ marginTop: '22px', height: '4px', width: '72px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#7c3aed)' }} />

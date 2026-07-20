@@ -78,11 +78,12 @@ export default function AboutPillarHero({
             {active.icon}
           </div>
 
-          <span className="apx-anim" style={{ animationDelay: '.08s', display: 'block', fontSize: '11px', fontWeight: 700, letterSpacing: '.09em', color: active.accent, textTransform: 'uppercase', marginBottom: '14px' }}>
+          <span className="apx-anim" style={{ animationDelay: '.08s', display: 'block', fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: active.accent, textTransform: 'uppercase', marginBottom: '16px' }}>
+            <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: active.accent, borderRadius: '2px' }} /></span>
             About Locator — {active.tagline}
           </span>
 
-          <h1 className="apx-anim" style={{ animationDelay: '.14s', margin: 0, fontSize: 'clamp(32px,4.2vw,54px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.03em', color: '#1d1d1f' }}>
+          <h1 className="apx-anim" style={{ animationDelay: '.14s', margin: 0, fontSize: 'clamp(21px,2.5vw,28px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
             {title}
           </h1>
 

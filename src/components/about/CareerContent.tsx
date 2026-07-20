@@ -67,10 +67,11 @@ export default function CareerContent() {
       <section style={{ padding: 'clamp(56px,7vw,88px) 28px 0', background: '#fff' }}>
         <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
           <div data-reveal style={{ textAlign: 'center', maxWidth: '620px', margin: '0 auto clamp(36px,5vw,52px)' }}>
-            <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '.09em', color: '#4f46e5', textTransform: 'uppercase', display: 'block', marginBottom: '14px' }}>
+            <span style={{ display: 'block', fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: '#4f46e5', textTransform: 'uppercase', marginBottom: '16px' }}>
+              <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#4f46e5', borderRadius: '2px' }} /></span>
               Why Locator
             </span>
-            <h2 style={{ margin: 0, fontSize: 'clamp(24px,3vw,36px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.02em', color: '#1d1d1f' }}>
+            <h2 style={{ margin: 0, fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               A place to do work that matters
             </h2>
           </div>

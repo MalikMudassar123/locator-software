@@ -9,10 +9,11 @@ export default function WhoWeAreJourney() {
       <section style={{ padding: 'clamp(56px,7vw,92px) 28px', background: '#f7f9fc' }}>
         <div className="wwj-grid">
           <div data-reveal="left">
-            <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '.09em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '14px' }}>
+            <span style={{ display: 'block', fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', marginBottom: '16px' }}>
+              <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
               Our Journey
             </span>
-            <h2 style={{ margin: 0, fontSize: 'clamp(26px,3.2vw,40px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.025em', color: '#1d1d1f' }}>
+            <h2 style={{ margin: 0, fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               From GPS tracking to a connected mobility ecosystem
             </h2>
             <div style={{ marginTop: '22px', height: '4px', width: '72px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#7c3aed)' }} />

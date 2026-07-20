@@ -77,16 +77,19 @@ export default function WhoWeAreNumbers() {
 
         .wwn-head { text-align: center; max-width: 720px; margin: 0 auto clamp(36px,4.4vw,56px); }
         .wwn-eyebrow {
-          display: inline-flex; align-items: center; gap: 12px;
-          font-size: clamp(12.5px,1.15vw,15px); font-weight: 700; letter-spacing: .12em;
-          color: #6ea2ff; text-transform: uppercase; margin-bottom: 18px;
+          display: block;
+          font-size: clamp(22px,2.8vw,32px); font-weight: 800; letter-spacing: .04em;
+          color: #6ea2ff; text-transform: uppercase; margin-bottom: 16px;
         }
-        .wwn-eyebrow::before, .wwn-eyebrow::after {
-          content: ''; width: 26px; height: 2px; background: rgba(110,162,255,.55); border-radius: 2px;
+        /* Single rule above the label — flanking rules break on wrap. */
+        .wwn-eyebrow::before {
+          content: ''; display: block; width: 34px; height: 3px;
+          background: rgba(110,162,255,.55); border-radius: 2px;
+          margin: 0 auto 12px;
         }
         .wwn-h2 {
-          margin: 0; font-size: clamp(30px,4vw,50px); font-weight: 800;
-          line-height: 1.08; letter-spacing: -.03em; color: #fff; text-wrap: balance;
+          margin: 0; font-size: clamp(19px,2.2vw,26px); font-weight: 800;
+          line-height: 1.25; letter-spacing: -.02em; color: #fff; text-wrap: balance;
         }
 
         /* Hairline-divided columns, no cards. */

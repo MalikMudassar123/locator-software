@@ -71,17 +71,18 @@ export default function SoftwareBlog() {
           {/* Header */}
           <div data-reveal style={{ textAlign: 'center', marginBottom: '44px' }}>
             <span style={{
-              display: 'inline-flex', alignItems: 'center', gap: '8px',
-              fontSize: '11px', fontWeight: 700, letterSpacing: '.08em',
+              display: 'block',
+              fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em',
               color: '#1360ee', textTransform: 'uppercase' as const,
-              marginBottom: '14px',
+              marginBottom: '16px',
             }}>
-              <span style={{ display: 'inline-block', width: '20px', height: '1.5px', background: '#1360ee', borderRadius: '2px' }} />
+              <span style={{ display: 'block', marginBottom: '12px' }}>
+                <span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} />
+              </span>
               Fleet Intelligence
-              <span style={{ display: 'inline-block', width: '20px', height: '1.5px', background: '#1360ee', borderRadius: '2px' }} />
             </span>
 
-            <h2 style={{ margin: '0 0 14px', fontSize: 'clamp(26px,3.6vw,42px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-.025em', color: '#1d1d1f' }}>
+            <h2 style={{ margin: '0 0 14px', fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.25, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               Insights from the{' '}
               <span style={{ color: '#1360ee' }}>road</span>
             </h2>

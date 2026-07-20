@@ -83,14 +83,15 @@ export default function VideoTelematicsHero() {
             </Link>
 
             <span style={{
-              fontSize: '11px', fontWeight: 700, letterSpacing: '.09em',
+              fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em',
               color: '#1360ee', textTransform: 'uppercase' as const,
-              display: 'block', marginBottom: '14px',
+              display: 'block', marginBottom: '16px',
             }}>
+              <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
               Video Telematics
             </span>
 
-            <h1 style={{ margin: 0, fontSize: 'clamp(28px,3.8vw,46px)', fontWeight: 800, lineHeight: 1.14, letterSpacing: '-.025em', color: '#1d1d1f' }}>
+            <h1 style={{ margin: 0, fontSize: 'clamp(21px,2.5vw,28px)', fontWeight: 800, lineHeight: 1.14, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               AI-Powered Fleet Dash Cameras &amp; MDVR Safety Systems
             </h1>
 

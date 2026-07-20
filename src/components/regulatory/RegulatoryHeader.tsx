@@ -45,13 +45,14 @@ export default function RegulatoryHeader({
             </Link>
           )}
           <span style={{
-            fontSize: '11px', fontWeight: 700, letterSpacing: '.09em',
+            fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em',
             color: '#1360ee', textTransform: 'uppercase' as const,
-            display: 'block', marginBottom: '12px',
+            display: 'block', marginBottom: '16px',
           }}>
+            <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
             {eyebrow}
           </span>
-          <h1 style={{ margin: 0, fontSize: 'clamp(26px, 3.4vw, 40px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.025em', color: '#1d1d1f' }}>
+          <h1 style={{ margin: 0, fontSize: 'clamp(21px,2.5vw,28px)', fontWeight: 800, lineHeight: 1.18, letterSpacing: '-.015em', color: '#1d1d1f' }}>
             {title}
           </h1>
           <p style={{ margin: '12px auto 0', maxWidth: 540, fontSize: 'clamp(13.5px, 1.25vw, 15.5px)', lineHeight: 1.55, color: '#6e6e73' }}>

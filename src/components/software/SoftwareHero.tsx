@@ -172,10 +172,11 @@ export default function SoftwareHero() {
 
           <div className="sw-hero-body">
             <div className="sw-copy">
-              <p style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '.01em', color: '#1360ee', marginBottom: 'clamp(8px,1.4vh,14px)' }}>
+              <p style={{ display: 'block', fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', color: '#1360ee', marginBottom: 'clamp(8px,1.4vh,14px)' }}>
+                <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
                 Locator Fleet Telematics
               </p>
-              <h1 style={{ fontSize: 'clamp(26px, 3.4vw, 46px)', fontWeight: 800, lineHeight: 1.04, letterSpacing: '-.025em', color: '#1d1d1f', maxWidth: '20ch', margin: '0 auto' }}>
+              <h1 style={{ fontSize: 'clamp(21px,2.5vw,28px)', fontWeight: 800, lineHeight: 1.18, letterSpacing: '-.015em', color: '#1d1d1f', maxWidth: '30ch', margin: '0 auto' }}>
                 One Platform for Complete Fleet Visibility
               </h1>
               <p style={{ maxWidth: '560px', margin: 'clamp(8px,1.4vh,14px) auto 0', fontSize: 'clamp(13px, 1.35vw, 16px)', lineHeight: 1.5, color: '#3a3a3c' }}>

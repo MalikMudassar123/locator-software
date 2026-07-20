@@ -112,12 +112,16 @@ export default function DeviceCarousel() {
 
         .dv-head { max-width: 1240px; margin: 0 auto clamp(24px,3vw,40px); padding: 0 28px; text-align: center; }
         .dv-eyebrow {
-          display: inline-flex; align-items: center; gap: 8px;
-          font-size: 11px; font-weight: 700; letter-spacing: .09em;
-          color: #1360ee; text-transform: uppercase; margin-bottom: 12px;
+          display: block;
+          font-size: clamp(22px,2.8vw,32px); font-weight: 800; letter-spacing: .04em;
+          color: #1360ee; text-transform: uppercase; margin-bottom: 16px;
         }
-        .dv-eyebrow::before, .dv-eyebrow::after { content: ''; width: 20px; height: 2px; background: #1360ee; border-radius: 2px; }
-        .dv-h2 { margin: 0 0 10px; font-size: clamp(24px,3.2vw,40px); font-weight: 800; line-height: 1.1; letter-spacing: -.025em; color: #1d1d1f; }
+        /* Rule above the label — never stranded when the label wraps. */
+        .dv-eyebrow::before {
+          content: ''; display: block; width: 34px; height: 3px;
+          background: #1360ee; border-radius: 2px; margin: 0 auto 12px;
+        }
+        .dv-h2 { margin: 0 0 10px; font-size: clamp(19px,2.2vw,26px); font-weight: 800; line-height: 1.25; letter-spacing: -.015em; color: #1d1d1f; }
         .dv-sub { margin: 0 auto; max-width: 56ch; font-size: clamp(13.5px,1.25vw,15.5px); line-height: 1.7; color: #52525e; }
 
         /* ── Full-width stage ────────────────────────────────── */

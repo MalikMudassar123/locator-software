@@ -58,10 +58,11 @@ export default function ServiceWhyChoose() {
         <div className="swc-grid">
           {/* Left: copy + reasons */}
           <div data-reveal="left">
-            <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '.09em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '14px' }}>
+            <span style={{ fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
+              <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
               Why LOCATOR
             </span>
-            <h2 style={{ margin: '0 0 clamp(28px,4vw,40px)', fontSize: 'clamp(26px,3.4vw,42px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.025em', color: '#1d1d1f' }}>
+            <h2 style={{ margin: '0 0 clamp(28px,4vw,40px)', fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               Why businesses choose LOCATOR
             </h2>
 

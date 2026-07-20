@@ -563,19 +563,19 @@ export default function ServiceIndustries() {
                 style={{ position: 'relative', zIndex: 1 }}
               >
                 <div style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '7px',
-                  fontSize: '10.5px', fontWeight: 700, letterSpacing: '.08em',
-                  color: BLUE, textTransform: 'uppercase', marginBottom: '14px',
+                  display: 'inline-flex', alignItems: 'center', gap: '10px',
+                  fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em',
+                  color: BLUE, textTransform: 'uppercase', marginBottom: '16px',
                 }}>
-                  <span style={{ display: 'inline-block', width: '20px', height: '1.5px', background: BLUE, borderRadius: '2px' }} />
+                  <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: BLUE, borderRadius: '2px' }} /></span>
                   GPS Fleet Services
                 </div>
 
                 <h2 style={{
                   margin: '0 0 18px',
-                  fontSize: 'clamp(30px,3.8vw,52px)',
-                  fontWeight: 800, lineHeight: 1.06,
-                  letterSpacing: '-.03em', color: '#1d1d1f',
+                  fontSize: 'clamp(21px,2.5vw,28px)',
+                  fontWeight: 800, lineHeight: 1.18,
+                  letterSpacing: '-.015em', color: '#1d1d1f',
                 }}>
                   {ind.title.split('\n').map((line, i) => (
                     <span key={i} style={{ display: 'block' }}>{line}</span>

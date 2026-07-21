@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, useInView, type Variants } from 'framer-motion'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
@@ -97,9 +97,13 @@ const FIELDS = [
   { name: 'vehicles', label: 'Number of vehicles', type: 'text', required: false, half: false },
 ] as const
 
+// Each step waits a full 1.5s after the previous one before it starts.
+const STEP_STAGGER = 1.5
+const STEP_DELAY_CHILDREN = 0.15
+
 const listV: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.4, delayChildren: 0.15 } },
+  show: { transition: { staggerChildren: STEP_STAGGER, delayChildren: STEP_DELAY_CHILDREN } },
 }
 const stepV: Variants = {
   hidden: { opacity: 0, x: 26 },
@@ -119,6 +123,21 @@ export default function QuoteForm() {
   const [sent, setSent] = useState(false)
   const stepsRef = useRef<HTMLDivElement>(null)
   const inView = useInView(stepsRef, { once: true, amount: 0.3 })
+
+  // Particles for a connector only start once THAT segment's beam has drawn
+  // in — otherwise, with a 1.5s gap between steps, you'd see step 3's
+  // particles already flowing before step 3 has even appeared.
+  const [revealed, setRevealed] = useState(0)
+  useEffect(() => {
+    if (!inView) return
+    const timers = STEPS.map((_, i) =>
+      setTimeout(
+        () => setRevealed((r) => Math.max(r, i + 1)),
+        (STEP_DELAY_CHILDREN + i * STEP_STAGGER + 0.5) * 1000,
+      ),
+    )
+    return () => timers.forEach(clearTimeout)
+  }, [inView])
 
   // NOTE: no backend endpoint yet — shows the success state locally.
   // Wire this to a real API route / email service when available.
@@ -376,7 +395,7 @@ export default function QuoteForm() {
                 {i < STEPS.length - 1 && (
                   <div className="qf-conn" aria-hidden="true">
                     <motion.div className="qf-conn-beam" variants={beamV} />
-                    {inView && (
+                    {revealed > i && (
                       <div className="qf-stream">
                         {STREAM.map((p, pi) => (
                           <span

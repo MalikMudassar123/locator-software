@@ -5,17 +5,19 @@ import Image from 'next/image'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
-// Images are placeholders until the industry shots land — swap `image` only.
+// Real AI-dashcam screenshots from the client — each has its own REC/HUD
+// overlay baked in (timestamp, resolution badge, detection boxes), so the
+// image uses object-fit: contain rather than cover — nothing gets cropped.
 const INDUSTRIES = [
   {
     title: 'Transportation & Logistics',
     desc: 'Prevent cargo loss with AI theft detection and HD video proof, speeding claims, reducing fraud disputes, and improving fleet safety across deliveries and loading hubs.',
-    image: '/service_page/Transport  Logistics 2.webp',
+    image: '/service_page/Industries we serve/Transportation & Logistics.webp',
   },
   {
     title: 'Warehouse',
     desc: 'Enable 24/7 AI video monitoring for forklifts and machines, preventing equipment damage, boosting operator accountability, and strengthening warehouse incident reporting.',
-    image: '/service_page/Facility Management Fleet.webp',
+    image: '/service_page/Industries we serve/Warehouse.webp',
   },
   {
     title: 'Construction',
@@ -25,17 +27,17 @@ const INDUSTRIES = [
   {
     title: 'School Districts',
     desc: 'Protect students and drivers with AI behavior monitoring and stop-arm violation evidence, improving road safety, driver training, and regulatory enforcement.',
-    image: '/service_page/School & Educational Fleet Monitoring.webp',
+    image: '/service_page/Industries we serve/School Districtse.webp',
   },
   {
     title: 'Waste Management',
     desc: 'Resolve complaints faster using real-time HD video and portal retrieval, improving driver coaching, service quality, and customer issue resolution.',
-    image: '/service_page/Waste Management Fleet Visibility.webp',
+    image: '/service_page/Industries we serve/Waste Management.webp',
   },
   {
     title: 'Field Services & Recovery',
     desc: 'Provide premium safety assurance with AI-protected video telematics for high-value vehicle transport, validating service completion and adding customer trust through recorded proof.',
-    image: '/service_page/Rental Leasing.webp',
+    image: '/service_page/Industries we serve/Field Services & Recovery Vehicles.webp',
   },
 ]
 
@@ -50,8 +52,11 @@ export default function VideoTelematicsIndustries() {
           height: clamp(420px,46vw,560px);
         }
 
+        /* Panel is a column: media zone on top, text zone below it in normal
+           flow — never stacked/overlaid, so the text can't cover the photo. */
         .vti-panel {
           position: relative; overflow: hidden;
+          display: flex; flex-direction: column;
           flex: 1 1 0; min-width: 0;
           border: 0; padding: 0; cursor: pointer;
           border-radius: clamp(18px,2vw,24px);
@@ -66,18 +71,27 @@ export default function VideoTelematicsIndustries() {
           box-shadow: 0 40px 80px -34px rgba(13,20,38,.62);
         }
 
+        /* Media zone — shrinks automatically as the text row below it grows,
+           so the two never overlap regardless of expanded/collapsed state. */
+        .vti-media { position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden; }
+
+        /* Real CCTV/dashcam screenshots carry their own REC/timestamp/detection
+           overlay baked into the frame — contain (not cover) so none of that
+           ever gets cropped off, whatever the panel's current size. */
         .vti-panel img {
           position: absolute; inset: 0;
-          width: 100%; height: 100%; object-fit: cover;
+          width: 100%; height: 100%; object-fit: contain;
           transition: transform .7s ${EASE}, filter .5s ${EASE};
         }
         /* Flat scrim, not a gradient — solid tint for legibility. */
         .vti-veil {
           position: absolute; inset: 0;
-          background: rgba(9,14,28,.62);
+          background: rgba(9,14,28,.55);
           transition: background .5s ${EASE};
         }
-        .vti-panel[aria-expanded="true"] .vti-veil { background: rgba(9,14,28,.42); }
+        /* Text no longer sits on the photo, so the expanded veil can stay
+           almost off — the shot reads bright and clear. */
+        .vti-panel[aria-expanded="true"] .vti-veil { background: rgba(9,14,28,.08); }
         .vti-panel[aria-expanded="false"]:hover img { transform: scale(1.06); }
 
         /* Accent bar marks the open panel. */
@@ -89,7 +103,7 @@ export default function VideoTelematicsIndustries() {
         }
         .vti-panel[aria-expanded="true"]::after { transform: scaleX(1); }
 
-        /* ── Collapsed: vertical spine label ── */
+        /* ── Collapsed: vertical spine label, over the media zone only ── */
         .vti-spine {
           position: absolute; inset: 0; z-index: 2;
           display: flex; align-items: center; justify-content: center;
@@ -104,23 +118,20 @@ export default function VideoTelematicsIndustries() {
         }
         .vti-panel[aria-expanded="true"] .vti-spine { opacity: 0; pointer-events: none; }
 
-        /* ── Expanded: copy sits on its own frosted panel so it stays readable
-           over any photo, however bright. Solid tint + blur, no gradient. ── */
+        /* ── Expanded: solid text row below the photo, own space, own
+           background — nothing translucent, nothing overlapping. ── */
         .vti-body {
-          position: absolute; z-index: 2;
-          left: clamp(14px,1.6vw,20px); right: clamp(14px,1.6vw,20px);
-          bottom: clamp(14px,1.6vw,20px);
-          padding: clamp(20px,2.2vw,28px);
-          border-radius: clamp(14px,1.6vw,18px);
-          background: rgba(9,14,28,.66);
-          -webkit-backdrop-filter: blur(14px) saturate(140%);
-          backdrop-filter: blur(14px) saturate(140%);
-          border: 1px solid rgba(255,255,255,.14);
-          opacity: 0; transform: translateY(14px);
-          transition: opacity .45s ${EASE} .12s, transform .45s ${EASE} .12s;
-          pointer-events: none;
+          flex: 0 0 auto; position: relative; z-index: 2;
+          max-height: 0; opacity: 0; overflow: hidden;
+          padding: 0 clamp(20px,2.2vw,28px);
+          background: #0a0f1e;
+          border-top: 1px solid rgba(255,255,255,.08);
+          transition: max-height .5s ${EASE}, opacity .4s ${EASE}, padding .5s ${EASE};
         }
-        .vti-panel[aria-expanded="true"] .vti-body { opacity: 1; transform: none; }
+        .vti-panel[aria-expanded="true"] .vti-body {
+          max-height: 280px; opacity: 1;
+          padding: clamp(18px,2.2vw,26px) clamp(20px,2.2vw,28px);
+        }
         .vti-body h3 {
           margin: 0 0 10px;
           font-size: clamp(20px,2.2vw,29px); font-weight: 800;
@@ -136,7 +147,8 @@ export default function VideoTelematicsIndustries() {
         @media (max-width: 860px) {
           .vti-rail { flex-direction: column; height: auto; }
           .vti-panel { flex: 0 0 auto; height: 92px; transition: height .55s ${EASE}; }
-          .vti-panel[aria-expanded="true"] { height: 340px; }
+          .vti-panel[aria-expanded="true"] { height: 430px; }
+          .vti-panel[aria-expanded="true"] .vti-body { max-height: 210px; }
           .vti-spine {
             writing-mode: horizontal-tb; transform: none;
             justify-content: flex-start; padding: 0 24px;
@@ -173,16 +185,17 @@ export default function VideoTelematicsIndustries() {
                 onFocus={() => setActive(i)}
                 onClick={() => setActive(i)}
               >
-                <Image
-                  src={ind.image}
-                  alt=""
-                  fill
-                  sizes="(max-width: 860px) 100vw, 60vw"
-                  style={{ objectFit: 'cover' }}
-                />
-                <span className="vti-veil" />
-
-                <span className="vti-spine">{ind.title}</span>
+                <div className="vti-media">
+                  <Image
+                    src={ind.image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 860px) 100vw, 60vw"
+                    style={{ objectFit: 'contain' }}
+                  />
+                  <span className="vti-veil" />
+                  <span className="vti-spine">{ind.title}</span>
+                </div>
 
                 <div className="vti-body">
                   <h3>{ind.title}</h3>

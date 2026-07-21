@@ -20,11 +20,6 @@ const INDUSTRIES = [
     image: '/service_page/Industries we serve/Warehouse.webp',
   },
   {
-    title: 'Construction',
-    desc: 'Improve site visibility with AI camera tracking and workforce monitoring, validating discrepancies, enhancing safety compliance, and optimizing job-site transport operations.',
-    image: '/service_page/Construction Site Fleet.webp',
-  },
-  {
     title: 'School Districts',
     desc: 'Protect students and drivers with AI behavior monitoring and stop-arm violation evidence, improving road safety, driver training, and regulatory enforcement.',
     image: '/service_page/Industries we serve/School Districtse.webp',

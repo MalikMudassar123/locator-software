@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { REGULATORY_PRODUCTS } from '@/components/regulatory/data'
 import { ABOUT_PAGES } from '@/components/about/data'
 import { SERVICE_PAGES } from '@/components/service/data'
@@ -39,6 +39,7 @@ export default function SoftwareNavbar() {
   const [renderMenu, setRenderMenu] = useState<string | null>(null) // content kept during close anim
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pathname = usePathname()
+  const router = useRouter()
 
   useEffect(() => { setMounted(true) }, [])
 
@@ -297,7 +298,7 @@ export default function SoftwareNavbar() {
             {/* Right: flag + CTA + hamburger */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }} onMouseEnter={() => setActiveMenu(null)}>
               <Image src="/uae-flag.svg" alt="UAE" width={28} height={28} className="swn-flag" style={{ borderRadius: '50%', display: 'block' }} />
-              <button className="swn-cta">Get a quote</button>
+              <button className="swn-cta" onClick={() => router.push('/get-a-quote')}>Get a quote</button>
 
               <button
                 onClick={() => setOpen(true)}
@@ -418,7 +419,10 @@ export default function SoftwareNavbar() {
           </ul>
 
           <div style={{ padding: '20px 24px' }}>
-            <button style={{ width: '100%', padding: '14px', borderRadius: '999px', border: 'none', background: '#1360ee', color: '#fff', fontSize: '15px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+            <button
+              onClick={() => { setOpen(false); router.push('/get-a-quote') }}
+              style={{ width: '100%', padding: '14px', borderRadius: '999px', border: 'none', background: '#1360ee', color: '#fff', fontSize: '15px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}
+            >
               Get a quote
             </button>
           </div>

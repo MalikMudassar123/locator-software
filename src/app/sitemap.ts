@@ -5,6 +5,7 @@ import { DEVICES } from "@/components/service/tracking-devices/devices-data";
 // Every live route. Add new entries here as routes are added.
 const ROUTES: { path: string; priority: number }[] = [
   { path: "", priority: 1 },
+  { path: "/get-a-quote", priority: 0.8 },
   { path: "/about/purpose", priority: 0.8 },
   { path: "/about/vision", priority: 0.8 },
   { path: "/about/mission", priority: 0.8 },

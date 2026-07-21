@@ -4,11 +4,13 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { REGULATORY_PRODUCTS } from '@/components/regulatory/data'
 import { ABOUT_PAGES } from '@/components/about/data'
 import { SERVICE_PAGES } from '@/components/service/data'
 import { SOFTWARE_MODULES } from '@/components/software/modules-data'
+
+const QUOTE_HREF = '/get-a-quote'
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -40,6 +42,7 @@ export default function Navbar() {
   const [renderMenu, setRenderMenu] = useState<string | null>(null) // kept during close anim
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pathname = usePathname()
+  const router = useRouter()
   const CTA_LINE_HEIGHT = 22
 
   useEffect(() => {
@@ -284,6 +287,7 @@ export default function Navbar() {
                 }}
                 onMouseEnter={() => setCtaHover(true)}
                 onMouseLeave={() => setCtaHover(false)}
+                onClick={() => router.push(QUOTE_HREF)}
               >
                 <span
                   aria-hidden="true"
@@ -579,6 +583,7 @@ export default function Navbar() {
                 letterSpacing: '0.01em',
                 boxShadow: '0 8px 24px rgba(0, 0, 0, 0.18)',
               }}
+              onClick={() => { setOpen(false); router.push(QUOTE_HREF) }}
             >
               Get a Quote
             </button>

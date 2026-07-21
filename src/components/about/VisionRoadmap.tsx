@@ -10,9 +10,18 @@ export default function VisionRoadmap() {
       <style>{`
         .vr-stat-wrap {
           position: relative; overflow: hidden; border-radius: 28px;
-          background: #0f1117; color: #fff;
+          /* Restrained: base theme blue easing into a slightly deeper blue.
+             A narrow range reads as depth, not a colour show. */
+          background: linear-gradient(165deg, #1360ee 0%, #1157dd 100%);
+          color: #fff;
+          box-shadow: 0 40px 80px -34px rgba(19,96,238,.55);
           padding: clamp(40px,5vw,64px) clamp(24px,4vw,56px);
           text-align: center; isolation: isolate;
+        }
+        /* Faint white sheen, high and wide — adds light, no visible seam. */
+        .vr-stat-wrap::before {
+          content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+          background: radial-gradient(120% 90% at 50% -20%, rgba(255,255,255,.1), transparent 55%);
         }
         @keyframes vrRing { 0%,100% { opacity: .07; transform: scale(1) rotate(0deg); } 50% { opacity: .13; transform: scale(1.05) rotate(180deg); } }
         .vr-ring { position: absolute; border-radius: 50%; border: 1px solid rgba(255,255,255,.14); pointer-events: none; animation: vrRing 14s linear infinite; }
@@ -20,9 +29,7 @@ export default function VisionRoadmap() {
         .vr-num {
           position: relative; z-index: 1;
           font-size: clamp(56px,9vw,112px); font-weight: 800; line-height: 1;
-          letter-spacing: -.03em;
-          background: linear-gradient(135deg, #fff 0%, #cfe0ff 100%);
-          -webkit-background-clip: text; background-clip: text; color: transparent;
+          letter-spacing: -.03em; color: #fff;
         }
 
         .vr-timeline { position: relative; max-width: 940px; margin: clamp(48px,6vw,72px) auto 0; }

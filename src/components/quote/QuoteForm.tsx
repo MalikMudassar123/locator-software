@@ -215,7 +215,7 @@ export default function QuoteForm() {
         .qf-step {
           position: relative; z-index: 1;
           display: grid; grid-template-columns: ${NODE}px 1fr; gap: 20px;
-          padding-bottom: clamp(28px,3.4vw,42px);
+          padding-bottom: clamp(46px,5.2vw,70px);
         }
         .qf-step:last-child { padding-bottom: 0; }
 

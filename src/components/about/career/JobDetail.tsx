@@ -66,7 +66,7 @@ export default function JobDetail({ job }: { job: Job }) {
         .jd-back:hover { color: #1360ee; gap: 10px; }
 
         .jd-head { text-align: center; padding-bottom: clamp(24px,3vw,32px); border-bottom: 1px solid #eef1f7; }
-        .jd-logo { position: relative; width: 130px; height: 34px; margin: 0 auto 22px; }
+        .jd-logo { position: relative; width: 230px; height: 62px; margin: 0 auto 22px; }
         .jd-title { margin: 0 0 12px; font-size: clamp(22px,2.8vw,30px); font-weight: 800; letter-spacing: -.02em; color: #1d1d1f; }
         .jd-meta { margin: 0 0 6px; font-size: 13.5px; font-weight: 700; color: #52525e; }
         .jd-meta span { color: #c3cbd9; margin: 0 8px; }
@@ -227,7 +227,7 @@ export default function JobDetail({ job }: { job: Job }) {
         </Link>
 
         <div className="jd-head">
-          <div className="jd-logo"><Image src="/llooogoo.png" alt="LOCATOR" fill sizes="130px" style={{ objectFit: 'contain' }} priority /></div>
+          <div className="jd-logo"><Image src="/llooogoo.png" alt="LOCATOR" fill sizes="230px" style={{ objectFit: 'contain' }} priority /></div>
           <h1 className="jd-title">{job.title}</h1>
           <p className="jd-meta">{job.type}<span>&middot;</span>{job.department}</p>
           <p className="jd-loc">{job.location}</p>

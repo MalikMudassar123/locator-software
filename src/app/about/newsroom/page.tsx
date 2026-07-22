@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 import ScrollReveal from '@/components/software/ScrollReveal'
-import AboutPillarHero from '@/components/about/AboutPillarHero'
-import NewsroomComingSoon from '@/components/about/NewsroomComingSoon'
+import NewsroomHero from '@/components/about/newsroom/NewsroomHero'
+import NewsroomTicker from '@/components/about/newsroom/NewsroomTicker'
+import NewsroomBoard from '@/components/about/newsroom/NewsroomBoard'
+import NewsroomHighlights from '@/components/about/newsroom/NewsroomHighlights'
+import NewsroomSubscribe from '@/components/about/newsroom/NewsroomSubscribe'
 import AboutPillarNav from '@/components/about/AboutPillarNav'
-import SoftwareCTA from '@/components/software/SoftwareCTA'
 import Footer from '@/components/layouts/Footer'
 
 export const metadata: Metadata = {
@@ -21,16 +23,14 @@ export const metadata: Metadata = {
 
 export default function AboutNewsroomPage() {
   return (
-    <main style={{ background: '#ffffff', minHeight: '100vh' }}>
+    <main style={{ background: '#ffffff', minHeight: '100vh', overflowX: 'clip' }}>
       <ScrollReveal />
-      <AboutPillarHero
-        slug="newsroom"
-        title="Newsroom"
-        lead="Company news, product announcements, and updates from the team building Locator's AI-powered IoT platform."
-      />
-      <NewsroomComingSoon />
+      <NewsroomHero />
+      <NewsroomTicker />
+      <NewsroomBoard />
+      <NewsroomHighlights />
+      <NewsroomSubscribe />
       <AboutPillarNav current="newsroom" />
-      <SoftwareCTA />
       <Footer />
     </main>
   )

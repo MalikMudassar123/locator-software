@@ -57,12 +57,13 @@ export default function NewsroomHero() {
         .nrh-btn-ghost:hover { border-color: #1360ee; color: #1360ee; transform: translateY(-2px); }
 
         .nrh-art { position: relative; }
-        .nrh-art-frame {
-          position: relative; border-radius: 18px; overflow: hidden;
-          box-shadow: 0 30px 70px -26px rgba(11,18,32,.32);
-          border: 1px solid #e7ecf6; background: #fff; aspect-ratio: 16 / 10;
+        /* The artwork ships with its own browser chrome, rounded corners and
+           shadow on a transparent background — so no frame, border, or card
+           background here. Adding one just paints a white box behind it. */
+        .nrh-art img {
+          display: block; width: 100%; height: auto;
+          filter: drop-shadow(0 26px 50px rgba(11,18,32,.22));
         }
-        .nrh-art-frame img { object-fit: cover; }
         /* Small floating pin marker, a nod to the tracking product itself. */
         .nrh-pin {
           position: absolute; right: 6%; bottom: 8%; z-index: 3;
@@ -113,15 +114,14 @@ export default function NewsroomHero() {
             </div>
 
             <div className="nrh-art" data-reveal>
-              <div className="nrh-art-frame">
-                <Image
-                  src="/live-showcase.png"
-                  alt="Locator fleet intelligence dashboard"
-                  fill
-                  priority
-                  sizes="(max-width: 940px) 100vw, 620px"
-                />
-              </div>
+              <Image
+                src="/dashboard.png"
+                alt="Locator live fleet tracking dashboard"
+                width={1600}
+                height={1019}
+                priority
+                sizes="(max-width: 940px) 100vw, 620px"
+              />
               <div className="nrh-pin" aria-hidden="true">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" />

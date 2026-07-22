@@ -227,7 +227,7 @@ export default function JobDetail({ job }: { job: Job }) {
         </Link>
 
         <div className="jd-head">
-          <div className="jd-logo"><Image src="/Untitled-1.png" alt="LOCATOR" fill sizes="130px" style={{ objectFit: 'contain' }} priority /></div>
+          <div className="jd-logo"><Image src="/llooogoo.png" alt="LOCATOR" fill sizes="130px" style={{ objectFit: 'contain' }} priority /></div>
           <h1 className="jd-title">{job.title}</h1>
           <p className="jd-meta">{job.type}<span>&middot;</span>{job.department}</p>
           <p className="jd-loc">{job.location}</p>

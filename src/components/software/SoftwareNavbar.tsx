@@ -241,7 +241,7 @@ export default function SoftwareNavbar() {
           <div className="swn-bar">
             {/* Logo */}
             <Link href="/" className="swn-logo" onMouseEnter={() => setActiveMenu(null)} style={{ display: 'flex', alignItems: 'center', flexShrink: 0, textDecoration: 'none' }}>
-              <Image src="/Untitled-1.png" alt="Locator" width={2617} height={911} style={{ width: 'auto', height: '30px', objectFit: 'contain' }} priority />
+              <Image src="/llooogoo.png" alt="Locator" width={2617} height={911} style={{ width: 'auto', height: '30px', objectFit: 'contain' }} priority />
             </Link>
 
             {/* Nav links */}
@@ -364,7 +364,7 @@ export default function SoftwareNavbar() {
           display: 'flex', flexDirection: 'column',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 24px', borderBottom: '1px solid #e3e3e6' }}>
-            <Image src="/Untitled-1.png" alt="Locator" width={2617} height={911} style={{ width: 'auto', height: '28px' }} />
+            <Image src="/llooogoo.png" alt="Locator" width={2617} height={911} style={{ width: 'auto', height: '28px' }} />
             <button
               onClick={() => setOpen(false)}
               aria-label="Close"

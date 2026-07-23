@@ -66,7 +66,7 @@ export default function CareerHero() {
 
       <section className="ch-hero">
         <div className="ch-bg">
-          <Image src="/service_page/Transport  Logistics 2.webp" alt="" fill priority sizes="100vw" />
+          <Image src="/Career/career page.webp" alt="" fill priority sizes="100vw" />
         </div>
         <div className="ch-scrim" />
         <div className="ch-glow" aria-hidden="true" />

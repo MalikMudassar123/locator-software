@@ -17,11 +17,44 @@ import {
   UPCOMING_EVENTS,
   type NewsCategory,
   type NewsItem,
+  type SocialPost,
 } from './newsroom-data'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
 type Tab = NewsCategory | 'all'
+
+// Social networks share the standard card shell; only the chip colour/label
+// and the byline change, so posts sit in the same 3-up grid as every other tab.
+const NET_META: Record<SocialPost['network'], { label: string; color: string }> = {
+  linkedin: { label: 'LinkedIn', color: '#0a66c2' },
+  instagram: { label: 'Instagram', color: '#d6336c' },
+  facebook: { label: 'Facebook', color: '#1877f2' },
+  x: { label: 'X', color: '#0b1220' },
+  youtube: { label: 'YouTube', color: '#e63946' },
+}
+
+function SocialGridCard({ post }: { post: SocialPost }) {
+  const net = NET_META[post.network]
+  // Use the first line as the headline and the remainder as the excerpt, so a
+  // social post reads like the standard image-over-text card.
+  const [head, ...rest] = post.text.split('\n').map((l) => l.trim()).filter(Boolean)
+  const excerpt = rest.join(' ')
+  return (
+    <a href={post.href} target="_blank" rel="noopener noreferrer" className="nrb-card nrb-card--social">
+      <div className="nrb-card-media">
+        <Image src={post.image} alt="" fill sizes="(max-width: 700px) 100vw, 340px" />
+        <span className="nrb-chip" style={{ background: net.color }}>{net.label}</span>
+      </div>
+      <div className="nrb-card-body">
+        <span className="nrb-card-date">{post.handle} · {post.time}</span>
+        <h3 className="nrb-card-title">{head}</h3>
+        {excerpt && <p className="nrb-card-excerpt">{excerpt}</p>}
+        <span className="nrb-card-more">View on {net.label} →</span>
+      </div>
+    </a>
+  )
+}
 
 function Card({ item, size = 'md' }: { item: NewsItem; size?: 'md' | 'lg' }) {
   const color = CATEGORY_COLOR[item.category]
@@ -147,6 +180,22 @@ export default function NewsroomBoard() {
         .nrb-card--lg .nrb-card-title { font-size: clamp(20px,2.4vw,30px); line-height: 1.18; letter-spacing: -.025em; }
         .nrb-card-excerpt { margin: 0 0 14px; font-size: 12.8px; line-height: 1.6; color: #6b7484; flex: 1; }
         .nrb-card--lg .nrb-card-excerpt { font-size: clamp(13.5px,1.2vw,15px); line-height: 1.7; max-width: 62ch; }
+        /* Social posts run long and vary wildly in length. Scoped rules give
+           every social card the same tidy body: a 2-line headline and a 3-line
+           excerpt, both reserved (min-height) so cards line up and short posts
+           don't leave a half-empty box. The excerpt must NOT be a flex-grow
+           child or -webkit-line-clamp silently stops truncating — so it's
+           fixed-size and the CTA is pinned to the bottom with margin-top:auto. */
+        .nrb-card--social .nrb-card-title {
+          display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+          min-height: calc(1.32em * 2);
+        }
+        .nrb-card--social .nrb-card-excerpt {
+          flex: 0 0 auto;
+          display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+          min-height: calc(1.6em * 3);
+        }
+        .nrb-card--social .nrb-card-more { margin-top: auto; }
         .nrb-card-more { font-size: 12.5px; font-weight: 700; color: #1360ee; }
         .nrb-card:hover .nrb-card-more { text-decoration: underline; }
 
@@ -240,8 +289,9 @@ export default function NewsroomBoard() {
         }
         .nrb-ev-cta:hover { background: #1360ee; border-color: #1360ee; color: #fff; }
 
-        /* ── Social feed: one narrow column, like a real timeline ── */
-        .nrb-feed { display: flex; flex-direction: column; gap: 12px; max-width: 620px; width: 100%; margin-inline: auto; }
+        /* ── Social feed: one narrow column, like a real timeline. Sits below
+           the highlights grid, so it's left-aligned with a divider above. ── */
+        .nrb-feed { display: flex; flex-direction: column; gap: 12px; max-width: 620px; width: 100%; margin-top: clamp(18px,2.4vw,26px); padding-top: clamp(18px,2.4vw,26px); border-top: 1px solid #e7ecf6; }
         @media (max-width: 1080px) { .nrb-feed { max-width: 100%; } }
         .nrb-feed-note {
           display: flex; align-items: center; gap: 8px; margin: 0 0 2px;
@@ -377,24 +427,39 @@ export default function NewsroomBoard() {
             )}
 
             {tab === 'social' && (
-              <div className="nrb-feed">
+              <>
                 <p className="nrb-feed-note">
                   <i />
                   Latest posts from Locator across LinkedIn, Instagram, Facebook, X, and YouTube
                 </p>
-                {SOCIAL_POSTS.map((p) => (
-                  <SocialCard key={p.id} post={p} />
-                ))}
-              </div>
+                {/* Highlights: three compact cards across the top. */}
+                <div className="nrb-grid">
+                  {SOCIAL_POSTS.slice(0, 3).map((p) => (
+                    <SocialGridCard key={p.id} post={p} />
+                  ))}
+                </div>
+                {/* Full LinkedIn-style feed below the highlights. */}
+                <div className="nrb-feed">
+                  {SOCIAL_POSTS.slice(3).map((p) => (
+                    <SocialCard key={p.id} post={p} />
+                  ))}
+                </div>
+              </>
             )}
 
             {tab === 'media' && (
               <div className="nrb-media">
                 {MEDIA_MENTIONS.map((m) => (
-                  <a key={m.id} href={m.href} className="nrb-media-row">
-                    <span className="nrb-media-pub">{m.publication}</span>
-                    <p className="nrb-media-title">{m.title}</p>
-                    <span className="nrb-media-date">{m.date}</span>
+                  <a key={m.id} href={m.href} target="_blank" rel="noopener noreferrer" className="nrb-card">
+                    <div className="nrb-card-media">
+                      <Image src={m.image} alt="" fill sizes="(max-width: 700px) 100vw, 400px" />
+                      <span className="nrb-chip" style={{ background: '#475569' }}>{m.publication}</span>
+                    </div>
+                    <div className="nrb-card-body">
+                      <span className="nrb-card-date">{m.date}</span>
+                      <h3 className="nrb-card-title">{m.title}</h3>
+                      <span className="nrb-card-more">Read Article →</span>
+                    </div>
                   </a>
                 ))}
               </div>

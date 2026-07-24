@@ -73,26 +73,9 @@ export default function NewsroomWatch() {
         .nyw-avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: #1360ee; color: #fff; font-size: 16px; font-weight: 800; }
         .nyw-cname { margin: 0; display: flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 700; color: #0b1220; }
         .nyw-cname svg { color: #9aa2b1; }
-        .nyw-csubs { margin: 1px 0 0; font-size: 12px; color: #6b7484; }
-        .nyw-sub-btn {
-          padding: 9px 18px; border-radius: 999px; border: 0; cursor: pointer; font-family: inherit;
-          font-size: 13.5px; font-weight: 700; color: #fff; background: #0b1220;
-          transition: background .18s ${EASE};
-        }
-        .nyw-sub-btn:hover { background: #1360ee; }
-
-        .nyw-pills { display: flex; gap: 8px; margin-left: auto; flex-wrap: wrap; }
-        .nyw-pill {
-          display: inline-flex; align-items: center; gap: 7px;
-          padding: 9px 15px; border-radius: 999px; border: 0; cursor: pointer; font-family: inherit;
-          font-size: 13px; font-weight: 650; color: #1b2433; background: #f0f2f5; text-decoration: none;
-          transition: background .18s ${EASE};
-        }
-        .nyw-pill:hover { background: #e3e7ed; }
 
         /* ── Description ── */
         .nyw-desc { margin: 14px 0 0; padding: 14px 16px; border-radius: 12px; background: #f0f2f5; }
-        .nyw-desc-stats { margin: 0 0 7px; font-size: 13px; font-weight: 700; color: #0b1220; }
         .nyw-desc-text { margin: 0; font-size: 13.5px; line-height: 1.6; color: #3d4657; white-space: pre-line; }
 
         /* ── Playlist rail ── */
@@ -181,37 +164,11 @@ export default function NewsroomWatch() {
                   <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1.3 14.5-4-4 1.6-1.6 2.4 2.4 5.4-5.4 1.6 1.6-7 7Z" />
                 </svg>
               </p>
-              <p className="nyw-csubs">24.6K subscribers</p>
             </div>
-            <button type="button" className="nyw-sub-btn">Subscribe</button>
-          </div>
-
-          <div className="nyw-pills">
-            <a className="nyw-pill" href={active.href}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
-                <path d="M7 10v11H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h3Zm4 11V10l3.5-6.5A2 2 0 0 1 18 4.5V9h3.2a1.8 1.8 0 0 1 1.78 2.07l-1.1 7A2 2 0 0 1 19.9 21H11Z" />
-              </svg>
-              Like
-            </a>
-            <a className="nyw-pill" href={active.href}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 15V3m0 0L8 7m4-4 4 4" />
-              </svg>
-              Share
-            </a>
-            <a className="nyw-pill" href={active.href}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16Z" />
-              </svg>
-              Save
-            </a>
           </div>
         </div>
 
         <div className="nyw-desc">
-          <p className="nyw-desc-stats">
-            {active.views ?? '—'} · {active.ago ?? active.date} · {active.tag}
-          </p>
           <p className="nyw-desc-text">{active.excerpt}</p>
         </div>
       </div>
@@ -232,7 +189,7 @@ export default function NewsroomWatch() {
           </span>
           <span>
             <span className="nyw-row-title" style={{ display: 'block' }}>{active.title}</span>
-            <span className="nyw-row-meta" style={{ display: 'block' }}>Locator · {active.views}</span>
+            <span className="nyw-row-meta" style={{ display: 'block' }}>Locator</span>
           </span>
         </button>
 
@@ -253,7 +210,7 @@ export default function NewsroomWatch() {
             <span>
               <span className="nyw-row-title" style={{ display: 'block' }}>{v.title}</span>
               <span className="nyw-row-meta" style={{ display: 'block' }}>
-                Locator · {v.views} · {v.ago}
+                Locator · {v.ago}
               </span>
             </span>
           </button>

@@ -135,6 +135,28 @@ export const NEWS_ITEMS: NewsItem[] = [
     href: '#',
   },
   {
+    id: 'temperature-alerts',
+    category: 'product',
+    tag: 'Product Update',
+    title: 'Real-Time Temperature & Cold-Chain Alerts',
+    excerpt:
+      'Continuous sensor logging now triggers instant excursion alerts and generates one-click compliance exports for refrigerated fleets.',
+    image: '/tracking_devices/Temperature_Humidity_Sensor.png',
+    date: 'April 12, 2026',
+    href: '#',
+  },
+  {
+    id: 'driver-app-scorecards',
+    category: 'product',
+    tag: 'Product Update',
+    title: 'Redesigned Driver App with Live Scorecards',
+    excerpt:
+      'Drivers now see their safety score, trip history, and coaching tips in a faster, rebuilt mobile app — with in-app notifications for harsh events.',
+    image: '/hero/mobile-summary.webp',
+    date: 'March 28, 2026',
+    href: '#',
+  },
+  {
     id: 'saudi-office',
     category: 'company',
     tag: 'Company News',
@@ -154,6 +176,50 @@ export const NEWS_ITEMS: NewsItem[] = [
       'An independent audit confirms our information-security controls across the platform and data centres.',
     image: '/regulatory/asateel-certified/LOCATOR-ASATEEL.webp',
     date: 'April 18, 2026',
+    href: '#',
+  },
+  {
+    id: 'milestone-10k',
+    category: 'company',
+    tag: 'Company News',
+    title: 'Locator Surpasses 10,000 Vehicles Tracked Daily',
+    excerpt:
+      'A new milestone across the GCC as our platform now monitors more than ten thousand active vehicles every single day.',
+    image: '/service_page/Transport  Logistics 2.webp',
+    date: 'April 05, 2026',
+    href: '#',
+  },
+  {
+    id: 'dbschenker-partnership',
+    category: 'company',
+    tag: 'Company News',
+    title: 'Locator Partners with DB Schenker on Regional Logistics',
+    excerpt:
+      'A new strategic partnership brings AI-powered fleet intelligence to one of the region’s largest logistics operators.',
+    image: '/service_page/Facility Management.webp',
+    date: 'March 22, 2026',
+    href: '#',
+  },
+  {
+    id: 'series-b-funding',
+    category: 'company',
+    tag: 'Company News',
+    title: 'Locator Raises Series B to Expand Across the GCC',
+    excerpt:
+      'The new funding round accelerates our expansion into Saudi Arabia, Qatar, and Oman, and doubles our R&D team.',
+    image: '/hero/web-graphical-report.png',
+    date: 'March 08, 2026',
+    href: '#',
+  },
+  {
+    id: 'team-expansion',
+    category: 'company',
+    tag: 'Company News',
+    title: 'Locator Doubles Its Field Installation Team',
+    excerpt:
+      'Fifty new GPS field technicians join across the UAE and KSA, cutting average installation lead times in half.',
+    image: '/service_page/Public & Government Fleet.webp',
+    date: 'February 20, 2026',
     href: '#',
   },
   {
@@ -198,6 +264,39 @@ export const NEWS_ITEMS: NewsItem[] = [
       'Continuous temperature logging turned a weekly audit scramble into a one-click export.',
     image: '/tracking_devices/Temperature.webp',
     date: 'April 09, 2026',
+    href: '#',
+  },
+  {
+    id: 'construction-utilisation-story',
+    category: 'stories',
+    tag: 'Customer Story',
+    title: 'Al Laith Group Lifts Equipment Utilisation by 28%',
+    excerpt:
+      'Machine-hour tracking across 14 active sites turned idle assets into billable hours and cut unauthorised use to near zero.',
+    image: '/service_page/Construction Site Fleet.webp',
+    date: 'March 30, 2026',
+    href: '#',
+  },
+  {
+    id: 'fuel-theft-story',
+    category: 'stories',
+    tag: 'Customer Story',
+    title: 'Energy Fleet Ends Fuel Theft with Sensor Analytics',
+    excerpt:
+      'A tanker operator traced drain events off the fuel curve and recovered its telematics investment in under four months.',
+    image: '/service_page/Petroleum & Energy Fleet Intelligence.webp',
+    date: 'March 14, 2026',
+    href: '#',
+  },
+  {
+    id: 'rental-recovery-story',
+    category: 'stories',
+    tag: 'Customer Story',
+    title: 'Rental Company Slashes Vehicle Recovery Time',
+    excerpt:
+      'Live location and geofence alerts helped a 900-car leasing fleet recover overdue vehicles in hours instead of days.',
+    image: '/service_page/rental.webp',
+    date: 'February 26, 2026',
     href: '#',
   },
   {
@@ -333,7 +432,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
     subtitle: 'New video · 6:41',
     time: '1d',
     text: 'New walkthrough: setting up geofence alerts that your drivers will not ignore. Zone types, dwell thresholds, and escalation rules — all in one sitting.',
-    image: '/block 1/map bar.png',
+    image: '/hero/web-live-map.webp',
     likes: 892,
     comments: 41,
     reposts: 24,
@@ -385,6 +484,7 @@ export type MediaMention = {
   publication: string
   title: string
   date: string
+  image: string
   href: string
 }
 
@@ -394,6 +494,7 @@ export const MEDIA_MENTIONS: MediaMention[] = [
     publication: 'Khaleej Times',
     title: 'Locator Raises the Bar for Fleet Intelligence in the UAE',
     date: 'May 24, 2026',
+    image: '/hero/web-live-map.webp',
     href: '#',
   },
   {
@@ -401,6 +502,7 @@ export const MEDIA_MENTIONS: MediaMention[] = [
     publication: 'Gulf Business',
     title: 'AI-Powered Telematics Is Driving Smarter Fleets Across the Gulf',
     date: 'May 11, 2026',
+    image: '/hero/web-graphical-report.png',
     href: '#',
   },
   {
@@ -408,6 +510,7 @@ export const MEDIA_MENTIONS: MediaMention[] = [
     publication: 'Arabian Business',
     title: 'Locator’s Growth Story and Road Ahead',
     date: 'April 20, 2026',
+    image: '/service_page/Transport  Logistics 2.webp',
     href: '#',
   },
   {
@@ -415,6 +518,7 @@ export const MEDIA_MENTIONS: MediaMention[] = [
     publication: 'Zawya',
     title: 'Regional Logistics Operators Turn to Predictive Maintenance',
     date: 'April 03, 2026',
+    image: '/service_page/Facility Management.webp',
     href: '#',
   },
 ]

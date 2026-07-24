@@ -1,10 +1,35 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { LIVE_UPDATES, NEWS_ITEMS, formatAgo, type LiveUpdate } from './newsroom-data'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
+
+// Live Updates panel: a fixed window of three, cycling like a notification
+// stack — a fresh item drops in at the top on each tick, the others shift down.
+const VISIBLE = 3
+const ROTATE_MS = 3500
+
+/**
+ * Cycling start index. Decrements so the item entering at the top is a *new*
+ * one each tick (newest-on-top, the way notifications arrive) rather than the
+ * previous middle sliding up. Pauses while the panel is hovered/focused so a
+ * link is never a moving target. Starts advancing only after mount, matching
+ * the timestamp clock.
+ */
+function useRotatingStart(count: number) {
+  const [start, setStart] = useState(0)
+  const paused = useRef(false)
+  useEffect(() => {
+    if (count <= VISIBLE) return
+    const id = setInterval(() => {
+      if (!paused.current) setStart((s) => (s - 1 + count) % count)
+    }, ROTATE_MS)
+    return () => clearInterval(id)
+  }, [count])
+  return { start, paused }
+}
 
 /**
  * Seconds elapsed since mount, ticking once per second.
@@ -52,6 +77,13 @@ const REVIEW_VIDEOS = NEWS_ITEMS.filter((i) => i.category === 'videos').slice(0,
 
 export default function NewsroomRail() {
   const elapsed = useElapsed()
+  const { start, paused } = useRotatingStart(LIVE_UPDATES.length)
+
+  // The three currently on screen, wrapping around the end of the list.
+  const windowItems = Array.from(
+    { length: Math.min(VISIBLE, LIVE_UPDATES.length) },
+    (_, k) => LIVE_UPDATES[(start + k) % LIVE_UPDATES.length],
+  )
 
   return (
     <>
@@ -82,27 +114,27 @@ export default function NewsroomRail() {
 
         .nrr-list { padding: 0 12px 12px; display: flex; flex-direction: column; gap: 8px; }
 
-        /* ── Auto-scrolling live stack ──
-           A fixed-height window over a doubled list, drifting upward forever.
-           Doubling means the -50% keyframe lands exactly on the copy, so the
-           loop is seamless. Fades top and bottom so items enter and leave
-           softly rather than popping at a hard edge. */
-        .nrr-marquee {
+        /* ── Notification stack ──
+           A fixed window of three. Each tick the whole group re-keys and
+           replays a staggered "arrive" cascade: the top card drops in fresh
+           while the two below settle down a notch, so it reads as a new
+           notification pushing the stack down. Fixed height keeps everything
+           below (the videos card) from shifting as text length varies. */
+        .nrr-notif {
           position: relative; height: 372px; overflow: hidden; padding: 0 12px 12px;
-          mask-image: linear-gradient(to bottom, transparent, #000 7%, #000 90%, transparent);
-          -webkit-mask-image: linear-gradient(to bottom, transparent, #000 7%, #000 90%, transparent);
+          -webkit-mask-image: linear-gradient(to bottom, transparent, #000 6%, #000 100%);
+          mask-image: linear-gradient(to bottom, transparent, #000 6%, #000 100%);
         }
-        .nrr-marquee-track {
-          display: flex; flex-direction: column; gap: 8px;
-          animation: nrr-drift 40s linear infinite;
-        }
-        @keyframes nrr-drift { to { transform: translateY(-50%); } }
-        /* Pause on hover or keyboard focus so a link is never a moving target. */
-        .nrr-marquee:hover .nrr-marquee-track,
-        .nrr-marquee:focus-within .nrr-marquee-track { animation-play-state: paused; }
+        .nrr-notif-track { display: flex; flex-direction: column; gap: 8px; }
+
+        @keyframes nrrDrop   { from { opacity: 0; transform: translateY(-18px) scale(.985); } to { opacity: 1; transform: none; } }
+        @keyframes nrrSettle { from { opacity: .35; transform: translateY(-8px); }            to { opacity: 1; transform: none; } }
+        .nrr-notif-track > *:nth-child(1) { animation: nrrDrop   .52s ${EASE} both; }
+        .nrr-notif-track > *:nth-child(2) { animation: nrrSettle .52s ${EASE} .07s both; }
+        .nrr-notif-track > *:nth-child(3) { animation: nrrSettle .52s ${EASE} .14s both; }
+
         @media (prefers-reduced-motion: reduce) {
-          .nrr-marquee { height: auto; overflow: visible; mask-image: none; -webkit-mask-image: none; }
-          .nrr-marquee-track { animation: none; }
+          .nrr-notif-track > * { animation: none !important; }
         }
 
         .nrr-item {
@@ -162,21 +194,19 @@ export default function NewsroomRail() {
             <h3>Live Updates</h3>
             <span className="nrr-live-pill"><i />Live</span>
           </div>
-          <div className="nrr-marquee">
-            <div className="nrr-marquee-track">
-              {[...LIVE_UPDATES, ...LIVE_UPDATES].map((u, i) => {
+          <div
+            className="nrr-notif"
+            onMouseEnter={() => (paused.current = true)}
+            onMouseLeave={() => (paused.current = false)}
+            onFocusCapture={() => (paused.current = true)}
+            onBlurCapture={() => (paused.current = false)}
+          >
+            {/* Re-keying on `start` replays the cascade each rotation. */}
+            <div className="nrr-notif-track" key={start}>
+              {windowItems.map((u) => {
                 const s = KIND_STYLE[u.kind]
-                // Second pass is the seamless-loop copy — hidden from screen
-                // readers and tab order so the list is not announced twice.
-                const clone = i >= LIVE_UPDATES.length
                 return (
-                  <a
-                    key={`${u.id}-${i}`}
-                    href={u.href}
-                    className="nrr-item"
-                    aria-hidden={clone || undefined}
-                    tabIndex={clone ? -1 : undefined}
-                  >
+                  <a key={u.id} href={u.href} className="nrr-item">
                     <span className="nrr-ico" style={{ background: s.bg, color: s.fg }}>
                       <KindIcon kind={u.kind} />
                     </span>

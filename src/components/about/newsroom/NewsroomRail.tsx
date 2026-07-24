@@ -9,7 +9,7 @@ const EASE = 'cubic-bezier(.22,.61,.36,1)'
 // Live Updates panel: a fixed window of three, cycling like a notification
 // stack — a fresh item drops in at the top on each tick, the others shift down.
 const VISIBLE = 3
-const ROTATE_MS = 3500
+const ROTATE_MS = 4200
 
 /**
  * Cycling start index. Decrements so the item entering at the top is a *new*
@@ -114,35 +114,67 @@ export default function NewsroomRail() {
 
         .nrr-list { padding: 0 12px 12px; display: flex; flex-direction: column; gap: 8px; }
 
-        /* ── Notification stack ──
-           A fixed window of three. Each tick the whole group re-keys and
-           replays a staggered "arrive" cascade: the top card drops in fresh
-           while the two below settle down a notch, so it reads as a new
-           notification pushing the stack down. Fixed height keeps everything
-           below (the videos card) from shifting as text length varies. */
+        /* ── Notification stack (iOS-style) ──
+           A fixed window of three. Each tick the group re-keys and replays a
+           spring "arrive" sequence: the newest card drops in from the top edge,
+           blurred and slightly small, then focuses and springs into place with
+           a brief highlight glow and an icon pop — while the two below smoothly
+           shift down a notch, exactly like a fresh iPhone notification pushing
+           the stack. Fixed height keeps the videos card below from shifting. */
         .nrr-notif {
-          position: relative; height: 372px; overflow: hidden; padding: 0 12px 12px;
-          -webkit-mask-image: linear-gradient(to bottom, transparent, #000 6%, #000 100%);
-          mask-image: linear-gradient(to bottom, transparent, #000 6%, #000 100%);
+          position: relative; height: 372px; overflow: hidden; padding: 2px 12px 12px;
+          -webkit-mask-image: linear-gradient(to bottom, transparent, #000 9%, #000 100%);
+          mask-image: linear-gradient(to bottom, transparent, #000 9%, #000 100%);
         }
-        .nrr-notif-track { display: flex; flex-direction: column; gap: 8px; }
+        .nrr-notif-track { display: flex; flex-direction: column; gap: 9px; }
+        .nrr-notif-track > * { will-change: transform, opacity, filter; }
 
-        @keyframes nrrDrop   { from { opacity: 0; transform: translateY(-18px) scale(.985); } to { opacity: 1; transform: none; } }
-        @keyframes nrrSettle { from { opacity: .35; transform: translateY(-8px); }            to { opacity: 1; transform: none; } }
-        .nrr-notif-track > *:nth-child(1) { animation: nrrDrop   .52s ${EASE} both; }
-        .nrr-notif-track > *:nth-child(2) { animation: nrrSettle .52s ${EASE} .07s both; }
-        .nrr-notif-track > *:nth-child(3) { animation: nrrSettle .52s ${EASE} .14s both; }
+        /* Spring easings: a gentle overshoot for the arriving card, a silky
+           expo-out for everything settling into place. */
+        @keyframes nrrArrive {
+          0%   { opacity: 0; transform: translateY(-34px) scale(.9);  filter: blur(9px); }
+          55%  { opacity: 1;                                          filter: blur(0); }
+          100% { opacity: 1; transform: translateY(0) scale(1);       filter: blur(0); }
+        }
+        @keyframes nrrShift {
+          0%   { opacity: .45; transform: translateY(-16px) scale(.98); filter: blur(2px); }
+          100% { opacity: 1;   transform: translateY(0) scale(1);       filter: blur(0); }
+        }
+        /* Fading focus ring + soft lift on the newest card, iOS highlight. */
+        @keyframes nrrGlow {
+          0%   { box-shadow: 0 0 0 2px rgba(19,96,238,.32), 0 14px 30px -10px rgba(19,96,238,.4); }
+          100% { box-shadow: 0 0 0 0 rgba(19,96,238,0), 0 2px 10px rgba(11,18,32,.03); }
+        }
+        /* The icon springs in with a tiny rotate — the finishing flourish. */
+        @keyframes nrrPop {
+          0%   { transform: scale(.4) rotate(-12deg); opacity: 0; }
+          70%  { transform: scale(1.12) rotate(2deg); opacity: 1; }
+          100% { transform: scale(1) rotate(0); opacity: 1; }
+        }
+
+        .nrr-notif-track > *:nth-child(1) {
+          animation:
+            nrrArrive .62s cubic-bezier(.22,1.15,.34,1) both,
+            nrrGlow 1.5s ${EASE} both;
+        }
+        .nrr-notif-track > *:nth-child(1) .nrr-ico {
+          animation: nrrPop .6s cubic-bezier(.34,1.56,.64,1) .12s both;
+        }
+        .nrr-notif-track > *:nth-child(2) { animation: nrrShift .58s cubic-bezier(.16,1,.3,1) .06s both; }
+        .nrr-notif-track > *:nth-child(3) { animation: nrrShift .58s cubic-bezier(.16,1,.3,1) .12s both; }
 
         @media (prefers-reduced-motion: reduce) {
-          .nrr-notif-track > * { animation: none !important; }
+          .nrr-notif-track > *,
+          .nrr-notif-track > * .nrr-ico { animation: none !important; }
         }
 
         .nrr-item {
           display: grid; grid-template-columns: 32px minmax(0,1fr); gap: 11px;
-          padding: 12px; border-radius: 12px; border: 1px solid #eef2f8; background: #fbfcfe;
-          text-decoration: none; transition: border-color .18s ${EASE}, background .18s ${EASE}, transform .18s ${EASE};
+          padding: 12px; border-radius: 14px; border: 1px solid #eef2f8; background: #fbfcfe;
+          text-decoration: none; box-shadow: 0 1px 2px rgba(11,18,32,.03);
+          transition: border-color .22s ${EASE}, background .22s ${EASE}, transform .22s ${EASE}, box-shadow .22s ${EASE};
         }
-        .nrr-item:hover { border-color: #cfdcf5; background: #fff; transform: translateY(-1px); }
+        .nrr-item:hover { border-color: #cfdcf5; background: #fff; transform: translateY(-2px); box-shadow: 0 10px 24px -12px rgba(19,96,238,.35); }
 
         .nrr-ico { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; }
 

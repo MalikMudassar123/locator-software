@@ -49,9 +49,9 @@ export default function IndustryBlocks({ industry }: { industry: Industry }) {
         .ixb-grid.flip .ixb-viz { order: 1; }
 
         .ixb-text { text-align: left; }
-        .ixb-h2 { margin: 0; font-size: clamp(19px,2.2vw,26px); font-weight: 800; line-height: 1.25; letter-spacing: -.015em; color: #1d1d1f; }
-        .ixb-sub { margin: 10px 0 0; font-size: clamp(14.5px,1.4vw,16.5px); font-weight: 700; color: #1360ee; }
-        .ixb-desc { margin: 14px 0 0; font-size: clamp(13.5px,1.3vw,15px); line-height: 1.68; color: #6e6e73; max-width: 50ch; }
+        .ixb-h2 { margin: 0; font-size: clamp(26px,3vw,38px); font-weight: 800; line-height: 1.14; letter-spacing: -.025em; color: #1d1d1f; max-width: 18ch; }
+        .ixb-sub { margin: 12px 0 0; font-size: clamp(16px,1.6vw,19px); font-weight: 700; letter-spacing: -.01em; color: #1360ee; }
+        .ixb-desc { margin: 18px 0 0; font-size: clamp(14px,1.35vw,15.5px); line-height: 1.72; color: #6e6e73; max-width: 52ch; }
 
         .ixb-features-label { margin: 22px 0 0; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: #1d1d1f; text-transform: uppercase; }
         .ixb-features { margin: 14px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
@@ -73,6 +73,7 @@ export default function IndustryBlocks({ industry }: { industry: Industry }) {
           .ixb-grid.flip .ixb-text { order: 0; }
           .ixb-grid.flip .ixb-viz { order: 0; }
           .ixb-text { text-align: center; max-width: 760px; margin: 0 auto; }
+          .ixb-h2 { max-width: 24ch; margin-left: auto; margin-right: auto; }
           .ixb-desc { margin-left: auto; margin-right: auto; }
           .ixb-features { align-items: center; }
           .ixb-features li { max-width: 52ch; }

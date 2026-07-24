@@ -20,11 +20,16 @@ export default function IndustryHero({ industry }: { industry: Industry }) {
         .ixh-crumbs svg { color: #b8bcc4; flex-shrink: 0; }
         .ixh-crumbs .cur { color: #8e8e93; }
 
-        .ixh-photo { position: relative; overflow: hidden; height: clamp(260px, 34vw, 400px); }
+        .ixh-photo { position: relative; overflow: hidden; height: clamp(300px, 38vw, 460px); }
         .ixh-photo img { object-fit: cover; }
+        /* Layered scrim: a strong bottom-up fade so the multi-line headline
+           always sits on dark pixels, plus a left-side wash so text stays
+           legible even where the photo is bright (e.g. pale buildings). */
         .ixh-scrim {
           position: absolute; inset: 0; z-index: 1;
-          background: linear-gradient(0deg, rgba(4,8,18,.9) 0%, rgba(4,8,18,.52) 42%, rgba(4,8,18,.18) 68%, rgba(4,8,18,.05) 100%);
+          background:
+            linear-gradient(0deg, rgba(4,8,18,.94) 0%, rgba(4,8,18,.82) 32%, rgba(4,8,18,.55) 58%, rgba(4,8,18,.28) 80%, rgba(4,8,18,.1) 100%),
+            linear-gradient(90deg, rgba(4,8,18,.7) 0%, rgba(4,8,18,.35) 40%, transparent 78%);
         }
 
         .ixh-photo-body {
@@ -35,16 +40,17 @@ export default function IndustryHero({ industry }: { industry: Industry }) {
         .ixh-content { max-width: min(760px, 90vw); }
 
         .ixh-eyebrow {
-          display: inline-flex; align-items: center; gap: 9px;
-          font-size: 11.5px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
-          color: #6ea2ff; margin-bottom: 14px;
+          display: inline-flex; align-items: center; gap: 12px;
+          font-size: clamp(13px,1.15vw,15px); font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+          color: #9ec2ff; margin-bottom: 16px;
+          text-shadow: 0 2px 12px rgba(0,0,0,.35);
         }
-        .ixh-eyebrow i { display: block; width: 26px; height: 2px; background: #6ea2ff; border-radius: 2px; }
+        .ixh-eyebrow i { display: block; width: 34px; height: 3px; background: #9ec2ff; border-radius: 2px; }
 
         .ixh-title {
-          margin: 0; font-size: clamp(26px,4.2vw,48px); font-weight: 800;
-          line-height: 1.1; letter-spacing: -.015em; color: #fff;
-          text-shadow: 0 4px 26px rgba(0,0,0,.3);
+          margin: 0; font-size: clamp(30px,4.6vw,56px); font-weight: 800;
+          line-height: 1.08; letter-spacing: -.02em; color: #fff; max-width: 20ch;
+          text-shadow: 0 2px 4px rgba(0,0,0,.45), 0 8px 34px rgba(0,0,0,.4);
         }
 
         .ixh-lead { margin: 16px 0 0; max-width: 62ch; font-size: clamp(14px,1.25vw,16.5px); line-height: 1.72; color: rgba(255,255,255,.86); }

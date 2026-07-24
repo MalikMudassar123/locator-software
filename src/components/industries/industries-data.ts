@@ -18,10 +18,14 @@ export type Industry = {
   name: string
   /** Card grid: short "who it's for" pill shown under the title. */
   cardTag: string
-  /** Card + hero image. */
+  /** Card thumbnail image (grid on /industries page). */
   image: string
   imageW: number
   imageH: number
+  /** Hero banner background image (detail page). */
+  heroImage: string
+  heroImageW: number
+  heroImageH: number
   /** Hero banner headline (the doc's "Banner" line). */
   tagline: string
   /** Hero banner sub-paragraph. */
@@ -38,6 +42,9 @@ export const INDUSTRIES: Industry[] = [
     image: '/Rental & Leasing,Transportation & Logistics -1,Transportation & Logistics/Rental & Leasing.webp',
     imageW: 1254,
     imageH: 1254,
+    heroImage: '/Rental & Leasing,Transportation & Logistics -1,Transportation & Logistics/Rental & Leasing.webp',
+    heroImageW: 1254,
+    heroImageH: 1254,
     tagline: 'Track, Protect and Optimize Every Rental Asset',
     lead: 'LOCATOR helps rental and leasing companies track, protect, and optimize vehicles, machines, and equipment from one centralized telematics platform.',
     block1: {
@@ -81,6 +88,9 @@ export const INDUSTRIES: Industry[] = [
     image: '/Rental & Leasing,Transportation & Logistics -1,Transportation & Logistics/Transportation & Logistics.webp',
     imageW: 1254,
     imageH: 1254,
+    heroImage: '/Rental & Leasing,Transportation & Logistics -1,Transportation & Logistics/Transportation & Logistics -1.webp',
+    heroImageW: 1254,
+    heroImageH: 1254,
     tagline: 'Smarter Fleet Operations. Faster Deliveries. Lower Costs.',
     lead: 'LOCATOR helps logistics companies track fleets, optimize routes, monitor drivers, and improve delivery performance.',
     block1: {
@@ -123,6 +133,9 @@ export const INDUSTRIES: Industry[] = [
     image: '/Rental & Leasing,Transportation & Logistics -1,Transportation & Logistics/Courier & Last Mile Delivery.webp',
     imageW: 1254,
     imageH: 1254,
+    heroImage: '/Rental & Leasing,Transportation & Logistics -1,Transportation & Logistics/Courier & Last Mile Delivery - 1.webp',
+    heroImageW: 1254,
+    heroImageH: 1254,
     tagline: 'Smarter GPS Tracking for Courier & Last-Mile Delivery',
     lead: 'Track delivery vehicles and riders, optimize routes, monitor performance, and complete every delivery faster with LOCATOR’s GPS tracking and telematics platform.',
     block1: {
@@ -162,6 +175,9 @@ export const INDUSTRIES: Industry[] = [
     image: '/Rental & Leasing,Transportation & Logistics -1,Transportation & Logistics/Construction.webp',
     imageW: 1254,
     imageH: 1254,
+    heroImage: '/Rental & Leasing,Transportation & Logistics -1,Transportation & Logistics/Construction-1.webp',
+    heroImageW: 1254,
+    heroImageH: 1254,
     tagline: 'GPS Tracking and Telematics for Construction Fleets',
     lead: 'Track construction vehicles, heavy machinery, and equipment in real time. Improve asset utilization, safety, maintenance, and operational control with LOCATOR.',
     block1: {
@@ -201,6 +217,9 @@ export const INDUSTRIES: Industry[] = [
     image: '/Rental & Leasing,Transportation & Logistics -1,Transportation & Logistics/Field Services.webp',
     imageW: 1254,
     imageH: 1254,
+    heroImage: '/Rental & Leasing,Transportation & Logistics -1,Transportation & Logistics/Field Services.webp',
+    heroImageW: 1254,
+    heroImageH: 1254,
     tagline: 'GPS Tracking and Telematics for Field Services',
     lead: 'Track service vehicles and field teams in real time. Improve scheduling, response times, productivity, and customer service with LOCATOR.',
     block1: {
@@ -240,6 +259,9 @@ export const INDUSTRIES: Industry[] = [
     image: '/Rental & Leasing,Transportation & Logistics -1,Transportation & Logistics/cover image indutries.webp',
     imageW: 1254,
     imageH: 1254,
+    heroImage: '/Rental & Leasing,Transportation & Logistics -1,Transportation & Logistics/cover image indutries.webp',
+    heroImageW: 1254,
+    heroImageH: 1254,
     tagline: 'GPS Tracking and Telematics for Food & Beverage Delivery',
     lead: 'Track delivery vehicles, protect temperature-sensitive products, and improve on-time deliveries with LOCATOR’s GPS tracking and fleet management platform.',
     block1: {

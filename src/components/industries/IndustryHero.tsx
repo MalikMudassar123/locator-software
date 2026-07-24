@@ -74,7 +74,7 @@ export default function IndustryHero({ industry }: { industry: Industry }) {
         </div>
 
         <div className="ixh-photo" data-reveal>
-          <Image src={industry.image} alt={industry.name} fill priority sizes="100vw" />
+          <Image src={industry.heroImage} alt={industry.name} fill priority sizes="100vw" />
           <div className="ixh-scrim" />
           <div className="ixh-photo-body">
             <div className="ixh-content">

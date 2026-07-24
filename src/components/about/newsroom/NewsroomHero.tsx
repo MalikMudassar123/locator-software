@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import SoftwareNavbar from '@/components/software/SoftwareNavbar'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
@@ -7,44 +8,56 @@ export default function NewsroomHero() {
   return (
     <>
       <style href="nr-newsroomhero" precedence="medium">{`
-        .nrh { position: relative; overflow: hidden; background: #fff; }
-        /* Faint city skyline wash behind the artwork, echoing the rest of the
-           site's light sections without competing with the headline. */
-        .nrh::before {
-          content: ''; position: absolute; inset: 0; z-index: 0;
-          background:
-            radial-gradient(1200px 420px at 78% 30%, rgba(19,96,238,.10), transparent 70%),
-            linear-gradient(180deg, #fbfcff 0%, #ffffff 60%);
+        .nrh { background: #fff; }
+
+        /* ── Breadcrumb strip — plain white bar above the photo ── */
+        .nrh-crumbs-bar { border-bottom: 1px solid #eef1f7; }
+        .nrh-crumbs {
+          display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+          max-width: 1280px; margin: 0 auto; padding: 16px 28px;
+          font-size: 14px; color: #6e6e73;
         }
-        .nrh-grid-lines {
-          position: absolute; inset: 0; z-index: 0; opacity: .5;
-          background-image:
-            linear-gradient(to right, rgba(19,96,238,.055) 1px, transparent 1px);
-          background-size: 68px 100%;
-          mask-image: linear-gradient(to bottom, transparent, #000 25%, #000 70%, transparent);
-          -webkit-mask-image: linear-gradient(to bottom, transparent, #000 25%, #000 70%, transparent);
+        .nrh-crumbs a { color: #1d1d1f; font-weight: 600; text-decoration: none; transition: color .18s ease; }
+        .nrh-crumbs a:hover { color: #1360ee; }
+        .nrh-crumbs svg { color: #b8bcc4; flex-shrink: 0; }
+        .nrh-crumbs .cur { color: #8e8e93; }
+
+        /* ── Photo band ── */
+        .nrh-photo { position: relative; overflow: hidden; height: clamp(300px, 38vw, 460px); }
+        .nrh-photo img { object-fit: cover; }
+        /* Layered scrim: strong bottom-up fade so the headline sits on dark
+           pixels, plus a left-side wash so text stays legible on bright areas. */
+        .nrh-scrim {
+          position: absolute; inset: 0; z-index: 1;
+          background:
+            linear-gradient(0deg, rgba(4,8,18,.94) 0%, rgba(4,8,18,.82) 32%, rgba(4,8,18,.55) 58%, rgba(4,8,18,.28) 80%, rgba(4,8,18,.1) 100%),
+            linear-gradient(90deg, rgba(4,8,18,.7) 0%, rgba(4,8,18,.35) 40%, transparent 78%);
         }
 
-        .nrh-body { position: relative; z-index: 2; max-width: 1240px; margin: 0 auto; padding: clamp(30px,4.5vw,58px) 28px clamp(34px,4vw,52px); }
-        .nrh-cols { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.06fr); gap: clamp(24px,4vw,52px); align-items: center; }
-        @media (max-width: 940px) { .nrh-cols { grid-template-columns: 1fr; } }
+        .nrh-photo-body {
+          position: relative; z-index: 2; height: 100%;
+          display: flex; align-items: flex-end;
+          max-width: 1280px; margin: 0 auto; padding: 0 28px clamp(26px,4vw,46px);
+        }
+        .nrh-content { max-width: min(760px, 90vw); }
 
         .nrh-eyebrow {
-          display: inline-flex; align-items: center; gap: 9px;
-          font-size: 11.5px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
-          color: #1360ee; margin-bottom: 18px;
+          display: inline-flex; align-items: center; gap: 12px;
+          font-size: clamp(13px,1.15vw,15px); font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+          color: #9ec2ff; margin-bottom: 16px;
+          text-shadow: 0 2px 12px rgba(0,0,0,.35);
         }
-        .nrh-eyebrow i { display: block; width: 26px; height: 2px; background: #1360ee; border-radius: 2px; }
+        .nrh-eyebrow i { display: block; width: 34px; height: 3px; background: #9ec2ff; border-radius: 2px; }
 
         .nrh-title {
-          margin: 0; font-size: clamp(30px,4.6vw,54px); font-weight: 800;
-          line-height: 1.08; letter-spacing: -.028em; color: #0b1220; max-width: 14ch;
+          margin: 0; font-size: clamp(30px,4.6vw,56px); font-weight: 800;
+          line-height: 1.08; letter-spacing: -.02em; color: #fff; max-width: 20ch;
+          text-shadow: 0 2px 4px rgba(0,0,0,.45), 0 8px 34px rgba(0,0,0,.4);
         }
-        .nrh-title span { color: #1360ee; }
 
-        .nrh-lead { margin: 20px 0 0; max-width: 50ch; font-size: clamp(14.5px,1.25vw,16.5px); line-height: 1.72; color: #5b6474; }
+        .nrh-lead { margin: 16px 0 0; max-width: 60ch; font-size: clamp(14px,1.25vw,16.5px); line-height: 1.72; color: rgba(255,255,255,.86); }
 
-        .nrh-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: clamp(24px,3vw,34px); }
+        .nrh-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: clamp(22px,3vw,30px); }
         .nrh-btn {
           display: inline-flex; align-items: center; gap: 9px;
           padding: 13px 22px; border-radius: 11px; text-decoration: none;
@@ -53,46 +66,30 @@ export default function NewsroomHero() {
         }
         .nrh-btn-primary { background: #1360ee; color: #fff; border: 1.5px solid #1360ee; box-shadow: 0 12px 26px -10px rgba(19,96,238,.7); }
         .nrh-btn-primary:hover { background: #0d4fd4; transform: translateY(-2px); box-shadow: 0 16px 32px -10px rgba(19,96,238,.8); }
-        .nrh-btn-ghost { background: #fff; color: #16233a; border: 1.5px solid #dbe2ee; }
-        .nrh-btn-ghost:hover { border-color: #1360ee; color: #1360ee; transform: translateY(-2px); }
-
-        .nrh-art { position: relative; }
-        /* The artwork ships with its own browser chrome, rounded corners and
-           shadow on a transparent background — so no frame, border, or card
-           background here. Adding one just paints a white box behind it. */
-        .nrh-art img {
-          display: block; width: 100%; height: auto;
-          filter: drop-shadow(0 26px 50px rgba(11,18,32,.22));
-        }
-        /* Small floating pin marker, a nod to the tracking product itself. */
-        .nrh-pin {
-          position: absolute; right: 6%; bottom: 8%; z-index: 3;
-          width: 44px; height: 44px; border-radius: 50%;
-          display: grid; place-items: center; color: #fff;
-          background: #1360ee; box-shadow: 0 12px 26px -8px rgba(19,96,238,.85);
-          animation: nrh-float 3.4s ${EASE} infinite;
-        }
-        @keyframes nrh-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-        @media (prefers-reduced-motion: reduce) { .nrh-pin { animation: none; } }
+        .nrh-btn-ghost { background: rgba(255,255,255,.08); color: #fff; border: 1.5px solid rgba(255,255,255,.4); backdrop-filter: blur(6px); }
+        .nrh-btn-ghost:hover { background: rgba(255,255,255,.16); border-color: #fff; transform: translateY(-2px); }
       `}</style>
 
       <section className="nrh">
-        <div className="nrh-grid-lines" aria-hidden="true" />
+        <SoftwareNavbar />
 
-        <div style={{ position: 'relative', zIndex: 3 }}>
-          <SoftwareNavbar />
+        <div className="nrh-crumbs-bar">
+          <nav className="nrh-crumbs" aria-label="Breadcrumb">
+            <Link href="/">Homepage</Link>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m9 6 6 6-6 6" />
+            </svg>
+            <span className="cur">Newsroom</span>
+          </nav>
         </div>
 
-        <div className="nrh-body">
-          <div className="nrh-cols">
-            <div data-reveal>
-              <span className="nrh-eyebrow">
-                <i />
-                Newsroom
-              </span>
-              <h1 className="nrh-title">
-                Stay updated with everything <span>Locator.</span>
-              </h1>
+        <div className="nrh-photo" data-reveal>
+          <Image src="/Newsroom banner.webp" alt="Locator Newsroom" fill priority sizes="100vw" />
+          <div className="nrh-scrim" />
+          <div className="nrh-photo-body">
+            <div className="nrh-content">
+              <span className="nrh-eyebrow"><i />Newsroom</span>
+              <h1 className="nrh-title">Stay updated with everything Locator</h1>
               <p className="nrh-lead">
                 Discover the latest product updates, company news, customer stories, events,
                 videos, and live updates from Locator — all in one place.
@@ -110,22 +107,6 @@ export default function NewsroomHero() {
                     <rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" />
                   </svg>
                 </a>
-              </div>
-            </div>
-
-            <div className="nrh-art" data-reveal>
-              <Image
-                src="/dashboard.png"
-                alt="Locator live fleet tracking dashboard"
-                width={1600}
-                height={1019}
-                priority
-                sizes="(max-width: 940px) 100vw, 620px"
-              />
-              <div className="nrh-pin" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" />
-                </svg>
               </div>
             </div>
           </div>

@@ -7,9 +7,8 @@ const EASE = 'cubic-bezier(.22,.61,.36,1)'
 const MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 const MONTHS_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const WEEKDAYS_LONG = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+const WEEKDAYS_SHORT = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 const DOW = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
-
-const TIME_SLOTS = ['10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM', '1:00 PM', '1:30 PM']
 
 const FIELDS = [
   { name: 'name', label: 'Full name', type: 'text', required: true, half: true, placeholder: 'Full name' },
@@ -40,8 +39,6 @@ const TRUST = [
 
 type Cell = { day: number; inMonth: boolean; date: Date }
 
-// A full 6-row grid: leading days from the previous month and trailing days
-// from the next fill the blanks, greyed and non-selectable.
 function buildGrid(year: number, month: number): Cell[] {
   const startDow = new Date(year, month, 1).getDay()
   const daysInMonth = new Date(year, month + 1, 0).getDate()
@@ -54,29 +51,50 @@ function buildGrid(year: number, month: number): Cell[] {
   return cells
 }
 
+function buildSlots(startHour: number, endHour: number, stepMin: number): string[] {
+  const out: string[] = []
+  for (let m = startHour * 60; m <= endHour * 60; m += stepMin) {
+    const h = Math.floor(m / 60)
+    const min = m % 60
+    const ampm = h >= 12 ? 'PM' : 'AM'
+    const hh = ((h + 11) % 12) + 1
+    out.push(`${hh}:${String(min).padStart(2, '0')} ${ampm}`)
+  }
+  return out
+}
+
+const SLOTS = buildSlots(9, 17, 30)
+
+const startOfDay = (d: Date) => { const x = new Date(d); x.setHours(0, 0, 0, 0); return x }
+const addDays = (d: Date, n: number) => { const x = new Date(d); x.setDate(x.getDate() + n); return x }
 const sameDay = (a: Date, b: Date) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
+const keyOf = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+const longLabel = (d: Date) => `${WEEKDAYS_LONG[d.getDay()]}, ${MONTHS_SHORT[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`
 
 export default function DemoBooking() {
-  // Date state is set on mount only (client-side) so the server render and the
-  // first client render agree — a `new Date()` during render would hydrate-mismatch.
   const [today, setToday] = useState<Date | null>(null)
   const [view, setView] = useState<{ y: number; m: number } | null>(null)
-  const [selected, setSelected] = useState<Date | null>(null)
-  const [time, setTime] = useState<string>('11:00 AM')
+  const [windowStart, setWindowStart] = useState<Date | null>(null)
+  const [slot, setSlot] = useState<{ key: string; time: string } | null>(null)
   const [sent, setSent] = useState(false)
   const [confirmed, setConfirmed] = useState<{ date: string; time: string } | null>(null)
 
   useEffect(() => {
-    const t = new Date()
-    t.setHours(0, 0, 0, 0)
+    const t = startOfDay(new Date())
     setToday(t)
     setView({ y: t.getFullYear(), m: t.getMonth() })
-    setSelected(t)
+    setWindowStart(t)
   }, [])
 
   const grid = useMemo(() => (view ? buildGrid(view.y, view.m) : []), [view])
 
   const atCurrentMonth = today && view ? view.y === today.getFullYear() && view.m === today.getMonth() : true
+  const atFirstDay = today && windowStart ? sameDay(windowStart, today) : true
+
+  const selectDay = (d: Date) => {
+    setWindowStart(d)
+    setView({ y: d.getFullYear(), m: d.getMonth() })
+  }
 
   const goMonth = (delta: number) => {
     setView((v) => {
@@ -86,14 +104,24 @@ export default function DemoBooking() {
     })
   }
 
-  const dateLabel = selected
-    ? `${WEEKDAYS_LONG[selected.getDay()]}, ${MONTHS_SHORT[selected.getMonth()]} ${selected.getDate()}, ${selected.getFullYear()}`
-    : ''
+  const days = windowStart ? [windowStart, addDays(windowStart, 1)] : []
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!selected) return
-    setConfirmed({ date: dateLabel, time })
+    if (!slot) return
+    const fd = new FormData(e.currentTarget)
+    const payload = {
+      name: String(fd.get('name') || ''),
+      email: String(fd.get('email') || ''),
+      phone: String(fd.get('phone') || ''),
+      company: String(fd.get('company') || ''),
+      vehicles: String(fd.get('vehicles') || ''),
+      message: String(fd.get('message') || ''),
+      date: slot.key,
+      time: slot.time,
+      timezone: 'GMT+04:00',
+    }
+    setConfirmed({ date: longLabel(new Date(`${payload.date}T00:00:00`)), time: payload.time })
     setSent(true)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -103,14 +131,11 @@ export default function DemoBooking() {
       <style>{`
         .db-sec { padding: clamp(16px,2.4vw,32px) 28px clamp(40px,5vw,64px); background: #fff; }
         .db-shell { max-width: 1180px; margin: 0 auto; }
-        .db-grid {
-          display: grid; grid-template-columns: .92fr 1.08fr; gap: clamp(18px,2.2vw,28px); align-items: stretch;
-        }
-        @media (max-width: 980px) { .db-grid { grid-template-columns: 1fr; } }
+        .db-grid { display: grid; grid-template-columns: .82fr 1.18fr; gap: clamp(18px,2.2vw,28px); align-items: stretch; }
+        @media (max-width: 1040px) { .db-grid { grid-template-columns: 1fr; } }
 
         .db-card { background: #fff; border: 1px solid #e7ebf3; border-radius: 22px; box-shadow: 0 30px 60px -38px rgba(20,40,90,.22); }
 
-        /* ── Left: form ── */
         .db-form-card { padding: clamp(22px,2.6vw,36px); }
         .db-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #1360ee; margin-bottom: 12px; }
         .db-eyebrow span { width: 22px; height: 2px; background: #1360ee; border-radius: 2px; }
@@ -119,7 +144,7 @@ export default function DemoBooking() {
 
         .db-fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         @media (max-width: 480px) { .db-fgrid { grid-template-columns: 1fr; } }
-        .db-field { display: flex; flex-direction: column; gap: 6px; position: relative; }
+        .db-field { display: flex; flex-direction: column; gap: 6px; }
         .db-field.full { grid-column: 1 / -1; }
         .db-label { font-size: 12px; font-weight: 700; color: #52525e; }
         .db-label b { color: #e5484d; }
@@ -132,26 +157,28 @@ export default function DemoBooking() {
         .db-input:focus, .db-textarea:focus { outline: none; border-color: #1360ee; background: #fff; box-shadow: 0 0 0 4px rgba(19,96,238,.12); }
         .db-textarea { resize: vertical; min-height: 92px; }
 
+        .db-pick-hint { margin: 16px 0 0; font-size: 12.5px; color: #8a92a3; display: flex; align-items: center; gap: 7px; }
+        .db-pick-hint b { color: #1360ee; font-weight: 700; }
+
         .db-submit {
-          margin-top: 20px; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+          margin-top: 16px; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
           padding: 16px 24px; border-radius: 12px; border: none; cursor: pointer;
           font-family: inherit; font-size: 15px; font-weight: 700; color: #fff;
           background: #1360ee; box-shadow: 0 12px 26px -10px rgba(19,96,238,.6); transition: .18s ${EASE};
         }
-        .db-submit:hover { background: #0d4fd4; transform: translateY(-1px); box-shadow: 0 16px 32px -10px rgba(19,96,238,.7); }
+        .db-submit:hover:not(:disabled) { background: #0d4fd4; transform: translateY(-1px); box-shadow: 0 16px 32px -10px rgba(19,96,238,.7); }
+        .db-submit:disabled { background: #c3cede; cursor: not-allowed; box-shadow: none; }
         .db-submit svg { transition: transform .2s ${EASE}; }
-        .db-submit:hover svg { transform: translateX(4px); }
+        .db-submit:hover:not(:disabled) svg { transform: translateX(4px); }
         .db-safe { display: flex; align-items: center; justify-content: center; gap: 7px; margin: 14px 0 0; font-size: 12px; color: #8a92a3; }
         .db-safe svg { color: #1360ee; }
 
-        /* success */
         .db-success { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; min-height: 460px; }
         .db-check { width: 64px; height: 64px; border-radius: 50%; margin-bottom: 22px; background: rgba(19,146,63,.1); color: #13923f; display: grid; place-items: center; animation: dbPop .5s ${EASE} both; }
         @keyframes dbPop { 0% { transform: scale(.5); opacity: 0 } 60% { transform: scale(1.1) } 100% { transform: scale(1); opacity: 1 } }
-        .db-confirm { margin: 8px 0 20px; padding: 14px 16px; border-radius: 12px; background: #f2f7ff; border: 1px solid #dbe6ff; font-size: 13.5px; color: #1d1d1f; }
+        .db-confirm { margin: 8px 0 20px; padding: 14px 16px; border-radius: 12px; background: #f2f7ff; border: 1px solid #dbe6ff; font-size: 13.5px; line-height: 1.6; color: #1d1d1f; }
         .db-confirm b { color: #1360ee; }
 
-        /* ── Right: scheduler ── */
         .db-sched-card { padding: clamp(20px,2.4vw,30px); display: flex; flex-direction: column; }
         .db-sched-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 18px; }
         .db-sched-ico { flex-shrink: 0; width: 40px; height: 40px; border-radius: 11px; background: #eaf1ff; color: #1360ee; display: grid; place-items: center; }
@@ -159,19 +186,16 @@ export default function DemoBooking() {
         .db-sched-h { margin: 0; font-size: clamp(16px,1.8vw,20px); font-weight: 800; letter-spacing: -.02em; color: #1d1d1f; }
         .db-sched-p { margin: 3px 0 0; font-size: 13px; color: #6e6e73; }
 
-        .db-picker {
-          border: 1px solid #eaedf4; border-radius: 16px; padding: clamp(16px,2vw,22px);
-          display: grid; grid-template-columns: 1fr 200px; gap: clamp(16px,2vw,26px);
-          background: linear-gradient(180deg, #ffffff, #fbfcff);
-        }
-        @media (max-width: 560px) { .db-picker { grid-template-columns: 1fr; } }
+        .db-picker { border: 1px solid #eaedf4; border-radius: 16px; padding: clamp(16px,2vw,22px); background: linear-gradient(180deg, #ffffff, #fbfcff); display: grid; grid-template-columns: minmax(230px,280px) 1fr; gap: clamp(16px,2.2vw,28px); }
+        @media (max-width: 720px) { .db-picker { grid-template-columns: 1fr; } }
+        .db-cal-skel { grid-column: 1 / -1; min-height: 260px; display: grid; place-items: center; color: #a0a6b4; font-size: 13px; }
 
         .db-cal-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
         .db-cal-month { font-size: 15px; font-weight: 800; color: #1d1d1f; }
         .db-cal-navs { display: flex; gap: 6px; }
         .db-nav { width: 30px; height: 30px; border-radius: 8px; border: 1px solid #e4e8f0; background: #fff; color: #52525e; display: grid; place-items: center; cursor: pointer; transition: .16s ${EASE}; }
         .db-nav:hover:not(:disabled) { border-color: #1360ee; color: #1360ee; }
-        .db-nav:disabled { opacity: .4; cursor: not-allowed; }
+        .db-nav:disabled { opacity: .38; cursor: not-allowed; }
 
         .db-dow { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; margin-bottom: 6px; }
         .db-dow span { text-align: center; font-size: 11px; font-weight: 700; color: #a0a6b4; padding: 4px 0; }
@@ -186,30 +210,32 @@ export default function DemoBooking() {
         .db-day.avail { background: #eef4ff; color: #1360ee; }
         .db-day.avail:hover { background: #dbe7ff; transform: translateY(-1px); }
         .db-day.selected { background: #1360ee; color: #fff; box-shadow: 0 8px 18px -6px rgba(19,96,238,.6); }
-        .db-day.today-ring { box-shadow: inset 0 0 0 1.5px rgba(19,96,238,.4); }
-
-        .db-cal-skel { min-height: 260px; display: grid; place-items: center; color: #a0a6b4; font-size: 13px; }
-
-        /* right rail: time slots */
-        .db-slots-head { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 800; color: #1d1d1f; }
-        .db-slots-head svg { width: 15px; height: 15px; color: #1360ee; }
-        .db-tz { margin: 3px 0 12px; font-size: 11.5px; color: #8a92a3; }
-        .db-slots { display: flex; flex-direction: column; gap: 8px; max-height: 300px; overflow-y: auto; }
-        @media (max-width: 560px) { .db-slots { display: grid; grid-template-columns: repeat(2,1fr); max-height: none; } }
-        .db-slot {
-          padding: 10px 14px; border-radius: 10px; border: 1.5px solid #e4e8f0; background: #fff; cursor: pointer;
-          font-family: inherit; font-size: 13px; font-weight: 700; color: #1d1d1f; text-align: center;
-          display: flex; align-items: center; justify-content: center; gap: 7px;
-          transition: .16s ${EASE};
-        }
-        .db-slot:hover { border-color: #9fbdf6; }
-        .db-slot.active { background: #1360ee; border-color: #1360ee; color: #fff; box-shadow: 0 10px 20px -8px rgba(19,96,238,.55); }
-        .db-slot .tick { width: 16px; height: 16px; border-radius: 50%; background: rgba(255,255,255,.25); display: grid; place-items: center; }
-
         .db-legend { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 12px; color: #8a92a3; }
         .db-legend i { width: 12px; height: 12px; border-radius: 50%; background: #eef4ff; box-shadow: inset 0 0 0 1px #cfe0ff; }
 
-        /* trust badges */
+        .db-times { display: flex; flex-direction: column; min-width: 0; }
+        .db-tz { margin: 0 0 12px; font-size: 12px; color: #8a92a3; text-align: right; }
+        @media (max-width: 720px) { .db-tz { text-align: left; } }
+        .db-daynav { position: relative; padding: 0 36px; margin-bottom: 12px; }
+        .db-daynav .db-nav { position: absolute; top: 50%; transform: translateY(-50%); }
+        .db-daynav .prev { left: 0; }
+        .db-daynav .next { right: 0; }
+        .db-dayheads { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .db-dayhead { text-align: center; }
+        .db-dayhead-wd { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #8a92a3; }
+        .db-dayhead-d { font-size: 20px; font-weight: 800; color: #1d1d1f; line-height: 1.2; }
+
+        .db-slots-wrap { padding: 0 36px; max-height: 340px; overflow-y: auto; }
+        .db-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .db-col { display: flex; flex-direction: column; gap: 8px; }
+        .db-slot {
+          padding: 11px 8px; border-radius: 999px; border: 1.5px solid #e4e8f0; background: #fff; cursor: pointer;
+          font-family: inherit; font-size: 13px; font-weight: 700; color: #1360ee; text-align: center;
+          transition: .15s ${EASE};
+        }
+        .db-slot:hover { border-color: #9fbdf6; background: #f5f9ff; }
+        .db-slot.active { background: #1360ee; border-color: #1360ee; color: #fff; box-shadow: 0 10px 20px -8px rgba(19,96,238,.55); }
+
         .db-trust {
           max-width: 1180px; margin: clamp(18px,2.2vw,26px) auto 0;
           border: 1px solid #e7ebf3; border-radius: 18px; background: #fff;
@@ -228,7 +254,6 @@ export default function DemoBooking() {
 
       <div className="db-shell">
         <div className="db-grid">
-          {/* ── Left: form ── */}
           <div className="db-card db-form-card">
             {sent ? (
               <div className="db-success">
@@ -242,7 +267,7 @@ export default function DemoBooking() {
                     confirmation and calendar invite shortly.
                   </div>
                 )}
-                <button className="db-submit" style={{ width: 'auto', marginTop: 0 }} onClick={() => setSent(false)}>Book another</button>
+                <button className="db-submit" style={{ width: 'auto', marginTop: 0 }} onClick={() => { setSent(false); setSlot(null) }}>Book another</button>
               </div>
             ) : (
               <>
@@ -264,7 +289,15 @@ export default function DemoBooking() {
                     </div>
                   </div>
 
-                  <button type="submit" className="db-submit">
+                  <p className="db-pick-hint">
+                    {slot ? (
+                      <><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1360ee" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>Selected <b>{slot.time}</b> on <b>{longLabel(new Date(`${slot.key}T00:00:00`))}</b></>
+                    ) : (
+                      <><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 8v4l2.5 1.5" /></svg>Pick a date and time from the scheduler</>
+                    )}
+                  </p>
+
+                  <button type="submit" className="db-submit" disabled={!slot}>
                     Get a Free Demo
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
                   </button>
@@ -277,7 +310,6 @@ export default function DemoBooking() {
             )}
           </div>
 
-          {/* ── Right: scheduler ── */}
           <div className="db-card db-sched-card">
             <div className="db-sched-head">
               <span className="db-sched-ico">
@@ -289,81 +321,80 @@ export default function DemoBooking() {
               </div>
             </div>
 
-            {!view || !today ? (
-              <div className="db-picker"><div className="db-cal-skel">Loading calendar…</div></div>
-            ) : (
-              <div className="db-picker">
-                {/* calendar */}
-                <div>
-                  <div className="db-cal-top">
-                    <span className="db-cal-month">{MONTHS_LONG[view.m]} {view.y}</span>
-                    <div className="db-cal-navs">
-                      <button type="button" className="db-nav" onClick={() => goMonth(-1)} disabled={!!atCurrentMonth} aria-label="Previous month">
+            <div className="db-picker">
+              {!view || !today || !windowStart ? (
+                <div className="db-cal-skel">Loading calendar…</div>
+              ) : (
+                <>
+                  <div>
+                    <div className="db-cal-top">
+                      <span className="db-cal-month">{MONTHS_LONG[view.m]} {view.y}</span>
+                      <div className="db-cal-navs">
+                        <button type="button" className="db-nav" onClick={() => goMonth(-1)} disabled={atCurrentMonth} aria-label="Previous month">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="m15 6-6 6 6 6" /></svg>
+                        </button>
+                        <button type="button" className="db-nav" onClick={() => goMonth(1)} aria-label="Next month">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="m9 6 6 6-6 6" /></svg>
+                        </button>
+                      </div>
+                    </div>
+                    <div className="db-dow">{DOW.map((d, i) => <span key={i}>{d}</span>)}</div>
+                    <div className="db-days">
+                      {grid.map((c, i) => {
+                        const past = c.date < today
+                        const avail = c.inMonth && !past
+                        const isSel = sameDay(c.date, windowStart)
+                        const cls = ['db-day', !c.inMonth ? 'muted' : '', c.inMonth && past ? 'past' : '', avail && !isSel ? 'avail' : '', isSel ? 'selected' : ''].filter(Boolean).join(' ')
+                        return (
+                          <button key={i} type="button" className={cls} disabled={!avail} onClick={() => avail && selectDay(c.date)}>{c.day}</button>
+                        )
+                      })}
+                    </div>
+                    <div className="db-legend"><i />Available dates</div>
+                  </div>
+
+                  <div className="db-times">
+                    <p className="db-tz">(GMT+04:00) Gulf Standard Time</p>
+                    <div className="db-daynav">
+                      <button type="button" className="db-nav prev" onClick={() => selectDay(addDays(windowStart, -1))} disabled={atFirstDay} aria-label="Previous day">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="m15 6-6 6 6 6" /></svg>
                       </button>
-                      <button type="button" className="db-nav" onClick={() => goMonth(1)} aria-label="Next month">
+                      <div className="db-dayheads">
+                        {days.map((d) => (
+                          <div className="db-dayhead" key={keyOf(d)}>
+                            <div className="db-dayhead-wd">{WEEKDAYS_SHORT[d.getDay()]}</div>
+                            <div className="db-dayhead-d">{d.getDate()}</div>
+                          </div>
+                        ))}
+                      </div>
+                      <button type="button" className="db-nav next" onClick={() => selectDay(addDays(windowStart, 1))} aria-label="Next day">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="m9 6 6 6-6 6" /></svg>
                       </button>
                     </div>
+                    <div className="db-slots-wrap">
+                      <div className="db-cols">
+                        {days.map((d) => {
+                          const k = keyOf(d)
+                          return (
+                            <div className="db-col" key={k}>
+                              {SLOTS.map((t) => {
+                                const active = slot && slot.key === k && slot.time === t
+                                return (
+                                  <button key={t} type="button" className={`db-slot${active ? ' active' : ''}`} onClick={() => setSlot({ key: k, time: t })}>{t}</button>
+                                )
+                              })}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
                   </div>
-
-                  <div className="db-dow">{DOW.map((d, i) => <span key={i}>{d}</span>)}</div>
-                  <div className="db-days">
-                    {grid.map((c, i) => {
-                      const past = c.date < today
-                      const avail = c.inMonth && !past
-                      const isSel = selected && sameDay(c.date, selected)
-                      const isToday = sameDay(c.date, today)
-                      const cls = [
-                        'db-day',
-                        !c.inMonth ? 'muted' : '',
-                        c.inMonth && past ? 'past' : '',
-                        avail && !isSel ? 'avail' : '',
-                        isSel ? 'selected' : '',
-                        isToday && !isSel ? 'today-ring' : '',
-                      ].filter(Boolean).join(' ')
-                      return (
-                        <button
-                          key={i}
-                          type="button"
-                          className={cls}
-                          disabled={!avail}
-                          onClick={() => avail && setSelected(c.date)}
-                        >
-                          {c.day}
-                        </button>
-                      )
-                    })}
-                  </div>
-                  <div className="db-legend"><i />Available dates</div>
-                </div>
-
-                {/* time slots */}
-                <div>
-                  <div className="db-slots-head">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
-                    {dateLabel}
-                  </div>
-                  <p className="db-tz">(GMT+04:00) Gulf Standard Time</p>
-                  <div className="db-slots">
-                    {TIME_SLOTS.map((t) => (
-                      <button key={t} type="button" className={`db-slot${t === time ? ' active' : ''}`} onClick={() => setTime(t)}>
-                        {t}
-                        {t === time && (
-                          <span className="tick">
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
-                          </span>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
+                </>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* trust badges */}
         <div className="db-trust">
           {TRUST.map((t) => (
             <div key={t.title} className="db-trust-item">

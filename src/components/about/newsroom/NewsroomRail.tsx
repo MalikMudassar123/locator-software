@@ -6,10 +6,11 @@ import { LIVE_UPDATES, NEWS_ITEMS, formatAgo, type LiveUpdate } from './newsroom
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
-// Live Updates panel: a fixed window of three, cycling like a notification
-// stack — a fresh item drops in at the top on each tick, the others shift down.
-const VISIBLE = 3
-const ROTATE_MS = 4200
+// Live Updates panel: shows ONE notification at a time, swapping to the next
+// on each tick with a soft "blink" — the card fades/scales in and its border
+// flashes blue, exactly like a fresh push notification changing on screen.
+const VISIBLE = 1
+const ROTATE_MS = 4000
 
 /**
  * Cycling start index. Decrements so the item entering at the top is a *new*
@@ -114,36 +115,28 @@ export default function NewsroomRail() {
 
         .nrr-list { padding: 0 12px 12px; display: flex; flex-direction: column; gap: 8px; }
 
-        /* ── Notification stack (iOS-style) ──
-           A fixed window of three. Each tick the group re-keys and replays a
-           spring "arrive" sequence: the newest card drops in from the top edge,
-           blurred and slightly small, then focuses and springs into place with
-           a brief highlight glow and an icon pop — while the two below smoothly
-           shift down a notch, exactly like a fresh iPhone notification pushing
-           the stack. Fixed height keeps the videos card below from shifting. */
-        .nrr-notif {
-          position: relative; height: 372px; overflow: hidden; padding: 2px 12px 12px;
-          -webkit-mask-image: linear-gradient(to bottom, transparent, #000 9%, #000 100%);
-          mask-image: linear-gradient(to bottom, transparent, #000 9%, #000 100%);
-        }
-        .nrr-notif-track { display: flex; flex-direction: column; gap: 9px; }
+        /* ── Single notification (iOS-style) ──
+           One card at a time. Each tick it re-keys and replays a "blink"
+           arrive: the card fades in from slightly small and blurred, springs
+           to focus, its border flashes blue and its icon pops — just like a
+           push notification changing on a lock screen. Fixed min-height keeps
+           the videos card below from shifting between updates. */
+        .nrr-notif { position: relative; min-height: 152px; padding: 8px 12px 14px; }
+        .nrr-notif-track { display: block; }
         .nrr-notif-track > * { will-change: transform, opacity, filter; }
 
-        /* Spring easings: a gentle overshoot for the arriving card, a silky
-           expo-out for everything settling into place. */
+        /* In-place arrival — a gentle spring, no big slide, so nothing spills
+           into the header or the card below. */
         @keyframes nrrArrive {
-          0%   { opacity: 0; transform: translateY(-34px) scale(.9);  filter: blur(9px); }
-          55%  { opacity: 1;                                          filter: blur(0); }
-          100% { opacity: 1; transform: translateY(0) scale(1);       filter: blur(0); }
+          0%   { opacity: 0; transform: translateY(-8px) scale(.95); filter: blur(6px); }
+          60%  { opacity: 1;                                         filter: blur(0); }
+          100% { opacity: 1; transform: translateY(0) scale(1);      filter: blur(0); }
         }
-        @keyframes nrrShift {
-          0%   { opacity: .45; transform: translateY(-16px) scale(.98); filter: blur(2px); }
-          100% { opacity: 1;   transform: translateY(0) scale(1);       filter: blur(0); }
-        }
-        /* Fading focus ring + soft lift on the newest card, iOS highlight. */
-        @keyframes nrrGlow {
-          0%   { box-shadow: 0 0 0 2px rgba(19,96,238,.32), 0 14px 30px -10px rgba(19,96,238,.4); }
-          100% { box-shadow: 0 0 0 0 rgba(19,96,238,0), 0 2px 10px rgba(11,18,32,.03); }
+        /* The "blink": border + background flash blue, then settle. */
+        @keyframes nrrBlink {
+          0%   { border-color: #1360ee; background: #eef4ff; box-shadow: 0 10px 26px -12px rgba(19,96,238,.5); }
+          55%  { border-color: #8fb4f6; }
+          100% { border-color: #eef2f8; background: #fbfcfe; box-shadow: 0 1px 2px rgba(11,18,32,.03); }
         }
         /* The icon springs in with a tiny rotate — the finishing flourish. */
         @keyframes nrrPop {
@@ -152,16 +145,16 @@ export default function NewsroomRail() {
           100% { transform: scale(1) rotate(0); opacity: 1; }
         }
 
-        .nrr-notif-track > *:nth-child(1) {
+        /* fill: backwards prevents a pre-animation flash but reverts to the
+           card's base styles afterwards, so hover-lift/border still work. */
+        .nrr-notif-track > * {
           animation:
-            nrrArrive .62s cubic-bezier(.22,1.15,.34,1) both,
-            nrrGlow 1.5s ${EASE} both;
+            nrrArrive .55s cubic-bezier(.22,1.15,.34,1) backwards,
+            nrrBlink 1.4s ${EASE} backwards;
         }
-        .nrr-notif-track > *:nth-child(1) .nrr-ico {
-          animation: nrrPop .6s cubic-bezier(.34,1.56,.64,1) .12s both;
+        .nrr-notif-track > * .nrr-ico {
+          animation: nrrPop .6s cubic-bezier(.34,1.56,.64,1) .1s backwards;
         }
-        .nrr-notif-track > *:nth-child(2) { animation: nrrShift .58s cubic-bezier(.16,1,.3,1) .06s both; }
-        .nrr-notif-track > *:nth-child(3) { animation: nrrShift .58s cubic-bezier(.16,1,.3,1) .12s both; }
 
         @media (prefers-reduced-motion: reduce) {
           .nrr-notif-track > *,

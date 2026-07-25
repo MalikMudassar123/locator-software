@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const vehicles = [
   {
@@ -122,6 +123,7 @@ const MOBILE_OVERRIDES: Record<
 }
 
 export default function RoadSection() {
+  const router = useRouter()
   const [hoveredPin, setHoveredPin] = useState<string | null>(null)
   const [showAllTooltips, setShowAllTooltips] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
@@ -303,6 +305,7 @@ export default function RoadSection() {
         {/* Get a Quote — filled blue */}
         <button
           className="road-cta-btn"
+          onClick={() => router.push('/get-a-quote')}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -331,6 +334,7 @@ export default function RoadSection() {
         {/* Get a Free Demo — outlined */}
         <button
           className="road-cta-btn"
+          onClick={() => router.push('/get-a-free-demo')}
           style={{
             display: 'flex',
             alignItems: 'center',

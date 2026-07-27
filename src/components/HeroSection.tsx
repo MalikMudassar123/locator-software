@@ -3,6 +3,52 @@
 import Image from 'next/image'
 import Navbar from './Navbar'
 
+const headlineStyle: React.CSSProperties = {
+  fontSize: 'clamp(17px, 3.5vw, 30px)',
+  fontWeight: 300,
+  color: 'rgba(255,255,255,0.58)',
+  lineHeight: 1.45,
+  letterSpacing: '0.02em',
+  margin: 0,
+}
+
+const subheadingStyle: React.CSSProperties = {
+  fontSize: 'clamp(12px, 1.6vw, 15px)',
+  fontWeight: 300,
+  color: 'rgba(255,255,255,0.42)',
+  lineHeight: 1.5,
+  letterSpacing: '0.01em',
+  margin: '0.6rem 0 0',
+  maxWidth: '38rem',
+}
+
+const heroHeadlines = [
+  {
+    heading: (
+      <>
+        All your <span style={{ fontWeight: 600 }}>Vehicles, Assets & Staffs</span> on One Software
+      </>
+    ),
+    sub: 'Take control of your whole operation with LOCATOR GPS Tracking',
+  },
+  {
+    heading: (
+      <>
+        User-friendly and affordable <span style={{ fontWeight: 600 }}>GPS Tracking System</span>
+      </>
+    ),
+    sub: 'A reliable guide that helps you control your Team and manage them effectively',
+  },
+  {
+    heading: (
+      <>
+        We help you to manage your <span style={{ fontWeight: 600 }}>Vehicles</span> & <span style={{ fontWeight: 600 }}>Team</span>
+      </>
+    ),
+    sub: 'An effective GPS Tracking software which helps utilizing your Vehicles & Team, and grow your Business.',
+  },
+]
+
 export default function HeroSection() {
   return (
     <section
@@ -164,6 +210,7 @@ export default function HeroSection() {
       {/* Bright white-gold halo behind the Burj — primary visible glow (low, near horizon) */}
       <div
         aria-hidden="true"
+        className="hero-halo-heartbeat"
         style={{
           position: 'absolute',
           bottom: '0%',
@@ -174,8 +221,8 @@ export default function HeroSection() {
           zIndex: 7,
           pointerEvents: 'none',
           background:
-            'radial-gradient(50% 60% at 50% 75%, rgba(251, 234, 188, 0.95) 0%, rgba(251, 234, 188, 0.72) 25%, rgba(251, 234, 188, 0.45) 50%, rgba(251, 234, 188, 0.2) 72%, rgba(251, 234, 188, 0) 94%)',
-          filter: 'blur(30px)',
+            'radial-gradient(50% 60% at 50% 75%, rgba(255, 221, 140, 1) 0%, rgba(255, 216, 130, 0.92) 20%, rgba(255, 205, 110, 0.68) 42%, rgba(255, 205, 110, 0.38) 65%, rgba(255, 205, 110, 0.12) 84%, rgba(255, 205, 110, 0) 96%)',
+          filter: 'blur(20px)',
         }}
       />
 
@@ -199,6 +246,7 @@ export default function HeroSection() {
       />
 
       {/* ─────────── DIAGONAL WAVES — top descends, bottom ascends ─────────── */}
+      {/* Commented out: moving white line was distracting. Restore by uncommenting.
       <div
         style={{
           position: 'absolute',
@@ -253,6 +301,7 @@ export default function HeroSection() {
           />
         </svg>
       </div>
+      */}
 
       {/* ─────────── SKY IMAGE — LEFT OF BUILDING ─────────── */}
       <div
@@ -377,12 +426,12 @@ export default function HeroSection() {
         <Navbar />
       </div>
 
-      {/* Headline */}
+      {/* Headline — three messages crossfade in place, CSS-only (no JS) */}
       <div
         className="hero-headline-wrap"
         style={{
           position: 'absolute',
-          top: '28%',
+          top: '18%',
           left: 0,
           right: 0,
           textAlign: 'center',
@@ -390,18 +439,17 @@ export default function HeroSection() {
           padding: '0 1rem',
         }}
       >
-        <h1
-          style={{
-            fontSize: 'clamp(17px, 3.5vw, 30px)',
-            fontWeight: 300,
-            color: 'rgba(255,255,255,0.58)',
-            lineHeight: 1.45,
-            letterSpacing: '0.02em',
-            margin: 0,
-          }}
-        >
-          We help you to manage your <span style={{ fontWeight: 600 }}>Vehicles</span> & <span style={{ fontWeight: 600 }}>Team</span>
-        </h1>
+        <div className="hero-headline-stack">
+          {heroHeadlines.map((item, i) => (
+            <div
+              key={i}
+              className={`hero-headline-slide hero-headline-slide-${i + 1}`}
+            >
+              <h1 style={headlineStyle}>{item.heading}</h1>
+              <p style={subheadingStyle}>{item.sub}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   )

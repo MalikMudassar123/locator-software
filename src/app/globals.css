@@ -1013,6 +1013,76 @@ h6 {
 }
 
 /* ══════════════════════════════════════════════════════
+   HERO HALO — warm glow behind the Burj pulses like a
+   heartbeat: two quick beats (scale + spread), then rest.
+   ══════════════════════════════════════════════════════ */
+.hero-halo-heartbeat {
+  transform-origin: 50% 100%;
+  will-change: transform, opacity;
+  animation: heroHaloHeartbeat 4.6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+@keyframes heroHaloHeartbeat {
+  0%   { transform: translateX(-50%) scale(1);     opacity: 0.82; }
+  22%  { transform: translateX(-50%) scale(1.1);   opacity: 0.96; }
+  40%  { transform: translateX(-50%) scale(1.02);  opacity: 0.86; }
+  58%  { transform: translateX(-50%) scale(1.14);  opacity: 1; }
+  80%  { transform: translateX(-50%) scale(1);     opacity: 0.82; }
+  100% { transform: translateX(-50%) scale(1);     opacity: 0.82; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-halo-heartbeat { animation: none !important; }
+}
+
+/* ══════════════════════════════════════════════════════
+   HERO HEADLINE ROTATOR — three headline/subheading pairs
+   crossfade in place, one 12s loop, 4s per message.
+   ══════════════════════════════════════════════════════ */
+.hero-headline-stack {
+  position: relative;
+  min-height: clamp(150px, 22vw, 210px);
+}
+.hero-headline-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  animation-duration: 12s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.hero-headline-slide-1 { animation-name: heroHeadlineSlide1; }
+.hero-headline-slide-2 { animation-name: heroHeadlineSlide2; }
+.hero-headline-slide-3 { animation-name: heroHeadlineSlide3; }
+
+@keyframes heroHeadlineSlide1 {
+  0%, 100% { opacity: 0; }
+  2%       { opacity: 1; }
+  29%      { opacity: 1; }
+  33%      { opacity: 0; }
+}
+@keyframes heroHeadlineSlide2 {
+  0%, 33% { opacity: 0; }
+  36%     { opacity: 1; }
+  63%     { opacity: 1; }
+  67%, 100% { opacity: 0; }
+}
+@keyframes heroHeadlineSlide3 {
+  0%, 66% { opacity: 0; }
+  69%     { opacity: 1; }
+  96%     { opacity: 1; }
+  99%, 100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-headline-slide { animation: none !important; opacity: 0; }
+  .hero-headline-slide-1 { opacity: 1 !important; }
+}
+
+/* ══════════════════════════════════════════════════════
    HERO SECTION — mobile overrides
    ══════════════════════════════════════════════════════ */
 @media (max-width: 640px) {
@@ -1027,7 +1097,10 @@ h6 {
     width: 92vw !important;
   }
   .hero-headline-wrap {
-    top: 22% !important;
+    top: 13% !important;
+  }
+  .hero-headline-stack {
+    min-height: clamp(130px, 34vw, 175px);
   }
 }
 @media (min-width: 641px) and (max-width: 1024px) {

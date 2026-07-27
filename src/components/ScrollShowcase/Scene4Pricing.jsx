@@ -143,7 +143,9 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     const update = () => {
       const w = el.offsetWidth;
       if (!w) return;
-      setScale(Math.min(1, w / W));
+      // Allow modest upscaling so the scene fills a wide sticky panel instead of
+      // sitting in dead space; capped so it never overflows the viewport height.
+      setScale(Math.min(1.18, w / W));
     };
     update();
     const ro = new ResizeObserver(update);

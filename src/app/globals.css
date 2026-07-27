@@ -863,10 +863,10 @@ h6 {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   padding-top: 12px;
   padding-bottom: 48px;
-  text-align: center;
+  text-align: left;
 }
 @media (min-width: 480px) {
   .ss-anim-panel { height: 400px; }
@@ -878,7 +878,10 @@ h6 {
   .ss-row {
     flex-direction: row;
     padding: 0 48px;
-    align-items: center;
+    /* flex-start, not center: a position:sticky flex item only tracks scroll when its
+       box starts at the top of the line. Centering it inside a taller row kills the
+       pin that the scroll-scrubbed phone reveal depends on. */
+    align-items: flex-start;
     justify-content: center;
   }
   .ss-anim-panel {
@@ -900,18 +903,30 @@ h6 {
     min-height: 100vh;
     padding-top: 80px;
     padding-bottom: 80px;
-    padding-left: 56px;
-    padding-right: 0;
-    align-items: center;
-    text-align: center;
+    padding-left: 8px;
+    padding-right: 24px;
+    align-items: flex-start;
+    text-align: left;
   }
   /* Zigzag: when animation is on right, text gets left side padding */
   .ss-row--anim-right .ss-anim-panel { order: 1; padding-left: 0; }
-  .ss-row--anim-right .ss-text-panel { order: 0; padding-left: 0; padding-right: 56px; }
+  .ss-row--anim-right .ss-text-panel { order: 0; padding-left: 24px; padding-right: 8px; }
+
+  /* Fleet Telematics row only. ScrollTrigger pins this whole row (see Scene1Icons)
+     so text and mockups hold still together while the phone is scrubbed in, then
+     releases to the next section. Two requirements come with that:
+       - the row must be exactly one viewport tall, or the pinned frame overflows;
+       - the anim panel must NOT be position:sticky, since the row itself is what
+         gets pinned now. Sticky stays on the base rule for the second row, which
+         still relies on it. */
+  .ss-row--anim-right { height: 100vh; }
+  .ss-row--anim-right .ss-anim-panel { position: relative; top: auto; }
+  /* Fill the fixed-height row rather than forcing it taller via min-height. */
+  .ss-row--anim-right .ss-text-panel { min-height: 0; height: 100%; }
 }
 
 /* Feature card grid — 1 col on mobile/tablet, 2 col on desktop */
-.ss-feature-grid { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; }
+.ss-feature-grid { grid-template-columns: 1fr; max-width: 520px; margin: 0; }
 @media (min-width: 1024px) {
   .ss-feature-grid { grid-template-columns: repeat(2, 1fr); max-width: 100%; }
 }

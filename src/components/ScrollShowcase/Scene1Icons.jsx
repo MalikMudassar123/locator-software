@@ -2,28 +2,33 @@
 import { forwardRef, useLayoutEffect, useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import BrowserChrome from './BrowserChrome';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const W = 580, H = 580;
 
-// Phone (mobile phase)
-const PHONE_X = 160, PHONE_Y = 38, PHONE_W = 260, PHONE_H = 500, PHONE_R = 32;
-const PX2 = PHONE_X + PHONE_W, PY2 = PHONE_Y + PHONE_H;
-const PHONE_PERIM = 1465;
+// Composition: the browser window sits back-left, the phone overlaps it front-right
+// and hangs below its bottom edge — both are on screen at the same time.
 
-// Desktop (browser-style frame)
-const DT_W = 550, DT_H = 380, DT_R = 14;
-const DT_X = (W - DT_W) / 2;             // 15
-const DT_Y = (H - DT_H) / 2;             // 100
+// Desktop (browser-style frame) — back layer
+const DT_X = 4, DT_Y = 108, DT_W = 460, DT_H = 330, DT_R = 14;
 const DTX2 = DT_X + DT_W, DTY2 = DT_Y + DT_H;
-const DT_PERIM = 2 * (DT_W + DT_H);      // ~1860
+const DT_PERIM = 2 * (DT_W + DT_H);
 
-const PHONE_PATH =
-  `M${PHONE_X+PHONE_R} ${PHONE_Y} H${PX2-PHONE_R}` +
-  ` Q${PX2} ${PHONE_Y} ${PX2} ${PHONE_Y+PHONE_R}` +
-  ` V${PY2-PHONE_R} Q${PX2} ${PY2} ${PX2-PHONE_R} ${PY2}` +
-  ` H${PHONE_X+PHONE_R} Q${PHONE_X} ${PY2} ${PHONE_X} ${PY2-PHONE_R}` +
-  ` V${PHONE_Y+PHONE_R} Q${PHONE_X} ${PHONE_Y} ${PHONE_X+PHONE_R} ${PHONE_Y} Z`;
+// Phone — front layer, clipping only the browser's right edge (~19% of its width)
+// so the dashboard's sidebar and map stay readable behind it.
+// 168×370 is the native aspect of /block 1/mobile.webp (1535×3378 → 0.454). Matching
+// it exactly means objectFit:cover shows the WHOLE screenshot with nothing cropped —
+// any other ratio silently cuts the bottom rows off. Change width and height together.
+const PHONE_X = 396, PHONE_Y = 125, PHONE_W = 168, PHONE_H = 370, PHONE_R = 24;
+
+// The wireframe rects below were hand-calibrated against the source screenshots at
+// the original frame sizes (phone 260×500, browser 550×380). Rather than re-measure
+// every rect for the new composition, scale the calibrated coordinates.
+const PSX = PHONE_W / 260, PSY = PHONE_H / 500;
+const DSX = DT_W / 550,    DSY = DT_H / 380;
 
 const DT_PATH =
   `M${DT_X+DT_R} ${DT_Y} H${DTX2-DT_R}` +
@@ -37,89 +42,50 @@ function rp(x, y, w, h, r = 0) {
   return `M${x+r} ${y}H${x+w-r}Q${x+w} ${y} ${x+w} ${y+r}V${y+h-r}Q${x+w} ${y+h} ${x+w-r} ${y+h}H${x+r}Q${x} ${y+h} ${x} ${y+h-r}V${y+r}Q${x} ${y} ${x+r} ${y}Z`;
 }
 
-// Calibrated to /block 1/mobile.webp (1535×3378) under objectFit:cover, center-top.
-// Vertical scale orig→box ≈ 0.16938; offsets below are measured from the PNG.
-const WIRE = [
-  // 1. Header bar — full blue "Vehicles - Live View" bar (matches PNG top region)
-  rp(PHONE_X+4,   PHONE_Y+4,   PHONE_W-8, 66, 6),
+// Wireframe rect in the browser's calibrated 550×380 space.
+// Only the browser has a wireframe stage — the phone simply fades in.
+function dw(dx, dy, w, h, r = 0) {
+  return rp(DT_X + dx * DSX, DT_Y + dy * DSY, w * DSX, h * DSY, r);
+}
 
-  // 2. Map view — header bottom (72) → map/panel boundary (325)
-  rp(PHONE_X+4,   PHONE_Y+72,  PHONE_W-8, 251, 4),
-
-  // 3. Bottom info panel container — ends at PHONE_Y+494 (within bottom safe zone ≤506)
-  rp(PHONE_X+4,   PHONE_Y+325, PHONE_W-8, 169, 8),
-
-  // 4. Nav: back-arrow icon (left)
-  rp(PHONE_X+12,  PHONE_Y+344, 20, 16, 4),
-
-  // 5. Nav: mute icon (right)
-  rp(PHONE_X+228, PHONE_Y+344, 20, 16, 4),
-
-  // 6. Driver avatar — ø60 circle
-  rp(PHONE_X+100, PHONE_Y+320, 60, 60, 30),
-
-  // 7. Driver name "Steve Johns 7895"
-  rp(PHONE_X+58,  PHONE_Y+380, 144, 12, 4),
-
-  // 8. Status row
-  rp(PHONE_X+10,  PHONE_Y+409, 52, 8, 3),
-  rp(PHONE_X+76,  PHONE_Y+409, 164, 8, 3),
-
-  // 9. Driver row
-  rp(PHONE_X+10,  PHONE_Y+428, 42, 8, 3),
-  rp(PHONE_X+76,  PHONE_Y+428, 86, 8, 3),
-
-  // 10. Phone row
-  rp(PHONE_X+10,  PHONE_Y+445, 42, 8, 3),
-  rp(PHONE_X+76,  PHONE_Y+445, 32, 8, 3),
-
-  // 11. Geozone row
-  rp(PHONE_X+10,  PHONE_Y+462, 56, 8, 3),
-  rp(PHONE_X+76,  PHONE_Y+462, 104, 8, 3),
-
-  // 12. Last Update row — ends at PHONE_Y+487 = 525, within phone bottom (538)
-  rp(PHONE_X+10,  PHONE_Y+479, 64, 8, 3),
-  rp(PHONE_X+76,  PHONE_Y+479, 110, 8, 3),
-];
-
-// Desktop wireframe — matches pro.mylocatorplus.com layout exactly
-// DT_W=550 DT_H=380  sidebar≈31%=170px  map≈69%=362px
+// Desktop wireframe — matches pro.mylocatorplus.com layout
+// calibrated at 550×380: sidebar≈170px, map≈362px
 const DT_WIRE = [
   // 1. Browser chrome / URL bar (full width)
-  rp(DT_X+8,   DT_Y+8,  DT_W-16, 26, 5),
+  dw(8,   8,  534, 26, 5),
 
   // 2. Left sidebar container (full content height)
-  rp(DT_X+8,   DT_Y+42, 168, DT_H-50, 6),
+  dw(8,   42, 168, 330, 6),
 
   // 3. Right map container (full content height)
-  rp(DT_X+182, DT_Y+42, DT_W-190, DT_H-50, 6),
+  dw(182, 42, 360, 330, 6),
 
   // Sidebar — tab pills: Vehicles | Drivers | Alerts
-  rp(DT_X+14,  DT_Y+50, 52, 18, 9),
-  rp(DT_X+72,  DT_Y+50, 44, 18, 9),
-  rp(DT_X+122, DT_Y+50, 44, 18, 9),
+  dw(14,  50, 52, 18, 9),
+  dw(72,  50, 44, 18, 9),
+  dw(122, 50, 44, 18, 9),
 
   // Sidebar — stats row: 13 Vehicles | 3 Moving | 1 Idling | 8 Parking | 1 No Signal
-  rp(DT_X+14,  DT_Y+76, 28, 26, 4),
-  rp(DT_X+47,  DT_Y+76, 28, 26, 4),
-  rp(DT_X+80,  DT_Y+76, 28, 26, 4),
-  rp(DT_X+113, DT_Y+76, 28, 26, 4),
-  rp(DT_X+146, DT_Y+76, 20, 26, 4),
+  dw(14,  76, 28, 26, 4),
+  dw(47,  76, 28, 26, 4),
+  dw(80,  76, 28, 26, 4),
+  dw(113, 76, 28, 26, 4),
+  dw(146, 76, 20, 26, 4),
 
   // Sidebar — search bar
-  rp(DT_X+14,  DT_Y+110, 152, 14, 7),
+  dw(14,  110, 152, 14, 7),
 
   // Sidebar — vehicle list items (4 rows, each with icon + text lines)
-  rp(DT_X+14,  DT_Y+132, 152, 38, 4),
-  rp(DT_X+14,  DT_Y+178, 152, 38, 4),
-  rp(DT_X+14,  DT_Y+224, 152, 38, 4),
-  rp(DT_X+14,  DT_Y+270, 152, 38, 4),
+  dw(14,  132, 152, 38, 4),
+  dw(14,  178, 152, 38, 4),
+  dw(14,  224, 152, 38, 4),
+  dw(14,  270, 152, 38, 4),
 
   // Map — top toolbar (Zone / POI / Traffic filters)
-  rp(DT_X+188, DT_Y+48, DT_W-200, 18, 4),
+  dw(188, 48, 350, 18, 4),
 
   // Map — bottom popup card ("Moinu Tech 68280")
-  rp(DT_X+188, DT_Y+DT_H-72, 130, 26, 6),
+  dw(188, 308, 130, 26, 6),
 ];
 
 const ICONS = [
@@ -172,6 +138,12 @@ function GlobalDefs() {
         <linearGradient id="s1pg_w" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#06b6d4"/>
         </linearGradient>
+        {/* Shared by BOTH wireframes (phone + browser), so it lives here rather than
+            in either one's local defs — deleting the owner SVG would strip the other. */}
+        <filter id="s1bgl" x="-6%" y="-6%" width="112%" height="112%">
+          <feGaussianBlur stdDeviation="0.8" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
       </defs>
     </svg>
   );
@@ -218,9 +190,6 @@ export default forwardRef(function Scene1Icons(_props, ref) {
   const activeRefs   = useRef([]);
   const iconRefs     = useRef([]);
   const lineRefs     = useRef([]);
-  const phoneOutRef  = useRef(null);
-  const wireRefs     = useRef([]);
-  const wireGrpRef   = useRef(null);
   const mobileRef    = useRef(null);
   const desktopFrameRef = useRef(null);
   const desktopWireRefs = useRef([]);
@@ -231,7 +200,47 @@ export default forwardRef(function Scene1Icons(_props, ref) {
   const allTweens    = useRef([]);
   const linesRef     = useRef(null);
   const outerRef     = useRef(null);
+  const playedRef    = useRef(false);
   const [scale, setScale] = useState(1);
+
+  // ── Phone gate ────────────────────────────────────────────────────────────
+  // The phone is the LAST beat of the scene: icons → browser wireframe → real
+  // dashboard → (scene HOLDS here) → phone.
+  //
+  // The gate is "scroll that happens AFTER the intro finished", not "scroll" and
+  // not "section entered". Both weaker gates were already satisfied by the time
+  // the dashboard landed — the user's scroll into the section is what starts the
+  // intro — so the phone kept letting itself in with no input. Instead: when the
+  // intro completes we stamp the scroll position, and the phone waits for the page
+  // to move PHONE_IN_PX beyond that stamp. That guarantees the hold on the
+  // finished desktop, however fast or slow the user was scrolling before it.
+  //
+  // The reveal is reversible: scrolling back up past PHONE_OUT_PX runs the same
+  // timeline backwards so the phone animates out the way it came in. Only the phone
+  // reverses — the intro is still a one-shot, so the dashboard stays put.
+  const introDoneRef   = useRef(false);
+  const phoneTlRef     = useRef(null);
+  const scrollAtIntroEndRef = useRef(0);
+
+  // Two thresholds, not one. A single boundary would sit right where the phone
+  // flips state, so a few pixels of scroll jitter would flap it in and out. The gap
+  // between them is a dead band where nothing changes.
+  //   IN  — "scroll a little": responsive, but past any wheel inertia left over
+  //         from before the intro ended, so it can't trip itself.
+  //   OUT — scrolling back below this reverses the reveal.
+  const PHONE_IN_PX  = 140;
+  const PHONE_OUT_PX = 80;
+
+  // Called on every scroll update while the section is in range. Safe to call
+  // repeatedly: play() on a finished timeline and reverse() on one already at 0
+  // are both no-ops, so this just steers direction.
+  const checkPhoneScroll = () => {
+    const tl = phoneTlRef.current;
+    if (!tl || !introDoneRef.current) return;
+    const travelled = window.scrollY - scrollAtIntroEndRef.current;
+    if (travelled >= PHONE_IN_PX) tl.play();
+    else if (travelled <= PHONE_OUT_PX) tl.reverse();
+  };
 
   useEffect(() => {
     const el = outerRef.current;
@@ -239,7 +248,9 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     const update = () => {
       const w = el.offsetWidth;
       if (!w) return;
-      setScale(Math.min(1, w / W));
+      // Allow modest upscaling so the scene fills a wide sticky panel instead of
+      // sitting in dead space; capped so it never overflows the viewport height.
+      setScale(Math.min(1.18, w / W));
     };
     update();
     const ro = new ResizeObserver(update);
@@ -249,10 +260,93 @@ export default forwardRef(function Scene1Icons(_props, ref) {
 
   useLayoutEffect(() => () => allTweens.current.forEach(t => t?.kill()), []);
 
-  const stop = () => {
-    allTweens.current.forEach(t => t?.kill());
-    allTweens.current = [];
-  };
+  // The scene resizes itself after mount (see the ResizeObserver above), which moves
+  // the pin start/end. Without this the trigger keeps stale measurements and the pin
+  // engages a few pixels off, which shows up as a jump when it latches.
+  useEffect(() => { ScrollTrigger.refresh(); }, [scale]);
+
+  // ── Pinned phone reveal ───────────────────────────────────────────────────
+  // The desktop dashboard lands via the intro timeline and stays. Scrolling into the
+  // section then pins the whole row and plays the phone in over the top of it.
+  //
+  // Trigger is the parent .ss-row, not this element: the row is what actually travels
+  // through the viewport, and it is the box that needs pinning.
+  useLayoutEffect(() => {
+    const el = outerRef.current;
+    if (!el) return;
+    const row = el.closest('.ss-row');
+    if (!row) return;
+
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+
+      // The phone starts hidden in BOTH branches. It is never shown outright —
+      // it always waits for the intro to finish (see checkPhoneScroll).
+      const buildPhoneTl = () => {
+        gsap.set(mobileRef.current, { opacity: 0, yPercent: 4 });
+        gsap.set(mobilePopupRef.current, { opacity: 0, x: -10 });
+
+        // Deliberately NOT scrubbed. A scrubbed timeline is bound to scroll position,
+        // so it stutters with every wheel delta and freezes the moment the user stops
+        // moving. Scroll only decides which DIRECTION this runs; once pointed it plays
+        // on its own clock, which is what makes both the reveal and the reverse smooth.
+        const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out' } });
+        tl.to(mobileRef.current, { opacity: 1, yPercent: 0, duration: 0.9 }, 0);
+        tl.to(mobilePopupRef.current,
+          { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(1.6)' }, 0.65);
+        phoneTlRef.current = tl;
+      };
+
+      // Desktop: pin the whole row so nothing moves while the phone is revealed.
+      mm.add('(min-width: 1024px)', () => {
+        buildPhoneTl();
+
+        ScrollTrigger.create({
+          trigger: row,
+          start: 'top top',
+          // Pin the entire row — text and mockups both hold still — for this much
+          // scroll distance, then release the page to the next section. The runway
+          // has to cover the intro, the hold, and the phone reveal, or the row
+          // unpins mid-sequence and the phone finishes off-screen.
+          end: () => '+=' + window.innerHeight * 1.6,
+          pin: true,
+          pinSpacing: true,
+          invalidateOnRefresh: true,
+          onUpdate: checkPhoneScroll,
+          // Safety net: if the intro finished so late in the runway that the
+          // remaining scroll never covers PHONE_IN_PX, the phone would be left
+          // hidden as the section scrolls away. Force it rather than lose the beat.
+          onLeave: () => phoneTlRef.current?.play(),
+          // Leaving upward means the whole section is behind the user — wind the
+          // phone back so the reveal is armed again next time they come down.
+          onLeaveBack: () => phoneTlRef.current?.reverse(),
+        });
+      });
+
+      // Below 1024px nothing is pinned, but the gate is measured in raw scroll
+      // pixels rather than pin progress, so the same check works untouched — this
+      // trigger exists only to deliver scroll updates while the row is in view.
+      mm.add('(max-width: 1023px)', () => {
+        buildPhoneTl();
+
+        ScrollTrigger.create({
+          trigger: row,
+          start: 'top bottom',
+          end: 'bottom top',
+          onUpdate: checkPhoneScroll,
+          onLeave: () => phoneTlRef.current?.play(),
+          onLeaveBack: () => phoneTlRef.current?.reverse(),
+        });
+      });
+    }, el);
+
+    return () => ctx.revert();
+  }, []);
+
+  // The intro is a one-shot that must be allowed to finish: killing it half-way
+  // (which the IntersectionObserver used to do on every scroll-out) left the
+  // dashboard stuck part-drawn. Cleanup happens on unmount instead.
+  const stop = () => {};
 
   // Premium cinematic easing
   const LINE_EASE = 'power2.inOut';
@@ -268,19 +362,13 @@ export default forwardRef(function Scene1Icons(_props, ref) {
       const len = getLen(p);
       gsap.set(p, { opacity: 0, strokeDasharray: `${len} ${len + 1}`, strokeDashoffset: len });
     });
-    gsap.set(wireGrpRef.current, { opacity: 0 });
-    gsap.set(phoneOutRef.current, { opacity: 0, strokeDashoffset: PHONE_PERIM });
-    gsap.set(mobileRef.current, { opacity: 0 });
+    // NOTE: the phone (mobileRef / mobilePopupRef) is deliberately not reset here —
+    // it is owned entirely by the pinned scroll timeline, and resetting it would
+    // fight ScrollTrigger for the same properties.
     gsap.set(desktopFrameRef.current, { opacity: 0, strokeDashoffset: DT_PERIM });
     gsap.set(desktopWireGrpRef.current, { opacity: 0 });
     gsap.set(desktopImgRef.current, { opacity: 0 });
     gsap.set(desktopPopupRef.current, { opacity: 0, x: -12, scale: 0.96 });
-    gsap.set(mobilePopupRef.current, { opacity: 0, x: -12, scale: 0.96 });
-    wireRefs.current.forEach(p => {
-      if (!p) return;
-      const len = getLen(p);
-      gsap.set(p, { strokeDasharray:`${len} ${len+1}`, strokeDashoffset:len, opacity:0 });
-    });
     desktopWireRefs.current.forEach(p => {
       if (!p) return;
       const len = getLen(p);
@@ -289,10 +377,27 @@ export default forwardRef(function Scene1Icons(_props, ref) {
   };
 
   const play = () => {
-    stop();
+    // One-shot. The row re-enters the viewport every time the user scrolls back up,
+    // and re-running this would blank the dashboard out and rebuild it mid-scroll —
+    // that was the flicker that appeared while scrolling through the pinned section.
+    if (playedRef.current) return;
+    playedRef.current = true;
+
     resetAll();
 
-    const tl = gsap.timeline({ onComplete: () => play() });
+    // Plays once and holds on the finished dashboard — no loop, so it doesn't fight
+    // the scroll-driven phone reveal that continues from this end state. Completing
+    // is what unlocks that reveal; until then the phone stays hidden no matter how
+    // far the user has scrolled.
+    const tl = gsap.timeline({
+      onComplete: () => {
+        // Stamp where the page was when the dashboard finished. The phone measures
+        // its scroll requirement from here, so the scene holds until the user
+        // scrolls onward from this exact point.
+        introDoneRef.current = true;
+        scrollAtIntroEndRef.current = window.scrollY;
+      },
+    });
     allTweens.current.push(tl);
 
     // ── PHASE 1: ICON LINES ONLY — no wireframe visible (faster)
@@ -324,56 +429,27 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     tl.to(activeRefs.current.filter(Boolean), { opacity:0, duration:0.45, ease:FADE_EASE }, phase1End + 0.20);
     tl.to(iconRefs.current.filter(Boolean),   { opacity:0, duration:0.55, ease:FADE_EASE }, phase1End + 0.25);
 
-    // ── PHASE 2: WIREFRAME builds (only after lines fully gone) → mobile PNG
-    const wireAt = phase1End + 0.80; // safe gap after fade-out completes
-    tl.to(wireGrpRef.current, { opacity:1, duration:0.25 }, wireAt);
-    wireRefs.current.forEach((p, i) => {
-      if (!p) return;
-      tl.to(p, { opacity:1, strokeDashoffset:0, duration:0.38, ease:'power2.out' }, wireAt + 0.04 + i * 0.045);
-    });
+    // ── PHASE 2: the browser wireframe builds, then the real dashboard crossfades in.
+    // This is where the intro ends — the desktop simply STAYS on screen. The phone is
+    // not part of this timeline; it is revealed by scroll (see the ScrollTrigger below).
+    // Gaps and stagger are kept tight on purpose: the phone can only start once this
+    // whole timeline is done, and both have to fit inside the pin runway above.
+    const wireAt = phase1End + 0.55; // safe gap after fade-out completes
 
-    const wireFullAt = wireAt + 0.04 + WIRE.length * 0.045 + 0.38;
-    const mobileAt = wireFullAt + 0.15;
-    tl.to(mobileRef.current, { opacity:1, duration:0.85, ease:'power2.out' }, mobileAt);
-
-    // Phone wireframe fades out as mobile PNG takes over
-    tl.to(wireGrpRef.current, { opacity:0, duration:0.65, ease:FADE_EASE }, mobileAt + 0.20);
-
-    // Map/Satellite bar appears with the mobile PNG
-    tl.to(mobilePopupRef.current, {
-      opacity: 1, x: 0, scale: 1,
-      duration: 0.55, ease: 'back.out(1.6)',
-    }, mobileAt);
-
-    const mobileEnd = mobileAt + 0.85 + 4.0;
-
-    // ── PHASE 3: mobile fades out → desktop wireframe builds → desktop PNG
-    tl.to(mobilePopupRef.current, { opacity:0, duration:0.45, ease:FADE_EASE }, mobileEnd - 0.15);
-    tl.to(mobileRef.current, { opacity:0, duration:0.55, ease:FADE_EASE }, mobileEnd);
-
-    const dtWireAt = mobileEnd + 0.70;
-    tl.to(desktopWireGrpRef.current, { opacity:1, duration:0.25 }, dtWireAt);
+    tl.to(desktopWireGrpRef.current, { opacity:1, duration:0.25 }, wireAt);
     desktopWireRefs.current.forEach((p, i) => {
       if (!p) return;
-      tl.to(p, { opacity:1, strokeDashoffset:0, duration:0.38, ease:'power2.out' }, dtWireAt + 0.04 + i * 0.06);
+      tl.to(p, { opacity:1, strokeDashoffset:0, duration:0.34, ease:'power2.out' }, wireAt + 0.04 + i * 0.035);
     });
+    const wireFullAt = wireAt + 0.04 + DT_WIRE.length * 0.035 + 0.34;
 
-    const dtFullAt = dtWireAt + 0.04 + DT_WIRE.length * 0.06 + 0.38;
-    const dtPngAt = dtFullAt + 0.15;
-    tl.to(desktopImgRef.current, { opacity:1, duration:0.85, ease:'power2.out' }, dtPngAt);
-
-    // Desktop wireframe fades out as desktop PNG takes over
-    tl.to(desktopWireGrpRef.current, { opacity:0, duration:0.65, ease:FADE_EASE }, dtPngAt + 0.20);
-
-    // Popup card appears together with the desktop PNG
+    const revealAt = wireFullAt + 0.15;
+    tl.to(desktopImgRef.current, { opacity:1, duration:0.80, ease:'power2.out' }, revealAt);
+    tl.to(desktopWireGrpRef.current, { opacity:0, duration:0.60, ease:FADE_EASE }, revealAt + 0.20);
     tl.to(desktopPopupRef.current, {
       opacity: 1, x: 0, scale: 1,
       duration: 0.55, ease: 'back.out(1.6)',
-    }, dtPngAt);
-
-    const dtEnd = dtPngAt + 0.85 + 4.0;
-    tl.to(desktopPopupRef.current, { opacity:0, duration:0.45, ease:FADE_EASE }, dtEnd - 0.15);
-    tl.to(desktopImgRef.current, { opacity:0, duration:0.60, ease:FADE_EASE }, dtEnd);
+    }, revealAt + 0.40);
   };
 
   return (
@@ -414,37 +490,9 @@ export default forwardRef(function Scene1Icons(_props, ref) {
         ))}
       </svg>
 
-      {/* z=2 — phone outline + wireframe */}
+      {/* z=2 — desktop outline + wireframe (back layer, the only wireframe in the scene) */}
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}
         style={{ position:'absolute', inset:0, zIndex:2, pointerEvents:'none', overflow:'visible' }}>
-        <defs>
-          <filter id="s1pgl" x="-5%" y="-4%" width="110%" height="108%">
-            <feGaussianBlur stdDeviation="1.8" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="s1bgl" x="-6%" y="-6%" width="112%" height="112%">
-            <feGaussianBlur stdDeviation="0.8" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          {/* Clip wireframe rects to the exact phone rounded-rectangle shape */}
-          <clipPath id="phone_wire_clip">
-            <path d={PHONE_PATH}/>
-          </clipPath>
-        </defs>
-        <path ref={phoneOutRef} d={PHONE_PATH}
-          stroke="none" fill="none" opacity="0"/>
-        <g ref={wireGrpRef} opacity="0" clipPath="url(#phone_wire_clip)">
-          {WIRE.map((d, i) => (
-            <path key={i} ref={r => (wireRefs.current[i] = r)} d={d}
-              stroke="url(#s1pg_w)" strokeWidth="0.7" fill="rgba(59,130,246,0.02)"
-              strokeLinecap="round" strokeLinejoin="round" opacity="0" filter="url(#s1bgl)"/>
-          ))}
-        </g>
-      </svg>
-
-      {/* z=3 — desktop outline + wireframe */}
-      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}
-        style={{ position:'absolute', inset:0, zIndex:3, pointerEvents:'none', overflow:'visible' }}>
         <path ref={desktopFrameRef} d={DT_PATH}
           stroke="none" fill="none" opacity="0"/>
         <g ref={desktopWireGrpRef} opacity="0">
@@ -456,7 +504,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
         </g>
       </svg>
 
-      {/* z=5 — mobile PNG overlay (on top of phone wireframe) */}
+      {/* z=6 — phone, front layer. White bezel + deeper shadow lift it off the browser. */}
       <div
         ref={mobileRef}
         style={{
@@ -466,10 +514,11 @@ export default forwardRef(function Scene1Icons(_props, ref) {
           borderRadius:PHONE_R,
           overflow:'hidden',
           opacity:0,
-          zIndex:5,
+          zIndex:6,
           pointerEvents:'none',
           willChange:'opacity',
-          boxShadow:'0 8px 36px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.06)',
+          border:'5px solid #fff',
+          boxShadow:'0 22px 50px rgba(15,23,42,0.22), 0 6px 16px rgba(15,23,42,0.12)',
           background:'#fff',
         }}
       >
@@ -483,7 +532,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
         />
       </div>
 
-      {/* z=6 — desktop browser window (Mac chrome + image) */}
+      {/* z=5 — desktop browser window (Mac chrome + image), back layer */}
       <div
         ref={desktopImgRef}
         style={{
@@ -493,7 +542,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
           borderRadius:DT_R,
           overflow:'hidden',
           opacity:0,
-          zIndex:6,
+          zIndex:5,
           pointerEvents:'none',
           willChange:'opacity',
           boxShadow:'0 18px 50px rgba(15,23,42,0.18), 0 4px 14px rgba(15,23,42,0.08)',
@@ -522,11 +571,11 @@ export default forwardRef(function Scene1Icons(_props, ref) {
         style={{
           position:'absolute',
           left: Math.max(0, DT_X - 10),
-          top: DT_Y + 130,
-          width: 250,
-          height: 54,
+          top: DT_Y + 130 * DSY,
+          width: 250 * DSX,
+          height: 54 * DSY,
           opacity: 0,
-          zIndex: 50,
+          zIndex: 7,
           pointerEvents: 'auto',
           cursor: 'pointer',
           willChange: 'opacity, transform',
@@ -549,12 +598,12 @@ export default forwardRef(function Scene1Icons(_props, ref) {
         onMouseLeave={() => gsap.to(mobilePopupRef.current, { scale: 1, duration: 0.35, ease: 'power3.out', transformOrigin: 'left center' })}
         style={{
           position:'absolute',
-          left: PHONE_X - 25,
-          top: PHONE_Y + 68,
-          width: 250,
-          height: 44,
+          left: PHONE_X - 22,
+          top: PHONE_Y + 68 * PSY,
+          width: 250 * PSX,
+          height: 44 * PSY,
           opacity: 0,
-          zIndex: 50,
+          zIndex: 8,
           pointerEvents: 'auto',
           cursor: 'pointer',
           willChange: 'opacity, transform',

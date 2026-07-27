@@ -2,7 +2,10 @@
 import { forwardRef, useLayoutEffect, useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import BrowserChrome from './BrowserChrome';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const W = 580, H = 400;
 const FX = 48, FY = 18, FW = 500, FH = 355, FR = 13;
@@ -135,7 +138,40 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
   const allTweens    = useRef([]);
   const linesRef     = useRef(null);
   const outerRef     = useRef(null);
+  const playedRef    = useRef(false);
   const [scale, setScale] = useState(1);
+
+  // ── Two scroll-gated stages ───────────────────────────────────────────────
+  // Mirrors Scene1Icons, minus its third (phone) stage — this scene has only one
+  // device to reveal:
+  //   STAGE 0  arrive   icons + connection lines, LOOPING. Nothing else on screen.
+  //   STAGE 1  scroll   icons dissolve → wireframe draws → video dashboard lands.
+  //
+  // The row is PINNED for stage 1 (desktop only), so the section freezes in place
+  // while the wireframe and dashboard build. It previously relied on a sticky anim
+  // panel instead, which kept the panel in view but let the row keep scrolling —
+  // so the reveal played while the whole section was sliding up the screen.
+  const iconsTlRef        = useRef(null);
+  const desktopTlRef      = useRef(null);
+  const desktopStartedRef = useRef(false);
+  const cycleDoneRef      = useRef(false);
+  const scrollAtCycleEndRef = useRef(0);
+
+  // Scroll required AFTER the first icon cycle finishes, before the dashboard builds.
+  const DESKTOP_IN_PX = 120;
+
+  const checkScroll = () => {
+    if (desktopStartedRef.current) return;
+    // Two conditions, and the order matters. Anchoring this to the section's entry
+    // instead (self.scroll() - self.start) did not work: scrolling INTO the section
+    // is what starts the icons, so that gate was already satisfied before they had
+    // played at all and the dashboard appeared immediately. Requiring a completed
+    // cycle first, then fresh scroll measured from the end of it, guarantees the
+    // icon animation is actually seen before anything replaces it.
+    if (!cycleDoneRef.current) return;
+    if (window.scrollY - scrollAtCycleEndRef.current < DESKTOP_IN_PX) return;
+    startDesktop();
+  };
 
   useEffect(() => {
     const el = outerRef.current;
@@ -155,10 +191,62 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
 
   useLayoutEffect(() => () => allTweens.current.forEach(t => t?.kill()), []);
 
-  const stop = () => {
-    allTweens.current.forEach(t => t?.kill());
-    allTweens.current = [];
-  };
+  // The scene resizes itself after mount (see the ResizeObserver above), which moves
+  // the trigger's start. Without this it keeps stale measurements and the gate fires
+  // at the wrong scroll position.
+  useEffect(() => { ScrollTrigger.refresh(); }, [scale]);
+
+  // Trigger is the parent .ss-row, not this element: the row is what actually
+  // travels through the viewport, and it is the box that needs pinning.
+  useLayoutEffect(() => {
+    const el = outerRef.current;
+    if (!el) return;
+    const row = el.closest('.ss-row');
+    if (!row) return;
+
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+
+      // Desktop: pin the whole row so the section holds still in view while the
+      // wireframe draws and the dashboard lands — the scene plays where the user is
+      // already looking instead of sliding up the screen underneath the animation.
+      mm.add('(min-width: 1024px)', () => {
+        ScrollTrigger.create({
+          trigger: row,
+          start: 'top top',
+          // Must absorb the mandatory first icon cycle (~5.4s, during which a
+          // scrolling user is still burning runway), the 120px gate, and the ~4s
+          // build. Too short and a moderate scroller unpins mid-sequence.
+          end: () => '+=' + window.innerHeight * 1.6,
+          pin: true,
+          pinSpacing: true,
+          invalidateOnRefresh: true,
+          onUpdate: checkScroll,
+          // Fast-scroll safety net: never leave the section half-built behind the user.
+          onLeave: () => { startDesktop(); desktopTlRef.current?.progress(1); },
+        });
+      });
+
+      // Below 1024px nothing is pinned; this trigger only delivers scroll updates
+      // while the row is in view, since the gate is measured in raw scroll pixels.
+      mm.add('(max-width: 1023px)', () => {
+        ScrollTrigger.create({
+          trigger: row,
+          start: 'top 75%',
+          end: 'bottom top',
+          onUpdate: checkScroll,
+          onLeave: () => { startDesktop(); desktopTlRef.current?.progress(1); },
+        });
+      });
+    }, el);
+
+    return () => ctx.revert();
+  }, []);
+
+  // The scene is a one-shot per stage now, so leaving the viewport must NOT kill
+  // anything — doing that left the dashboard stuck part-drawn on scroll-out.
+  // Cleanup happens on unmount instead (see the effect above).
+  const stop = () => {};
 
   // Gentle curves, matching Scene1Icons. sine has the softest acceleration of the
   // standard eases, so the line draw reads as one continuous glide; power3/power2.in
@@ -187,11 +275,32 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     });
   };
 
+  // ── STAGE 0 ───────────────────────────────────────────────────────────────
+  // Icons and their connections, looping. All the user sees on arrival; the video
+  // dashboard is not part of this timeline and cannot appear until they scroll.
   const play = () => {
-    stop();
+    // Guarded: the row re-enters the viewport whenever the user scrolls back up,
+    // and restarting would yank the scene back to stage 0 from wherever it got to.
+    if (playedRef.current) return;
+    playedRef.current = true;
+
     resetAll();
 
-    const tl = gsap.timeline({ onComplete: () => play() });
+    // repeatDelay lands on an empty board — every beat clears itself, so the cycle
+    // ends clean and the pause reads as a breath rather than a stall.
+    const tl = gsap.timeline({
+      repeat: -1,
+      repeatDelay: 0.6,
+      // Fires at the end of every cycle; only the first is meaningful. This is what
+      // arms the desktop gate — until one complete pass of the icons has been shown,
+      // no amount of scrolling can advance the scene.
+      onRepeat: () => {
+        if (cycleDoneRef.current) return;
+        cycleDoneRef.current = true;
+        scrollAtCycleEndRef.current = window.scrollY;
+      },
+    });
+    iconsTlRef.current = tl;
     allTweens.current.push(tl);
 
     // ── PHASE 1: ICON LINES ONLY — no wireframe visible
@@ -235,19 +344,39 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
       if (elB)  tl.to(elB,  { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
     });
 
-    const phase1End = CONN_START + (SEQ.length - 1) * STEP + BEAT;
+    // The last beat's clear tween ends at exactly CONN_START + 2*STEP + BEAT, so the
+    // timeline already measures the full cycle and repeats from an empty board.
+    // NOTE: the grey outline cards are deliberately NOT faded at the end of a cycle.
+    // They belong to the scene, not to one pass; fading them would blink the whole
+    // board on every repeat. startDesktop owns their exit.
+  };
 
-    // Each beat already cleared its own pair; this only fades the remaining grey
-    // outline cards out. The line/active sweeps are a cheap safety net in case a
-    // beat was interrupted.
-    tl.to(lineRefs.current.filter(Boolean),   { opacity:0, duration:0.40, ease:FADE_EASE }, phase1End);
-    tl.to(activeRefs.current.filter(Boolean), { opacity:0, duration:0.40, ease:FADE_EASE }, phase1End);
-    tl.to(iconRefs.current.filter(Boolean),   { opacity:0, duration:0.55, ease:FADE_EASE }, phase1End + 0.10);
+  // ── STAGE 1 ───────────────────────────────────────────────────────────────
+  // Scroll brought the user past DESKTOP_IN_PX. Dissolve the icon board — from
+  // wherever the loop happens to be — then draw the wireframe and land the real
+  // dashboard, which then STAYS. Runs once; scrolling back does not rebuild it.
+  const startDesktop = () => {
+    if (desktopStartedRef.current) return;
+    desktopStartedRef.current = true;
 
-    // ── PHASE 2: WIREFRAME builds (only after lines fully gone) → video PNG
-    // Gap must clear the icon-outline fade above (starts +0.10, runs 0.55) or the
+    // Kill the loop rather than letting it finish its cycle: waiting would stall the
+    // response to the user's scroll by up to a full cycle. Killing leaves every
+    // element at its current opacity and the fades below take over from there, so
+    // the handover is continuous no matter which frame we interrupted.
+    iconsTlRef.current?.kill();
+
+    const tl = gsap.timeline();
+    desktopTlRef.current = tl;
+    allTweens.current.push(tl);
+
+    // Clear whatever the loop left lit, then the grey cards behind it.
+    tl.to(lineRefs.current.filter(Boolean),   { opacity:0, duration:0.45, ease:FADE_EASE }, 0);
+    tl.to(activeRefs.current.filter(Boolean), { opacity:0, duration:0.45, ease:FADE_EASE }, 0);
+    tl.to(iconRefs.current.filter(Boolean),   { opacity:0, duration:0.55, ease:FADE_EASE }, 0.12);
+
+    // Gap must clear the icon-outline fade above (starts +0.12, runs 0.55) or the
     // wireframe starts drawing while grey cards are still dissolving over it.
-    const wireAt = phase1End + 0.70;
+    const wireAt = 0.80;
     tl.to(wireGrpRef.current, { opacity:1, duration:0.25 }, wireAt);
     wireRefs.current.forEach((p, i) => {
       if (!p) return;
@@ -267,10 +396,9 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
       duration: 0.55, ease: 'back.out(1.6)',
     }, pngAt);
 
-    // Hold ~4.5s, then fade image before loop restart
-    const holdEnd = pngAt + 0.85 + 4.5;
-    tl.to(popupRef.current,    { opacity:0, duration:0.45, ease:FADE_EASE }, holdEnd - 0.15);
-    tl.to(videoImgRef.current, { opacity:0, duration:0.60, ease:FADE_EASE }, holdEnd);
+    // Ends here — the dashboard holds. The old timeline faded it back out after a
+    // ~4.5s hold so the whole scene could loop; with the stage gated on scroll that
+    // teardown would just blank the section out while the user is still reading it.
   };
 
   return (

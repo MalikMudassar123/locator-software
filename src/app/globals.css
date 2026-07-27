@@ -875,12 +875,17 @@ h6 {
   .ss-anim-panel { height: 520px; }
 }
 @media (min-width: 1024px) {
+  /* BOTH rows are pinned by ScrollTrigger (see Scene1Icons and Scene4Pricing), so
+     the pin's requirements belong here on the base rule rather than on one row:
+       - the row must be exactly one viewport tall, or the pinned frame overflows;
+       - the anim panel must NOT be position:sticky. Sticky and pin are two answers
+         to the same problem and they fight: sticky keeps the panel in view by
+         scrolling it inside a tall row, while the pin freezes the whole row. Used
+         together the panel drifts within the frozen frame. */
   .ss-row {
     flex-direction: row;
     padding: 0 48px;
-    /* flex-start, not center: a position:sticky flex item only tracks scroll when its
-       box starts at the top of the line. Centering it inside a taller row kills the
-       pin that the scroll-scrubbed phone reveal depends on. */
+    height: 100vh;
     align-items: flex-start;
     justify-content: center;
   }
@@ -889,18 +894,20 @@ h6 {
     flex: 0 0 42%;
     width: auto;
     height: 100vh;
-    position: sticky;
-    top: 0;
+    position: relative;
     border-radius: 0;
     overflow: visible;
     background: transparent;
     margin-bottom: 0;
   }
+  /* Fill the fixed-height row rather than forcing it taller via min-height, which
+     would push the row past one viewport and break the pin. */
   .ss-text-panel {
     order: unset;
     flex: 0 0 58%;
     width: auto;
-    min-height: 100vh;
+    height: 100%;
+    min-height: 0;
     padding-top: 80px;
     padding-bottom: 80px;
     padding-left: 8px;
@@ -908,21 +915,10 @@ h6 {
     align-items: flex-start;
     text-align: left;
   }
-  /* Zigzag: when animation is on right, text gets left side padding */
+  /* Zigzag: when animation is on right, text gets left side padding. Layout only —
+     this selector no longer carries any pin-related rules. */
   .ss-row--anim-right .ss-anim-panel { order: 1; padding-left: 0; }
   .ss-row--anim-right .ss-text-panel { order: 0; padding-left: 24px; padding-right: 8px; }
-
-  /* Fleet Telematics row only. ScrollTrigger pins this whole row (see Scene1Icons)
-     so text and mockups hold still together while the phone is scrubbed in, then
-     releases to the next section. Two requirements come with that:
-       - the row must be exactly one viewport tall, or the pinned frame overflows;
-       - the anim panel must NOT be position:sticky, since the row itself is what
-         gets pinned now. Sticky stays on the base rule for the second row, which
-         still relies on it. */
-  .ss-row--anim-right { height: 100vh; }
-  .ss-row--anim-right .ss-anim-panel { position: relative; top: auto; }
-  /* Fill the fixed-height row rather than forcing it taller via min-height. */
-  .ss-row--anim-right .ss-text-panel { min-height: 0; height: 100%; }
 }
 
 /* Feature card grid — 1 col on mobile/tablet, 2 col on desktop */

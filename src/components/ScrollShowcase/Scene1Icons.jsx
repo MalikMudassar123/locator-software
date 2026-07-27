@@ -88,46 +88,87 @@ const DT_WIRE = [
   dw(188, 308, 130, 26, 6),
 ];
 
-// Three staggered columns: left (2 icons), centre (3), right (1). Sizes and gaps
-// are chosen so no two cards share a row edge — the eye reads it as a network
-// rather than a grid.
-//   pin  (30,40)          .            route (420,128)
-//          .        bell  (232,128)          .
-//   moon (30,250)   grid  (232,318)
-//                   wrench(236,470)
+// Three columns on a UNIFORM grid, matching the reference composition:
+//   · every card is the same size — no per-icon sizes
+//   · the gap between column lefts and the gap between stacked cards are the SAME
+//     pitch; that squareness is what makes the arrangement read as a lattice
+//   · the centre column is dropped by OFFSET (≈0.45 of a pitch) against the outer
+//     columns, which is what breaks the lattice into a network
+//
+// Cards are placed by CENTRE (cx/cy), not by top-left, so ICON_SIZE can change
+// without dragging every card off the grid — left/top are derived below.
+//
+//   col x:  98              289             480          (pitch 191)
+//   pin   cy  56             ·               ·
+//          ·         bell   cy 143    route cy 143
+//   moon  cy 247      grid   cy 334
+//                    wrench cy 525
+//
+//   outer columns: cy 56, 247        centre column: cy 143, 334, 525
+//   both step by the same 191 pitch; the centre column is offset by 87.
+//
+// label/tip drive the hover tooltip. Labels mirror the feature card titles in the
+// text panel so hovering an icon names the same capability the copy describes.
+// `flip` hangs the tooltip to the LEFT of the card — needed for any icon close
+// enough to the right edge that a right-hanging tooltip would run off the scene.
+const ICON_SIZE = 76;
 const ICONS = [
-  { id:'pin',    left:30,  top:40,  size:84, layer:'outer'  },
-  { id:'bell',   left:232, top:128, size:76, layer:'center' },
-  { id:'route',  left:420, top:128, size:76, layer:'outer'  },
-  { id:'moon',   left:30,  top:250, size:84, layer:'outer'  },
-  { id:'grid',   left:232, top:318, size:84, layer:'center' },
-  { id:'wrench', left:236, top:470, size:76, layer:'center' },
-];
+  { id:'pin',    cx:98,  cy:56,  layer:'outer',  label:'Live GPS Tracking',          tip:'linear-gradient(90deg,#f472b6,#8b5cf6)' },
+  { id:'bell',   cx:289, cy:143, layer:'center', label:'Instant Idle Alerts',        tip:'linear-gradient(90deg,#2dd4bf,#3b82f6)' },
+  { id:'route',  cx:480, cy:143, layer:'outer',  label:'Daily Route History',        tip:'linear-gradient(90deg,#f472b6,#a855f7)', flip:true },
+  { id:'moon',   cx:98,  cy:247, layer:'outer',  label:'After-Hours Vehicle Alerts', tip:'linear-gradient(90deg,#6366f1,#7c3aed)' },
+  { id:'grid',   cx:289, cy:334, layer:'center', label:'Dynamic Fleet Dashboard',    tip:'linear-gradient(90deg,#6366f1,#06b6d4)' },
+  { id:'wrench', cx:289, cy:525, layer:'center', label:'Fleet Service Reminders',    tip:'linear-gradient(90deg,#60a5fa,#2563eb)' },
+].map(ic => ({
+  ...ic,
+  size: ICON_SIZE,
+  left: ic.cx - ICON_SIZE / 2,
+  top:  ic.cy - ICON_SIZE / 2,
+}));
 
-// Card edge midpoints, derived from ICONS above. Every connection starts and ends
-// exactly on one of these, so the lines meet the cards flush instead of poking
-// under them — recompute these if a position or size changes.
-//   pin    box  30-114 x  40-124   centre ( 72,  82)
-//   bell   box 232-308 x 128-204   centre (270, 166)
-//   route  box 420-496 x 128-204   centre (458, 166)
-//   moon   box  30-114 x 250-334   centre ( 72, 292)
-//   grid   box 232-316 x 318-402   centre (274, 360)
-//   wrench box 236-312 x 470-546   centre (274, 508)
+// Card edges, DERIVED from ICONS. Every connection endpoint is read from here, so
+// the lines track any change to a position or to ICON_SIZE and always land flush on
+// the card they point at. These used to be hand-typed coordinates, which silently
+// drifted out of sync each time the layout moved — that drift is what left visible
+// gaps between a line's end and the icon it was supposed to touch.
+const E = Object.fromEntries(ICONS.map(ic => [ic.id, {
+  cx: ic.cx,   cy: ic.cy,
+  l:  ic.left, r:  ic.left + ic.size,
+  t:  ic.top,  b:  ic.top  + ic.size,
+}]));
+
+const R = 12; // corner radius shared by every elbow
+
+// Three elbow shapes, named for the axis order they travel. Each takes two points
+// that already sit ON a card edge and routes between them with rounded corners.
+// A leaves a vertical (left/right) edge, B enters a vertical edge.
+const hvh = (ax, ay, bx, by) => {
+  const dx = Math.sign(bx - ax), dy = Math.sign(by - ay);
+  const bend = bx - dx * R;
+  return `M ${ax} ${ay} H ${bend - dx * R} Q ${bend} ${ay} ${bend} ${ay + dy * R}`
+       + ` V ${by - dy * R} Q ${bend} ${by} ${bx} ${by}`;
+};
+// A leaves a horizontal (top/bottom) edge, B enters a vertical edge.
+const vhv = (ax, ay, bx, by) => {
+  const dx = Math.sign(bx - ax), dy = Math.sign(by - ay);
+  const bend = by - dy * R;
+  return `M ${ax} ${ay} V ${bend - dy * R} Q ${ax} ${bend} ${ax + dx * R} ${bend}`
+       + ` H ${bx - dx * R} Q ${bx} ${bend} ${bx} ${by}`;
+};
+// A leaves a vertical edge, B enters a horizontal edge.
+const hv = (ax, ay, bx, by) => {
+  const dx = Math.sign(bx - ax), dy = Math.sign(by - ay);
+  return `M ${ax} ${ay} H ${bx - dx * R} Q ${bx} ${ay} ${bx} ${ay + dy * R} V ${by}`;
+};
+
 const CONNECTIONS = [
-  // 0 — pin right → route left (over the top of the scene)
-  'M 114 82 H 396 Q 408 82 408 94 V 154 Q 408 166 420 166',
-  // 1 — pin bottom → bell left
-  'M 72 124 V 142 Q 72 154 84 154 H 220 Q 232 154 232 166',
-  // 2 — moon right → grid left
-  'M 114 292 H 208 Q 220 292 220 304 V 348 Q 220 360 232 360',
-  // 3 — grid bottom → wrench top (the straight vertical drop)
-  'M 274 402 V 470',
-  // 4 — route left → bell right (same row, straight across)
-  'M 420 166 H 308',
-  // 5 — moon bottom → wrench left
-  'M 72 334 V 484 Q 72 496 84 496 H 224 Q 236 496 236 508',
-  // 6 — bell left → moon top
-  'M 232 166 H 96 Q 84 166 84 178 V 238 Q 84 250 72 250',
+  hvh(E.pin.r,   E.pin.cy,  E.route.l,  E.route.cy),  // 0 — pin → route, over the top
+  vhv(E.pin.cx,  E.pin.b,   E.bell.l,   E.bell.cy),   // 1 — pin → bell
+  hvh(E.moon.r,  E.moon.cy, E.grid.l,   E.grid.cy),   // 2 — moon → grid
+  `M ${E.grid.cx} ${E.grid.b} V ${E.wrench.t}`,       // 3 — grid → wrench, straight drop
+  `M ${E.route.l} ${E.route.cy} H ${E.bell.r}`,       // 4 — route → bell, straight across
+  vhv(E.moon.cx, E.moon.b,  E.wrench.l, E.wrench.cy), // 5 — moon → wrench
+  hv (E.bell.l,  E.bell.cy, E.moon.cx,  E.moon.t),    // 6 — bell → moon
 ];
 
 const PAIRS = [[0,2],[0,1],[3,4],[4,5],[2,1],[3,5],[1,3]];
@@ -144,25 +185,28 @@ function GlobalDefs() {
         {/* One gradient per connection, in userSpaceOnUse — the coordinates are the
             first and last point of the matching path in CONNECTIONS, so each line
             fades between the two icons it actually joins. Move a path, move these. */}
-        <linearGradient id="s1lg0" x1="114" y1="82" x2="420" y2="166" gradientUnits="userSpaceOnUse">
+        {/* One gradient per connection, anchored to the SAME derived edge points the
+            matching path in CONNECTIONS uses — so a layout change moves the colour
+            ramp with the line instead of leaving it stranded on old geometry. */}
+        <linearGradient id="s1lg0" x1={E.pin.r} y1={E.pin.cy} x2={E.route.l} y2={E.route.cy} gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#f472b6"/><stop offset="100%" stopColor="#06b6d4"/>
         </linearGradient>
-        <linearGradient id="s1lg1" x1="72" y1="124" x2="232" y2="166" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s1lg1" x1={E.pin.cx} y1={E.pin.b} x2={E.bell.l} y2={E.bell.cy} gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#8b5cf6"/><stop offset="100%" stopColor="#3b82f6"/>
         </linearGradient>
-        <linearGradient id="s1lg2" x1="114" y1="292" x2="232" y2="360" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s1lg2" x1={E.moon.r} y1={E.moon.cy} x2={E.grid.l} y2={E.grid.cy} gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#4c1d95"/><stop offset="100%" stopColor="#6366f1"/>
         </linearGradient>
-        <linearGradient id="s1lg3" x1="274" y1="402" x2="274" y2="470" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s1lg3" x1={E.grid.cx} y1={E.grid.b} x2={E.wrench.cx} y2={E.wrench.t} gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#60a5fa"/>
         </linearGradient>
-        <linearGradient id="s1lg4" x1="420" y1="166" x2="308" y2="166" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s1lg4" x1={E.route.l} y1={E.route.cy} x2={E.bell.r} y2={E.bell.cy} gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#818cf8"/><stop offset="100%" stopColor="#06b6d4"/>
         </linearGradient>
-        <linearGradient id="s1lg5" x1="72" y1="334" x2="236" y2="508" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s1lg5" x1={E.moon.cx} y1={E.moon.b} x2={E.wrench.l} y2={E.wrench.cy} gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#8b5cf6"/><stop offset="100%" stopColor="#6366f1"/>
         </linearGradient>
-        <linearGradient id="s1lg6" x1="232" y1="166" x2="72" y2="250" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s1lg6" x1={E.bell.l} y1={E.bell.cy} x2={E.moon.cx} y2={E.moon.t} gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#3b82f6"/><stop offset="100%" stopColor="#6d28d9"/>
         </linearGradient>
         <linearGradient id="s1pg_w" x1="0" y1="0" x2="1" y2="1">
@@ -220,6 +264,8 @@ export default forwardRef(function Scene1Icons(_props, ref) {
   const activeRefs   = useRef([]);
   const iconRefs     = useRef([]);
   const lineRefs     = useRef([]);
+  const hoverRefs    = useRef([]);
+  const tipRefs      = useRef([]);
   const mobileRef    = useRef(null);
   const desktopFrameRef = useRef(null);
   const desktopWireRefs = useRef([]);
@@ -233,41 +279,62 @@ export default forwardRef(function Scene1Icons(_props, ref) {
   const playedRef    = useRef(false);
   const [scale, setScale] = useState(1);
 
-  // ── Phone gate ────────────────────────────────────────────────────────────
-  // The phone is the LAST beat of the scene: icons → browser wireframe → real
-  // dashboard → (scene HOLDS here) → phone.
+  // ── Three scroll-gated stages ─────────────────────────────────────────────
+  // The scene is a story the user advances, not one that runs itself:
   //
-  // The gate is "scroll that happens AFTER the intro finished", not "scroll" and
-  // not "section entered". Both weaker gates were already satisfied by the time
-  // the dashboard landed — the user's scroll into the section is what starts the
-  // intro — so the phone kept letting itself in with no input. Instead: when the
-  // intro completes we stamp the scroll position, and the phone waits for the page
-  // to move PHONE_IN_PX beyond that stamp. That guarantees the hold on the
-  // finished desktop, however fast or slow the user was scrolling before it.
+  //   STAGE 0  arrive        icons + connection lines, LOOPING. Nothing else is on
+  //                          screen. This holds forever if the user never scrolls.
+  //   STAGE 1  scroll        icons dissolve → browser wireframe draws → dashboard.
+  //   STAGE 2  scroll again  phone rises over the dashboard.
   //
-  // The reveal is reversible: scrolling back up past PHONE_OUT_PX runs the same
-  // timeline backwards so the phone animates out the way it came in. Only the phone
-  // reverses — the intro is still a one-shot, so the dashboard stays put.
-  const introDoneRef   = useRef(false);
-  const phoneTlRef     = useRef(null);
-  const scrollAtIntroEndRef = useRef(0);
+  // Each gate is measured in scroll pixels travelled since the PREVIOUS stage
+  // finished, never since the section was entered. That distinction is the whole
+  // trick: entering the section is what starts stage 0, so any gate anchored there
+  // is already satisfied by the time stage 0 is done, and the later stages would
+  // fire themselves with no input from the user.
+  const iconsTlRef   = useRef(null);
+  const desktopTlRef = useRef(null);
+  const phoneTlRef   = useRef(null);
 
-  // Two thresholds, not one. A single boundary would sit right where the phone
-  // flips state, so a few pixels of scroll jitter would flap it in and out. The gap
-  // between them is a dead band where nothing changes.
+  const desktopStartedRef   = useRef(false);
+  const desktopDoneRef      = useRef(false);
+  const scrollAtDesktopEndRef = useRef(0);
+  const cycleDoneRef        = useRef(false);
+  const scrollAtCycleEndRef = useRef(0);
+
+  // Stage 1 gate: scroll required AFTER the first full icon cycle has played.
+  const DESKTOP_IN_PX = 120;
+
+  // Stage 2 gate. Two thresholds, not one — a single boundary would sit right where
+  // the phone flips state, so a few pixels of scroll jitter would flap it in and
+  // out. The gap between them is a dead band where nothing changes.
   //   IN  — "scroll a little": responsive, but past any wheel inertia left over
-  //         from before the intro ended, so it can't trip itself.
+  //         from the desktop build, so it can't trip itself.
   //   OUT — scrolling back below this reverses the reveal.
   const PHONE_IN_PX  = 140;
   const PHONE_OUT_PX = 80;
 
-  // Called on every scroll update while the section is in range. Safe to call
+  // Runs on every scroll update while the section is in range. Safe to call
   // repeatedly: play() on a finished timeline and reverse() on one already at 0
-  // are both no-ops, so this just steers direction.
-  const checkPhoneScroll = () => {
+  // are both no-ops, so this only ever steers direction.
+  const checkScroll = () => {
+    // Stage 1 — needs a completed icon cycle AND fresh scroll measured from the end
+    // of it. Anchoring to the section's entry instead did not work: scrolling INTO
+    // the section is what starts the icons, so that gate was already satisfied
+    // before they had played and the dashboard appeared immediately.
+    if (!desktopStartedRef.current) {
+      if (cycleDoneRef.current &&
+          window.scrollY - scrollAtCycleEndRef.current >= DESKTOP_IN_PX) {
+        startDesktop();
+      }
+      return; // stage 2 cannot be evaluated until stage 1 has at least begun
+    }
+
+    // Stage 2 — measured from where the page was when the dashboard finished, so
+    // the scene genuinely holds on the completed desktop until the user moves on.
     const tl = phoneTlRef.current;
-    if (!tl || !introDoneRef.current) return;
-    const travelled = window.scrollY - scrollAtIntroEndRef.current;
+    if (!tl || !desktopDoneRef.current) return;
+    const travelled = window.scrollY - scrollAtDesktopEndRef.current;
     if (travelled >= PHONE_IN_PX) tl.play();
     else if (travelled <= PHONE_OUT_PX) tl.reverse();
   };
@@ -335,36 +402,39 @@ export default forwardRef(function Scene1Icons(_props, ref) {
           trigger: row,
           start: 'top top',
           // Pin the entire row — text and mockups both hold still — for this much
-          // scroll distance, then release the page to the next section. The runway
-          // has to cover the intro, the hold, and the phone reveal, or the row
-          // unpins mid-sequence and the phone finishes off-screen.
-          end: () => '+=' + window.innerHeight * 2.2,
+          // scroll distance, then release to the next section. The runway has to
+          // absorb the mandatory first icon cycle (~5.4s, during which a scrolling
+          // user is still burning runway) plus both gates and the two builds. Too
+          // short and a moderate scroller unpins before the sequence finishes.
+          end: () => '+=' + window.innerHeight * 1.8,
           pin: true,
           pinSpacing: true,
           invalidateOnRefresh: true,
-          onUpdate: checkPhoneScroll,
-          // Safety net: if the intro finished so late in the runway that the
-          // remaining scroll never covers PHONE_IN_PX, the phone would be left
-          // hidden as the section scrolls away. Force it rather than lose the beat.
-          onLeave: () => phoneTlRef.current?.play(),
+          onUpdate: checkScroll,
+          // Safety net for a fast scroller: if they blow through before the stages
+          // fire, snap to the finished end state so the section doesn't scroll away
+          // half-built (and reads correctly when they come back to it).
+          onLeave: settleToEnd,
           // Leaving upward means the whole section is behind the user — wind the
           // phone back so the reveal is armed again next time they come down.
           onLeaveBack: () => phoneTlRef.current?.reverse(),
         });
       });
 
-      // Below 1024px nothing is pinned, but the gate is measured in raw scroll
+      // Below 1024px nothing is pinned, but the gates are measured in raw scroll
       // pixels rather than pin progress, so the same check works untouched — this
       // trigger exists only to deliver scroll updates while the row is in view.
+      // start is 'top 70%' rather than 'top bottom' so stage 1's distance is
+      // measured from the row being genuinely on screen, not a viewport early.
       mm.add('(max-width: 1023px)', () => {
         buildPhoneTl();
 
         ScrollTrigger.create({
           trigger: row,
-          start: 'top bottom',
+          start: 'top 70%',
           end: 'bottom top',
-          onUpdate: checkPhoneScroll,
-          onLeave: () => phoneTlRef.current?.play(),
+          onUpdate: checkScroll,
+          onLeave: settleToEnd,
           onLeaveBack: () => phoneTlRef.current?.reverse(),
         });
       });
@@ -388,9 +458,32 @@ export default forwardRef(function Scene1Icons(_props, ref) {
 
   const getLen = (p) => { try { return p.getTotalLength(); } catch { return 400; } };
 
+  // ── Icon hover ────────────────────────────────────────────────────────────
+  // Colours the card and slides its tooltip out. Only meaningful during stage 0 —
+  // once the desktop build starts the icons are on their way out, so hovering a
+  // dissolving card would fight the fade.
+  const hoverIcon = (i, on) => {
+    const card = iconRefs.current[i];
+    if (!card || desktopStartedRef.current) return;
+
+    // Lift the hovered card so its tooltip can cross over neighbouring icons,
+    // which sit on their own z-layers. Restored to the resting layer on exit.
+    card.style.zIndex = on ? 20 : (ICONS[i].layer === 'center' ? 4 : 7);
+
+    gsap.to(hoverRefs.current[i], { opacity: on ? 1 : 0, duration: 0.28, ease: 'power2.out' });
+    gsap.to(tipRefs.current[i], {
+      opacity: on ? 1 : 0,
+      y: on ? 0 : 5,
+      duration: 0.28,
+      ease: on ? 'back.out(1.8)' : 'power2.in',
+    });
+  };
+
   const resetAll = () => {
-    gsap.set(iconRefs.current.filter(Boolean),   { opacity: 1 });
+    gsap.set(iconRefs.current.filter(Boolean),   { opacity: 1, pointerEvents: 'auto' });
     gsap.set(activeRefs.current.filter(Boolean), { opacity: 0 });
+    gsap.set(hoverRefs.current.filter(Boolean),  { opacity: 0 });
+    gsap.set(tipRefs.current.filter(Boolean),    { opacity: 0, y: 5 });
     lineRefs.current.filter(Boolean).forEach(p => {
       const len = getLen(p);
       gsap.set(p, { opacity: 0, strokeDasharray: `${len} ${len + 1}`, strokeDashoffset: len });
@@ -409,28 +502,33 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     });
   };
 
+  // ── STAGE 0 ───────────────────────────────────────────────────────────────
+  // Icons and their connections, looping. This is all the user sees on arrival and
+  // it repeats indefinitely — the desktop is not part of this timeline and cannot
+  // appear until they scroll (see startDesktop).
   const play = () => {
-    // One-shot. The row re-enters the viewport every time the user scrolls back up,
-    // and re-running this would blank the dashboard out and rebuild it mid-scroll —
-    // that was the flicker that appeared while scrolling through the pinned section.
+    // Guarded: the row re-enters the viewport every time the user scrolls back up,
+    // and restarting would yank the scene back to stage 0 from wherever it had got to.
     if (playedRef.current) return;
     playedRef.current = true;
 
     resetAll();
 
-    // Plays once and holds on the finished dashboard — no loop, so it doesn't fight
-    // the scroll-driven phone reveal that continues from this end state. Completing
-    // is what unlocks that reveal; until then the phone stays hidden no matter how
-    // far the user has scrolled.
+    // repeatDelay lands on an empty board — every beat clears itself, so the cycle
+    // ends clean and the pause reads as a breath rather than a stall.
     const tl = gsap.timeline({
-      onComplete: () => {
-        // Stamp where the page was when the dashboard finished. The phone measures
-        // its scroll requirement from here, so the scene holds until the user
-        // scrolls onward from this exact point.
-        introDoneRef.current = true;
-        scrollAtIntroEndRef.current = window.scrollY;
+      repeat: -1,
+      repeatDelay: 0.6,
+      // Fires at the end of every cycle; only the first is meaningful. This is what
+      // arms the desktop gate — until one complete pass of the icons has been shown,
+      // no amount of scrolling can advance the scene.
+      onRepeat: () => {
+        if (cycleDoneRef.current) return;
+        cycleDoneRef.current = true;
+        scrollAtCycleEndRef.current = window.scrollY;
       },
     });
+    iconsTlRef.current = tl;
     allTweens.current.push(tl);
 
     // ── PHASE 1: ICON LINES ONLY — no wireframe visible
@@ -475,23 +573,54 @@ export default forwardRef(function Scene1Icons(_props, ref) {
       if (elB)  tl.to(elB,  { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
     });
 
-    const phase1End = CONN_START + (SEQ.length - 1) * STEP + BEAT;
+    // The last beat's clear tween ends at exactly CONN_START + 2*STEP + BEAT, so the
+    // timeline already measures the full cycle and repeats from an empty board — no
+    // padding or reset call needed.
+    // NOTE: the grey outline cards are deliberately NOT faded at the end of a cycle.
+    // They belong to the scene, not to one pass; fading them would blink the whole
+    // board on every repeat. startDesktop owns their exit.
+  };
 
-    // Each beat already cleared its own pair; this only fades the remaining grey
-    // outline cards out before the wireframe starts. The line/active sweeps are a
-    // cheap safety net in case a beat was interrupted.
-    tl.to(lineRefs.current.filter(Boolean),   { opacity:0, duration:0.40, ease:FADE_EASE }, phase1End);
-    tl.to(activeRefs.current.filter(Boolean), { opacity:0, duration:0.40, ease:FADE_EASE }, phase1End);
-    tl.to(iconRefs.current.filter(Boolean),   { opacity:0, duration:0.55, ease:FADE_EASE }, phase1End + 0.10);
+  // ── STAGE 1 ───────────────────────────────────────────────────────────────
+  // Scroll brought the user past DESKTOP_IN_PX. Dissolve the icon board — from
+  // wherever the loop happens to be — then draw the wireframe and land the real
+  // dashboard. Runs once; scrolling back does not rebuild it.
+  const startDesktop = () => {
+    if (desktopStartedRef.current) return;
+    desktopStartedRef.current = true;
 
-    // ── PHASE 2: the browser wireframe builds, then the real dashboard crossfades in.
-    // This is where the intro ends — the desktop simply STAYS on screen. The phone is
-    // not part of this timeline; it is revealed by scroll (see the ScrollTrigger below).
-    // Gaps and stagger are kept tight on purpose: the phone can only start once this
-    // whole timeline is done, and both have to fit inside the pin runway above.
-    // Gap must clear the icon-outline fade above (starts +0.10, runs 0.55) or the
+    // Kill the loop rather than letting it finish its cycle: waiting would stall
+    // the response to the user's scroll by up to a full cycle. Killing leaves every
+    // element at its current opacity, and the fades below take over from there, so
+    // the handover is continuous no matter which frame we interrupted.
+    iconsTlRef.current?.kill();
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        // Stamp where the page was when the dashboard finished. Stage 2 measures
+        // its scroll requirement from here, so the scene holds on the completed
+        // desktop until the user scrolls onward from this exact point.
+        desktopDoneRef.current = true;
+        scrollAtDesktopEndRef.current = window.scrollY;
+      },
+    });
+    desktopTlRef.current = tl;
+    allTweens.current.push(tl);
+
+    // Clear whatever the loop left lit, plus any tooltip the user was hovering,
+    // then the grey cards behind it all.
+    tl.to(lineRefs.current.filter(Boolean),   { opacity:0, duration:0.45, ease:FADE_EASE }, 0);
+    tl.to(activeRefs.current.filter(Boolean), { opacity:0, duration:0.45, ease:FADE_EASE }, 0);
+    tl.to(hoverRefs.current.filter(Boolean),  { opacity:0, duration:0.30, ease:FADE_EASE }, 0);
+    tl.to(tipRefs.current.filter(Boolean),    { opacity:0, y:5, duration:0.30, ease:FADE_EASE }, 0);
+    tl.to(iconRefs.current.filter(Boolean),   { opacity:0, duration:0.55, ease:FADE_EASE }, 0.12);
+    // Stop hit-testing once they are invisible, or the cards keep intercepting the
+    // pointer over the dashboard that replaces them.
+    tl.set(iconRefs.current.filter(Boolean),  { pointerEvents:'none' }, 0.70);
+
+    // Gap must clear the icon-outline fade above (starts +0.12, runs 0.55) or the
     // wireframe starts drawing while grey cards are still dissolving over it.
-    const wireAt = phase1End + 0.70;
+    const wireAt = 0.80;
 
     tl.to(desktopWireGrpRef.current, { opacity:1, duration:0.25 }, wireAt);
     desktopWireRefs.current.forEach((p, i) => {
@@ -507,6 +636,15 @@ export default forwardRef(function Scene1Icons(_props, ref) {
       opacity: 1, x: 0, scale: 1,
       duration: 0.55, ease: 'back.out(1.6)',
     }, revealAt + 0.40);
+  };
+
+  // Fast-scroll safety net: jump straight to the finished state so the section is
+  // never left mid-build behind the user. progress(1) fires the onComplete above,
+  // which is what unlocks the phone.
+  const settleToEnd = () => {
+    startDesktop();
+    desktopTlRef.current?.progress(1);
+    phoneTlRef.current?.play();
   };
 
   return (
@@ -534,7 +672,14 @@ export default forwardRef(function Scene1Icons(_props, ref) {
       <svg ref={linesRef} width={W} height={H} viewBox={`0 0 ${W} ${H}`}
         style={{ position:'absolute', inset:0, zIndex:0, pointerEvents:'none', overflow:'visible' }}>
         <defs>
-          <filter id="s1line_glow" x="-20%" y="-20%" width="140%" height="140%">
+          {/* filterUnits MUST be userSpaceOnUse. The default (objectBoundingBox)
+              sizes the filter region from the path's own bbox, and a perfectly
+              vertical or horizontal line has a ZERO-width/height bbox — the region
+              collapses to zero area and the browser renders nothing at all. That is
+              why the straight grid→wrench drop and route→bell run were invisible
+              while every elbowed line drew fine. */}
+          <filter id="s1line_glow" filterUnits="userSpaceOnUse"
+            x={-40} y={-40} width={W + 80} height={H + 80}>
             <feGaussianBlur stdDeviation="1.2" result="b"/>
             <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
           </filter>
@@ -680,11 +825,16 @@ export default forwardRef(function Scene1Icons(_props, ref) {
       {ICONS.map((ic, i) => (
         <div key={ic.id}
           ref={el => (iconRefs.current[i] = el)}
+          onMouseEnter={() => hoverIcon(i, true)}
+          onMouseLeave={() => hoverIcon(i, false)}
           style={{
             position:'absolute', left:ic.left, top:ic.top,
             width:ic.size, height:ic.size,
             zIndex: ic.layer === 'center' ? 4 : 7,
-            pointerEvents:'none',
+            // Hover needs hit-testing. startDesktop switches this back to 'none'
+            // once the icons have faded, so invisible cards can't swallow pointer
+            // events over the dashboard underneath them.
+            pointerEvents:'auto',
             willChange:'opacity',
           }}
         >
@@ -692,6 +842,41 @@ export default forwardRef(function Scene1Icons(_props, ref) {
           <div ref={el => (activeRefs.current[i] = el)}
             style={{ position:'absolute', inset:0, opacity:0, willChange:'opacity' }}>
             <ActiveCard id={ic.id} size={ic.size}/>
+          </div>
+
+          {/* Hover colour is a SECOND active layer rather than a reuse of the one
+              above: the looping timeline owns that element's opacity, and driving
+              the same property from two places makes them fight mid-beat. */}
+          <div ref={el => (hoverRefs.current[i] = el)}
+            style={{ position:'absolute', inset:0, opacity:0, pointerEvents:'none', willChange:'opacity' }}>
+            <ActiveCard id={ic.id} size={ic.size}/>
+          </div>
+
+          <div ref={el => (tipRefs.current[i] = el)}
+            style={{
+              position:'absolute',
+              // Hangs off the card's bottom corner, overlapping it slightly so the
+              // label reads as attached to the icon rather than floating near it.
+              top: ic.size - 12,
+              ...(ic.flip
+                ? { right: Math.round(ic.size * 0.45) }
+                : { left:  Math.round(ic.size * 0.45) }),
+              padding:'7px 13px',
+              borderRadius:9,
+              background: ic.tip,
+              color:'#fff',
+              fontSize:13,
+              fontWeight:700,
+              lineHeight:1.2,
+              whiteSpace:'nowrap',
+              boxShadow:'0 8px 20px rgba(15,23,42,0.20)',
+              opacity:0,
+              transform:'translateY(5px)',
+              pointerEvents:'none',
+              willChange:'opacity, transform',
+            }}
+          >
+            {ic.label}
           </div>
         </div>
       ))}

@@ -1218,14 +1218,29 @@ export default function FeatureSlider() {
                 onMouseLeave={e=>e.currentTarget.style.color='#9ca3af'}>›</button>
             </div>
 
-            <div style={{ display:'flex', justifyContent:'center', gap:8, marginTop:20 }}>
-              {SLIDES.map((_,i) => (
-                <button key={i} onClick={()=>goTo(i)} style={{
-                  width:8, height:8, borderRadius:'50%', border:'none', cursor:'pointer', padding:0,
-                  background: i===activeIdx ? '#6b7280' : '#c9d2e8',
-                  transition:'background 0.3s ease',
-                }}/>
-              ))}
+            {/* Pill indicator: the active slide stretches into a bar, the rest stay
+                dots. Width is transitioned alongside the colour so the bar appears to
+                travel and reshape between positions rather than the fill snapping
+                from one circle to another. */}
+            <div style={{ display:'flex', justifyContent:'center', alignItems:'center', gap:9, marginTop:20 }}>
+              {SLIDES.map((_,i) => {
+                const active = i === activeIdx;
+                return (
+                  <button key={i} onClick={()=>goTo(i)}
+                    aria-label={`Go to slide ${i+1}`}
+                    aria-current={active ? 'true' : undefined}
+                    style={{
+                      width: active ? 32 : 9,
+                      height: 9,
+                      // Not '50%': that would re-round the pill into an ellipse as it
+                      // widens. A large fixed radius keeps the caps circular.
+                      borderRadius: 999,
+                      border:'none', cursor:'pointer', padding:0, flexShrink:0,
+                      background: active ? '#414e63' : '#d2dcec',
+                      transition:'width 0.38s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.38s ease',
+                    }}/>
+                );
+              })}
             </div>
           </div>
         </div>

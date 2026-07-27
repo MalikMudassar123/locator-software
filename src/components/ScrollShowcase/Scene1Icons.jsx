@@ -88,25 +88,49 @@ const DT_WIRE = [
   dw(188, 308, 130, 26, 6),
 ];
 
+// Three staggered columns: left (2 icons), centre (3), right (1). Sizes and gaps
+// are chosen so no two cards share a row edge — the eye reads it as a network
+// rather than a grid.
+//   pin  (30,40)          .            route (420,128)
+//          .        bell  (232,128)          .
+//   moon (30,250)   grid  (232,318)
+//                   wrench(236,470)
 const ICONS = [
-  { id:'pin',    left:22,  top:68,  size:70, layer:'outer'  },
-  { id:'bell',   left:183, top:143, size:64, layer:'center' },
-  { id:'route',  left:412, top:44,  size:64, layer:'outer'  },
-  { id:'moon',   left:22,  top:278, size:64, layer:'outer'  },
-  { id:'grid',   left:300, top:248, size:64, layer:'center' },
-  { id:'wrench', left:300, top:382, size:64, layer:'center' },
+  { id:'pin',    left:30,  top:40,  size:84, layer:'outer'  },
+  { id:'bell',   left:232, top:128, size:76, layer:'center' },
+  { id:'route',  left:420, top:128, size:76, layer:'outer'  },
+  { id:'moon',   left:30,  top:250, size:84, layer:'outer'  },
+  { id:'grid',   left:232, top:318, size:84, layer:'center' },
+  { id:'wrench', left:236, top:470, size:76, layer:'center' },
 ];
 
+// Card edge midpoints, derived from ICONS above. Every connection starts and ends
+// exactly on one of these, so the lines meet the cards flush instead of poking
+// under them — recompute these if a position or size changes.
+//   pin    box  30-114 x  40-124   centre ( 72,  82)
+//   bell   box 232-308 x 128-204   centre (270, 166)
+//   route  box 420-496 x 128-204   centre (458, 166)
+//   moon   box  30-114 x 250-334   centre ( 72, 292)
+//   grid   box 232-316 x 318-402   centre (274, 360)
+//   wrench box 236-312 x 470-546   centre (274, 508)
 const CONNECTIONS = [
-  'M 92 103 V 88 Q 92 76 104 76 H 412',
-  'M 92 124 H 203 Q 215 124 215 136 V 143',
-  'M 86 310 H 288 Q 300 310 300 298 V 280',
-  'M 332 312 V 382',
-  'M 444 108 V 163 Q 444 175 432 175 H 247',
-  'M 54 342 V 402 Q 54 414 66 414 H 300',
+  // 0 — pin right → route left (over the top of the scene)
+  'M 114 82 H 396 Q 408 82 408 94 V 154 Q 408 166 420 166',
+  // 1 — pin bottom → bell left
+  'M 72 124 V 142 Q 72 154 84 154 H 220 Q 232 154 232 166',
+  // 2 — moon right → grid left
+  'M 114 292 H 208 Q 220 292 220 304 V 348 Q 220 360 232 360',
+  // 3 — grid bottom → wrench top (the straight vertical drop)
+  'M 274 402 V 470',
+  // 4 — route left → bell right (same row, straight across)
+  'M 420 166 H 308',
+  // 5 — moon bottom → wrench left
+  'M 72 334 V 484 Q 72 496 84 496 H 224 Q 236 496 236 508',
+  // 6 — bell left → moon top
+  'M 232 166 H 96 Q 84 166 84 178 V 238 Q 84 250 72 250',
 ];
 
-const PAIRS = [[0,2],[0,1],[3,4],[4,5],[2,1],[3,5]];
+const PAIRS = [[0,2],[0,1],[3,4],[4,5],[2,1],[3,5],[1,3]];
 
 function GlobalDefs() {
   return (
@@ -117,23 +141,29 @@ function GlobalDefs() {
         <linearGradient id="ig_route"  x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#818cf8"/><stop offset="100%" stopColor="#06b6d4"/></linearGradient>
         <linearGradient id="ig_moon"   x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#3730a3"/><stop offset="100%" stopColor="#6d28d9"/></linearGradient>
         <linearGradient id="ig_wrench" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#60a5fa"/><stop offset="100%" stopColor="#2563eb"/></linearGradient>
-        <linearGradient id="s1lg0" x1="92" y1="103" x2="412" y2="76" gradientUnits="userSpaceOnUse">
+        {/* One gradient per connection, in userSpaceOnUse — the coordinates are the
+            first and last point of the matching path in CONNECTIONS, so each line
+            fades between the two icons it actually joins. Move a path, move these. */}
+        <linearGradient id="s1lg0" x1="114" y1="82" x2="420" y2="166" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#f472b6"/><stop offset="100%" stopColor="#06b6d4"/>
         </linearGradient>
-        <linearGradient id="s1lg1" x1="92" y1="124" x2="215" y2="143" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s1lg1" x1="72" y1="124" x2="232" y2="166" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#8b5cf6"/><stop offset="100%" stopColor="#3b82f6"/>
         </linearGradient>
-        <linearGradient id="s1lg2" x1="86" y1="310" x2="300" y2="280" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s1lg2" x1="114" y1="292" x2="232" y2="360" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#4c1d95"/><stop offset="100%" stopColor="#6366f1"/>
         </linearGradient>
-        <linearGradient id="s1lg3" x1="332" y1="312" x2="332" y2="382" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s1lg3" x1="274" y1="402" x2="274" y2="470" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#60a5fa"/>
         </linearGradient>
-        <linearGradient id="s1lg4" x1="444" y1="108" x2="247" y2="175" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s1lg4" x1="420" y1="166" x2="308" y2="166" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#818cf8"/><stop offset="100%" stopColor="#06b6d4"/>
         </linearGradient>
-        <linearGradient id="s1lg5" x1="54" y1="342" x2="300" y2="414" gradientUnits="userSpaceOnUse">
+        <linearGradient id="s1lg5" x1="72" y1="334" x2="236" y2="508" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#8b5cf6"/><stop offset="100%" stopColor="#6366f1"/>
+        </linearGradient>
+        <linearGradient id="s1lg6" x1="232" y1="166" x2="72" y2="250" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#3b82f6"/><stop offset="100%" stopColor="#6d28d9"/>
         </linearGradient>
         <linearGradient id="s1pg_w" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#06b6d4"/>
@@ -308,7 +338,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
           // scroll distance, then release the page to the next section. The runway
           // has to cover the intro, the hold, and the phone reveal, or the row
           // unpins mid-sequence and the phone finishes off-screen.
-          end: () => '+=' + window.innerHeight * 1.6,
+          end: () => '+=' + window.innerHeight * 2.2,
           pin: true,
           pinSpacing: true,
           invalidateOnRefresh: true,
@@ -348,10 +378,13 @@ export default forwardRef(function Scene1Icons(_props, ref) {
   // dashboard stuck part-drawn. Cleanup happens on unmount instead.
   const stop = () => {};
 
-  // Premium cinematic easing
-  const LINE_EASE = 'power2.inOut';
-  const ICON_EASE = 'power3.out';
-  const FADE_EASE = 'power2.in';
+  // Premium cinematic easing. All three are deliberately gentle curves: sine has the
+  // softest acceleration of the standard eases, which keeps the line draw reading as
+  // one continuous glide rather than a snap. power3/power2.in were noticeably punchier
+  // at the ends and made the same motion look abrupt.
+  const LINE_EASE = 'sine.inOut';
+  const ICON_EASE = 'power2.out';
+  const FADE_EASE = 'sine.inOut';
 
   const getLen = (p) => { try { return p.getTotalLength(); } catch { return 400; } };
 
@@ -400,41 +433,65 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     });
     allTweens.current.push(tl);
 
-    // ── PHASE 1: ICON LINES ONLY — no wireframe visible (faster)
+    // ── PHASE 1: ICON LINES ONLY — no wireframe visible
+    // One beat per connection, and each beat CLEARS ITSELF before the next begins:
+    // light the two icons the line joins → draw the line → hold → drop all three back
+    // to inactive. Beats never overlap (STEP ≥ the work inside a beat), so exactly two
+    // icons are ever lit at once — previously they accumulated until the phase ended.
     const CONN_START = 0.06;
-    const CONN_DUR   = 0.55;
-    const STAGGER    = 0.32;
-    const SEQ = [{ ci:0 }, { ci:2 }, { ci:4 }];
+    const ACT_DUR    = 0.28;  // icon grey → colour
+    const LINE_LEAD  = 0.14;  // line starts just after the first icon lights
+    const CONN_DUR   = 0.75;  // line draw — the slowest part, it's the thing being read
+    const HOLD       = 0.28;  // pair sits complete
+    const CLEAR_DUR  = 0.40;  // pair + line back to inactive
+    const BEAT       = LINE_LEAD + CONN_DUR + HOLD + CLEAR_DUR; // 1.57
+    // Slightly longer than BEAT so there is a breath of empty board between beats,
+    // rather than the next pair lighting the instant the last one finishes fading.
+    const STEP       = 1.6;
 
-    SEQ.forEach(({ ci }, idx) => {
-      const at = CONN_START + idx * STAGGER;
+    // Three beats covering all six icons exactly once each, so every feature gets a
+    // moment: pin+route, then bell+moon, then grid+wrench.
+    const SEQ = [0, 6, 3];
+
+    SEQ.forEach((ci, idx) => {
+      const at = CONN_START + idx * STEP;
       const [ia, ib] = PAIRS[ci];
       const elA = activeRefs.current[ia];
       const elB = activeRefs.current[ib];
       const line = lineRefs.current[ci];
-      if (elA) tl.to(elA, { opacity:1, duration:0.18, ease:ICON_EASE }, at);
-      if (elB) tl.to(elB, { opacity:1, duration:0.18, ease:ICON_EASE }, at + 0.08);
+
+      if (elA) tl.to(elA, { opacity:1, duration:ACT_DUR, ease:ICON_EASE }, at);
+      if (elB) tl.to(elB, { opacity:1, duration:ACT_DUR, ease:ICON_EASE }, at + 0.06);
       if (line) {
         const len = getLen(line);
-        tl.set(line, { strokeDasharray:`${len} ${len + 1}`, strokeDashoffset:len, opacity:1 }, at + 0.05);
-        tl.to(line, { strokeDashoffset:0, duration:CONN_DUR, ease:LINE_EASE }, at + 0.05);
+        tl.set(line, { strokeDasharray:`${len} ${len + 1}`, strokeDashoffset:len, opacity:1 }, at + LINE_LEAD);
+        tl.to(line, { strokeDashoffset:0, duration:CONN_DUR, ease:LINE_EASE }, at + LINE_LEAD);
       }
+
+      // Hand back to grey so the next pair starts from a clean board.
+      const clearAt = at + LINE_LEAD + CONN_DUR + HOLD;
+      if (line) tl.to(line, { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
+      if (elA)  tl.to(elA,  { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
+      if (elB)  tl.to(elB,  { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
     });
 
-    // Phase 1 ends at: 0.20 + 2*0.80 + 0.12 + 1.35 = 3.27s
-    const phase1End = CONN_START + (SEQ.length - 1) * STAGGER + 0.12 + CONN_DUR;
+    const phase1End = CONN_START + (SEQ.length - 1) * STEP + BEAT;
 
-    // Lines + active icons + icon outlines fade out COMPLETELY before wireframe starts
-    tl.to(lineRefs.current.filter(Boolean),   { opacity:0, duration:0.50, ease:FADE_EASE }, phase1End + 0.15);
-    tl.to(activeRefs.current.filter(Boolean), { opacity:0, duration:0.45, ease:FADE_EASE }, phase1End + 0.20);
-    tl.to(iconRefs.current.filter(Boolean),   { opacity:0, duration:0.55, ease:FADE_EASE }, phase1End + 0.25);
+    // Each beat already cleared its own pair; this only fades the remaining grey
+    // outline cards out before the wireframe starts. The line/active sweeps are a
+    // cheap safety net in case a beat was interrupted.
+    tl.to(lineRefs.current.filter(Boolean),   { opacity:0, duration:0.40, ease:FADE_EASE }, phase1End);
+    tl.to(activeRefs.current.filter(Boolean), { opacity:0, duration:0.40, ease:FADE_EASE }, phase1End);
+    tl.to(iconRefs.current.filter(Boolean),   { opacity:0, duration:0.55, ease:FADE_EASE }, phase1End + 0.10);
 
     // ── PHASE 2: the browser wireframe builds, then the real dashboard crossfades in.
     // This is where the intro ends — the desktop simply STAYS on screen. The phone is
     // not part of this timeline; it is revealed by scroll (see the ScrollTrigger below).
     // Gaps and stagger are kept tight on purpose: the phone can only start once this
     // whole timeline is done, and both have to fit inside the pin runway above.
-    const wireAt = phase1End + 0.55; // safe gap after fade-out completes
+    // Gap must clear the icon-outline fade above (starts +0.10, runs 0.55) or the
+    // wireframe starts drawing while grey cards are still dissolving over it.
+    const wireAt = phase1End + 0.70;
 
     tl.to(desktopWireGrpRef.current, { opacity:1, duration:0.25 }, wireAt);
     desktopWireRefs.current.forEach((p, i) => {

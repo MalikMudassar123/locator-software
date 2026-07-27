@@ -160,9 +160,12 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     allTweens.current = [];
   };
 
-  const LINE_EASE = 'power2.inOut';
-  const ICON_EASE = 'power3.out';
-  const FADE_EASE = 'power2.in';
+  // Gentle curves, matching Scene1Icons. sine has the softest acceleration of the
+  // standard eases, so the line draw reads as one continuous glide; power3/power2.in
+  // were punchier at the ends and made the same motion look abrupt.
+  const LINE_EASE = 'sine.inOut';
+  const ICON_EASE = 'power2.out';
+  const FADE_EASE = 'sine.inOut';
 
   const getLen = (p) => { try { return p.getTotalLength(); } catch { return 400; } };
 
@@ -191,36 +194,60 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     const tl = gsap.timeline({ onComplete: () => play() });
     allTweens.current.push(tl);
 
-    // ── PHASE 1: ICON LINES ONLY — no wireframe visible (faster)
+    // ── PHASE 1: ICON LINES ONLY — no wireframe visible
+    // One beat per connection, and each beat CLEARS ITSELF before the next begins:
+    // light the two icons the line joins → draw the line → hold → drop all three back
+    // to inactive. Beats never overlap (STEP > BEAT), so exactly two icons are ever
+    // lit at once — previously they accumulated until the phase ended.
     const CONN_START = 0.06;
-    const CONN_DUR   = 0.55;
-    const STAGGER    = 0.32;
-    const SEQ = [{ ci:1 }, { ci:2 }, { ci:3 }]; // overarch → shield-play → ai-alert (touches all 5 icons)
+    const ACT_DUR    = 0.28;  // icon grey → colour
+    const LINE_LEAD  = 0.14;  // line starts just after the first icon lights
+    const CONN_DUR   = 0.75;  // line draw — the slowest part, it's the thing being read
+    const HOLD       = 0.28;  // pair sits complete
+    const CLEAR_DUR  = 0.40;  // pair + line back to inactive
+    const BEAT       = LINE_LEAD + CONN_DUR + HOLD + CLEAR_DUR; // 1.57
+    // Slightly longer than BEAT so there is a breath of empty board between beats.
+    const STEP       = 1.6;
 
-    SEQ.forEach(({ ci }, idx) => {
-      const at = CONN_START + idx * STAGGER;
-      const iconIdx = PAIRS[ci];
-      iconIdx.forEach(ii => {
-        const el = activeRefs.current[ii];
-        if (el) tl.to(el, { opacity:1, duration:0.18, ease:ICON_EASE }, at);
-      });
+    // overarch (cam+ai) → shield+play → ai+alert. Five icons can't split into three
+    // disjoint pairs, so `ai` is the one that appears twice.
+    const SEQ = [1, 2, 3];
+
+    SEQ.forEach((ci, idx) => {
+      const at = CONN_START + idx * STEP;
+      const [ia, ib] = PAIRS[ci];
+      const elA = activeRefs.current[ia];
+      const elB = activeRefs.current[ib];
       const line = lineRefs.current[ci];
+
+      if (elA) tl.to(elA, { opacity:1, duration:ACT_DUR, ease:ICON_EASE }, at);
+      if (elB) tl.to(elB, { opacity:1, duration:ACT_DUR, ease:ICON_EASE }, at + 0.06);
       if (line) {
         const len = getLen(line);
-        tl.set(line, { strokeDasharray:`${len} ${len + 1}`, strokeDashoffset:len, opacity:1 }, at + 0.05);
-        tl.to(line, { strokeDashoffset:0, duration:CONN_DUR, ease:LINE_EASE }, at + 0.05);
+        tl.set(line, { strokeDasharray:`${len} ${len + 1}`, strokeDashoffset:len, opacity:1 }, at + LINE_LEAD);
+        tl.to(line, { strokeDashoffset:0, duration:CONN_DUR, ease:LINE_EASE }, at + LINE_LEAD);
       }
+
+      // Hand back to grey so the next pair starts from a clean board.
+      const clearAt = at + LINE_LEAD + CONN_DUR + HOLD;
+      if (line) tl.to(line, { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
+      if (elA)  tl.to(elA,  { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
+      if (elB)  tl.to(elB,  { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
     });
 
-    const phase1End = CONN_START + (SEQ.length - 1) * STAGGER + 0.12 + CONN_DUR;
+    const phase1End = CONN_START + (SEQ.length - 1) * STEP + BEAT;
 
-    // Lines + active icons + icon outlines fade out COMPLETELY before wireframe starts
-    tl.to(lineRefs.current.filter(Boolean),   { opacity:0, duration:0.50, ease:FADE_EASE }, phase1End + 0.15);
-    tl.to(activeRefs.current.filter(Boolean), { opacity:0, duration:0.45, ease:FADE_EASE }, phase1End + 0.20);
-    tl.to(iconRefs.current.filter(Boolean),   { opacity:0, duration:0.55, ease:FADE_EASE }, phase1End + 0.25);
+    // Each beat already cleared its own pair; this only fades the remaining grey
+    // outline cards out. The line/active sweeps are a cheap safety net in case a
+    // beat was interrupted.
+    tl.to(lineRefs.current.filter(Boolean),   { opacity:0, duration:0.40, ease:FADE_EASE }, phase1End);
+    tl.to(activeRefs.current.filter(Boolean), { opacity:0, duration:0.40, ease:FADE_EASE }, phase1End);
+    tl.to(iconRefs.current.filter(Boolean),   { opacity:0, duration:0.55, ease:FADE_EASE }, phase1End + 0.10);
 
     // ── PHASE 2: WIREFRAME builds (only after lines fully gone) → video PNG
-    const wireAt = phase1End + 0.80; // safe gap after fade-out completes
+    // Gap must clear the icon-outline fade above (starts +0.10, runs 0.55) or the
+    // wireframe starts drawing while grey cards are still dissolving over it.
+    const wireAt = phase1End + 0.70;
     tl.to(wireGrpRef.current, { opacity:1, duration:0.25 }, wireAt);
     wireRefs.current.forEach((p, i) => {
       if (!p) return;

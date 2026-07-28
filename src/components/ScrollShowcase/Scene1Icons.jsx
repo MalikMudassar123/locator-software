@@ -327,18 +327,30 @@ export default forwardRef(function Scene1Icons(_props, ref) {
   // trick: entering the section is what starts stage 0, so any gate anchored there
   // is already satisfied by the time stage 0 is done, and the later stages would
   // fire themselves with no input from the user.
+  //
+  // BOTH DIRECTIONS. Scrolling back unwinds the stages in the reverse order they
+  // were built — phone sinks first, then the dashboard un-builds to the wireframe
+  // and back to the looping icon board. Stage 1 used to be a one-shot that could
+  // only ever run forward, so scrolling back left the dashboard stranded on screen
+  // with no way to see the icon story again.
   const iconsTlRef   = useRef(null);
   const desktopTlRef = useRef(null);
   const phoneTlRef   = useRef(null);
 
-  const desktopStartedRef   = useRef(false);
+  // "Engaged" = stage 1 is showing or on its way in/out, i.e. NOT resting on the
+  // bare icon board. Cleared again when the reverse completes.
+  const desktopEngagedRef   = useRef(false);
   const desktopDoneRef      = useRef(false);
   const scrollAtDesktopEndRef = useRef(0);
   const cycleDoneRef        = useRef(false);
   const scrollAtCycleEndRef = useRef(0);
 
-  // Stage 1 gate: scroll required AFTER the first full icon cycle has played.
-  const DESKTOP_IN_PX = 120;
+  // Stage 1 gates, measured from the end of the first full icon cycle. Two
+  // thresholds for the same reason stage 2 has two: a single boundary sits exactly
+  // where the stage flips, so a few pixels of scroll jitter would flap it in and
+  // out. The 60px between them is a dead band where nothing changes.
+  const DESKTOP_IN_PX  = 120;
+  const DESKTOP_OUT_PX = 60;
 
   // Stage 2 gate. Two thresholds, not one — a single boundary would sit right where
   // the phone flips state, so a few pixels of scroll jitter would flap it in and
@@ -349,29 +361,86 @@ export default forwardRef(function Scene1Icons(_props, ref) {
   const PHONE_IN_PX  = 140;
   const PHONE_OUT_PX = 80;
 
+  // Where the page was when the phone finished sinking back down, or null if the
+  // phone has not been up this pass. Stage 1's reverse is measured from HERE, not
+  // from the cycle anchor — see the comment on DESKTOP_BACK_PX.
+  const scrollAtPhoneOutRef = useRef(null);
+
+  // Stage 1 REVERSE gate: further upward scroll required after the phone is fully
+  // down, before the dashboard starts un-building. Without a separate anchor both
+  // stages sit within ~140px of each other on the way back — the forward pass only
+  // needs DESKTOP_IN_PX (120) of travel between them — so a single flick reversed
+  // the entire scene at once instead of one step at a time.
+  // BACK  — keep scrolling up this far past the phone landing and stage 1 unwinds.
+  // BAND  — scrolling back DOWN this far inside that distance sends it forward
+  //         again; the gap between the two is the dead band that stops flapping.
+  const DESKTOP_BACK_PX = 160;
+  const DESKTOP_BACK_BAND = 70;
+
   // Runs on every scroll update while the section is in range. Safe to call
   // repeatedly: play() on a finished timeline and reverse() on one already at 0
   // are both no-ops, so this only ever steers direction.
   const checkScroll = () => {
-    // Stage 1 — needs a completed icon cycle AND fresh scroll measured from the end
-    // of it. Anchoring to the section's entry instead did not work: scrolling INTO
-    // the section is what starts the icons, so that gate was already satisfied
-    // before they had played and the dashboard appeared immediately.
-    if (!desktopStartedRef.current) {
-      if (cycleDoneRef.current &&
-          window.scrollY - scrollAtCycleEndRef.current >= DESKTOP_IN_PX) {
-        startDesktop();
+    // Nothing can advance until the icons have shown a full pass. Anchoring the
+    // stage-1 gate to the section's entry instead did not work: scrolling INTO the
+    // section is what starts the icons, so that gate was already satisfied before
+    // they had played and the dashboard appeared immediately.
+    if (!cycleDoneRef.current) return;
+
+    const sy  = window.scrollY;
+    const ptl = phoneTlRef.current;
+
+    // ── STAGE 2 (phone) ──────────────────────────────────────────────────────
+    // Evaluated FIRST because it is the outermost stage: on the way back it has to
+    // be fully down before stage 1 is allowed to unwind out from under it, or the
+    // two collapse together into one mushy transition instead of reversing in
+    // order. Measured from where the page was when the dashboard finished, so the
+    // scene genuinely holds on the completed desktop until the user moves on.
+    if (desktopDoneRef.current && ptl) {
+      const travelled = sy - scrollAtDesktopEndRef.current;
+      if (travelled >= PHONE_IN_PX) {
+        // Coming back up the scene: this is also what re-arms stage 1's reverse
+        // anchor, so a second trip down and back measures from the new landing.
+        scrollAtPhoneOutRef.current = null;
+        playPhone();
+        return;
       }
-      return; // stage 2 cannot be evaluated until stage 1 has at least begun
+      if (travelled > PHONE_OUT_PX) return;   // dead band — hold whatever it is
+      // Only touch the phone if it is actually up. Calling reverse() on a timeline
+      // already parked at 0 makes GSAP fire onReverseComplete immediately, which
+      // would stamp scrollAtPhoneOutRef at the moment the DASHBOARD landed — the
+      // phone having never been seen. Stage 1 would then measure its reverse gate
+      // against a landing that never happened.
+      if (ptl.progress() > 0) { reversePhone(); return; }  // still up — sink it first
     }
 
-    // Stage 2 — measured from where the page was when the dashboard finished, so
-    // the scene genuinely holds on the completed desktop until the user moves on.
-    const tl = phoneTlRef.current;
-    if (!tl || !desktopDoneRef.current) return;
-    const travelled = window.scrollY - scrollAtDesktopEndRef.current;
-    if (travelled >= PHONE_IN_PX) tl.play();
-    else if (travelled <= PHONE_OUT_PX) tl.reverse();
+    // ── STAGE 1 (dashboard) ──────────────────────────────────────────────────
+    if (!desktopEngagedRef.current) {
+      if (sy - scrollAtCycleEndRef.current >= DESKTOP_IN_PX) playDesktop();
+      return;
+    }
+
+    // Engaged — steer direction. Which anchor applies depends on whether the phone
+    // stage was ever reached, because that is what decides where "the step before
+    // this one" ended.
+    const out = scrollAtPhoneOutRef.current;
+    if (out !== null) {
+      // Phone has been up and has landed. Its landing point is the anchor, so
+      // unwinding the dashboard is a genuinely separate step: the flick that drops
+      // the phone no longer also tears down everything underneath it.
+      const back = out - sy;
+      if (back >= DESKTOP_BACK_PX) reverseDesktop();
+      else if (back <= DESKTOP_BACK_PX - DESKTOP_BACK_BAND) desktopTlRef.current?.play();
+      return;
+    }
+
+    // Phone was never revealed, so the cycle anchor is still the nearest thing to
+    // "where the previous step ended".
+    const fromCycle = sy - scrollAtCycleEndRef.current;
+    // play() on a finished timeline is a no-op, so this only ever steers direction
+    // — including catching a reverse still in flight and sending it forward again.
+    if (fromCycle >= DESKTOP_IN_PX) desktopTlRef.current?.play();
+    else if (fromCycle <= DESKTOP_OUT_PX) reverseDesktop();
   };
 
   useEffect(() => {
@@ -422,7 +491,14 @@ export default forwardRef(function Scene1Icons(_props, ref) {
         // so it stutters with every wheel delta and freezes the moment the user stops
         // moving. Scroll only decides which DIRECTION this runs; once pointed it plays
         // on its own clock, which is what makes both the reveal and the reverse smooth.
-        const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out' } });
+        const tl = gsap.timeline({
+          paused: true,
+          defaults: { ease: 'power2.out' },
+          // Stamp where the page was the moment the phone finishes sinking. Stage 1
+          // measures its own reverse from this point, which is what turns "scroll
+          // back" into two distinct steps instead of one collapse.
+          onReverseComplete: () => { scrollAtPhoneOutRef.current = window.scrollY; },
+        });
         tl.to(mobileRef.current, { opacity: 1, yPercent: 0, duration: 0.9 }, 0);
         tl.to(mobilePopupRef.current,
           { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(1.6)' }, 0.65);
@@ -437,11 +513,16 @@ export default forwardRef(function Scene1Icons(_props, ref) {
           trigger: row,
           start: 'top top',
           // Pin the entire row — text and mockups both hold still — for this much
-          // scroll distance, then release to the next section. The runway has to
-          // absorb the mandatory first icon cycle (~5.4s, during which a scrolling
-          // user is still burning runway) plus both gates and the two builds. Too
-          // short and a moderate scroller unpins before the sequence finishes.
-          end: () => '+=' + window.innerHeight * 1.8,
+          // scroll distance, then release to the next section.
+          //
+          // The runway has to absorb the mandatory first icon pass (~8.6s, during
+          // which a scrolling user is still burning runway), then DESKTOP_IN_PX,
+          // the ~4.2s dashboard build, PHONE_IN_PX, and the ~1.2s phone reveal.
+          // 1.8 was sized for a much shorter icon pass; once the chain grew to five
+          // links with a slower draw it no longer fit, and overrunning it trips
+          // onLeave → settleToEnd, which is what snaps the dashboard and phone on
+          // together with no build animation.
+          end: () => '+=' + window.innerHeight * 2.6,
           pin: true,
           pinSpacing: true,
           invalidateOnRefresh: true,
@@ -450,9 +531,10 @@ export default forwardRef(function Scene1Icons(_props, ref) {
           // fire, snap to the finished end state so the section doesn't scroll away
           // half-built (and reads correctly when they come back to it).
           onLeave: settleToEnd,
-          // Leaving upward means the whole section is behind the user — wind the
-          // phone back so the reveal is armed again next time they come down.
-          onLeaveBack: () => phoneTlRef.current?.reverse(),
+          // Leaving upward means the whole section is behind the user — wind BOTH
+          // stages back so the story is armed again next time they come down. This
+          // used to reverse only the phone, which left the dashboard stranded.
+          onLeaveBack: settleToStart,
         });
       });
 
@@ -470,7 +552,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
           end: 'bottom top',
           onUpdate: checkScroll,
           onLeave: settleToEnd,
-          onLeaveBack: () => phoneTlRef.current?.reverse(),
+          onLeaveBack: settleToStart,
         });
       });
     }, el);
@@ -498,7 +580,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
   // dissolving card would fight the fade.
   const hoverIcon = (i, on) => {
     const card = iconRefs.current[i];
-    if (!card || desktopStartedRef.current) return;
+    if (!card || desktopEngagedRef.current) return;
 
     // Lift the hovered card so its tooltip can cross over neighbouring icons,
     // which sit on their own z-layers. Restored to the resting layer on exit.
@@ -557,18 +639,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
 
     // repeatDelay lands on an empty board — every beat clears itself, so the cycle
     // ends clean and the pause reads as a breath rather than a stall.
-    const tl = gsap.timeline({
-      repeat: -1,
-      repeatDelay: 0.6,
-      // Fires at the end of every cycle; only the first is meaningful. This is what
-      // arms the desktop gate — until one complete pass of the icons has been shown,
-      // no amount of scrolling can advance the scene.
-      onRepeat: () => {
-        if (cycleDoneRef.current) return;
-        cycleDoneRef.current = true;
-        scrollAtCycleEndRef.current = window.scrollY;
-      },
-    });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.6 });
     iconsTlRef.current = tl;
     allTweens.current.push(tl);
 
@@ -685,6 +756,22 @@ export default forwardRef(function Scene1Icons(_props, ref) {
       if (tgt) tl.to(tgt, { opacity:1, scale:1, duration:ACT_DUR, ease:'back.out(1.7)' }, arriveAt);
     });
 
+    // ── Arm the stage-1 gate ────────────────────────────────────────────────────
+    // The moment the last link has landed and lit, the user has seen the whole
+    // story, so scrolling is allowed to advance the scene from here.
+    //
+    // This used to hang off the timeline's `onRepeat`, which fires a further ~1.6s
+    // later — after the board clears AND after repeatDelay. That made the mandatory
+    // wait 10.2s rather than 8.6s, and every one of those seconds is scroll runway
+    // being burnt by anyone who keeps scrolling. Overrunning the runway trips the
+    // pin's onLeave safety net, which snaps the dashboard and phone on together
+    // with no build animation at all.
+    tl.call(() => {
+      if (cycleDoneRef.current) return;
+      cycleDoneRef.current = true;
+      scrollAtCycleEndRef.current = window.scrollY;
+    }, null, lastArrive + ACT_DUR);
+
     // ── Clear the last beat, so the cycle restarts from an empty board ───────────
     // Only the final link is still on screen at this point; every earlier one was
     // already retired by the beat that followed it.
@@ -699,26 +786,36 @@ export default forwardRef(function Scene1Icons(_props, ref) {
   };
 
   // ── STAGE 1 ───────────────────────────────────────────────────────────────
-  // Scroll brought the user past DESKTOP_IN_PX. Dissolve the icon board — from
-  // wherever the loop happens to be — then draw the wireframe and land the real
-  // dashboard. Runs once; scrolling back does not rebuild it.
-  const startDesktop = () => {
-    if (desktopStartedRef.current) return;
-    desktopStartedRef.current = true;
-
-    // Kill the loop rather than letting it finish its cycle: waiting would stall
-    // the response to the user's scroll by up to a full cycle. Killing leaves every
-    // element at its current opacity, and the fades below take over from there, so
-    // the handover is continuous no matter which frame we interrupted.
-    iconsTlRef.current?.kill();
+  // Dissolve the icon board — from wherever the loop happens to be — then draw the
+  // wireframe and land the real dashboard. Scrolling back runs the whole thing in
+  // reverse: dashboard fades, wireframe undraws, icons return.
+  //
+  // Built ONCE and then steered by scroll — play() to reveal, reverse() to unwind.
+  // Deliberately `paused`, and deliberately not rebuilt: every tween below records
+  // its start value when the timeline is CREATED, so a rebuilt timeline would
+  // capture whatever half-faded state the board happened to be in and reverse to
+  // that instead of to the icon board.
+  const buildDesktop = () => {
+    if (desktopTlRef.current) return desktopTlRef.current;
 
     const tl = gsap.timeline({
+      paused: true,
       onComplete: () => {
         // Stamp where the page was when the dashboard finished. Stage 2 measures
         // its scroll requirement from here, so the scene holds on the completed
         // desktop until the user scrolls onward from this exact point.
         desktopDoneRef.current = true;
         scrollAtDesktopEndRef.current = window.scrollY;
+      },
+      onReverseComplete: () => {
+        // Board is back to bare icons — hand control to the loop again.
+        desktopEngagedRef.current = false;
+        desktopDoneRef.current = false;
+        // Drop the phone's landing anchor too. The next trip down re-arms both
+        // stages from scratch; leaving a stale anchor here would make the dashboard
+        // measure its reverse against a landing from a previous pass.
+        scrollAtPhoneOutRef.current = null;
+        iconsTlRef.current?.resume();
       },
     });
     desktopTlRef.current = tl;
@@ -754,15 +851,78 @@ export default forwardRef(function Scene1Icons(_props, ref) {
       opacity: 1, x: 0, scale: 1,
       duration: 0.55, ease: 'back.out(1.6)',
     }, revealAt + 0.40);
+
+    return tl;
   };
 
-  // Fast-scroll safety net: jump straight to the finished state so the section is
-  // never left mid-build behind the user. progress(1) fires the onComplete above,
-  // which is what unlocks the phone.
+  // Unwinding runs a little quicker than building. A reveal earns its time — it is
+  // showing the user something new — but replaying the same beats backwards at the
+  // same pace feels like being held up, and the user is scrolling AWAY.
+  const REVERSE_RATE = 1.35;
+
+  const playPhone = () => {
+    const tl = phoneTlRef.current;
+    if (!tl) return;
+    tl.timeScale(1);
+    tl.play();
+  };
+
+  const reversePhone = () => {
+    const tl = phoneTlRef.current;
+    if (!tl) return;
+    tl.timeScale(REVERSE_RATE);
+    tl.reverse();
+  };
+
+  const playDesktop = () => {
+    const tl = buildDesktop();
+    tl.timeScale(1);
+    desktopEngagedRef.current = true;
+    // PAUSE the icon loop, never kill it. Reversing has to hand the board back to
+    // this exact timeline, and a killed one cannot be resumed. Pausing also leaves
+    // every element at its current opacity, so the fades below take over from
+    // there and the handover stays continuous whichever frame we interrupted.
+    iconsTlRef.current?.pause();
+    // Re-record start values whenever we replay from the top. GSAP caches a tween's
+    // start value the first time it renders, but the icon loop has kept running and
+    // been paused on a DIFFERENT frame since then — without this, a second forward
+    // play would snap the board back to the frame of the first play before fading.
+    if (tl.progress() === 0) tl.invalidate();
+    tl.play();
+  };
+
+  const reverseDesktop = () => {
+    const tl = desktopTlRef.current;
+    if (!tl) return;
+    // Cleared up front, not in onReverseComplete: stage 2 must stop being evaluated
+    // the instant we start going back, or it would keep re-reading a phone gate
+    // anchored to a dashboard that is busy disappearing.
+    desktopDoneRef.current = false;
+    tl.timeScale(REVERSE_RATE);
+    tl.reverse();
+  };
+
+  // Runs when the user reaches the end of the pin runway before the sequence has
+  // finished. All it does is make sure the dashboard is ON ITS WAY IN, playing at
+  // normal speed.
+  //
+  // It deliberately does NOT snap to the end and does NOT pull the phone in with it.
+  // Doing both — progress(1) plus playPhone() — is what made a normal-speed scroll
+  // look like the entire scene appeared at once, fully formed, with no build
+  // animation whatsoever: the icon pass takes ~8.6s of wall-clock time, a scrolling
+  // user reaches the end of the runway well before that, and this fired INSTEAD of
+  // the real sequence rather than after it.
   const settleToEnd = () => {
-    startDesktop();
-    desktopTlRef.current?.progress(1);
-    phoneTlRef.current?.play();
+    if (!desktopEngagedRef.current) playDesktop();
+  };
+
+  // Leaving upward means the whole section is behind the user: wind both stages
+  // back so the story is armed again next time they come down into it. Both are
+  // reversed outright rather than stepped, because there is no longer a user
+  // watching the order — this is a reset, not a transition.
+  const settleToStart = () => {
+    reversePhone();
+    reverseDesktop();
   };
 
   return (

@@ -108,18 +108,23 @@ const DT_WIRE = [
 //   outer columns: cy 56, 247        centre column: cy 143, 334, 525
 //   both step by the same 191 pitch; the centre column is offset by 87.
 //
-// label/tip drive the hover tooltip. Labels mirror the feature card titles in the
+// Tooltip pill background. One shared neutral grey for every icon — the colour in
+// this scene belongs to the active icons and the connection lines; a coloured pill
+// competed with them and made the board read as six unrelated brands.
+const TIP_BG = 'linear-gradient(90deg, #6b7280 0%, #4b5563 100%)';
+
+// `label` drives the hover tooltip. Labels mirror the feature card titles in the
 // text panel so hovering an icon names the same capability the copy describes.
 // `flip` hangs the tooltip to the LEFT of the card — needed for any icon close
 // enough to the right edge that a right-hanging tooltip would run off the scene.
 const ICON_SIZE = 76;
 const ICONS = [
-  { id:'pin',    cx:98,  cy:56,  layer:'outer',  label:'Live GPS Tracking',          tip:'linear-gradient(90deg, #10b981 0%, #06b6d4 100%)' },
-  { id:'bell',   cx:289, cy:143, layer:'center', label:'Instant Idle Alerts',        tip:'linear-gradient(90deg, #14b8a6 0%, #6366f1 100%)' },
-  { id:'route',  cx:480, cy:143, layer:'outer',  label:'Daily Route History',        tip:'linear-gradient(90deg, #ec4899 0%, #8b5cf6 100%)', flip:true },
-  { id:'moon',   cx:98,  cy:247, layer:'outer',  label:'After-Hours Vehicle Alerts', tip:'linear-gradient(90deg, #6366f1 0%, #a855f7 100%)' },
-  { id:'grid',   cx:289, cy:334, layer:'center', label:'Dynamic Fleet Dashboard',    tip:'linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%)' },
-  { id:'wrench', cx:289, cy:525, layer:'center', label:'Fleet Service Reminders',    tip:'linear-gradient(90deg, #60a5fa 0%, #a78bfa 100%)' },
+  { id:'pin',    cx:98,  cy:56,  layer:'outer',  label:'Live GPS Tracking' },
+  { id:'bell',   cx:289, cy:143, layer:'center', label:'Instant Idle Alerts' },
+  { id:'route',  cx:480, cy:143, layer:'outer',  label:'Daily Route History', flip:true },
+  { id:'moon',   cx:98,  cy:247, layer:'outer',  label:'After-Hours Vehicle Alerts' },
+  { id:'grid',   cx:289, cy:334, layer:'center', label:'Dynamic Fleet Dashboard' },
+  { id:'wrench', cx:289, cy:525, layer:'center', label:'Fleet Service Reminders' },
 ].map(ic => ({
   ...ic,
   size: ICON_SIZE,
@@ -139,6 +144,12 @@ const E = Object.fromEntries(ICONS.map(ic => [ic.id, {
 }]));
 
 const R = 12; // corner radius shared by every elbow
+
+// Resting radius of the travelling dot. Visibility here comes from a bright, solid
+// core rather than from sheer size — the background is a very pale #f5f7fa, so a
+// crisp white centre with a defined blue edge carries much further than a large
+// soft disc, and it stays readable without swamping the fine stroke it rides.
+const DOT_R = 5.5;
 
 // Three elbow shapes, named for the axis order they travel. Each takes two points
 // that already sit ON a card edge and routes between them with rounded corners.
@@ -162,17 +173,55 @@ const hv = (ax, ay, bx, by) => {
   return `M ${ax} ${ay} H ${bx - dx * R} Q ${bx} ${ay} ${bx} ${ay + dy * R} V ${by}`;
 };
 
-const CONNECTIONS = [
-  hvh(E.pin.r,   E.pin.cy,  E.route.l,  E.route.cy),  // 0 — pin → route, over the top
-  vhv(E.pin.cx,  E.pin.b,   E.bell.l,   E.bell.cy),   // 1 — pin → bell
-  hvh(E.moon.r,  E.moon.cy, E.grid.l,   E.grid.cy),   // 2 — moon → grid
-  `M ${E.grid.cx} ${E.grid.b} V ${E.wrench.t}`,       // 3 — grid → wrench, straight drop
-  `M ${E.route.l} ${E.route.cy} H ${E.bell.r}`,       // 4 — route → bell, straight across
-  vhv(E.moon.cx, E.moon.b,  E.wrench.l, E.wrench.cy), // 5 — moon → wrench
-  hv (E.bell.l,  E.bell.cy, E.moon.cx,  E.moon.t),    // 6 — bell → moon
+// A run with no bend at all — used where two cards already share an axis.
+const straight = (ax, ay, bx, by) => `M ${ax} ${ay} ${ax === bx ? `V ${by}` : `H ${bx}`}`;
+
+// ── The flow ──────────────────────────────────────────────────────────────────
+// The board tells ONE connected story, played start to finish in this order:
+//
+//     Live GPS ──▶ Idle Alerts ──▶ Route History
+//                       │
+//                       ▼
+//                After-Hours ──▶ Fleet Dashboard ──▶ Service Reminders
+//
+// Two properties make this a chain rather than a pile of pairs, and both are load-
+// bearing:
+//
+//   · every link's `from` is either the very first icon or the `to` of an EARLIER
+//     link, so the signal is handed forward and no link ever starts from a cold
+//     card. `bell` is the hub — it receives once and sends twice.
+//   · order is meaningful. Each step assumes its source is already lit, so FLOW
+//     cannot be reordered without re-checking that invariant.
+//
+// This replaces an older 7-entry CONNECTIONS/PAIRS pair of arrays that had to be
+// kept index-aligned by hand, of which only 3 were ever animated. Endpoints live
+// here once and feed the path, the gradient, and the timeline alike.
+const link = (from, to, a, b, shape, c1, c2) => ({
+  from, to, a, b, c1, c2,
+  d: shape(a[0], a[1], b[0], b[1]),
+});
+
+// ROUTING RULE: no two links may run parallel and adjacent, and no two may share an
+// axis over the same span. Adjacent parallel runs merge into what looks like a single
+// doubled line, which destroys the whole point of separate connections — `pin→bell`
+// used to leave pin's BOTTOM edge and turn right at y=131, running 12px above and
+// alongside `bell→moon`'s return at y=143, with both verticals sitting on x=98. Two
+// distinct links read as one racetrack. It now leaves pin's RIGHT edge and drops into
+// bell's TOP edge instead, which keeps it clear of everything else on the board.
+const FLOW = [
+  link('pin',  'bell',   [E.pin.r,   E.pin.cy],  [E.bell.cx,  E.bell.t],    hv,       '#8b5cf6', '#3b82f6'),
+  link('bell', 'route',  [E.bell.r,  E.bell.cy], [E.route.l,  E.route.cy],  straight, '#3b82f6', '#06b6d4'),
+  link('bell', 'moon',   [E.bell.l,  E.bell.cy], [E.moon.cx,  E.moon.t],    hv,       '#3b82f6', '#6d28d9'),
+  link('moon', 'grid',   [E.moon.r,  E.moon.cy], [E.grid.l,   E.grid.cy],   hvh,      '#4c1d95', '#6366f1'),
+  link('grid', 'wrench', [E.grid.cx, E.grid.b],  [E.wrench.cx, E.wrench.t], straight, '#6366f1', '#60a5fa'),
 ];
 
-const PAIRS = [[0,2],[0,1],[3,4],[4,5],[2,1],[3,5],[1,3]];
+// id → index into ICONS, which is the same index activeRefs/iconRefs use.
+const IDX = Object.fromEntries(ICONS.map((ic, i) => [ic.id, i]));
+
+// FLOW is played ONE LINK AT A TIME. Exactly one connection is ever on screen: when
+// a link begins, the previous link's line is cleared away, so the board never shows
+// two lines at once and can never read as a single continuous run through the icons.
 
 function GlobalDefs() {
   return (
@@ -183,33 +232,17 @@ function GlobalDefs() {
         <linearGradient id="ig_route"  x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#818cf8"/><stop offset="100%" stopColor="#06b6d4"/></linearGradient>
         <linearGradient id="ig_moon"   x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#3730a3"/><stop offset="100%" stopColor="#6d28d9"/></linearGradient>
         <linearGradient id="ig_wrench" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#60a5fa"/><stop offset="100%" stopColor="#2563eb"/></linearGradient>
-        {/* One gradient per connection, in userSpaceOnUse — the coordinates are the
-            first and last point of the matching path in CONNECTIONS, so each line
-            fades between the two icons it actually joins. Move a path, move these. */}
-        {/* One gradient per connection, anchored to the SAME derived edge points the
-            matching path in CONNECTIONS uses — so a layout change moves the colour
-            ramp with the line instead of leaving it stranded on old geometry. */}
-        <linearGradient id="s1lg0" x1={E.pin.r} y1={E.pin.cy} x2={E.route.l} y2={E.route.cy} gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#f472b6"/><stop offset="100%" stopColor="#06b6d4"/>
-        </linearGradient>
-        <linearGradient id="s1lg1" x1={E.pin.cx} y1={E.pin.b} x2={E.bell.l} y2={E.bell.cy} gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#8b5cf6"/><stop offset="100%" stopColor="#3b82f6"/>
-        </linearGradient>
-        <linearGradient id="s1lg2" x1={E.moon.r} y1={E.moon.cy} x2={E.grid.l} y2={E.grid.cy} gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#4c1d95"/><stop offset="100%" stopColor="#6366f1"/>
-        </linearGradient>
-        <linearGradient id="s1lg3" x1={E.grid.cx} y1={E.grid.b} x2={E.wrench.cx} y2={E.wrench.t} gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#60a5fa"/>
-        </linearGradient>
-        <linearGradient id="s1lg4" x1={E.route.l} y1={E.route.cy} x2={E.bell.r} y2={E.bell.cy} gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#818cf8"/><stop offset="100%" stopColor="#06b6d4"/>
-        </linearGradient>
-        <linearGradient id="s1lg5" x1={E.moon.cx} y1={E.moon.b} x2={E.wrench.l} y2={E.wrench.cy} gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#8b5cf6"/><stop offset="100%" stopColor="#6366f1"/>
-        </linearGradient>
-        <linearGradient id="s1lg6" x1={E.bell.l} y1={E.bell.cy} x2={E.moon.cx} y2={E.moon.t} gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#3b82f6"/><stop offset="100%" stopColor="#6d28d9"/>
-        </linearGradient>
+        {/* One gradient per link, generated FROM FLOW rather than hand-written beside
+            it. userSpaceOnUse anchors each ramp to the exact two edge points its path
+            runs between, so moving an icon moves the path and the colour together —
+            the previous hand-maintained list silently stranded ramps on old geometry
+            every time the layout shifted. */}
+        {FLOW.map((f, i) => (
+          <linearGradient key={i} id={`s1lg${i}`} gradientUnits="userSpaceOnUse"
+            x1={f.a[0]} y1={f.a[1]} x2={f.b[0]} y2={f.b[1]}>
+            <stop offset="0%" stopColor={f.c1}/><stop offset="100%" stopColor={f.c2}/>
+          </linearGradient>
+        ))}
         <linearGradient id="s1pg_w" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#06b6d4"/>
         </linearGradient>
@@ -455,7 +488,6 @@ export default forwardRef(function Scene1Icons(_props, ref) {
   // one continuous glide rather than a snap. power3/power2.in were noticeably punchier
   // at the ends and made the same motion look abrupt.
   const LINE_EASE = 'sine.inOut';
-  const ICON_EASE = 'power2.out';
   const FADE_EASE = 'sine.inOut';
 
   const getLen = (p) => { try { return p.getTotalLength(); } catch { return 400; } };
@@ -483,16 +515,19 @@ export default forwardRef(function Scene1Icons(_props, ref) {
 
   const resetAll = () => {
     gsap.set(iconRefs.current.filter(Boolean),   { opacity: 1, pointerEvents: 'auto' });
-    gsap.set(activeRefs.current.filter(Boolean), { opacity: 0 });
+    gsap.set(activeRefs.current.filter(Boolean), { opacity: 0, scale: 0.9, transformOrigin: '50% 50%' });
     gsap.set(hoverRefs.current.filter(Boolean),  { opacity: 0 });
     gsap.set(tipRefs.current.filter(Boolean),    { opacity: 0, y: 5 });
     lineRefs.current.filter(Boolean).forEach(p => {
       const len = getLen(p);
       gsap.set(p, { opacity: 0, strokeDasharray: `${len} ${len + 1}`, strokeDashoffset: len });
     });
-    // Reset animated dots
+    // Reset the travelling dots back to their resting radius. `r` is animated as an
+    // attribute rather than a transform: the dot's position is driven by cx/cy attrs
+    // during travel, and a CSS transform would scale it about the SVG origin instead
+    // of its own centre, throwing it off the line.
     dotRefs.current.filter(Boolean).forEach(dot => {
-      gsap.set(dot, { opacity: 0 });
+      gsap.set(dot, { opacity: 0, attr: { r: DOT_R } });
     });
     // NOTE: the phone (mobileRef / mobilePopupRef) is deliberately not reset here —
     // it is owned entirely by the pinned scroll timeline, and resetting it would
@@ -538,74 +573,126 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     allTweens.current.push(tl);
 
     // ── PHASE 1: ICON LINES ONLY — no wireframe visible
-    // One beat per connection, and each beat CLEARS ITSELF before the next begins:
-    // light the two icons the line joins → draw the line → hold → drop all three back
-    // to inactive. Beats never overlap (STEP ≥ the work inside a beat), so exactly two
-    // icons are ever lit at once — previously they accumulated until the phase ended.
-    const CONN_START = 0.06;
-    const ACT_DUR    = 0.28;  // icon grey → colour
-    const LINE_LEAD  = 0.14;  // line starts just after the first icon lights
-    const CONN_DUR   = 1.2;   // line draw — INCREASED for smoother animation
-    const HOLD       = 0.4;   // pair sits complete — INCREASED for better viewing
-    const CLEAR_DUR  = 0.50;  // pair + line back to inactive
-    const BEAT       = LINE_LEAD + CONN_DUR + HOLD + CLEAR_DUR; // now ~2.24
-    // Slightly longer than BEAT so there is a breath of empty board between beats,
-    // rather than the next pair lighting the instant the last one finishes fading.
-    const STEP       = 2.4;
+    //
+    // ONE LINK AT A TIME. Each beat owns the board outright:
+    //
+    //   clear the previous link  →  line leaves the source  →  dot rides its leading
+    //   edge  →  dot LANDS on the target  →  target lights on impact  →  hold
+    //
+    // Nothing accumulates. Lines drawn by earlier beats are gone, and the ONLY icons
+    // in colour are the two ends of the connection currently being made. Letting the
+    // board build up was the mistake: five links on screen at once merge into what
+    // looks like a single continuous run through the icons, no matter how they were
+    // timed or grouped.
+    //
+    // The source is never re-lit from grey, because FLOW is a chain — each link's
+    // source is the previous link's target, so it is simply the one icon that does
+    // NOT get cleared at the start of the beat. That is what makes the sequence read
+    // as one signal walking the board rather than five unrelated pairs blinking.
+    const CHAIN_START = 0.10;
+    const ACT_DUR     = 0.30;  // icon grey → colour
+    const LINE_LEAD   = 0.25;  // line leaves the source once the last one has cleared
+    // Deliberately unhurried. The draw IS the content of this scene — the dot tracing
+    // the route between two features is the thing worth watching — so it is paced to
+    // be followed rather than merely noticed. Paired with sine.inOut (LINE_EASE), the
+    // gentlest of the standard curves, so it eases away from the source and settles
+    // into the target without a hard edge at either end.
+    const DRAW_DUR    = 1.05;  // line draw / dot travel, per link
+    const HOLD        = 0.45;  // completed connection sits before the next beat takes over
+    const CLEAR_DUR   = 0.40;  // previous line + stale icons back to grey
+    const STEP        = LINE_LEAD + DRAW_DUR + HOLD;  // start-to-start between beats
+    // The instant the dot reaches the target card. Pulled 0.05 early so the icon is
+    // already blooming as the dot touches it — landing exactly on the frame reads a
+    // beat late to the eye.
+    const ARRIVE_LEAD = 0.05;
 
-    // Three beats covering all six icons exactly once each, so every feature gets a
-    // moment: pin+route, then bell+moon, then grid+wrench.
-    const SEQ = [0, 6, 3];
+    // Tracked so the final hold is measured from the moment the LAST link actually
+    // lands, rather than from a re-derived guess that drifts if timings change.
+    let lastArrive = CHAIN_START;
 
-    SEQ.forEach((ci, idx) => {
-      const at = CONN_START + idx * STEP;
-      const [ia, ib] = PAIRS[ci];
-      const elA = activeRefs.current[ia];
-      const elB = activeRefs.current[ib];
-      const line = lineRefs.current[ci];
-      const dot = dotRefs.current[ci];
+    FLOW.forEach((f, i) => {
+      const at       = CHAIN_START + i * STEP;
+      const drawAt   = at + LINE_LEAD;
+      const arriveAt = drawAt + DRAW_DUR - ARRIVE_LEAD;
+      lastArrive     = Math.max(lastArrive, arriveAt);
 
-      if (elA) tl.to(elA, { opacity:1, duration:ACT_DUR, ease:ICON_EASE }, at);
-      if (elB) tl.to(elB, { opacity:1, duration:ACT_DUR, ease:ICON_EASE }, at + 0.06);
-      if (line && dot) {
-        const len = getLen(line);
-        
-        // Draw the line with dash offset
-        tl.set(line, { strokeDasharray:`${len} ${len + 1}`, strokeDashoffset:len, opacity:1 }, at + LINE_LEAD);
-        tl.to(line, { strokeDashoffset:0, duration:CONN_DUR, ease:LINE_EASE }, at + LINE_LEAD);
-        
-        // Animate dot along the line synchronized with the drawing
-        tl.set(dot, { opacity: 1 }, at + LINE_LEAD);
-        tl.to(dot, {
-          onUpdate: function() {
-            try {
-              const progress = this.progress();
-              const point = line.getPointAtLength(len * progress);
-              gsap.set(dot, { attr: { cx: point.x, cy: point.y } });
-            } catch (e) {
-              // Silently handle any errors
-            }
-          },
-          duration: CONN_DUR,
-          ease: LINE_EASE,
-        }, at + LINE_LEAD);
-      } else if (line) {
-        const len = getLen(line);
-        tl.set(line, { strokeDasharray:`${len} ${len + 1}`, strokeDashoffset:len, opacity:1 }, at + LINE_LEAD);
-        tl.to(line, { strokeDashoffset:0, duration:CONN_DUR, ease:LINE_EASE }, at + LINE_LEAD);
+      const line = lineRefs.current[i];
+      const dot  = dotRefs.current[i];
+      const src  = activeRefs.current[IDX[f.from]];
+      const tgt  = activeRefs.current[IDX[f.to]];
+
+      // ── Hand the board over ──────────────────────────────────────────────────
+      // Retire the previous link's line, and drop every lit icon EXCEPT this beat's
+      // source back to grey. Filtering by "not the source" rather than naming the
+      // icons to clear is what keeps this correct as FLOW changes: `bell` is the
+      // source of two consecutive links and must survive both hand-overs, while
+      // `route` — a target that is never a source — has to be cleared by the beat
+      // after it. A hand-written list would get one of those wrong.
+      if (i > 0) {
+        const prevLine = lineRefs.current[i - 1];
+        if (prevLine) tl.to(prevLine, { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, at);
+
+        const stale = activeRefs.current.filter((el, idx) => el && idx !== IDX[f.from]);
+        if (stale.length) tl.to(stale, { opacity:0, scale:0.9, duration:CLEAR_DUR, ease:FADE_EASE }, at);
       }
 
-      // Hand back to grey so the next pair starts from a clean board.
-      const clearAt = at + LINE_LEAD + CONN_DUR + HOLD;
-      if (line) tl.to(line, { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
-      if (dot) tl.to(dot, { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
-      if (elA)  tl.to(elA,  { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
-      if (elB)  tl.to(elB,  { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
+      // Light the source. Beat 0 is the only one where this is a real transition —
+      // afterwards the source is already lit and survived the clear above, so this
+      // resolves to a no-op rather than a second pop.
+      if (src) tl.to(src, { opacity:1, scale:1, duration:ACT_DUR, ease:'back.out(1.7)' }, at);
+
+      if (line) {
+        const len = getLen(line);
+
+        tl.set(line, { strokeDasharray:`${len} ${len + 1}`, strokeDashoffset:len, opacity:1 }, drawAt);
+        tl.to(line, { strokeDashoffset:0, duration:DRAW_DUR, ease:LINE_EASE }, drawAt);
+
+        // The dot rides the stroke's leading edge. It shares DRAW_DUR and LINE_EASE
+        // with the draw above, so the two stay locked for the whole trip — any
+        // difference in either shows up as the dot drifting off the end of the line.
+        if (dot) {
+          tl.set(dot, { opacity: 1, attr: { r: DOT_R } }, drawAt);
+          tl.to(dot, {
+            duration: DRAW_DUR,
+            ease: LINE_EASE,
+            onUpdate: function () {
+              try {
+                const p = line.getPointAtLength(len * this.progress());
+                // Written straight to the attributes rather than through gsap.set.
+                // This runs on every frame of every link; gsap.set builds a fresh
+                // tween and plugin instance per call, and that per-frame allocation
+                // was the source of the micro-stutter along the path.
+                dot.setAttribute('cx', p.x);
+                dot.setAttribute('cy', p.y);
+              } catch {
+                // Path not measurable yet — skip this frame rather than break the beat.
+              }
+            },
+          }, drawAt);
+
+          // Landing: the dot blooms and discharges into the card instead of simply
+          // stopping. This is what sells the line as having carried something.
+          tl.to(dot, {
+            opacity: 0,
+            attr: { r: DOT_R * 2.6 },
+            duration: 0.42,
+            ease: 'power2.out',
+          }, arriveAt);
+        }
+      }
+
+      // Target lights ON IMPACT — never before.
+      if (tgt) tl.to(tgt, { opacity:1, scale:1, duration:ACT_DUR, ease:'back.out(1.7)' }, arriveAt);
     });
 
-    // The last beat's clear tween ends at exactly CONN_START + 2*STEP + BEAT, so the
-    // timeline already measures the full cycle and repeats from an empty board — no
-    // padding or reset call needed.
+    // ── Clear the last beat, so the cycle restarts from an empty board ───────────
+    // Only the final link is still on screen at this point; every earlier one was
+    // already retired by the beat that followed it.
+    const clearAt = lastArrive + ACT_DUR + HOLD;
+    tl.to(lineRefs.current.filter(Boolean),   { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
+    tl.to(activeRefs.current.filter(Boolean), { opacity:0, scale:0.9, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
+    tl.set(dotRefs.current.filter(Boolean),   { opacity:0, attr:{ r: DOT_R } }, clearAt);
+
     // NOTE: the grey outline cards are deliberately NOT faded at the end of a cycle.
     // They belong to the scene, not to one pass; fading them would blink the whole
     // board on every repeat. startDesktop owns their exit.
@@ -711,39 +798,51 @@ export default forwardRef(function Scene1Icons(_props, ref) {
               while every elbowed line drew fine. */}
           <filter id="s1line_glow" filterUnits="userSpaceOnUse"
             x={-40} y={-40} width={W + 80} height={H + 80}>
-            <feGaussianBlur stdDeviation="1.2" result="b"/>
+            <feGaussianBlur stdDeviation="0.8" result="b"/>
             <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
           </filter>
-          {/* Strong glow filter for animated dots */}
+          {/* Halo for the travelling dot. Deliberately tight — a single soft pass at
+              low deviation. The previous version blurred at 4 and merged the result
+              twice, which stacked into an opaque bloom roughly three times the dot's
+              own size and buried the fine stroke it is supposed to be riding. */}
           <filter id="s1dot_glow" filterUnits="userSpaceOnUse"
             x={-40} y={-40} width={W + 80} height={H + 80}>
-            <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
-            <feComponentTransfer in="blur" result="brightBlur">
-              <feFuncA type="linear" slope="1.5"/>
+            {/* Halo only, drawn UNDER an untouched SourceGraphic. Blurring the source
+                and merging it back is what previously softened the dot itself into a
+                haze; keeping the core out of the blur is what lets the glow grow
+                without the centre ever losing its edge. */}
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3.2" result="blur"/>
+            <feComponentTransfer in="blur" result="halo">
+              <feFuncA type="linear" slope="1.25"/>
             </feComponentTransfer>
             <feMerge>
-              <feMergeNode in="brightBlur"/>
-              <feMergeNode in="brightBlur"/>
+              <feMergeNode in="halo"/>
+              <feMergeNode in="halo"/>
               <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
-          {/* Radial gradient for dots - bright center to glowing edge */}
+          {/* Solid white core out to 55%, then a fast fall-off through blue to fully
+              transparent. The flat core is what makes the dot punch; the transparent
+              rim is what keeps the halo blending into the line instead of ending on
+              a visible disc edge. */}
           <radialGradient id="dotGradient">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="1"/>
-            <stop offset="40%" stopColor="#93c5fd" stopOpacity="1"/>
-            <stop offset="100%" stopColor="#60a5fa" stopOpacity="0.8"/>
+            <stop offset="0%"   stopColor="#ffffff" stopOpacity="1"/>
+            <stop offset="55%"  stopColor="#ffffff" stopOpacity="1"/>
+            <stop offset="72%"  stopColor="#93c5fd" stopOpacity="0.95"/>
+            <stop offset="100%" stopColor="#3b82f6" stopOpacity="0"/>
           </radialGradient>
         </defs>
-        {CONNECTIONS.map((d, i) => (
-          <path key={i} ref={el => (lineRefs.current[i] = el)} d={d}
-            stroke={`url(#s1lg${i})`} strokeWidth="1.8" fill="none"
+        {FLOW.map((f, i) => (
+          <path key={`${f.from}-${f.to}`} ref={el => (lineRefs.current[i] = el)} d={f.d}
+            stroke={`url(#s1lg${i})`} strokeWidth="1.1" fill="none"
             strokeLinecap="round" strokeLinejoin="round" opacity="0"
             filter="url(#s1line_glow)"/>
         ))}
-        {/* Animated traveling dots */}
-        {CONNECTIONS.map((d, i) => (
-          <circle key={`dot-${i}`} ref={el => (dotRefs.current[i] = el)}
-            cx="0" cy="0" r="8" fill="url(#dotGradient)" opacity="0"
+        {/* Animated traveling dots — one per link, drawn after the paths so a dot
+            always rides ON TOP of the stroke it is following. */}
+        {FLOW.map((f, i) => (
+          <circle key={`dot-${f.from}-${f.to}`} ref={el => (dotRefs.current[i] = el)}
+            cx="0" cy="0" r={DOT_R} fill="url(#dotGradient)" opacity="0"
             filter="url(#s1dot_glow)"/>
         ))}
       </svg>
@@ -917,15 +1016,15 @@ export default forwardRef(function Scene1Icons(_props, ref) {
               ...(ic.flip
                 ? { right: Math.round(ic.size * 0.45) }
                 : { left:  Math.round(ic.size * 0.45) }),
-              padding:'8px 18px',
-              borderRadius:30,
-              background: ic.tip,
+              padding:'5px 10px',
+              borderRadius:4,
+              background: TIP_BG,
               color:'#ffffff',
               fontSize:12,
               fontWeight:700,
               lineHeight:1.3,
               whiteSpace:'nowrap',
-              boxShadow:'0 6px 20px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1)',
+              boxShadow:'0 6px 20px rgba(15, 23, 42, 0.18), 0 2px 8px rgba(15, 23, 42, 0.12)',
               opacity:0,
               transform:'translateY(5px)',
               pointerEvents:'none',

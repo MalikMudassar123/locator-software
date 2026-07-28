@@ -888,6 +888,15 @@ h6 {
     height: 100vh;
     align-items: flex-start;
     justify-content: center;
+    /* Gutter BETWEEN the copy and the mockups, owned by the row so it holds in both
+       zigzag directions automatically. This used to be attempted with margins on the
+       anim panel, which put the 48px on the panel's OUTER side — away from the page
+       edge instead of away from the text — leaving the real gutter at whatever the
+       text panel's inner padding happened to be (8px). Hence the mockups sitting
+       almost flush against the feature cards.
+       The two panels are 38% + 52% = 90%, so the 10% of slack plus the row's own
+       padding absorbs this gap without overflow at any width from 1024px up. */
+    gap: clamp(48px, 5vw, 96px);
   }
   .ss-anim-panel {
     order: unset;
@@ -899,7 +908,6 @@ h6 {
     overflow: visible;
     background: transparent;
     margin-bottom: 0;
-    margin-left: 48px;
   }
   /* Fill the fixed-height row rather than forcing it taller via min-height, which
      would push the row past one viewport and break the pin. */
@@ -911,15 +919,17 @@ h6 {
     min-height: 0;
     padding-top: 80px;
     padding-bottom: 80px;
+    /* Inner breathing room only. Separation from the anim panel is the row's `gap`
+       and distance from the page edge is the row's own padding — keeping those
+       concerns out of here is what lets the zigzag rules below be pure ordering. */
     padding-left: 8px;
-    padding-right: 24px;
+    padding-right: 8px;
     align-items: flex-start;
     text-align: left;
   }
-  /* Zigzag: when animation is on right, text gets left side padding. Layout only —
-     this selector no longer carries any pin-related rules. */
-  .ss-row--anim-right .ss-anim-panel { order: 1; margin-left: 0; margin-right: 48px; }
-  .ss-row--anim-right .ss-text-panel { order: 0; padding-left: 24px; padding-right: 8px; }
+  /* Zigzag: which side each panel lands on. Ordering only — no spacing rules. */
+  .ss-row--anim-right .ss-anim-panel { order: 1; }
+  .ss-row--anim-right .ss-text-panel { order: 0; }
 }
 
 /* Feature card grid — 1 col on mobile/tablet, 2 col on desktop */

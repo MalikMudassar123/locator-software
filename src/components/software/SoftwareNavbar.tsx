@@ -9,6 +9,7 @@ import { REGULATORY_PRODUCTS } from '@/components/regulatory/data'
 import { ABOUT_PAGES } from '@/components/about/data'
 import { SERVICE_PAGES } from '@/components/service/data'
 import { SOFTWARE_MODULES } from '@/components/software/modules-data'
+import { INDUSTRY_NAV_ITEMS } from '@/components/industries/industries-nav'
 
 const NAV_LINKS = [
   { href: '/',           label: 'Home' },
@@ -27,10 +28,22 @@ const DROPDOWNS: Record<string, { items: NavDropdownItem[]; base: string; label:
   '/about':      { items: ABOUT_PAGES,         base: '/about',   label: 'About Locator',                 blurb: 'Who we are, where we’re headed, and the people behind the platform.' },
   '/software':   { items: SOFTWARE_MODULES,    base: '/software', label: 'Software Platform',            blurb: 'Jump straight to any module of the Locator fleet platform.', hash: true, navigable: true },
   '/service':    { items: SERVICE_PAGES,       base: '/service', label: 'Locator Services',              blurb: 'End-to-end fleet, video, and IoT services for every operation.' },
+  // navigable: the label stays a real link to /industries (like /software), so the
+  // overview page is still reachable by click while hover opens the menu.
+  '/industries': { items: INDUSTRY_NAV_ITEMS,  base: '/industries', label: 'Industries We Serve',       blurb: 'Telematics built around how your sector actually operates.', navigable: true },
 }
 
 const itemHref = (dd: { base: string; hash?: boolean }, slug: string) =>
   dd.hash ? `${dd.base}#${slug}` : `${dd.base}/${slug}`
+
+// Every mega-menu icon chip uses this one colour, deliberately overriding each item's
+// own `accent`. The per-item accents still drive the destination PAGES (RegulatoryGrid,
+// AboutPillarNav, ServiceProcess, SmartIotFeatures and others read the same field), and
+// they are right there — a page gets to own its identity colour. In a dropdown they are
+// wrong: five items in five hues turn a navigation list into a colour chart and make
+// items look categorically different when they are just siblings. Overriding here rather
+// than flattening the data keeps both behaviours.
+const MENU_ICON_ACCENT = '#1360ee'
 
 export default function SoftwareNavbar() {
   const [open, setOpen]       = useState(false)      // mobile drawer
@@ -335,7 +348,7 @@ export default function SoftwareNavbar() {
                 <div className="swn-mega-grid">
                   {activeDD.items.map(p => (
                     <Link key={p.slug} href={itemHref(activeDD, p.slug)} className="swn-mega-card" role="menuitem" onClick={() => setActiveMenu(null)}>
-                      <span className="swn-mega-ic" style={{ background: `${p.accent}14`, color: p.accent }}>{p.icon}</span>
+                      <span className="swn-mega-ic" style={{ background: `${MENU_ICON_ACCENT}14`, color: MENU_ICON_ACCENT }}>{p.icon}</span>
                       <span style={{ minWidth: 0 }}>
                         <span className="swn-mega-name">{p.name}</span>
                         <span className="swn-mega-tag">{p.tagline}</span>
@@ -407,7 +420,7 @@ export default function SoftwareNavbar() {
                           onClick={() => setOpen(false)}
                           style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '11px 4px', fontSize: '14.5px', fontWeight: 600, color: '#52525e', textDecoration: 'none' }}
                         >
-                          <span style={{ width: 6, height: 6, borderRadius: '50%', background: p.accent, flexShrink: 0 }} />
+                          <span style={{ width: 6, height: 6, borderRadius: '50%', background: MENU_ICON_ACCENT, flexShrink: 0 }} />
                           {p.name}
                         </Link>
                       ))}

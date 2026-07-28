@@ -40,24 +40,92 @@ const WIRE = [
   rp(FX+SBW+2+CellW+4, CY+2+CellH+4, CellW, CellH, 5),
 ];
 
+// Tooltip pill background. One shared neutral grey for every icon — the colour in
+// this scene belongs to the active icons and the connection lines; a coloured pill
+// competes with them and makes the board read as five unrelated brands.
+const TIP_BG = 'linear-gradient(90deg, #6b7280 0%, #4b5563 100%)';
+
+// `label` drives the hover tooltip. Where a label matches a feature card title in the
+// text panel, hovering the icon names the same capability the copy describes; the two
+// that do not (`play`, `alert`) name the intermediate steps of the flow, since there
+// are five icons and only four feature cards.
+// `flip` hangs the tooltip to the LEFT of the card — required for `ai`, which sits at
+// x=480 in a 580-wide scene, so a right-hanging pill would run clean off the board.
 const ICONS = [
-  { id:'cam',    left:6,   top:60,  size:54, layer:'outer'  }, // 0
-  { id:'shield', left:6,   top:266, size:54, layer:'outer'  }, // 1
-  { id:'ai',     left:480, top:50,  size:54, layer:'outer'  }, // 2
-  { id:'play',   left:160, top:120, size:50, layer:'center' }, // 3 — inside frame
-  { id:'alert',  left:340, top:160, size:50, layer:'center' }, // 4 — inside frame
+  { id:'cam',    left:6,   top:60,  size:54, layer:'outer',  label:'Live HD Video' },           // 0
+  { id:'shield', left:6,   top:266, size:54, layer:'outer',  label:'Collision Prevention' },    // 1
+  { id:'ai',     left:480, top:50,  size:54, layer:'outer',  label:'Operational Efficiency', flip:true }, // 2
+  { id:'play',   left:160, top:120, size:50, layer:'center', label:'On-Demand Footage' },       // 3 — inside frame
+  { id:'alert',  left:340, top:160, size:50, layer:'center', label:'Instant Driver Alerts' },   // 4 — inside frame
 ];
 
-// Clean L-shaped connectors with 12px rounded corners (same style as Scene1)
-const CONNECTIONS = [
-  'M 60 87 H 173 Q 185 87 185 99 V 120',                       // 0: cam → play (right, down)
-  'M 33 60 V 16 Q 33 4 45 4 H 495 Q 507 4 507 16 V 50',        // 1: cam → ai over top (L overarch)
-  'M 60 293 H 173 Q 185 293 185 281 V 170',                    // 2: shield → play (right, up)
-  'M 480 77 H 377 Q 365 77 365 89 V 160',                      // 3: ai → alert (left, down)
-  'M 210 145 H 328 Q 340 145 340 157 V 175',                   // 4: play → alert (right, down)
+// Card edges, DERIVED from ICONS. Every connection endpoint is read from here, so
+// the lines track any change to a position or size and always land flush on the card
+// they point at. These used to be hand-typed coordinates baked into the path strings,
+// which silently drifted out of sync each time the layout moved — that drift is what
+// left visible gaps between a line's end and the icon it was supposed to touch.
+const E = Object.fromEntries(ICONS.map(ic => [ic.id, {
+  cx: ic.left + ic.size / 2, cy: ic.top + ic.size / 2,
+  l:  ic.left,               r:  ic.left + ic.size,
+  t:  ic.top,                b:  ic.top  + ic.size,
+}]));
+
+const R = 12; // corner radius shared by every elbow
+
+// Resting radius of the travelling dot. Visibility comes from a bright solid core
+// rather than sheer size — the background is a very pale #f5f7fa, so a crisp white
+// centre with a defined blue edge carries further than a large soft disc.
+const DOT_R = 5.5;
+
+// Elbow shapes, named for the axis order they travel. Each takes two points that
+// already sit ON a card edge and routes between them with rounded corners.
+// A leaves a vertical (left/right) edge, B enters a vertical edge.
+const hvh = (ax, ay, bx, by) => {
+  const dx = Math.sign(bx - ax), dy = Math.sign(by - ay);
+  const bend = bx - dx * R;
+  return `M ${ax} ${ay} H ${bend - dx * R} Q ${bend} ${ay} ${bend} ${ay + dy * R}`
+       + ` V ${by - dy * R} Q ${bend} ${by} ${bx} ${by}`;
+};
+// A leaves a vertical edge, B enters a horizontal (top/bottom) edge.
+const hv = (ax, ay, bx, by) => {
+  const dx = Math.sign(bx - ax), dy = Math.sign(by - ay);
+  return `M ${ax} ${ay} H ${bx - dx * R} Q ${bx} ${ay} ${bx} ${ay + dy * R} V ${by}`;
+};
+
+// ── The flow ──────────────────────────────────────────────────────────────────
+// The board tells ONE connected story, played start to finish in this order:
+//
+//   Live HD Video ──▶ Footage Review ──▶ AI Analysis ──▶ Driver Alert ──▶ Collision
+//                                                                        Prevented
+//
+// Same contract as Scene1Icons' FLOW, and it is load-bearing in the same two ways:
+//
+//   · every link's `from` is either the very first icon or the `to` of an EARLIER
+//     link, so the signal is handed forward and no link ever starts from a cold card.
+//   · order is meaningful — each step assumes its source is already lit, so FLOW
+//     cannot be reordered without re-checking that invariant.
+//
+// ROUTING RULE: no two links may run parallel and adjacent, and a link must never
+// enter a card on the same edge that the next link leaves it by — `play → ai` used to
+// arrive at ai's left edge along y=77, which is exactly where `ai → alert` departs,
+// so the two would have doubled back over each other. It now enters ai's BOTTOM edge.
+//
+// This replaces a 5-entry CONNECTIONS/PAIRS pair of arrays that had to be kept
+// index-aligned by hand, of which only 3 were ever animated.
+const link = (from, to, a, b, shape, c1, c2) => ({
+  from, to, a, b, c1, c2,
+  d: shape(a[0], a[1], b[0], b[1]),
+});
+
+const FLOW = [
+  link('cam',   'play',   [E.cam.r,   E.cam.cy],   [E.play.cx,   E.play.t],   hv,  '#6366f1', '#3b82f6'),
+  link('play',  'ai',     [E.play.r,  E.play.cy],  [E.ai.cx,     E.ai.b],     hv,  '#3b82f6', '#06b6d4'),
+  link('ai',    'alert',  [E.ai.l,    E.ai.cy],    [E.alert.cx,  E.alert.t],  hv,  '#06b6d4', '#f59e0b'),
+  link('alert', 'shield', [E.alert.l, E.alert.cy], [E.shield.r,  E.shield.cy], hvh, '#ef4444', '#06b6d4'),
 ];
 
-const PAIRS = [[0,3],[0,2],[1,3],[2,4],[3,4]];
+// id → index into ICONS, which is the same index activeRefs/iconRefs use.
+const IDX = Object.fromEntries(ICONS.map((ic, i) => [ic.id, i]));
 
 function GlobalDefs() {
   return (
@@ -68,21 +136,17 @@ function GlobalDefs() {
         <linearGradient id="s4ig_ai"     x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#06b6d4"/></linearGradient>
         <linearGradient id="s4ig_play"   x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#3b82f6"/></linearGradient>
         <linearGradient id="s4ig_alert"  x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#f59e0b"/><stop offset="100%" stopColor="#ef4444"/></linearGradient>
-        <linearGradient id="s4lg0" x1="60" y1="87" x2="185" y2="120" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#3b82f6"/>
-        </linearGradient>
-        <linearGradient id="s4lg1" x1="33" y1="60" x2="507" y2="50" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#f472b6"/><stop offset="100%" stopColor="#06b6d4"/>
-        </linearGradient>
-        <linearGradient id="s4lg2" x1="60" y1="293" x2="185" y2="170" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#3b82f6"/><stop offset="100%" stopColor="#6366f1"/>
-        </linearGradient>
-        <linearGradient id="s4lg3" x1="480" y1="77" x2="365" y2="160" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#f59e0b"/>
-        </linearGradient>
-        <linearGradient id="s4lg4" x1="210" y1="145" x2="340" y2="175" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#8b5cf6"/><stop offset="100%" stopColor="#ef4444"/>
-        </linearGradient>
+        {/* One gradient per link, generated FROM FLOW rather than hand-written beside
+            it. userSpaceOnUse anchors each ramp to the exact two edge points its path
+            runs between, so moving an icon moves the path and the colour together —
+            the previous hand-maintained list stranded ramps on old geometry every
+            time the layout shifted. */}
+        {FLOW.map((f, i) => (
+          <linearGradient key={i} id={`s4lg${i}`} gradientUnits="userSpaceOnUse"
+            x1={f.a[0]} y1={f.a[1]} x2={f.b[0]} y2={f.b[1]}>
+            <stop offset="0%" stopColor={f.c1}/><stop offset="100%" stopColor={f.c2}/>
+          </linearGradient>
+        ))}
         <linearGradient id="s4pg_w" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#06b6d4"/>
         </linearGradient>
@@ -130,6 +194,9 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
   const activeRefs   = useRef([]);
   const iconRefs     = useRef([]);
   const lineRefs     = useRef([]);
+  const dotRefs      = useRef([]);
+  const hoverRefs    = useRef([]);
+  const tipRefs      = useRef([]);
   const framePathRef = useRef(null);
   const wireRefs     = useRef([]);
   const wireGrpRef   = useRef(null);
@@ -252,14 +319,36 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
   // standard eases, so the line draw reads as one continuous glide; power3/power2.in
   // were punchier at the ends and made the same motion look abrupt.
   const LINE_EASE = 'sine.inOut';
-  const ICON_EASE = 'power2.out';
   const FADE_EASE = 'sine.inOut';
 
   const getLen = (p) => { try { return p.getTotalLength(); } catch { return 400; } };
 
+  // ── Icon hover ────────────────────────────────────────────────────────────
+  // Colours the card and slides its tooltip out. Only meaningful during stage 0 —
+  // once the dashboard build starts the icons are on their way out, so hovering a
+  // dissolving card would fight the fade.
+  const hoverIcon = (i, on) => {
+    const card = iconRefs.current[i];
+    if (!card || desktopStartedRef.current) return;
+
+    // Lift the hovered card so its tooltip can cross over neighbouring icons, which
+    // sit on their own z-layers. Restored to the resting layer on exit.
+    card.style.zIndex = on ? 20 : (ICONS[i].layer === 'center' ? 4 : 7);
+
+    gsap.to(hoverRefs.current[i], { opacity: on ? 1 : 0, duration: 0.28, ease: 'power2.out' });
+    gsap.to(tipRefs.current[i], {
+      opacity: on ? 1 : 0,
+      y: on ? 0 : 5,
+      duration: 0.28,
+      ease: on ? 'back.out(1.8)' : 'power2.in',
+    });
+  };
+
   const resetAll = () => {
-    gsap.set(iconRefs.current.filter(Boolean),   { opacity:1 });
-    gsap.set(activeRefs.current.filter(Boolean), { opacity:0 });
+    gsap.set(iconRefs.current.filter(Boolean),   { opacity:1, pointerEvents:'auto' });
+    gsap.set(activeRefs.current.filter(Boolean), { opacity:0, scale:0.9, transformOrigin:'50% 50%' });
+    gsap.set(hoverRefs.current.filter(Boolean),  { opacity:0 });
+    gsap.set(tipRefs.current.filter(Boolean),    { opacity:0, y:5 });
     gsap.set(wireGrpRef.current,   { opacity: 0 });
     gsap.set(framePathRef.current, { opacity: 0, strokeDashoffset: FRAME_PERIM });
     gsap.set(videoImgRef.current,  { opacity: 0 });
@@ -267,6 +356,13 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     lineRefs.current.filter(Boolean).forEach(p => {
       const len = getLen(p);
       gsap.set(p, { opacity:0, strokeDasharray:`${len} ${len+1}`, strokeDashoffset:len });
+    });
+    // Travelling dots back to their resting radius. `r` is animated as an ATTRIBUTE
+    // rather than a transform: position is driven by cx/cy attrs during travel, and a
+    // CSS transform would scale the dot about the SVG origin instead of its own
+    // centre, throwing it off the line.
+    dotRefs.current.filter(Boolean).forEach(dot => {
+      gsap.set(dot, { opacity: 0, attr: { r: DOT_R } });
     });
     wireRefs.current.forEach(el => {
       if (!el) return;
@@ -304,48 +400,123 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     allTweens.current.push(tl);
 
     // ── PHASE 1: ICON LINES ONLY — no wireframe visible
-    // One beat per connection, and each beat CLEARS ITSELF before the next begins:
-    // light the two icons the line joins → draw the line → hold → drop all three back
-    // to inactive. Beats never overlap (STEP > BEAT), so exactly two icons are ever
-    // lit at once — previously they accumulated until the phase ended.
-    const CONN_START = 0.06;
-    const ACT_DUR    = 0.28;  // icon grey → colour
-    const LINE_LEAD  = 0.14;  // line starts just after the first icon lights
-    const CONN_DUR   = 0.75;  // line draw — the slowest part, it's the thing being read
-    const HOLD       = 0.28;  // pair sits complete
-    const CLEAR_DUR  = 0.40;  // pair + line back to inactive
-    const BEAT       = LINE_LEAD + CONN_DUR + HOLD + CLEAR_DUR; // 1.57
-    // Slightly longer than BEAT so there is a breath of empty board between beats.
-    const STEP       = 1.6;
+    //
+    // ONE LINK AT A TIME, matching Scene1Icons. Each beat owns the board outright:
+    //
+    //   clear the previous link  →  line leaves the source  →  dot rides its leading
+    //   edge  →  dot LANDS on the target  →  target lights on impact  →  hold
+    //
+    // Nothing accumulates. Lines drawn by earlier beats are gone, and the ONLY icons
+    // in colour are the two ends of the connection currently being made. Letting the
+    // board build up merges the links into what looks like a single continuous run
+    // through the icons, no matter how they are timed or grouped.
+    //
+    // The source is never re-lit from grey, because FLOW is a chain — each link's
+    // source is the previous link's target, so it is simply the one icon that does
+    // NOT get cleared at the start of the beat. That is what makes the sequence read
+    // as one signal walking the board rather than four unrelated pairs blinking.
+    const CHAIN_START = 0.10;
+    const ACT_DUR     = 0.30;  // icon grey → colour
+    const LINE_LEAD   = 0.25;  // line leaves the source once the last one has cleared
+    // Deliberately unhurried — the draw IS the content of this scene, so it is paced
+    // to be followed rather than merely noticed. Paired with sine.inOut (LINE_EASE),
+    // the gentlest standard curve, so it eases away from the source and settles into
+    // the target without a hard edge at either end.
+    const DRAW_DUR    = 1.05;  // line draw / dot travel, per link
+    const HOLD        = 0.45;  // completed connection sits before the next beat takes over
+    const CLEAR_DUR   = 0.40;  // previous line + stale icons back to grey
+    const STEP        = LINE_LEAD + DRAW_DUR + HOLD;  // start-to-start between beats
+    // The instant the dot reaches the target card. Pulled 0.05 early so the icon is
+    // already blooming as the dot touches it — landing exactly on the frame reads a
+    // beat late to the eye.
+    const ARRIVE_LEAD = 0.05;
 
-    // overarch (cam+ai) → shield+play → ai+alert. Five icons can't split into three
-    // disjoint pairs, so `ai` is the one that appears twice.
-    const SEQ = [1, 2, 3];
+    // Tracked so the final hold is measured from the moment the LAST link actually
+    // lands, rather than from a re-derived guess that drifts if timings change.
+    let lastArrive = CHAIN_START;
 
-    SEQ.forEach((ci, idx) => {
-      const at = CONN_START + idx * STEP;
-      const [ia, ib] = PAIRS[ci];
-      const elA = activeRefs.current[ia];
-      const elB = activeRefs.current[ib];
-      const line = lineRefs.current[ci];
+    FLOW.forEach((f, i) => {
+      const at       = CHAIN_START + i * STEP;
+      const drawAt   = at + LINE_LEAD;
+      const arriveAt = drawAt + DRAW_DUR - ARRIVE_LEAD;
+      lastArrive     = Math.max(lastArrive, arriveAt);
 
-      if (elA) tl.to(elA, { opacity:1, duration:ACT_DUR, ease:ICON_EASE }, at);
-      if (elB) tl.to(elB, { opacity:1, duration:ACT_DUR, ease:ICON_EASE }, at + 0.06);
-      if (line) {
-        const len = getLen(line);
-        tl.set(line, { strokeDasharray:`${len} ${len + 1}`, strokeDashoffset:len, opacity:1 }, at + LINE_LEAD);
-        tl.to(line, { strokeDashoffset:0, duration:CONN_DUR, ease:LINE_EASE }, at + LINE_LEAD);
+      const line = lineRefs.current[i];
+      const dot  = dotRefs.current[i];
+      const src  = activeRefs.current[IDX[f.from]];
+      const tgt  = activeRefs.current[IDX[f.to]];
+
+      // ── Hand the board over ──────────────────────────────────────────────────
+      // Retire the previous link's line, and drop every lit icon EXCEPT this beat's
+      // source back to grey. Filtering by "not the source" rather than naming icons
+      // to clear is what keeps this correct as FLOW changes: a source that appears in
+      // two consecutive links must survive both hand-overs, while a target that is
+      // never a source has to be cleared by the beat after it.
+      if (i > 0) {
+        const prevLine = lineRefs.current[i - 1];
+        if (prevLine) tl.to(prevLine, { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, at);
+
+        const stale = activeRefs.current.filter((el, idx) => el && idx !== IDX[f.from]);
+        if (stale.length) tl.to(stale, { opacity:0, scale:0.9, duration:CLEAR_DUR, ease:FADE_EASE }, at);
       }
 
-      // Hand back to grey so the next pair starts from a clean board.
-      const clearAt = at + LINE_LEAD + CONN_DUR + HOLD;
-      if (line) tl.to(line, { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
-      if (elA)  tl.to(elA,  { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
-      if (elB)  tl.to(elB,  { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
+      // Light the source. Beat 0 is the only one where this is a real transition —
+      // afterwards the source is already lit and survived the clear above, so this
+      // resolves to a no-op rather than a second pop.
+      if (src) tl.to(src, { opacity:1, scale:1, duration:ACT_DUR, ease:'back.out(1.7)' }, at);
+
+      if (line) {
+        const len = getLen(line);
+
+        tl.set(line, { strokeDasharray:`${len} ${len + 1}`, strokeDashoffset:len, opacity:1 }, drawAt);
+        tl.to(line, { strokeDashoffset:0, duration:DRAW_DUR, ease:LINE_EASE }, drawAt);
+
+        // The dot rides the stroke's leading edge. It shares DRAW_DUR and LINE_EASE
+        // with the draw above, so the two stay locked for the whole trip — any
+        // difference in either shows up as the dot drifting off the end of the line.
+        if (dot) {
+          tl.set(dot, { opacity: 1, attr: { r: DOT_R } }, drawAt);
+          tl.to(dot, {
+            duration: DRAW_DUR,
+            ease: LINE_EASE,
+            onUpdate: function () {
+              try {
+                const p = line.getPointAtLength(len * this.progress());
+                // Written straight to the attributes rather than through gsap.set.
+                // This runs every frame of every link; gsap.set builds a fresh tween
+                // and plugin instance per call, and that per-frame allocation shows
+                // up as micro-stutter along the path.
+                dot.setAttribute('cx', p.x);
+                dot.setAttribute('cy', p.y);
+              } catch {
+                // Path not measurable yet — skip this frame rather than break the beat.
+              }
+            },
+          }, drawAt);
+
+          // Landing: the dot blooms and discharges into the card instead of simply
+          // stopping. This is what sells the line as having carried something.
+          tl.to(dot, {
+            opacity: 0,
+            attr: { r: DOT_R * 2.6 },
+            duration: 0.42,
+            ease: 'power2.out',
+          }, arriveAt);
+        }
+      }
+
+      // Target lights ON IMPACT — never before.
+      if (tgt) tl.to(tgt, { opacity:1, scale:1, duration:ACT_DUR, ease:'back.out(1.7)' }, arriveAt);
     });
 
-    // The last beat's clear tween ends at exactly CONN_START + 2*STEP + BEAT, so the
-    // timeline already measures the full cycle and repeats from an empty board.
+    // ── Clear the last beat, so the cycle restarts from an empty board ───────────
+    // Only the final link is still on screen at this point; every earlier one was
+    // already retired by the beat that followed it.
+    const clearAt = lastArrive + ACT_DUR + HOLD;
+    tl.to(lineRefs.current.filter(Boolean),   { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
+    tl.to(activeRefs.current.filter(Boolean), { opacity:0, scale:0.9, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
+    tl.set(dotRefs.current.filter(Boolean),   { opacity:0, attr:{ r: DOT_R } }, clearAt);
+
     // NOTE: the grey outline cards are deliberately NOT faded at the end of a cycle.
     // They belong to the scene, not to one pass; fading them would blink the whole
     // board on every repeat. startDesktop owns their exit.
@@ -369,10 +540,18 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     desktopTlRef.current = tl;
     allTweens.current.push(tl);
 
-    // Clear whatever the loop left lit, then the grey cards behind it.
+    // Clear whatever the loop left lit, then the grey cards behind it. The dots are
+    // included: killing the loop mid-beat can leave one parked on a path, and it
+    // would otherwise sit there glowing over the dashboard that replaces the icons.
     tl.to(lineRefs.current.filter(Boolean),   { opacity:0, duration:0.45, ease:FADE_EASE }, 0);
+    tl.to(dotRefs.current.filter(Boolean),    { opacity:0, duration:0.45, ease:FADE_EASE }, 0);
     tl.to(activeRefs.current.filter(Boolean), { opacity:0, duration:0.45, ease:FADE_EASE }, 0);
+    tl.to(hoverRefs.current.filter(Boolean),  { opacity:0, duration:0.30, ease:FADE_EASE }, 0);
+    tl.to(tipRefs.current.filter(Boolean),    { opacity:0, y:5, duration:0.30, ease:FADE_EASE }, 0);
     tl.to(iconRefs.current.filter(Boolean),   { opacity:0, duration:0.55, ease:FADE_EASE }, 0.12);
+    // Stop hit-testing once they are invisible, or the cards keep intercepting the
+    // pointer over the dashboard that replaces them.
+    tl.set(iconRefs.current.filter(Boolean),  { pointerEvents:'none' }, 0.70);
 
     // Gap must clear the icon-outline fade above (starts +0.12, runs 0.55) or the
     // wireframe starts drawing while grey cards are still dissolving over it.
@@ -426,16 +605,54 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
       <svg ref={linesRef} width={W} height={H} viewBox={`0 0 ${W} ${H}`}
         style={{ position:'absolute', inset:0, zIndex:0, pointerEvents:'none', overflow:'visible' }}>
         <defs>
-          <filter id="s4line_glow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="1.0" result="b"/>
+          {/* filterUnits MUST be userSpaceOnUse. The default (objectBoundingBox) sizes
+              the filter region from the path's own bbox, and a perfectly vertical or
+              horizontal run has a ZERO-width/height bbox — the region collapses to no
+              area and the browser renders nothing at all. Every path here currently
+              has a bend, so this has not bitten yet, but a straight link would vanish
+              silently the moment one is added. */}
+          <filter id="s4line_glow" filterUnits="userSpaceOnUse"
+            x={-40} y={-40} width={W + 80} height={H + 80}>
+            <feGaussianBlur stdDeviation="0.8" result="b"/>
             <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
           </filter>
+          {/* Halo for the travelling dot, drawn UNDER an untouched SourceGraphic —
+              keeping the core out of the blur is what lets the glow grow without the
+              centre ever losing its edge. */}
+          <filter id="s4dot_glow" filterUnits="userSpaceOnUse"
+            x={-40} y={-40} width={W + 80} height={H + 80}>
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3.2" result="blur"/>
+            <feComponentTransfer in="blur" result="halo">
+              <feFuncA type="linear" slope="1.25"/>
+            </feComponentTransfer>
+            <feMerge>
+              <feMergeNode in="halo"/>
+              <feMergeNode in="halo"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          {/* Solid white core out to 55%, then a fast fall-off to fully transparent.
+              The flat core is what makes the dot punch; the transparent rim is what
+              keeps the halo blending into the line instead of ending on a disc edge. */}
+          <radialGradient id="s4dotGradient">
+            <stop offset="0%"   stopColor="#ffffff" stopOpacity="1"/>
+            <stop offset="55%"  stopColor="#ffffff" stopOpacity="1"/>
+            <stop offset="72%"  stopColor="#93c5fd" stopOpacity="0.95"/>
+            <stop offset="100%" stopColor="#3b82f6" stopOpacity="0"/>
+          </radialGradient>
         </defs>
-        {CONNECTIONS.map((d, i) => (
-          <path key={i} ref={el=>(lineRefs.current[i]=el)} d={d}
-            stroke={`url(#s4lg${i})`} strokeWidth="1.6" fill="none"
+        {FLOW.map((f, i) => (
+          <path key={`${f.from}-${f.to}`} ref={el=>(lineRefs.current[i]=el)} d={f.d}
+            stroke={`url(#s4lg${i})`} strokeWidth="1.1" fill="none"
             strokeLinecap="round" strokeLinejoin="round" opacity="0"
             filter="url(#s4line_glow)"/>
+        ))}
+        {/* Travelling dots — one per link, drawn after the paths so a dot always
+            rides ON TOP of the stroke it is following. */}
+        {FLOW.map((f, i) => (
+          <circle key={`dot-${f.from}-${f.to}`} ref={el => (dotRefs.current[i] = el)}
+            cx="0" cy="0" r={DOT_R} fill="url(#s4dotGradient)" opacity="0"
+            filter="url(#s4dot_glow)"/>
         ))}
       </svg>
 
@@ -527,11 +744,16 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
       {ICONS.map((ic, i) => (
         <div key={ic.id}
           ref={el => (iconRefs.current[i] = el)}
+          onMouseEnter={() => hoverIcon(i, true)}
+          onMouseLeave={() => hoverIcon(i, false)}
           style={{
             position:'absolute', left:ic.left, top:ic.top,
             width:ic.size, height:ic.size,
             zIndex:ic.layer === 'center' ? 4 : 7,
-            pointerEvents:'none',
+            // Hover needs hit-testing. startDesktop switches this back to 'none' once
+            // the icons have faded, so invisible cards can't swallow pointer events
+            // over the dashboard underneath them.
+            pointerEvents:'auto',
             willChange:'opacity',
           }}
         >
@@ -539,6 +761,41 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
           <div ref={el=>(activeRefs.current[i]=el)}
             style={{ position:'absolute', inset:0, opacity:0, willChange:'opacity' }}>
             <ActiveCard id={ic.id} size={ic.size}/>
+          </div>
+
+          {/* Hover colour is a SECOND active layer rather than a reuse of the one
+              above: the looping timeline owns that element's opacity, and driving the
+              same property from two places makes them fight mid-beat. */}
+          <div ref={el => (hoverRefs.current[i] = el)}
+            style={{ position:'absolute', inset:0, opacity:0, pointerEvents:'none', willChange:'opacity' }}>
+            <ActiveCard id={ic.id} size={ic.size}/>
+          </div>
+
+          <div ref={el => (tipRefs.current[i] = el)}
+            style={{
+              position:'absolute',
+              // Hangs off the card's bottom corner, overlapping it slightly so the
+              // label reads as attached to the icon rather than floating near it.
+              top: ic.size - 12,
+              ...(ic.flip
+                ? { right: Math.round(ic.size * 0.45) }
+                : { left:  Math.round(ic.size * 0.45) }),
+              padding:'5px 10px',
+              borderRadius:4,
+              background: TIP_BG,
+              color:'#ffffff',
+              fontSize:12,
+              fontWeight:700,
+              lineHeight:1.3,
+              whiteSpace:'nowrap',
+              boxShadow:'0 6px 20px rgba(15, 23, 42, 0.18), 0 2px 8px rgba(15, 23, 42, 0.12)',
+              opacity:0,
+              transform:'translateY(5px)',
+              pointerEvents:'none',
+              willChange:'opacity, transform',
+            }}
+          >
+            {ic.label}
           </div>
         </div>
       ))}

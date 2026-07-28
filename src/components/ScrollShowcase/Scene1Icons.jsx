@@ -3,9 +3,10 @@ import { forwardRef, useLayoutEffect, useRef, useState, useEffect } from 'react'
 import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import BrowserChrome from './BrowserChrome';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
 const W = 580, H = 580;
 
@@ -113,12 +114,12 @@ const DT_WIRE = [
 // enough to the right edge that a right-hanging tooltip would run off the scene.
 const ICON_SIZE = 76;
 const ICONS = [
-  { id:'pin',    cx:98,  cy:56,  layer:'outer',  label:'Live GPS Tracking',          tip:'linear-gradient(90deg,#f472b6,#8b5cf6)' },
-  { id:'bell',   cx:289, cy:143, layer:'center', label:'Instant Idle Alerts',        tip:'linear-gradient(90deg,#2dd4bf,#3b82f6)' },
-  { id:'route',  cx:480, cy:143, layer:'outer',  label:'Daily Route History',        tip:'linear-gradient(90deg,#f472b6,#a855f7)', flip:true },
-  { id:'moon',   cx:98,  cy:247, layer:'outer',  label:'After-Hours Vehicle Alerts', tip:'linear-gradient(90deg,#6366f1,#7c3aed)' },
-  { id:'grid',   cx:289, cy:334, layer:'center', label:'Dynamic Fleet Dashboard',    tip:'linear-gradient(90deg,#6366f1,#06b6d4)' },
-  { id:'wrench', cx:289, cy:525, layer:'center', label:'Fleet Service Reminders',    tip:'linear-gradient(90deg,#60a5fa,#2563eb)' },
+  { id:'pin',    cx:98,  cy:56,  layer:'outer',  label:'Live GPS Tracking',          tip:'linear-gradient(90deg, #10b981 0%, #06b6d4 100%)' },
+  { id:'bell',   cx:289, cy:143, layer:'center', label:'Instant Idle Alerts',        tip:'linear-gradient(90deg, #14b8a6 0%, #6366f1 100%)' },
+  { id:'route',  cx:480, cy:143, layer:'outer',  label:'Daily Route History',        tip:'linear-gradient(90deg, #ec4899 0%, #8b5cf6 100%)', flip:true },
+  { id:'moon',   cx:98,  cy:247, layer:'outer',  label:'After-Hours Vehicle Alerts', tip:'linear-gradient(90deg, #6366f1 0%, #a855f7 100%)' },
+  { id:'grid',   cx:289, cy:334, layer:'center', label:'Dynamic Fleet Dashboard',    tip:'linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%)' },
+  { id:'wrench', cx:289, cy:525, layer:'center', label:'Fleet Service Reminders',    tip:'linear-gradient(90deg, #60a5fa 0%, #a78bfa 100%)' },
 ].map(ic => ({
   ...ic,
   size: ICON_SIZE,
@@ -264,6 +265,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
   const activeRefs   = useRef([]);
   const iconRefs     = useRef([]);
   const lineRefs     = useRef([]);
+  const dotRefs      = useRef([]); // NEW: refs for animated dots
   const hoverRefs    = useRef([]);
   const tipRefs      = useRef([]);
   const mobileRef    = useRef(null);
@@ -488,6 +490,10 @@ export default forwardRef(function Scene1Icons(_props, ref) {
       const len = getLen(p);
       gsap.set(p, { opacity: 0, strokeDasharray: `${len} ${len + 1}`, strokeDashoffset: len });
     });
+    // Reset animated dots
+    dotRefs.current.filter(Boolean).forEach(dot => {
+      gsap.set(dot, { opacity: 0 });
+    });
     // NOTE: the phone (mobileRef / mobilePopupRef) is deliberately not reset here —
     // it is owned entirely by the pinned scroll timeline, and resetting it would
     // fight ScrollTrigger for the same properties.
@@ -539,13 +545,13 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     const CONN_START = 0.06;
     const ACT_DUR    = 0.28;  // icon grey → colour
     const LINE_LEAD  = 0.14;  // line starts just after the first icon lights
-    const CONN_DUR   = 0.75;  // line draw — the slowest part, it's the thing being read
-    const HOLD       = 0.28;  // pair sits complete
-    const CLEAR_DUR  = 0.40;  // pair + line back to inactive
-    const BEAT       = LINE_LEAD + CONN_DUR + HOLD + CLEAR_DUR; // 1.57
+    const CONN_DUR   = 1.2;   // line draw — INCREASED for smoother animation
+    const HOLD       = 0.4;   // pair sits complete — INCREASED for better viewing
+    const CLEAR_DUR  = 0.50;  // pair + line back to inactive
+    const BEAT       = LINE_LEAD + CONN_DUR + HOLD + CLEAR_DUR; // now ~2.24
     // Slightly longer than BEAT so there is a breath of empty board between beats,
     // rather than the next pair lighting the instant the last one finishes fading.
-    const STEP       = 1.6;
+    const STEP       = 2.4;
 
     // Three beats covering all six icons exactly once each, so every feature gets a
     // moment: pin+route, then bell+moon, then grid+wrench.
@@ -557,10 +563,33 @@ export default forwardRef(function Scene1Icons(_props, ref) {
       const elA = activeRefs.current[ia];
       const elB = activeRefs.current[ib];
       const line = lineRefs.current[ci];
+      const dot = dotRefs.current[ci];
 
       if (elA) tl.to(elA, { opacity:1, duration:ACT_DUR, ease:ICON_EASE }, at);
       if (elB) tl.to(elB, { opacity:1, duration:ACT_DUR, ease:ICON_EASE }, at + 0.06);
-      if (line) {
+      if (line && dot) {
+        const len = getLen(line);
+        
+        // Draw the line with dash offset
+        tl.set(line, { strokeDasharray:`${len} ${len + 1}`, strokeDashoffset:len, opacity:1 }, at + LINE_LEAD);
+        tl.to(line, { strokeDashoffset:0, duration:CONN_DUR, ease:LINE_EASE }, at + LINE_LEAD);
+        
+        // Animate dot along the line synchronized with the drawing
+        tl.set(dot, { opacity: 1 }, at + LINE_LEAD);
+        tl.to(dot, {
+          onUpdate: function() {
+            try {
+              const progress = this.progress();
+              const point = line.getPointAtLength(len * progress);
+              gsap.set(dot, { attr: { cx: point.x, cy: point.y } });
+            } catch (e) {
+              // Silently handle any errors
+            }
+          },
+          duration: CONN_DUR,
+          ease: LINE_EASE,
+        }, at + LINE_LEAD);
+      } else if (line) {
         const len = getLen(line);
         tl.set(line, { strokeDasharray:`${len} ${len + 1}`, strokeDashoffset:len, opacity:1 }, at + LINE_LEAD);
         tl.to(line, { strokeDashoffset:0, duration:CONN_DUR, ease:LINE_EASE }, at + LINE_LEAD);
@@ -569,6 +598,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
       // Hand back to grey so the next pair starts from a clean board.
       const clearAt = at + LINE_LEAD + CONN_DUR + HOLD;
       if (line) tl.to(line, { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
+      if (dot) tl.to(dot, { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
       if (elA)  tl.to(elA,  { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
       if (elB)  tl.to(elB,  { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
     });
@@ -610,6 +640,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     // Clear whatever the loop left lit, plus any tooltip the user was hovering,
     // then the grey cards behind it all.
     tl.to(lineRefs.current.filter(Boolean),   { opacity:0, duration:0.45, ease:FADE_EASE }, 0);
+    tl.to(dotRefs.current.filter(Boolean),    { opacity:0, duration:0.45, ease:FADE_EASE }, 0);
     tl.to(activeRefs.current.filter(Boolean), { opacity:0, duration:0.45, ease:FADE_EASE }, 0);
     tl.to(hoverRefs.current.filter(Boolean),  { opacity:0, duration:0.30, ease:FADE_EASE }, 0);
     tl.to(tipRefs.current.filter(Boolean),    { opacity:0, y:5, duration:0.30, ease:FADE_EASE }, 0);
@@ -683,12 +714,37 @@ export default forwardRef(function Scene1Icons(_props, ref) {
             <feGaussianBlur stdDeviation="1.2" result="b"/>
             <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
           </filter>
+          {/* Strong glow filter for animated dots */}
+          <filter id="s1dot_glow" filterUnits="userSpaceOnUse"
+            x={-40} y={-40} width={W + 80} height={H + 80}>
+            <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+            <feComponentTransfer in="blur" result="brightBlur">
+              <feFuncA type="linear" slope="1.5"/>
+            </feComponentTransfer>
+            <feMerge>
+              <feMergeNode in="brightBlur"/>
+              <feMergeNode in="brightBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          {/* Radial gradient for dots - bright center to glowing edge */}
+          <radialGradient id="dotGradient">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="1"/>
+            <stop offset="40%" stopColor="#93c5fd" stopOpacity="1"/>
+            <stop offset="100%" stopColor="#60a5fa" stopOpacity="0.8"/>
+          </radialGradient>
         </defs>
         {CONNECTIONS.map((d, i) => (
           <path key={i} ref={el => (lineRefs.current[i] = el)} d={d}
             stroke={`url(#s1lg${i})`} strokeWidth="1.8" fill="none"
             strokeLinecap="round" strokeLinejoin="round" opacity="0"
             filter="url(#s1line_glow)"/>
+        ))}
+        {/* Animated traveling dots */}
+        {CONNECTIONS.map((d, i) => (
+          <circle key={`dot-${i}`} ref={el => (dotRefs.current[i] = el)}
+            cx="0" cy="0" r="8" fill="url(#dotGradient)" opacity="0"
+            filter="url(#s1dot_glow)"/>
         ))}
       </svg>
 
@@ -861,15 +917,15 @@ export default forwardRef(function Scene1Icons(_props, ref) {
               ...(ic.flip
                 ? { right: Math.round(ic.size * 0.45) }
                 : { left:  Math.round(ic.size * 0.45) }),
-              padding:'7px 13px',
-              borderRadius:9,
+              padding:'8px 18px',
+              borderRadius:30,
               background: ic.tip,
-              color:'#fff',
-              fontSize:13,
+              color:'#ffffff',
+              fontSize:12,
               fontWeight:700,
-              lineHeight:1.2,
+              lineHeight:1.3,
               whiteSpace:'nowrap',
-              boxShadow:'0 8px 20px rgba(15,23,42,0.20)',
+              boxShadow:'0 6px 20px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1)',
               opacity:0,
               transform:'translateY(5px)',
               pointerEvents:'none',

@@ -891,7 +891,7 @@ h6 {
   }
   .ss-anim-panel {
     order: unset;
-    flex: 0 0 42%;
+    flex: 0 0 38%;
     width: auto;
     height: 100vh;
     position: relative;
@@ -899,12 +899,13 @@ h6 {
     overflow: visible;
     background: transparent;
     margin-bottom: 0;
+    margin-left: 48px;
   }
   /* Fill the fixed-height row rather than forcing it taller via min-height, which
      would push the row past one viewport and break the pin. */
   .ss-text-panel {
     order: unset;
-    flex: 0 0 58%;
+    flex: 0 0 52%;
     width: auto;
     height: 100%;
     min-height: 0;
@@ -917,7 +918,7 @@ h6 {
   }
   /* Zigzag: when animation is on right, text gets left side padding. Layout only —
      this selector no longer carries any pin-related rules. */
-  .ss-row--anim-right .ss-anim-panel { order: 1; padding-left: 0; }
+  .ss-row--anim-right .ss-anim-panel { order: 1; margin-left: 0; margin-right: 48px; }
   .ss-row--anim-right .ss-text-panel { order: 0; padding-left: 24px; padding-right: 8px; }
 }
 

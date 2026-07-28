@@ -969,10 +969,14 @@ h6 {
 /* ══════════════════════════════════════════════════════
    FEATURE SLIDER — responsive layout
    ══════════════════════════════════════════════════════ */
+/* Outer measure, page padding and column gutter are deliberately identical to
+   .ss-row (the Fleet / Video Telematics rows above) — the two sections sit directly
+   on top of each other, so any difference in these three reads as the page shifting
+   sideways between them. Change them together or not at all. */
 .fs-container {
-  max-width: 1240px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 24px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -1002,11 +1006,17 @@ h6 {
   .fs-container {
     flex-direction: row;
     align-items: center;
-    gap: 32px;
-    padding: 0 60px;
+    gap: clamp(48px, 5vw, 96px);
+    padding: 0 48px;
   }
-  .fs-left { flex: 1 1 auto; min-width: 0; width: auto; }
-  .fs-right { flex: 0 0 460px; min-width: 0; width: auto; }
+  /* 52 / 38 to match .ss-text-panel and .ss-anim-panel, so the copy column and the
+     mockup column line up vertically with the rows above rather than starting and
+     ending a few dozen pixels off. The 10% of slack left over plus the row padding
+     is what absorbs the gutter without overflow at any width from 1024px up —
+     both are flex-shrink: 0, so an oversized gap would overflow rather than
+     compress. `fs-right` was a fixed 460px basis, which could not stay in step. */
+  .fs-left  { flex: 0 0 52%; min-width: 0; width: auto; }
+  .fs-right { flex: 0 0 38%; min-width: 0; width: auto; }
   .fs-scene-wrap { height: 320px; }
 }
 

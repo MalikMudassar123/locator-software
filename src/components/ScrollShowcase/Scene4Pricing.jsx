@@ -4,6 +4,7 @@ import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import BrowserChrome from './BrowserChrome';
+import { lockScroll, unlockScroll, forceUnlockScroll } from './scroll-lock';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -75,7 +76,16 @@ const R = 12; // corner radius shared by every elbow
 // Resting radius of the travelling dot. Visibility comes from a bright solid core
 // rather than sheer size — the background is a very pale #f5f7fa, so a crisp white
 // centre with a defined blue edge carries further than a large soft disc.
-const DOT_R = 5.5;
+// Kept deliberately small so it reads as a current pulse rather than as a marker or
+// a progress indicator being dragged along. Matches Scene1Icons.
+const DOT_R = 4.2;
+
+// How far BEHIND the line's leading edge the dot rides, in path units. Matches
+// Scene1Icons exactly so both sections read identically. The line leads, the dot
+// follows — which is what reads as current flowing along a wire that is already
+// there. Sampling at exactly the wavefront put the dot on the very tip of the
+// stroke, so it looked like it was dragging the line out behind it.
+const DOT_TRAIL = 16;
 
 // Elbow shapes, named for the axis order they travel. Each takes two points that
 // already sit ON a card edge and routes between them with rounded corners.
@@ -194,7 +204,8 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
   const activeRefs   = useRef([]);
   const iconRefs     = useRef([]);
   const lineRefs     = useRef([]);
-  const dotRefs      = useRef([]);
+  const dotRefs      = useRef([]);   // lead pulse — rides the line as it draws
+  const pulseRefs    = useRef([]);   // follow pulse — keeps the finished line live
   const hoverRefs    = useRef([]);
   const tipRefs      = useRef([]);
   const framePathRef = useRef(null);
@@ -208,36 +219,90 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
   const playedRef    = useRef(false);
   const [scale, setScale] = useState(1);
 
-  // ── Two scroll-gated stages ───────────────────────────────────────────────
-  // Mirrors Scene1Icons, minus its third (phone) stage — this scene has only one
-  // device to reveal:
-  //   STAGE 0  arrive   icons + connection lines, LOOPING. Nothing else on screen.
-  //   STAGE 1  scroll   icons dissolve → wireframe draws → video dashboard lands.
+  // ── State machine ─────────────────────────────────────────────────────────
+  // Same machine as Scene1Icons, one state shorter — this scene has only one
+  // device to reveal, so there is no mobile step:
   //
-  // The row is PINNED for stage 1 (desktop only), so the section freezes in place
-  // while the wireframe and dashboard build. It previously relied on a sticky anim
-  // panel instead, which kept the panel in view but let the row keep scrolling —
-  // so the reveal played while the whole section was sliding up the screen.
-  const iconsTlRef        = useRef(null);
-  const desktopTlRef      = useRef(null);
-  const desktopStartedRef = useRef(false);
-  const cycleDoneRef      = useRef(false);
-  const scrollAtCycleEndRef = useRef(0);
+  //     ST_ICONS  ⇄  ST_DESKTOP
+  //
+  // The ST_ prefix matters: `ICONS` is already the module-level array of icon
+  // definitions, which hoverIcon and the JSX both read. An unprefixed state
+  // constant would shadow it and turn `ICONS.map(...)` into a call on the number 0.
+  //
+  // Two rules, both of which this scene was missing:
+  //
+  //   1. ONE TRANSITION AT A TIME — `busyRef` locks out a new transition until the
+  //      running one lands, so states can never overlap.
+  //   2. REVERSIBLE — the dashboard build used to be a strict one-shot, played
+  //      forward once and never again. Scrolling back left it stranded on screen
+  //      with no way to return to the icon board, so forward and reverse were not
+  //      symmetric at all.
+  //
+  // Gating is on the trigger's OWN progress — a fixed fraction of the section's
+  // scroll range. The previous gate measured pixels travelled from an anchor
+  // stamped whenever the icon loop happened to finish a pass, and that anchor
+  // landed wherever the user was at that instant, so the same gesture needed a
+  // different amount of scroll every time.
+  const ST_ICONS = 0, ST_DESKTOP = 1;
+  const iconsTlRef   = useRef(null);
+  const desktopTlRef = useRef(null);
+  const stateRef     = useRef(ST_ICONS);  // last COMMITTED state
+  const busyRef      = useRef(false);     // a transition is in flight
+  const progRef      = useRef(0);         // most recent scroll progress
+  const lockedRef    = useRef(false);     // this scene is holding the scroll lock
+  // Only the pinned breakpoint locks scrolling. Below 1024px the row is not pinned
+  // and simply flows past, so freezing the page there would strand the user staring
+  // at a frozen screen for the length of an animation they did not ask to wait for.
+  const pinnedRef    = useRef(false);
 
-  // Scroll required AFTER the first icon cycle finishes, before the dashboard builds.
-  const DESKTOP_IN_PX = 120;
+  // Per-state thresholds — the boundary that applies depends on which way you are
+  // travelling, which is the hysteresis: there is no single point where a few
+  // pixels of scroll jitter can flap the state in and out.
+  const TO_DESKTOP = 0.34;  // icons   → desktop
+  const TO_ICONS   = 0.26;  // desktop → icons
 
-  const checkScroll = () => {
-    if (desktopStartedRef.current) return;
-    // Two conditions, and the order matters. Anchoring this to the section's entry
-    // instead (self.scroll() - self.start) did not work: scrolling INTO the section
-    // is what starts the icons, so that gate was already satisfied before they had
-    // played at all and the dashboard appeared immediately. Requiring a completed
-    // cycle first, then fresh scroll measured from the end of it, guarantees the
-    // icon animation is actually seen before anything replaces it.
-    if (!cycleDoneRef.current) return;
-    if (window.scrollY - scrollAtCycleEndRef.current < DESKTOP_IN_PX) return;
-    startDesktop();
+  const nextState = () => {
+    const p = progRef.current;
+    return stateRef.current === ST_ICONS
+      ? (p >= TO_DESKTOP ? ST_DESKTOP : ST_ICONS)
+      : (p <= TO_ICONS   ? ST_ICONS   : ST_DESKTOP);
+  };
+
+  // Idempotent: does nothing if a transition is running or the state already
+  // matches the scroll position.
+  const settle = () => {
+    if (busyRef.current) return;
+    const from = stateRef.current;
+    const to   = nextState();
+    if (to === from) return;
+    busyRef.current = true;
+    // Freeze the page for the whole transition. The pin holds the SECTION still but
+    // does nothing to stop the page moving under it — without this the pin runs out
+    // of range mid-animation and releases, which is the section sliding upward while
+    // the state is still changing.
+    if (pinnedRef.current) { lockScroll(); lockedRef.current = true; }
+    runTransition(from, to);
+  };
+
+  const finishTransition = (to) => {
+    const wasLocked = lockedRef.current;
+    lockedRef.current = false;
+    stateRef.current  = to;
+    busyRef.current   = false;
+    // Back on the bare board — hand control to the looping icon animation again.
+    if (to === ST_ICONS) iconsTlRef.current?.resume();
+    // Re-evaluate against wherever the user scrolled while this ran, so a fast
+    // scroll is played back in order rather than having its steps dropped.
+    settle();
+    // Released AFTER settle, not before. If settle starts the next transition it
+    // takes its own lock first, so the refcount never reaches zero between the two
+    // and the page is not briefly free to jump during the hand-over.
+    if (wasLocked) unlockScroll();
+  };
+
+  const checkScroll = (self) => {
+    progRef.current = self.progress;
+    settle();
   };
 
   useEffect(() => {
@@ -256,7 +321,14 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     return () => ro.disconnect();
   }, []);
 
-  useLayoutEffect(() => () => allTweens.current.forEach(t => t?.kill()), []);
+  useLayoutEffect(() => () => {
+    allTweens.current.forEach(t => t?.kill());
+    // Killing the timelines means no completion callback will ever fire, so a
+    // transition in flight would never release its lock. forceUnlockScroll rather
+    // than unlockScroll: leaving the user on an unscrollable page is far worse than
+    // dropping a refcount that nothing else is holding.
+    if (lockedRef.current) { lockedRef.current = false; forceUnlockScroll(); }
+  }, []);
 
   // The scene resizes itself after mount (see the ResizeObserver above), which moves
   // the trigger's start. Without this it keeps stale measurements and the gate fires
@@ -278,31 +350,55 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
       // wireframe draws and the dashboard lands — the scene plays where the user is
       // already looking instead of sliding up the screen underneath the animation.
       mm.add('(min-width: 1024px)', () => {
+        pinnedRef.current = true;
+
         ScrollTrigger.create({
           trigger: row,
           start: 'top top',
-          // Must absorb the mandatory first icon cycle (~5.4s, during which a
-          // scrolling user is still burning runway), the 120px gate, and the ~4s
-          // build. Too short and a moderate scroller unpins mid-sequence.
-          end: () => '+=' + window.innerHeight * 1.6,
+          // Purely a pacing choice: the state threshold is a fraction of this, so it
+          // only decides how much scrolling sits either side of the change.
+          //
+          //   0.00 → 0.34   icon board   (first scroll lands the dashboard)
+          //   0.34 → 1.00   dashboard, then release
+          //
+          // Reverse reads the same band with its own threshold, so the pin is not
+          // given up until the board is back to icons. It no longer has to be long
+          // enough to CONTAIN a time-based icon pass, which is what 1.6 was sized
+          // for and what no length reliably achieved.
+          end: () => '+=' + window.innerHeight * 1.8,
           pin: true,
           pinSpacing: true,
           invalidateOnRefresh: true,
           onUpdate: checkScroll,
-          // Fast-scroll safety net: never leave the section half-built behind the user.
-          onLeave: () => { startDesktop(); desktopTlRef.current?.progress(1); },
+          // Also on refresh, so a reload partway down the section or a resize
+          // resolves to the state the scroll position implies.
+          onRefresh: checkScroll,
+          // No onLeave. It was a safety net for a stage that might not have fired;
+          // the machine converges on its own — finishTransition re-evaluates against
+          // the latest progress, so anything skipped past is played in order rather
+          // than forced to an end state.
         });
+
+        // Crossing back below 1024px tears this branch down. Drop the pinned flag
+        // with it, and release any lock still held, or the page stays frozen with
+        // nothing left running to unfreeze it.
+        return () => {
+          pinnedRef.current = false;
+          if (lockedRef.current) { lockedRef.current = false; unlockScroll(); }
+        };
       });
 
-      // Below 1024px nothing is pinned; this trigger only delivers scroll updates
-      // while the row is in view, since the gate is measured in raw scroll pixels.
+      // Below 1024px nothing is pinned, but `self.progress` runs 0→1 across the
+      // range below exactly as it does across the pin, so the same fraction works
+      // untouched.
       mm.add('(max-width: 1023px)', () => {
         ScrollTrigger.create({
           trigger: row,
           start: 'top 75%',
-          end: 'bottom top',
+          end: 'bottom 30%',
+          invalidateOnRefresh: true,
           onUpdate: checkScroll,
-          onLeave: () => { startDesktop(); desktopTlRef.current?.progress(1); },
+          onRefresh: checkScroll,
         });
       });
     }, el);
@@ -329,7 +425,7 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
   // dissolving card would fight the fade.
   const hoverIcon = (i, on) => {
     const card = iconRefs.current[i];
-    if (!card || desktopStartedRef.current) return;
+    if (!card || stateRef.current !== ST_ICONS || busyRef.current) return;
 
     // Lift the hovered card so its tooltip can cross over neighbouring icons, which
     // sit on their own z-layers. Restored to the resting layer on exit.
@@ -361,8 +457,8 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     // rather than a transform: position is driven by cx/cy attrs during travel, and a
     // CSS transform would scale the dot about the SVG origin instead of its own
     // centre, throwing it off the line.
-    dotRefs.current.filter(Boolean).forEach(dot => {
-      gsap.set(dot, { opacity: 0, attr: { r: DOT_R } });
+    [...dotRefs.current, ...pulseRefs.current].filter(Boolean).forEach(d => {
+      gsap.set(d, { opacity: 0, attr: { r: DOT_R } });
     });
     wireRefs.current.forEach(el => {
       if (!el) return;
@@ -384,18 +480,13 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
 
     // repeatDelay lands on an empty board — every beat clears itself, so the cycle
     // ends clean and the pause reads as a breath rather than a stall.
-    const tl = gsap.timeline({
-      repeat: -1,
-      repeatDelay: 0.6,
-      // Fires at the end of every cycle; only the first is meaningful. This is what
-      // arms the desktop gate — until one complete pass of the icons has been shown,
-      // no amount of scrolling can advance the scene.
-      onRepeat: () => {
-        if (cycleDoneRef.current) return;
-        cycleDoneRef.current = true;
-        scrollAtCycleEndRef.current = window.scrollY;
-      },
-    });
+    //
+    // This loop no longer gates anything. It used to stamp a scroll anchor when a
+    // pass completed, and the desktop could not appear until then — which meant the
+    // scroll position that unlocked it differed on every visit, because the user was
+    // still scrolling while the pass played. Where the states change is now decided
+    // purely by how far down the section the user is.
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.6 });
     iconsTlRef.current = tl;
     allTweens.current.push(tl);
 
@@ -423,28 +514,43 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     // the gentlest standard curve, so it eases away from the source and settles into
     // the target without a hard edge at either end.
     const DRAW_DUR    = 1.05;  // line draw / dot travel, per link
-    const HOLD        = 0.45;  // completed connection sits before the next beat takes over
     const CLEAR_DUR   = 0.40;  // previous line + stale icons back to grey
-    const STEP        = LINE_LEAD + DRAW_DUR + HOLD;  // start-to-start between beats
+    // ── Continuous flow ──────────────────────────────────────────────────────
+    // The instant a line finishes drawing, a SECOND pulse sets off along it, so the
+    // completed connection stays visibly live while the next one begins. The next
+    // beat starts when that follow pulse is PULSE_HANDOFF of the way along — half is
+    // enough for the eye to read "this line is flowing", and holding for the
+    // remainder only reintroduces the dead pause this replaces.
+    //
+    // Same numbers as Scene1Icons so both sections flow identically.
+    const PULSE_DUR     = 0.90;  // follow pulse, source → target on the finished line
+    const PULSE_HANDOFF = 0.50;  // fraction of it before the next beat takes over
+    // Comes out at exactly the old LINE_LEAD + DRAW_DUR + HOLD: the static hold has
+    // been swapped for the first half of the follow pulse, so the sequence keeps its
+    // pacing and only the dead time is gone.
+    const STEP        = LINE_LEAD + DRAW_DUR + PULSE_DUR * PULSE_HANDOFF;
+    const END_HOLD    = 0.45;  // after the last pulse hands off, before clearing
     // The instant the dot reaches the target card. Pulled 0.05 early so the icon is
     // already blooming as the dot touches it — landing exactly on the frame reads a
     // beat late to the eye.
     const ARRIVE_LEAD = 0.05;
 
-    // Tracked so the final hold is measured from the moment the LAST link actually
-    // lands, rather than from a re-derived guess that drifts if timings change.
-    let lastArrive = CHAIN_START;
+    // Tracked so the final clear is measured from the moment the LAST follow pulse
+    // sets off, rather than from a re-derived guess that drifts if timings change.
+    let lastPulseAt = CHAIN_START;
 
     FLOW.forEach((f, i) => {
       const at       = CHAIN_START + i * STEP;
       const drawAt   = at + LINE_LEAD;
       const arriveAt = drawAt + DRAW_DUR - ARRIVE_LEAD;
-      lastArrive     = Math.max(lastArrive, arriveAt);
+      const pulseAt  = drawAt + DRAW_DUR;   // line complete → follow pulse departs
+      lastPulseAt    = Math.max(lastPulseAt, pulseAt);
 
-      const line = lineRefs.current[i];
-      const dot  = dotRefs.current[i];
-      const src  = activeRefs.current[IDX[f.from]];
-      const tgt  = activeRefs.current[IDX[f.to]];
+      const line  = lineRefs.current[i];
+      const dot   = dotRefs.current[i];
+      const pulse = pulseRefs.current[i];
+      const src   = activeRefs.current[IDX[f.from]];
+      const tgt   = activeRefs.current[IDX[f.to]];
 
       // ── Hand the board over ──────────────────────────────────────────────────
       // Retire the previous link's line, and drop every lit icon EXCEPT this beat's
@@ -455,6 +561,13 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
       if (i > 0) {
         const prevLine = lineRefs.current[i - 1];
         if (prevLine) tl.to(prevLine, { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, at);
+
+        // The previous link's follow pulse is mid-flight right now — exactly
+        // PULSE_HANDOFF along. Fade it WITH its line rather than stopping it: it
+        // keeps travelling under the fade, so the old connection reads as dimming
+        // out while still flowing, not as something switched off.
+        const prevPulse = pulseRefs.current[i - 1];
+        if (prevPulse) tl.to(prevPulse, { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, at);
 
         const stale = activeRefs.current.filter((el, idx) => el && idx !== IDX[f.from]);
         if (stale.length) tl.to(stale, { opacity:0, scale:0.9, duration:CLEAR_DUR, ease:FADE_EASE }, at);
@@ -481,7 +594,12 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
             ease: LINE_EASE,
             onUpdate: function () {
               try {
-                const p = line.getPointAtLength(len * this.progress());
+                // Sample DOT_TRAIL behind the wavefront, never ahead of it and never
+                // before the start of the path. The clamp parks the dot on the source
+                // edge for the first few frames, which reads as the pulse gathering
+                // before it sets off rather than as a stall.
+                const head = len * this.progress();
+                const p = line.getPointAtLength(Math.max(0, head - DOT_TRAIL));
                 // Written straight to the attributes rather than through gsap.set.
                 // This runs every frame of every link; gsap.set builds a fresh tween
                 // and plugin instance per call, and that per-frame allocation shows
@@ -503,6 +621,31 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
             ease: 'power2.out',
           }, arriveAt);
         }
+
+        // ── Follow pulse ────────────────────────────────────────────────────
+        // Departs the source the moment the stroke is complete and runs the whole
+        // path on its own. Two things set it apart from the lead dot: it travels a
+        // line that already exists, so there is no wavefront to trail and no
+        // DOT_TRAIL offset; and it moves at a CONSTANT rate. Linear is what reads
+        // as current — the eased in-and-out of the lead dot belongs to the act of
+        // drawing, and reusing it here would make the flow look like it were
+        // starting and stopping rather than running steadily.
+        if (pulse) {
+          tl.set(pulse, { opacity: 1, attr: { r: DOT_R } }, pulseAt);
+          tl.to(pulse, {
+            duration: PULSE_DUR,
+            ease: 'none',
+            onUpdate: function () {
+              try {
+                const p = line.getPointAtLength(len * this.progress());
+                pulse.setAttribute('cx', p.x);
+                pulse.setAttribute('cy', p.y);
+              } catch {
+                // Path not measurable yet — skip this frame rather than break the beat.
+              }
+            },
+          }, pulseAt);
+        }
       }
 
       // Target lights ON IMPACT — never before.
@@ -512,39 +655,43 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     // ── Clear the last beat, so the cycle restarts from an empty board ───────────
     // Only the final link is still on screen at this point; every earlier one was
     // already retired by the beat that followed it.
-    const clearAt = lastArrive + ACT_DUR + HOLD;
+    // Measured from the last follow pulse's departure and given the same handoff
+    // share the other beats get, so the final link is held for exactly as long as
+    // every other one before the board clears.
+    const clearAt = lastPulseAt + PULSE_DUR * PULSE_HANDOFF + END_HOLD;
     tl.to(lineRefs.current.filter(Boolean),   { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
     tl.to(activeRefs.current.filter(Boolean), { opacity:0, scale:0.9, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
+    tl.to(pulseRefs.current.filter(Boolean),  { opacity:0, duration:CLEAR_DUR, ease:FADE_EASE }, clearAt);
     tl.set(dotRefs.current.filter(Boolean),   { opacity:0, attr:{ r: DOT_R } }, clearAt);
 
     // NOTE: the grey outline cards are deliberately NOT faded at the end of a cycle.
     // They belong to the scene, not to one pass; fading them would blink the whole
-    // board on every repeat. startDesktop owns their exit.
+    // board on every repeat. The icons ⇄ desktop transition owns their exit.
   };
 
-  // ── STAGE 1 ───────────────────────────────────────────────────────────────
-  // Scroll brought the user past DESKTOP_IN_PX. Dissolve the icon board — from
-  // wherever the loop happens to be — then draw the wireframe and land the real
-  // dashboard, which then STAYS. Runs once; scrolling back does not rebuild it.
-  const startDesktop = () => {
-    if (desktopStartedRef.current) return;
-    desktopStartedRef.current = true;
+  // ── The icons ⇄ desktop transition ────────────────────────────────────────
+  // Dissolve the icon board — from wherever the loop happens to be — then draw the
+  // wireframe and land the real dashboard. Played forward to reveal and reversed to
+  // unwind, so the two directions are the same beats in opposite order.
+  //
+  // Built ONCE and deliberately `paused`. Every tween below records its start value
+  // when the timeline is CREATED, so rebuilding it would capture whatever half-faded
+  // state the board happened to be in and reverse to that rather than to the icons.
+  const buildDesktop = () => {
+    if (desktopTlRef.current) return desktopTlRef.current;
 
-    // Kill the loop rather than letting it finish its cycle: waiting would stall the
-    // response to the user's scroll by up to a full cycle. Killing leaves every
-    // element at its current opacity and the fades below take over from there, so
-    // the handover is continuous no matter which frame we interrupted.
-    iconsTlRef.current?.kill();
-
-    const tl = gsap.timeline();
+    // No completion callbacks baked in here — runTransition attaches them per run,
+    // because the landing state depends on which direction the timeline was sent.
+    const tl = gsap.timeline({ paused: true });
     desktopTlRef.current = tl;
     allTweens.current.push(tl);
 
     // Clear whatever the loop left lit, then the grey cards behind it. The dots are
-    // included: killing the loop mid-beat can leave one parked on a path, and it
+    // included: pausing the loop mid-beat can leave one parked on a path, and it
     // would otherwise sit there glowing over the dashboard that replaces the icons.
     tl.to(lineRefs.current.filter(Boolean),   { opacity:0, duration:0.45, ease:FADE_EASE }, 0);
-    tl.to(dotRefs.current.filter(Boolean),    { opacity:0, duration:0.45, ease:FADE_EASE }, 0);
+    tl.to([...dotRefs.current, ...pulseRefs.current].filter(Boolean),
+                                              { opacity:0, duration:0.45, ease:FADE_EASE }, 0);
     tl.to(activeRefs.current.filter(Boolean), { opacity:0, duration:0.45, ease:FADE_EASE }, 0);
     tl.to(hoverRefs.current.filter(Boolean),  { opacity:0, duration:0.30, ease:FADE_EASE }, 0);
     tl.to(tipRefs.current.filter(Boolean),    { opacity:0, y:5, duration:0.30, ease:FADE_EASE }, 0);
@@ -578,6 +725,49 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     // Ends here — the dashboard holds. The old timeline faded it back out after a
     // ~4.5s hold so the whole scene could loop; with the stage gated on scroll that
     // teardown would just blank the section out while the user is still reading it.
+
+    return tl;
+  };
+
+  // Unwinding runs a little quicker than building. A reveal earns its time — it is
+  // showing the user something new — but replaying the same beats backwards at the
+  // same pace feels like being held up, and the user is scrolling AWAY.
+  const REVERSE_RATE = 1.35;
+
+  // The ONLY place a timeline is started. Every entry point routes through here, so
+  // there is exactly one owner per transition and two can never be pointed at once.
+  const runTransition = (from, to) => {
+    const tl = buildDesktop();
+
+    // icons → desktop
+    if (from === ST_ICONS && to === ST_DESKTOP) {
+      // PAUSE the icon loop, never kill it. Reversing has to hand the board back to
+      // this exact timeline, and a killed one cannot be resumed. Pausing also leaves
+      // every element at its current opacity, so the fades take over from there and
+      // the handover stays continuous whichever frame we interrupted.
+      iconsTlRef.current?.pause();
+      // Re-record start values when replaying from the top. GSAP caches a tween's
+      // start value the first time it renders, but the icon loop has kept running
+      // and been paused on a DIFFERENT frame since — without this a second forward
+      // play snaps the board back to the first play's frame before fading.
+      if (tl.progress() === 0) tl.invalidate();
+      tl.timeScale(1);
+      tl.eventCallback('onComplete', () => finishTransition(ST_DESKTOP));
+      tl.play();
+      return;
+    }
+
+    // desktop → icons
+    if (from === ST_DESKTOP && to === ST_ICONS) {
+      tl.timeScale(REVERSE_RATE);
+      tl.eventCallback('onReverseComplete', () => finishTransition(ST_ICONS));
+      tl.reverse();
+      return;
+    }
+
+    // Unreachable with only two states, but releasing the lock rather than silently
+    // holding it means a future pair cannot wedge the machine shut.
+    finishTransition(to);
   };
 
   return (
@@ -647,10 +837,18 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
             strokeLinecap="round" strokeLinejoin="round" opacity="0"
             filter="url(#s4line_glow)"/>
         ))}
-        {/* Travelling dots — one per link, drawn after the paths so a dot always
-            rides ON TOP of the stroke it is following. */}
+        {/* Lead pulses — one per link, drawn after the paths so a pulse always rides
+            ON TOP of the stroke it is following. */}
         {FLOW.map((f, i) => (
           <circle key={`dot-${f.from}-${f.to}`} ref={el => (dotRefs.current[i] = el)}
+            cx="0" cy="0" r={DOT_R} fill="url(#s4dotGradient)" opacity="0"
+            filter="url(#s4dot_glow)"/>
+        ))}
+        {/* Follow pulses — a second one per link, sent along the finished stroke so
+            the connection keeps carrying current while the next link is drawn. Same
+            geometry and gradient as the lead pulse; only its timing differs. */}
+        {FLOW.map((f, i) => (
+          <circle key={`pulse-${f.from}-${f.to}`} ref={el => (pulseRefs.current[i] = el)}
             cx="0" cy="0" r={DOT_R} fill="url(#s4dotGradient)" opacity="0"
             filter="url(#s4dot_glow)"/>
         ))}
@@ -750,7 +948,7 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
             position:'absolute', left:ic.left, top:ic.top,
             width:ic.size, height:ic.size,
             zIndex:ic.layer === 'center' ? 4 : 7,
-            // Hover needs hit-testing. startDesktop switches this back to 'none' once
+            // Hover needs hit-testing. The transition switches this back to 'none' once
             // the icons have faded, so invisible cards can't swallow pointer events
             // over the dashboard underneath them.
             pointerEvents:'auto',

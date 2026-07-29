@@ -41,11 +41,16 @@ const fleetFeatures = [
     desc: 'Central dashboard for trip insights, vehicle status, performance',
   },
   {
+    // Ringing bell — body, clapper, and a sound arc either side. Replaces a coffee
+    // mug (cup, handle and steam) that presumably stood for "after hours" but read
+    // as a break rather than as an alarm going off.
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <path d="M18 8h1a4 4 0 010 8h-1" stroke="#374151" strokeWidth="1.5" strokeLinecap="round"/>
-        <path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z" stroke="#374151" strokeWidth="1.5"/>
-        <path d="M6 1v3M10 1v3M14 1v3" stroke="#374151" strokeWidth="1.5" strokeLinecap="round"/>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+        stroke="#374151" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M6 8a6 6 0 0112 0c0 7 3 9 3 9H3s3-2 3-9"/>
+        <path d="M10.3 21a1.94 1.94 0 003.4 0"/>
+        <path d="M4 2C2.8 3.7 2 5.7 2 8"/>
+        <path d="M22 8c0-2.3-.8-4.3-2-6"/>
       </svg>
     ),
     title: 'After-Hours Vehicle Alerts',

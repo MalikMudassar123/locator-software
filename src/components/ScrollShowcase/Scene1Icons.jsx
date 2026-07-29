@@ -1141,9 +1141,17 @@ export default forwardRef(function Scene1Icons(_props, ref) {
         onMouseLeave={() => gsap.to(desktopPopupRef.current, { scale: 1, duration: 0.35, ease: 'power3.out', transformOrigin: 'left center' })}
         style={{
           position:'absolute',
-          left: Math.max(0, DT_X - 10),
+          // Pushed further left of the desktop frame's own left edge (DT_X) than
+          // before, and allowed to go negative — the outer canvas is
+          // overflow:'visible' on the pinned (desktop) breakpoint this popup
+          // actually matters on, so it sits just off the mockup's edge rather than
+          // flush against it. Still expressed as an offset FROM DT_X, so it tracks
+          // the desktop image if that ever moves.
+          left: DT_X - 52,
           top: DT_Y + 130 * DSY,
-          width: 250 * DSX,
+          // *DSX/DSY throughout, same as before — sized relative to the desktop
+          // image's own scale, just a smaller fraction of it (225/250 ≈ 90%).
+          width: 225 * DSX,
           height: 54 * DSY,
           opacity: 0,
           zIndex: 7,
@@ -1157,7 +1165,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
           src="/block 1/fdghgyhjhk.webp"
           alt="Vehicle hover popup"
           fill
-          sizes="250px"
+          sizes="225px"
           style={{ objectFit:'contain', objectPosition:'left top' }}
         />
       </div>

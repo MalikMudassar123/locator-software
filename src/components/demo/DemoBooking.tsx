@@ -85,6 +85,7 @@ export default function DemoBooking() {
     setView({ y: t.getFullYear(), m: t.getMonth() })
     setWindowStart(t)
   }, [])
+  
 
   const grid = useMemo(() => (view ? buildGrid(view.y, view.m) : []), [view])
 

@@ -205,7 +205,7 @@ export default function SoftwareHero() {
               <div className="sw-layer sw-layer-mobile" ref={mobileRef}>
                 {PHONES.map((p, i) => (
                   <div key={p.src} className={`sw-phone ${p.cls}`}>
-                    <Image src={p.src} alt={p.alt} fill sizes="(max-width: 520px) 72vw, (max-width: 820px) 42vw, 24vw" priority={i === 2} />
+                    <Image src={p.src} alt={p.alt} fill sizes="(max-width: 520px) 72vw, (max-width: 820px) 42vw, 24vw" priority loading="eager" />
                   </div>
                 ))}
               </div>
@@ -214,19 +214,19 @@ export default function SoftwareHero() {
               <div className="sw-layer sw-layer-web" ref={webRef} style={{ opacity: 0 }}>
                 <div className="sw-web-fan">
                   <div className="sw-wb sw-wb-l2">
-                    <Image src="/hero/web-live-map.webp" alt="Locator web — live map" fill sizes="(max-width: 820px) 0px, 24vw" />
+                    <Image src="/hero/web-live-map.webp" alt="Locator web — live map" fill sizes="(max-width: 820px) 0px, 24vw" priority loading="eager" />
                   </div>
                   <div className="sw-wb sw-wb-l1">
-                    <Image src="/hero/web-graphical-report.png" alt="Locator web — graphical reports" fill sizes="(max-width: 820px) 32vw, 28vw" />
+                    <Image src="/hero/web-graphical-report.png" alt="Locator web — graphical reports" fill sizes="(max-width: 820px) 32vw, 28vw" priority loading="eager" />
                   </div>
                   <div className="sw-wb sw-wb-c">
-                    <Image src="/hero/web-live-map.webp" alt="Locator web — live fleet map with alerts" fill sizes="(max-width: 820px) 92vw, 44vw" />
+                    <Image src="/hero/web-live-map.webp" alt="Locator web — live fleet map with alerts" fill sizes="(max-width: 820px) 92vw, 44vw" priority loading="eager" />
                   </div>
                   <div className="sw-wb sw-wb-r1">
-                    <Image src="/hero/web-route-playback.webp" alt="Locator web — route playback" fill sizes="(max-width: 820px) 32vw, 28vw" />
+                    <Image src="/hero/web-route-playback.webp" alt="Locator web — route playback" fill sizes="(max-width: 820px) 32vw, 28vw" priority loading="eager" />
                   </div>
                   <div className="sw-wb sw-wb-r2">
-                    <Image src="/hero/web-live-map.webp" alt="Locator web — fleet overview" fill sizes="(max-width: 820px) 0px, 24vw" />
+                    <Image src="/hero/web-live-map.webp" alt="Locator web — fleet overview" fill sizes="(max-width: 820px) 0px, 24vw" priority loading="eager" />
                   </div>
                 </div>
               </div>

@@ -203,7 +203,7 @@ export default function SoftwareHero() {
 
               {/* Layer 1 — mobile fan (default) */}
               <div className="sw-layer sw-layer-mobile" ref={mobileRef}>
-                {PHONES.map((p, i) => (
+                {PHONES.map((p) => (
                   <div key={p.src} className={`sw-phone ${p.cls}`}>
                     <Image src={p.src} alt={p.alt} fill sizes="(max-width: 520px) 72vw, (max-width: 820px) 42vw, 24vw" priority loading="eager" />
                   </div>

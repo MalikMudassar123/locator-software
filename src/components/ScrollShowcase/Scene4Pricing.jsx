@@ -901,11 +901,13 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
         <BrowserChrome />
         <div style={{ position:'relative', flex:1, background:'#fff' }}>
           <Image
-            src="/block 1/video teleframe.webp"
+            src="/block%201/video%20teleframe.webp"
             alt="Video telematics dashboard"
             fill
             sizes={`${FW}px`}
             style={{ objectFit:'contain', objectPosition:'left top' }}
+            priority
+            loading="eager"
           />
         </div>
       </div>
@@ -930,11 +932,13 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
         }}
       >
         <Image
-          src="/block 1/fdghgyhjhk.webp"
+          src="/block%201/fdghgyhjhk.webp"
           alt="Vehicle hover popup"
           fill
           sizes="250px"
           style={{ objectFit:'contain', objectPosition:'left top' }}
+          priority
+          loading="eager"
         />
       </div>
 

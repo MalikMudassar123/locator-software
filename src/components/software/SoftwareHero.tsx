@@ -132,13 +132,13 @@ export default function SoftwareHero() {
           transform-origin: bottom center;
         }
         .sw-phone img { object-fit: contain; }
-        .sw-ph-0 { z-index: 5; margin: 0 -2.5%; }
-        .sw-ph-1 { z-index: 4; transform: rotate(-8deg)  scale(.88); margin: 0 -2.5%; }
-        .sw-ph-2 { z-index: 3; transform: rotate(-16deg) scale(.74); margin: 0 -2.5%; }
-        .sw-ph-1.sw-ph-r { transform: rotate(8deg)  scale(.88); }
-        .sw-ph-2.sw-ph-r { transform: rotate(16deg) scale(.74); }
+        .sw-ph-0 { z-index: 5; margin: 0 -1%; }
+        .sw-ph-1 { z-index: 4; transform: rotate(-10deg) scale(.90); margin: 0 -1%; }
+        .sw-ph-2 { z-index: 3; transform: rotate(-18deg) scale(.78); margin: 0 -1%; }
+        .sw-ph-1.sw-ph-r { transform: rotate(10deg)  scale(.90); }
+        .sw-ph-2.sw-ph-r { transform: rotate(18deg) scale(.78); }
 
-        /* ── Web browser fan ── */
+        /* ── Web browser fan (5 images) ── */
         .sw-web-fan { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; }
         .sw-wb {
           position: relative; aspect-ratio: 1092 / 1000; flex: 0 0 auto;
@@ -147,22 +147,28 @@ export default function SoftwareHero() {
           box-shadow: 0 36px 70px -34px rgba(20,40,90,.42), 0 2px 8px rgba(20,40,90,.08);
         }
         .sw-wb img { object-fit: cover; }
-        /* sized by HEIGHT (capped to the stage) so the browser fan also can't
-           overflow upward into the headline */
-        .sw-wb-c { height: clamp(220px, 44vh, 480px); max-height: 100%; width: auto; z-index: 3; }
-        .sw-wb-l { height: clamp(180px, 35vh, 390px); max-height: 88%; width: auto; z-index: 2; margin-right: -7%; transform: translateY(4%) rotate(-2.5deg); }
-        .sw-wb-r { height: clamp(180px, 35vh, 390px); max-height: 88%; width: auto; z-index: 2; margin-left: -7%;  transform: translateY(4%) rotate(2.5deg); }
+        /* Center browser (largest, z-index 5) */
+        .sw-wb-c { height: clamp(240px, 48vh, 520px); max-height: 100%; width: auto; z-index: 5; }
+        /* Left browsers */
+        .sw-wb-l1 { height: clamp(200px, 40vh, 430px); max-height: 88%; width: auto; z-index: 4; margin-right: -8%; transform: translateY(6%) rotate(-4deg); }
+        .sw-wb-l2 { height: clamp(180px, 36vh, 390px); max-height: 82%; width: auto; z-index: 3; margin-right: -8%; transform: translateY(10%) rotate(-8deg); }
+        /* Right browsers */
+        .sw-wb-r1 { height: clamp(200px, 40vh, 430px); max-height: 88%; width: auto; z-index: 4; margin-left: -8%;  transform: translateY(6%) rotate(4deg); }
+        .sw-wb-r2 { height: clamp(180px, 36vh, 390px); max-height: 82%; width: auto; z-index: 3; margin-left: -8%;  transform: translateY(10%) rotate(8deg); }
 
         @media (max-width: 820px) {
           .sw-ph-2 { display: none; }
-          .sw-ph-1 { transform: rotate(-9deg) scale(.85); margin: 0 -5%; }
-          .sw-ph-1.sw-ph-r { transform: rotate(9deg) scale(.85); }
-          .sw-wb-l, .sw-wb-r { display: none; }
+          .sw-ph-1 { transform: rotate(-11deg) scale(.88); margin: 0 -2%; }
+          .sw-ph-1.sw-ph-r { transform: rotate(11deg) scale(.88); }
+          .sw-wb-l2, .sw-wb-r2 { display: none; }
+          .sw-wb-l1 { margin-right: -10%; transform: translateY(4%) rotate(-5deg); }
+          .sw-wb-r1 { margin-left: -10%; transform: translateY(4%) rotate(5deg); }
           .sw-wb-c { height: auto; width: min(92vw, 540px); }
         }
         @media (max-width: 520px) {
           .sw-ph-1, .sw-ph-2 { display: none; }
           .sw-ph-0 { margin: 0; }
+          .sw-wb-l1, .sw-wb-l2, .sw-wb-r1, .sw-wb-r2 { display: none; }
         }
       `}</style>
 
@@ -173,11 +179,10 @@ export default function SoftwareHero() {
           <div className="sw-hero-body">
             <div className="sw-copy">
               <p style={{ display: 'block', fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', color: '#1360ee', marginBottom: 'clamp(8px,1.4vh,14px)' }}>
-                <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
                 Locator Fleet Telematics
               </p>
-              <h1 style={{ fontSize: 'clamp(21px,2.5vw,28px)', fontWeight: 800, lineHeight: 1.18, letterSpacing: '-.015em', color: '#1d1d1f', maxWidth: '30ch', margin: '0 auto' }}>
-                One Platform for Complete Fleet Visibility
+              <h1 style={{ fontSize: 'clamp(21px,2.5vw,28px)', fontWeight: 800, lineHeight: 1.18, letterSpacing: '-.015em', color: '#1d1d1f', maxWidth: '40ch', margin: '0 auto' }}>
+                One Platform for Complete Fleet Visibility <span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px', marginLeft: '8px', verticalAlign: 'middle' }} />
               </h1>
               <p style={{ maxWidth: '560px', margin: 'clamp(8px,1.4vh,14px) auto 0', fontSize: 'clamp(13px, 1.35vw, 16px)', lineHeight: 1.5, color: '#3a3a3c' }}>
                 GPS tracking, telematics, tasks, expenses, inspections, maintenance and AI dashcams for your whole fleet, on web and mobile.
@@ -205,17 +210,23 @@ export default function SoftwareHero() {
                 ))}
               </div>
 
-              {/* Layer 2 — web browser fan (revealed on scroll) */}
+              {/* Layer 2 — web browser fan (5 images revealed on scroll) */}
               <div className="sw-layer sw-layer-web" ref={webRef} style={{ opacity: 0 }}>
                 <div className="sw-web-fan">
-                  <div className="sw-wb sw-wb-l">
-                    <Image src="/hero/web-graphical-report.png" alt="Locator web — graphical reports" fill sizes="(max-width: 820px) 0px, 30vw" />
+                  <div className="sw-wb sw-wb-l2">
+                    <Image src="/hero/web-live-map.webp" alt="Locator web — live map" fill sizes="(max-width: 820px) 0px, 24vw" />
+                  </div>
+                  <div className="sw-wb sw-wb-l1">
+                    <Image src="/hero/web-graphical-report.png" alt="Locator web — graphical reports" fill sizes="(max-width: 820px) 32vw, 28vw" />
                   </div>
                   <div className="sw-wb sw-wb-c">
-                    <Image src="/hero/web-live-map.webp" alt="Locator web — live fleet map with alerts" fill sizes="(max-width: 820px) 92vw, 42vw" />
+                    <Image src="/hero/web-live-map.webp" alt="Locator web — live fleet map with alerts" fill sizes="(max-width: 820px) 92vw, 44vw" />
                   </div>
-                  <div className="sw-wb sw-wb-r">
-                    <Image src="/hero/web-route-playback.webp" alt="Locator web — route playback" fill sizes="(max-width: 820px) 0px, 30vw" />
+                  <div className="sw-wb sw-wb-r1">
+                    <Image src="/hero/web-route-playback.webp" alt="Locator web — route playback" fill sizes="(max-width: 820px) 32vw, 28vw" />
+                  </div>
+                  <div className="sw-wb sw-wb-r2">
+                    <Image src="/hero/web-live-map.webp" alt="Locator web — fleet overview" fill sizes="(max-width: 820px) 0px, 24vw" />
                   </div>
                 </div>
               </div>

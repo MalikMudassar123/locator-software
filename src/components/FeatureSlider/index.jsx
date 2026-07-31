@@ -329,7 +329,7 @@ function BrowserBar() {
 
 function FullImage({ src, alt }) {
   return (
-    <div style={{ position:'absolute', inset:0, display:'flex', flexDirection:'column', background:'#fff' }}>
+    <div style={{ position:'absolute', inset:0, display:'flex', flexDirection:'column', background:'#fff', borderRadius:14, overflow:'hidden' }}>
       <BrowserBar/>
       <div style={{ position:'relative', flex:1 }}>
         <Image src={src} alt={alt} fill style={{ objectFit:'contain', objectPosition:'left top' }} sizes="700px"/>
@@ -391,7 +391,7 @@ function rp(x, y, w, h, rr = 0) {
   if (!rr) return `M${x} ${y}H${x+w}V${y+h}H${x}Z`;
   return `M${x+rr} ${y}H${x+w-rr}Q${x+w} ${y} ${x+w} ${y+rr}V${y+h-rr}Q${x+w} ${y+h} ${x+w-rr} ${y+h}H${x+rr}Q${x} ${y+h} ${x} ${y+h-rr}V${y+rr}Q${x} ${y} ${x+rr} ${y}Z`;
 }
-const DT_X = 14, DT_Y = 28, DT_W = 532, DT_H = 360, DT_R = 12;
+const DT_X = 14, DT_Y = 28, DT_W = 532, DT_H = 360, DT_R = 14;
 
 // Wireframe calibrated to /Task Manager/jkliului.png (4500×2428) rendered
 // objectFit:contain in a 532-wide area below the 32px browser bar.
@@ -887,7 +887,7 @@ const SceneExpense = forwardRef(function SceneExpense(_, ref) {
     <div style={{ position:'absolute', inset:0, zIndex:10 }}>
       <div ref={wireRef} style={{ position:'absolute', inset:0, opacity:0 }}><WireExpense/></div>
       <div ref={mainImgRef} style={{ position:'absolute', inset:0, opacity:0 }}>
-        <div style={{ position:'absolute', top:0, left:0, right:0, display:'flex', flexDirection:'column' }}>
+        <div style={{ position:'absolute', top:0, left:0, right:0, display:'flex', flexDirection:'column', borderRadius:14, overflow:'hidden', background:'#fff' }}>
           <BrowserBar/>
           <div style={{ position:'relative', width:'100%', aspectRatio:'1448 / 1060', overflow:'hidden' }}>
             <Image
@@ -991,7 +991,7 @@ const SceneInspection = forwardRef(function SceneInspection(_, ref) {
     <div style={{ position:'absolute', inset:0, zIndex:10 }}>
       <div ref={wireRef} style={{ position:'absolute', inset:0, opacity:0 }}><WireInspection/></div>
       <div ref={mainImgRef} style={{ position:'absolute', inset:0, opacity:0 }}>
-        <div style={{ position:'absolute', inset:0, display:'flex', flexDirection:'column', background:'#fff' }}>
+        <div style={{ position:'absolute', inset:0, display:'flex', flexDirection:'column', background:'#fff', borderRadius:14, overflow:'hidden' }}>
           <BrowserBar/>
           <div style={{ position:'relative', flex:1 }}>
             <Image
@@ -1068,7 +1068,7 @@ const SceneFleet = forwardRef(function SceneFleet(_, ref) {
     <div style={{ position:'absolute', inset:0, zIndex:10 }}>
       <div ref={wireRef} style={{ position:'absolute', inset:0, opacity:0 }}><WireFleet/></div>
       <div ref={mainImgRef} style={{ position:'absolute', inset:0, opacity:0 }}>
-        <div style={{ position:'absolute', inset:0, display:'flex', flexDirection:'column', background:'#fff' }}>
+        <div style={{ position:'absolute', inset:0, display:'flex', flexDirection:'column', background:'#fff', borderRadius:14, overflow:'hidden' }}>
           <BrowserBar/>
           <div style={{ position:'relative', flex:1 }}>
             <Image

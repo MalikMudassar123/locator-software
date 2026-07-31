@@ -4,24 +4,43 @@
 // the Locator-websites hero. Fully responsive; mobile shows a single device each.
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import SoftwareNavbar from '@/components/software/SoftwareNavbar'
 
 const PHONES = [
   { src: '/hero/mobile-graphical-report.webp', alt: 'Locator app — graphical report', cls: 'sw-ph-2' },
-  { src: '/hero/mobile-notifications.png',    alt: 'Locator app — notifications',     cls: 'sw-ph-1' },
-  { src: '/hero/mobile-dashboard.webp',        alt: 'Locator app — live dashboard',    cls: 'sw-ph-0' },
+  { src: '/hero/mobile-dashboard.webp',        alt: 'Locator app — live dashboard',    cls: 'sw-ph-1' },
+  { src: '/hero/mobile-notifications.png',     alt: 'Locator app — notifications',     cls: 'sw-ph-0' },
   { src: '/hero/mobile-summary.webp',          alt: 'Locator app — vehicle summary',   cls: 'sw-ph-1 sw-ph-r' },
   { src: '/hero/mobile-map-view.webp',         alt: 'Locator app — live map view',     cls: 'sw-ph-2 sw-ph-r' },
 ]
 
 const clamp = (v: number, a = 0, b = 1) => Math.min(Math.max(v, a), b)
+const smoothstep = (t: number) => t * t * (3 - 2 * t)
 
 export default function SoftwareHero() {
   const wrapRef = useRef<HTMLDivElement>(null)
   const mobileRef = useRef<HTMLDivElement>(null)
   const webRef = useRef<HTMLDivElement>(null)
   const [animateWeb, setAnimateWeb] = useState(false)
+
+  // On a hard refresh the browser restores the previous scroll position before
+  // React mounts, which would drop the hero straight into its mid-transition
+  // (desktop-visible) state. Force it back to the top so every load/refresh
+  // always starts from the initial mobile-fan state, matching first paint.
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined' || !('history' in window)) return
+    const prevRestoration = window.history.scrollRestoration
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual'
+    }
+    window.scrollTo(0, 0)
+    return () => {
+      if ('scrollRestoration' in window.history) {
+        window.history.scrollRestoration = prevRestoration || 'auto'
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const wrap = wrapRef.current
@@ -36,17 +55,21 @@ export default function SoftwareHero() {
       const scrolled = clamp(-wrap.getBoundingClientRect().top, 0, dist || 1)
       const p = dist > 0 ? scrolled / dist : 0
 
-      // Mirrored cross-fade over p∈[0.2, 0.6] so the two layers' opacities always
-      // sum to ~1 — a clean swap with no blank moment in the middle.
-      const t = clamp((p - 0.2) / 0.4)
-      const mOp = 1 - t
+      // Sequential, eased hand-off: the mobile fan fades/lifts out over its own
+      // window and the web fan fades/rises in over a later window, with only a
+      // short overlap between them (instead of both spanning the same 40% of
+      // scroll) so they read as one clean swap rather than two decks mixing.
+      const mobileT = smoothstep(clamp((p - 0.15) / 0.28))
+      const webT = smoothstep(clamp((p - 0.34) / 0.28))
+
+      const mOp = 1 - mobileT
       mob.style.opacity = String(mOp)
-      mob.style.transform = `translateY(${-t * 34}px) scale(${1 - t * 0.06})`
+      mob.style.transform = `translateY(${-mobileT * 46}px) scale(${1 - mobileT * 0.09})`
       mob.style.pointerEvents = mOp < 0.5 ? 'none' : 'auto'
 
-      const wOp = t
+      const wOp = webT
       web.style.opacity = String(wOp)
-      web.style.transform = `translateY(${(1 - wOp) * 44}px) scale(${0.94 + wOp * 0.06})`
+      web.style.transform = `translateY(${(1 - webT) * 56}px) scale(${0.92 + webT * 0.08})`
       web.style.pointerEvents = wOp > 0.5 ? 'auto' : 'none'
 
       // Trigger animation when web layer starts fading in
@@ -92,12 +115,6 @@ export default function SoftwareHero() {
         @keyframes peacockRight2 {
           0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.78); }
           100% { opacity: 1; transform: rotate(18deg) scale(.78); }
-        }
-        
-        /* Notification slide-in animation */
-        @keyframes notifSlideIn {
-          0% { opacity: 0; transform: translateY(-20px); }
-          100% { opacity: 1; transform: translateY(0); }
         }
         
         @keyframes browserFadeInCenter {

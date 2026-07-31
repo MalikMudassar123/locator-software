@@ -47,17 +47,19 @@ const socialLinks = [
   },
 ]
 
+const EASE = 'cubic-bezier(0.4, 0, 0.2, 1)'
+
 const INPUT_BASE: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.09)',
-  border: '1px solid rgba(255,255,255,0.14)',
+  background: '#ffffff',
+  border: '1px solid #e2e7f0',
   borderRadius: '8px',
   padding: '8px 11px',
-  color: '#ffffff',
+  color: '#1d1d1f',
   fontSize: '12px',
   outline: 'none',
   width: '100%',
   fontFamily: 'inherit',
-  transition: 'border-color 0.18s, background 0.18s',
+  transition: `border-color 280ms ${EASE}, background 280ms ${EASE}, box-shadow 280ms ${EASE}`,
 }
 
 export default function Footer() {
@@ -66,49 +68,33 @@ export default function Footer() {
     setForm(p => ({ ...p, [k]: e.target.value }))
 
   const focusIn  = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    e.currentTarget.style.borderColor = 'rgba(79,195,247,0.55)'
-    e.currentTarget.style.background  = 'rgba(255,255,255,0.13)'
+    e.currentTarget.style.borderColor = '#1360ee'
+    e.currentTarget.style.boxShadow  = '0 0 0 3px rgba(19,96,238,0.10)'
   }
   const focusOut = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'
-    e.currentTarget.style.background  = 'rgba(255,255,255,0.09)'
+    e.currentTarget.style.borderColor = '#e2e7f0'
+    e.currentTarget.style.boxShadow  = 'none'
   }
 
   return (
     <footer style={{
       position: 'relative',
       overflow: 'hidden',
-      /* HERO PALETTE — light/pale at top, deep navy at bottom (flipped) */
-      background: 'linear-gradient(180deg, #97def1 0%, #3abede 22%, #0a84e3 55%, #1360ee 82%, #062a8a 100%)',
+      background: 'linear-gradient(180deg, #f9fafc 0%, #f5f7fb 100%)',
     }}>
 
-      {/* ── Ambient glow layer ── */}
-      <div aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-        {/* Top-left orb — pale-ice glow that softens the light top */}
-        <div style={{ position: 'absolute', width: '480px', height: '480px', top: '-160px', left: '-80px', background: 'radial-gradient(circle, rgba(193,235,247,0.55) 0%, transparent 65%)', borderRadius: '50%' }} />
-        {/* Top-right orb — cyan haze along the upper light band */}
-        <div style={{ position: 'absolute', width: '420px', height: '420px', top: '-80px', right: '-60px', background: 'radial-gradient(circle, rgba(58,190,222,0.35) 0%, transparent 65%)', borderRadius: '50%' }} />
-        {/* Bottom-left orb — deep navy bloom anchoring the dark base */}
-        <div style={{ position: 'absolute', width: '520px', height: '520px', bottom: '-140px', left: '-100px', background: 'radial-gradient(circle, rgba(13,47,165,0.45) 0%, transparent 65%)', borderRadius: '50%' }} />
-        {/* Bottom-right orb — extra navy weight in the dark zone */}
-        <div style={{ position: 'absolute', width: '420px', height: '420px', bottom: '-60px', right: '-60px', background: 'radial-gradient(circle, rgba(13,47,165,0.32) 0%, transparent 65%)', borderRadius: '50%' }} />
-        {/* Top glow line */}
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(79,195,247,0.5) 35%, rgba(255,255,255,0.3) 50%, rgba(79,195,247,0.5) 65%, transparent)' }} />
-        {/* Subtle dot-grid texture */}
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
-      </div>
+      {/* ── Faded top hairline (softer than a flat border) ── */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, #dde3ee 20%, #dde3ee 80%, transparent)' }} />
 
-      {/* ── Wave cap ── */}
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, lineHeight: 0 }}>
-        <svg viewBox="0 0 1440 40" preserveAspectRatio="none" style={{ width: '100%', height: '40px', display: 'block' }}>
-          <path d="M0,20 C360,40 720,0 1080,20 C1260,32 1380,10 1440,20 L1440,0 L0,0 Z" fill="rgba(255,255,255,0.05)" />
-        </svg>
+      {/* ── Ambient depth — barely-there radial highlight, not a heavy gradient ── */}
+      <div aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+        <div style={{ position: 'absolute', width: '620px', height: '620px', top: '-320px', left: '50%', transform: 'translateX(-50%)', background: 'radial-gradient(circle, rgba(19,96,238,0.045) 0%, transparent 70%)', borderRadius: '50%' }} />
       </div>
 
       {/* ════════════════════════════════════════
           MAIN CONTENT
           ════════════════════════════════════════ */}
-      <div style={{ position: 'relative', zIndex: 1, maxWidth: '1280px', margin: '0 auto', padding: '44px clamp(16px,3.5vw,48px) 0' }}>
+      <div style={{ position: 'relative', zIndex: 1, maxWidth: '1280px', margin: '0 auto', padding: '48px clamp(16px,3.5vw,48px) 0' }}>
 
         {/* ── 5-column grid: [form] [company] [services] [support] [connect] ── */}
         <div style={{
@@ -121,17 +107,16 @@ export default function Footer() {
         >
 
           {/* ── Quick Contact ── */}
-          <div style={{
-            background: 'rgba(255,255,255,0.07)',
-            backdropFilter: 'blur(14px)',
-            WebkitBackdropFilter: 'blur(14px)',
-            border: '1px solid rgba(255,255,255,0.12)',
+          <div className="footer-contact-card" style={{
+            background: '#ffffff',
+            border: '1px solid #e7ebf3',
             borderRadius: '16px',
             padding: '18px',
-            boxShadow: '0 6px 28px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.09)',
+            boxShadow: '0 6px 24px rgba(19,96,238,0.06)',
+            transition: `box-shadow 320ms ${EASE}, transform 320ms ${EASE}`,
           }}>
-            <h3 style={{ color: '#ffffff', fontSize: '13px', fontWeight: 700, marginBottom: '14px', letterSpacing: '0.03em', display: 'flex', alignItems: 'center', gap: '7px' }}>
-              <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#4fc3f7', boxShadow: '0 0 7px rgba(79,195,247,0.9)', display: 'inline-block', flexShrink: 0 }} />
+            <h3 style={{ color: '#1360ee', fontSize: '13px', fontWeight: 700, marginBottom: '14px', letterSpacing: '0.03em', display: 'flex', alignItems: 'center', gap: '7px' }}>
+              <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#1360ee', display: 'inline-block', flexShrink: 0, boxShadow: '0 0 0 3px rgba(19,96,238,0.14)' }} />
               Quick Contact
             </h3>
 
@@ -151,29 +136,11 @@ export default function Footer() {
                 onFocus={focusIn}
                 onBlur={focusOut}
               />
-              <button
-                style={{
-                  background: 'linear-gradient(135deg, #1a8fe0 0%, #1060b0 100%)',
-                  border: '1px solid rgba(79,195,247,0.28)',
-                  borderRadius: '8px',
-                  padding: '9px',
-                  color: '#fff',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  fontFamily: 'inherit',
-                  letterSpacing: '0.05em',
-                  width: '100%',
-                  boxShadow: '0 3px 14px rgba(26,143,224,0.38)',
-                  transition: 'transform 0.18s, box-shadow 0.18s',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(26,143,224,0.52)' }}
-                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 3px 14px rgba(26,143,224,0.38)' }}
-              >
+              <button className="footer-btn-primary">
                 Send Message
               </button>
             </div>
-            <p style={{ marginTop: '10px', color: 'rgba(255,255,255,0.32)', fontSize: '9.5px', lineHeight: 1.5 }}>
+            <p style={{ marginTop: '10px', color: '#9aa3b2', fontSize: '9.5px', lineHeight: 1.5 }}>
               We use cookies to give you the best experience on our website.
             </p>
           </div>
@@ -196,18 +163,16 @@ export default function Footer() {
               href="https://maps.google.com/?q=City+Tower+2+Sheikh+Zayed+Road+Dubai"
               target="_blank"
               rel="noopener noreferrer"
+              className="footer-map"
               style={{
                 display: 'block',
                 borderRadius: '10px',
                 overflow: 'hidden',
-                border: '1px solid rgba(255,255,255,0.14)',
+                border: '1px solid #e7ebf3',
                 marginBottom: '12px',
                 position: 'relative',
-                boxShadow: '0 4px 16px rgba(0,0,0,0.28)',
-                transition: 'transform 0.2s, box-shadow 0.2s',
+                boxShadow: '0 4px 14px rgba(19,96,238,0.08)',
               }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 22px rgba(0,0,0,0.38)' }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.28)' }}
             >
               <iframe
                 title="Locator Dubai"
@@ -218,10 +183,8 @@ export default function Footer() {
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
-              {/* Subtle tinted overlay so map blends with dark theme */}
-              <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,40,80,0.22)', pointerEvents: 'none' }} />
               {/* "View map" pill */}
-              <div style={{ position: 'absolute', bottom: '7px', right: '7px', background: 'rgba(12,63,107,0.85)', backdropFilter: 'blur(6px)', border: '1px solid rgba(79,195,247,0.3)', borderRadius: '20px', padding: '3px 9px', color: '#fff', fontSize: '9px', fontWeight: 600, letterSpacing: '0.06em', pointerEvents: 'none' }}>
+              <div className="footer-map-pill" style={{ position: 'absolute', bottom: '7px', right: '7px', background: '#1360ee', borderRadius: '20px', padding: '3px 9px', color: '#fff', fontSize: '9px', fontWeight: 600, letterSpacing: '0.06em', pointerEvents: 'none', boxShadow: '0 2px 8px rgba(19,96,238,0.35)' }}>
                 VIEW MAP
               </div>
             </a>
@@ -229,46 +192,22 @@ export default function Footer() {
             {/* Address + phone stacked compactly */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
               <div style={{ display: 'flex', gap: '7px', alignItems: 'flex-start' }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(79,195,247,0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginTop: '1px', flexShrink: 0 }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1360ee" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginTop: '1px', flexShrink: 0 }}>
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
                 </svg>
-                <span style={{ color: 'rgba(255,255,255,0.68)', fontSize: '11.5px', lineHeight: 1.5 }}>
+                <span style={{ color: '#5a6472', fontSize: '11.5px', lineHeight: 1.5 }}>
                   City Tower 2, Sheikh Zayed Road, Dubai, UAE
                 </span>
               </div>
-              <a
-                href="tel:+971508746688"
-                style={{ display: 'flex', gap: '7px', alignItems: 'center', color: '#ffffff', fontSize: '13px', fontWeight: 600, textDecoration: 'none', transition: 'color 0.18s' }}
-                onMouseEnter={e => e.currentTarget.style.color = '#4fc3f7'}
-                onMouseLeave={e => e.currentTarget.style.color = '#ffffff'}
-              >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(79,195,247,0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+              <a href="tel:+971508746688" className="footer-phone">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1360ee" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.73 12 19.79 19.79 0 0 1 1.67 3.43 2 2 0 0 1 3.66 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8 8.09a16 16 0 0 0 5.91 5.91l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
                 </svg>
                 050 874 66 88
               </a>
             </div>
 
-            <a
-              href="/contact"
-              style={{
-                display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '5px',
-                background: 'rgba(255,255,255,0.10)',
-                border: '1px solid rgba(255,255,255,0.18)',
-                borderRadius: '7px',
-                padding: '8px 14px',
-                color: '#fff',
-                fontSize: '11px',
-                fontWeight: 600,
-                textDecoration: 'none',
-                letterSpacing: '0.04em',
-                backdropFilter: 'blur(8px)',
-                width: '100%',
-                transition: 'background 0.18s, border-color 0.18s, transform 0.18s',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(79,195,247,0.18)'; e.currentTarget.style.borderColor = 'rgba(79,195,247,0.45)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.10)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)'; e.currentTarget.style.transform = 'translateY(0)' }}
-            >
+            <a href="/contact" className="footer-btn-outline">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
               </svg>
@@ -278,15 +217,15 @@ export default function Footer() {
         </div>
 
         {/* ── Divider ── */}
-        <div style={{ margin: '32px 0 0', height: '1px', background: 'linear-gradient(90deg, transparent, rgba(79,195,247,0.3) 25%, rgba(255,255,255,0.15) 50%, rgba(79,195,247,0.3) 75%, transparent)' }} />
+        <div style={{ margin: '32px 0 0', height: '1px', background: 'linear-gradient(90deg, transparent, #e2e7f0 15%, #e2e7f0 85%, transparent)' }} />
 
         {/* ── Bottom bar ── */}
-        <div style={{ padding: '16px 0 20px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '14px' }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-            <Image src="/logo.png" alt="Locator" width={100} height={32} style={{ width: 'auto', height: '30px', opacity: 0.9 }} />
+        <div style={{ padding: '18px 0 22px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '14px' }}>
+          <Link href="/" className="footer-logo" style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+            <Image src="/logo.png" alt="Locator" width={100} height={32} style={{ width: 'auto', height: '30px' }} />
           </Link>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             {socialLinks.map(s => (
               <a
                 key={s.label}
@@ -294,18 +233,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={s.label}
-                style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  width: '32px', height: '32px',
-                  background: 'rgba(255,255,255,0.08)',
-                  border: '1px solid rgba(255,255,255,0.13)',
-                  borderRadius: '7px',
-                  color: 'rgba(255,255,255,0.65)',
-                  textDecoration: 'none',
-                  transition: 'background 0.18s, color 0.18s, border-color 0.18s, transform 0.18s, box-shadow 0.18s',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(26,143,224,0.28)'; e.currentTarget.style.borderColor = 'rgba(79,195,247,0.45)'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(26,143,224,0.35)' }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.13)'; e.currentTarget.style.color = 'rgba(255,255,255,0.65)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
+                className="footer-social"
               >
                 {s.icon}
               </a>
@@ -313,27 +241,22 @@ export default function Footer() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-            <span style={{ color: 'rgba(255,255,255,0.40)', fontSize: '11px' }}>
+            <span style={{ color: '#8a93a2', fontSize: '11px' }}>
               Copyright 2026{' '}
-              <a href="https://aryzetech.com" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.62)', textDecoration: 'underline', textUnderlineOffset: '2px' }}>
+              <a href="https://aryzetech.com" target="_blank" rel="noopener noreferrer" className="footer-textlink">
                 Synosys
               </a>
               {' '}| All Rights Reserved
             </span>
-            <span style={{ color: 'rgba(255,255,255,0.18)', fontSize: '11px' }}>|</span>
-            <Link
-              href="/sitemap"
-              style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', textDecoration: 'none', transition: 'color 0.18s' }}
-              onMouseEnter={e => e.currentTarget.style.color = '#ffffff'}
-              onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.42)'}
-            >
+            <span style={{ color: '#d5dae3', fontSize: '11px' }}>|</span>
+            <Link href="/sitemap" className="footer-textlink">
               Sitemap
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Responsive grid override via style tag */}
+      {/* Interaction & responsive styles */}
       <style>{`
         @media (max-width: 1100px) {
           .footer-main-grid {
@@ -352,7 +275,188 @@ export default function Footer() {
         }
         .footer-main-grid input::placeholder,
         .footer-main-grid textarea::placeholder {
-          color: rgba(255,255,255,0.38);
+          color: #9aa3b2;
+        }
+
+        .footer-contact-card:hover {
+          box-shadow: 0 10px 32px rgba(19,96,238,0.10);
+          transform: translateY(-2px);
+        }
+
+        /* Nav links — color glide + sliding underline */
+        .footer-link {
+          position: relative;
+          color: #5a6472;
+          font-size: 13px;
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          transition: color 280ms ${EASE}, gap 280ms ${EASE};
+        }
+        .footer-link-dot {
+          width: 3px;
+          height: 3px;
+          border-radius: 50%;
+          background: #1360ee;
+          flex-shrink: 0;
+          display: inline-block;
+          transition: transform 280ms ${EASE};
+        }
+        .footer-link-text {
+          position: relative;
+        }
+        .footer-link-text::after {
+          content: '';
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: -3px;
+          height: 1px;
+          background: #1360ee;
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform 300ms ${EASE};
+        }
+        .footer-link:hover {
+          color: #1360ee;
+          gap: 9px;
+        }
+        .footer-link:hover .footer-link-dot {
+          transform: scale(1.7);
+        }
+        .footer-link:hover .footer-link-text::after {
+          transform: scaleX(1);
+        }
+
+        /* Primary CTA button */
+        .footer-btn-primary {
+          background: linear-gradient(135deg, #1360ee 0%, #0d4fd4 100%);
+          border: none;
+          border-radius: 8px;
+          padding: 9px;
+          color: #fff;
+          font-size: 12px;
+          font-weight: 600;
+          cursor: pointer;
+          font-family: inherit;
+          letter-spacing: 0.05em;
+          width: 100%;
+          box-shadow: 0 3px 14px rgba(19,96,238,0.28);
+          transition: transform 280ms ${EASE}, box-shadow 280ms ${EASE}, filter 280ms ${EASE};
+        }
+        .footer-btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 24px rgba(19,96,238,0.40);
+          filter: brightness(1.06);
+        }
+        .footer-btn-primary:active {
+          transform: translateY(0) scale(0.98);
+          box-shadow: 0 3px 10px rgba(19,96,238,0.30);
+        }
+
+        /* Outline CTA (Get a Quote) */
+        .footer-btn-outline {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
+          background: #ffffff;
+          border: 1px solid #1360ee;
+          border-radius: 7px;
+          padding: 8px 14px;
+          color: #1360ee;
+          font-size: 11px;
+          font-weight: 600;
+          text-decoration: none;
+          letter-spacing: 0.04em;
+          width: 100%;
+          transition: background 280ms ${EASE}, color 280ms ${EASE}, transform 280ms ${EASE}, box-shadow 280ms ${EASE};
+        }
+        .footer-btn-outline:hover {
+          background: #1360ee;
+          color: #ffffff;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(19,96,238,0.30);
+        }
+        .footer-btn-outline:active {
+          transform: translateY(0) scale(0.98);
+          box-shadow: 0 4px 10px rgba(19,96,238,0.24);
+        }
+
+        /* Map tile */
+        .footer-map {
+          transition: transform 300ms ${EASE}, box-shadow 300ms ${EASE};
+        }
+        .footer-map:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 10px 24px rgba(19,96,238,0.16);
+        }
+        .footer-map-pill {
+          transition: transform 280ms ${EASE};
+        }
+        .footer-map:hover .footer-map-pill {
+          transform: scale(1.05);
+        }
+
+        /* Phone link */
+        .footer-phone {
+          display: flex;
+          gap: 7px;
+          align-items: center;
+          color: #1d1d1f;
+          font-size: 13px;
+          font-weight: 600;
+          text-decoration: none;
+          transition: color 280ms ${EASE}, transform 280ms ${EASE};
+        }
+        .footer-phone:hover {
+          color: #1360ee;
+          transform: translateX(2px);
+        }
+
+        /* Logo */
+        .footer-logo {
+          transition: opacity 280ms ${EASE}, transform 280ms ${EASE};
+        }
+        .footer-logo:hover {
+          opacity: 0.82;
+          transform: translateY(-1px);
+        }
+
+        /* Social icons */
+        .footer-social {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          background: #eef1f7;
+          border: 1px solid #e7ebf3;
+          border-radius: 8px;
+          color: #5a6472;
+          text-decoration: none;
+          transition: background 300ms ${EASE}, color 300ms ${EASE}, border-color 300ms ${EASE}, transform 300ms ${EASE}, box-shadow 300ms ${EASE};
+        }
+        .footer-social:hover {
+          background: #1360ee;
+          border-color: #1360ee;
+          color: #fff;
+          transform: translateY(-3px) scale(1.06);
+          box-shadow: 0 10px 22px rgba(19,96,238,0.32), 0 0 0 4px rgba(19,96,238,0.08);
+        }
+        .footer-social:active {
+          transform: translateY(-1px) scale(1.02);
+        }
+
+        /* Bottom-bar text links */
+        .footer-textlink {
+          color: #8a93a2;
+          text-decoration: none;
+          transition: color 280ms ${EASE};
+        }
+        .footer-textlink:hover {
+          color: #1360ee;
         }
       `}</style>
     </footer>
@@ -362,17 +466,17 @@ export default function Footer() {
 function ColHeading({ children }: { children: React.ReactNode }) {
   return (
     <h4 style={{
-      color: 'rgba(255,255,255,0.58)',
+      color: '#1360ee',
       fontSize: '10.5px',
       fontWeight: 700,
       letterSpacing: '0.13em',
       textTransform: 'uppercase',
-      marginBottom: '14px',
+      marginBottom: '16px',
       display: 'flex',
       alignItems: 'center',
       gap: '7px',
     }}>
-      <span style={{ display: 'inline-block', width: '14px', height: '1.5px', background: 'linear-gradient(90deg, #4fc3f7, transparent)', borderRadius: '2px' }} />
+      <span style={{ display: 'inline-block', width: '14px', height: '1.5px', background: '#1360ee', borderRadius: '2px' }} />
       {children}
     </h4>
   )
@@ -382,17 +486,12 @@ function FooterCol({ title, links }: { title: string; links: { href: string; lab
   return (
     <div>
       <ColHeading>{title}</ColHeading>
-      <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+      <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
         {links.map(l => (
           <li key={l.href}>
-            <Link
-              href={l.href}
-              style={{ color: 'rgba(255,255,255,0.65)', fontSize: '13px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px', transition: 'color 0.18s, gap 0.18s' }}
-              onMouseEnter={e => { e.currentTarget.style.color = '#ffffff'; e.currentTarget.style.gap = '9px' }}
-              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.65)'; e.currentTarget.style.gap = '6px' }}
-            >
-              <span style={{ width: '3px', height: '3px', borderRadius: '50%', background: 'rgba(79,195,247,0.65)', flexShrink: 0, display: 'inline-block' }} />
-              {l.label}
+            <Link href={l.href} className="footer-link">
+              <span className="footer-link-dot" />
+              <span className="footer-link-text">{l.label}</span>
             </Link>
           </li>
         ))}

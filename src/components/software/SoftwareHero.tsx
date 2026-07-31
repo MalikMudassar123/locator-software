@@ -4,7 +4,7 @@
 // the Locator-websites hero. Fully responsive; mobile shows a single device each.
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import SoftwareNavbar from '@/components/software/SoftwareNavbar'
 
 const PHONES = [
@@ -21,6 +21,7 @@ export default function SoftwareHero() {
   const wrapRef = useRef<HTMLDivElement>(null)
   const mobileRef = useRef<HTMLDivElement>(null)
   const webRef = useRef<HTMLDivElement>(null)
+  const [animateWeb, setAnimateWeb] = useState(false)
 
   useEffect(() => {
     const wrap = wrapRef.current
@@ -47,6 +48,11 @@ export default function SoftwareHero() {
       web.style.opacity = String(wOp)
       web.style.transform = `translateY(${(1 - wOp) * 44}px) scale(${0.94 + wOp * 0.06})`
       web.style.pointerEvents = wOp > 0.5 ? 'auto' : 'none'
+
+      // Trigger animation when web layer starts fading in
+      if (wOp > 0.1 && !animateWeb) {
+        setAnimateWeb(true)
+      }
     }
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(apply) }
 
@@ -58,13 +64,62 @@ export default function SoftwareHero() {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
     }
-  }, [])
+  }, [animateWeb])
 
   return (
     <>
       <style>{`
         @keyframes heroRise { from { opacity:0; transform:translateY(36px); } to { opacity:1; transform:none; } }
         @keyframes swGlow { 0%,100% { opacity:.55; } 50% { opacity:.9; } }
+        
+        /* Peacock feather animation for mobile phones */
+        @keyframes peacockCenter {
+          0% { opacity: 0; transform: translateY(30px) scale(0.85); }
+          100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes peacockLeft1 {
+          0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.9); }
+          100% { opacity: 1; transform: rotate(-10deg) scale(.90); }
+        }
+        @keyframes peacockLeft2 {
+          0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.78); }
+          100% { opacity: 1; transform: rotate(-18deg) scale(.78); }
+        }
+        @keyframes peacockRight1 {
+          0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.9); }
+          100% { opacity: 1; transform: rotate(10deg) scale(.90); }
+        }
+        @keyframes peacockRight2 {
+          0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.78); }
+          100% { opacity: 1; transform: rotate(18deg) scale(.78); }
+        }
+        
+        /* Notification slide-in animation */
+        @keyframes notifSlideIn {
+          0% { opacity: 0; transform: translateY(-20px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes browserFadeInCenter {
+          0% { opacity: 0; transform: translateY(50px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes browserFadeInL1 {
+          0% { opacity: 0; transform: translateY(56px) rotate(-4deg); }
+          100% { opacity: 1; transform: translateY(6%) rotate(-4deg); }
+        }
+        @keyframes browserFadeInL2 {
+          0% { opacity: 0; transform: translateY(60px) rotate(-8deg); }
+          100% { opacity: 1; transform: translateY(10%) rotate(-8deg); }
+        }
+        @keyframes browserFadeInR1 {
+          0% { opacity: 0; transform: translateY(56px) rotate(4deg); }
+          100% { opacity: 1; transform: translateY(6%) rotate(4deg); }
+        }
+        @keyframes browserFadeInR2 {
+          0% { opacity: 0; transform: translateY(60px) rotate(8deg); }
+          100% { opacity: 1; transform: translateY(10%) rotate(8deg); }
+        }
 
         /* Tall wrapper provides the scroll distance for the transition */
         .sw-pin-wrap { position: relative; height: 185vh; background: #ffffff; }
@@ -125,13 +180,44 @@ export default function SoftwareHero() {
         /* ── Mobile device fan ── */
         .sw-phone {
           position: relative; height: clamp(260px, 50vh, 540px);
-          max-height: 100%;                 /* never taller than the stage → never covers the copy */
+          max-height: 100%;
           aspect-ratio: 466 / 1000; width: auto; flex: 0 0 auto;
           border-radius: 14% / 6.6%;
           filter: drop-shadow(0 26px 42px rgba(20,40,90,.22));
           transform-origin: bottom center;
         }
         .sw-phone img { object-fit: contain; }
+        
+        /* Peacock feather animation - premium feel */
+        @media (prefers-reduced-motion: no-preference) {
+          .sw-phone { 
+            animation-duration: 1.2s;
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+            animation-fill-mode: both;
+          }
+          .sw-ph-0 { 
+            animation-name: peacockCenter;
+            animation-delay: 0.3s;
+          }
+          .sw-ph-1 { 
+            animation-name: peacockLeft1;
+            animation-delay: 0.65s;
+          }
+          .sw-ph-2 { 
+            animation-name: peacockLeft2;
+            animation-delay: 0.8s;
+          }
+          .sw-ph-1.sw-ph-r { 
+            animation-name: peacockRight1;
+            animation-delay: 0.7s;
+          }
+          .sw-ph-2.sw-ph-r { 
+            animation-name: peacockRight2;
+            animation-delay: 0.85s;
+          }
+        }
+        
+        /* Final positions - ORIGINAL LAYOUT RESTORED */
         .sw-ph-0 { z-index: 5; margin: 0 -1%; }
         .sw-ph-1 { z-index: 4; transform: rotate(-10deg) scale(.90); margin: 0 -1%; }
         .sw-ph-2 { z-index: 3; transform: rotate(-18deg) scale(.78); margin: 0 -1%; }
@@ -145,16 +231,27 @@ export default function SoftwareHero() {
           border-radius: 12px; overflow: hidden; background: #fff;
           border: 1px solid #e7ebf3;
           box-shadow: 0 36px 70px -34px rgba(20,40,90,.42), 0 2px 8px rgba(20,40,90,.08);
+          will-change: opacity, transform;
         }
         .sw-wb img { object-fit: cover; }
+        
+        /* Staggered entrance animation - ONLY when .animate class is added */
+        @media (prefers-reduced-motion: no-preference) {
+          .sw-web-fan.animate .sw-wb-c { animation: browserFadeInCenter 1.4s ease-out 0.1s both; }
+          .sw-web-fan.animate .sw-wb-l1 { animation: browserFadeInL1 1.4s ease-out 0.5s both; }
+          .sw-web-fan.animate .sw-wb-r1 { animation: browserFadeInR1 1.4s ease-out 0.7s both; }
+          .sw-web-fan.animate .sw-wb-l2 { animation: browserFadeInL2 1.4s ease-out 0.9s both; }
+          .sw-web-fan.animate .sw-wb-r2 { animation: browserFadeInR2 1.4s ease-out 1.1s both; }
+        }
+        
         /* Center browser (largest, z-index 5) */
         .sw-wb-c { height: clamp(240px, 48vh, 520px); max-height: 100%; width: auto; z-index: 5; }
         /* Left browsers */
-        .sw-wb-l1 { height: clamp(200px, 40vh, 430px); max-height: 88%; width: auto; z-index: 4; margin-right: -8%; transform: translateY(6%) rotate(-4deg); }
-        .sw-wb-l2 { height: clamp(180px, 36vh, 390px); max-height: 82%; width: auto; z-index: 3; margin-right: -8%; transform: translateY(10%) rotate(-8deg); }
+        .sw-wb-l1 { height: clamp(200px, 40vh, 430px); max-height: 88%; width: auto; z-index: 4; margin-right: -13%; transform: translateY(6%) rotate(-4deg); }
+        .sw-wb-l2 { height: clamp(180px, 36vh, 390px); max-height: 82%; width: auto; z-index: 3; margin-right: -13%; transform: translateY(10%) rotate(-8deg); }
         /* Right browsers */
-        .sw-wb-r1 { height: clamp(200px, 40vh, 430px); max-height: 88%; width: auto; z-index: 4; margin-left: -8%;  transform: translateY(6%) rotate(4deg); }
-        .sw-wb-r2 { height: clamp(180px, 36vh, 390px); max-height: 82%; width: auto; z-index: 3; margin-left: -8%;  transform: translateY(10%) rotate(8deg); }
+        .sw-wb-r1 { height: clamp(200px, 40vh, 430px); max-height: 88%; width: auto; z-index: 4; margin-left: -13%;  transform: translateY(6%) rotate(4deg); }
+        .sw-wb-r2 { height: clamp(180px, 36vh, 390px); max-height: 82%; width: auto; z-index: 3; margin-left: -13%;  transform: translateY(10%) rotate(8deg); }
 
         @media (max-width: 820px) {
           .sw-ph-2 { display: none; }
@@ -212,21 +309,21 @@ export default function SoftwareHero() {
 
               {/* Layer 2 — web browser fan (5 images revealed on scroll) */}
               <div className="sw-layer sw-layer-web" ref={webRef} style={{ opacity: 0 }}>
-                <div className="sw-web-fan">
+                <div className={`sw-web-fan ${animateWeb ? 'animate' : ''}`}>
                   <div className="sw-wb sw-wb-l2">
-                    <Image src="/hero/web-live-map.webp" alt="Locator web — live map" fill sizes="(max-width: 820px) 0px, 24vw" priority loading="eager" />
+                    <Image src="/software_images/desktop/software-page-animation-5.png" alt="Locator web — fleet overview" fill sizes="(max-width: 820px) 0px, 24vw" priority loading="eager" />
                   </div>
                   <div className="sw-wb sw-wb-l1">
-                    <Image src="/hero/web-graphical-report.png" alt="Locator web — graphical reports" fill sizes="(max-width: 820px) 32vw, 28vw" priority loading="eager" />
+                    <Image src="/software_images/desktop/software-page-animation-4.png" alt="Locator web — route playback" fill sizes="(max-width: 820px) 32vw, 28vw" priority loading="eager" />
                   </div>
                   <div className="sw-wb sw-wb-c">
-                    <Image src="/hero/web-live-map.webp" alt="Locator web — live fleet map with alerts" fill sizes="(max-width: 820px) 92vw, 44vw" priority loading="eager" />
+                    <Image src="/software_images/desktop/software-page-animation-1.png" alt="Locator web — live fleet map with alerts" fill sizes="(max-width: 820px) 92vw, 44vw" priority loading="eager" />
                   </div>
                   <div className="sw-wb sw-wb-r1">
-                    <Image src="/hero/web-route-playback.webp" alt="Locator web — route playback" fill sizes="(max-width: 820px) 32vw, 28vw" priority loading="eager" />
+                    <Image src="/software_images/desktop/software-page-animation-2.png" alt="Locator web — graphical reports" fill sizes="(max-width: 820px) 32vw, 28vw" priority loading="eager" />
                   </div>
                   <div className="sw-wb sw-wb-r2">
-                    <Image src="/hero/web-live-map.webp" alt="Locator web — fleet overview" fill sizes="(max-width: 820px) 0px, 24vw" priority loading="eager" />
+                    <Image src="/software_images/desktop/software-page-animation-3.png" alt="Locator web — live map" fill sizes="(max-width: 820px) 0px, 24vw" priority loading="eager" />
                   </div>
                 </div>
               </div>

@@ -446,38 +446,42 @@ export default function BenefitsSection() {
           animation: bfShimmer 1.4s ${EASE} infinite;
         }
 
-        /* accordion item wrapper */
+        /* accordion item wrapper — persistent pill background, sized to its own content */
         .bf-item {
-          border-radius: 12px;
+          border-radius: 18px;
           overflow: hidden;
+          background: #f5f5f7;
           transition: background .15s ${EASE};
+          align-self: flex-start;
+          max-width: 100%;
         }
-        .bf-item:hover { background: #f2f2f5; }
-        .bf-item.on    { background: #ebebef; }
+        .bf-item:hover { background: #ececf0; }
+        .bf-item.on {
+          background: #ececf0;
+          align-self: stretch;
+        }
 
-        /* pill trigger row */
+        /* pill trigger row — inline-flex so it shrink-wraps to its label width */
         .bf-pill {
-          display: flex; align-items: center; gap: 10px;
-          width: 100%; padding: 9px 12px;
-          background: none; border: none; border-radius: 12px;
+          display: inline-flex; align-items: center; gap: 12px;
+          padding: 16px 22px;
+          background: none; border: none; border-radius: 18px;
           cursor: pointer; font-family: inherit; text-align: left;
+          white-space: nowrap;
         }
+        /* Active item shows only its description, no header row */
+        .bf-item.on .bf-pill { display: none; }
         .bf-pill-icon {
-          width: 24px; height: 24px; border-radius: 50%;
+          width: 26px; height: 26px; border-radius: 50%;
           border: 1.5px solid #c8c8d0;
           display: grid; place-items: center;
           flex-shrink: 0; color: #8888a0; font-size: 17px; line-height: 1;
           transition: border-color .2s ${EASE}, color .2s ${EASE}, transform .35s cubic-bezier(.34,1.3,.64,1);
         }
-        .bf-item.on .bf-pill-icon {
-          border-color: #1360ee; color: #1360ee;
-          transform: rotate(45deg);
-        }
         .bf-pill-lbl {
-          font-size: 13.5px; font-weight: 600; color: #3a3a3c;
+          font-size: 14px; font-weight: 600; color: #3a3a3c;
           letter-spacing: -.01em; transition: color .15s;
         }
-        .bf-item.on .bf-pill-lbl { color: #1d1d1f; font-weight: 700; }
 
         /* accordion body — CSS grid-rows for smooth height */
         .bf-acc-body {
@@ -487,8 +491,8 @@ export default function BenefitsSection() {
         .bf-item.on .bf-acc-body { grid-template-rows: 1fr; }
         .bf-acc-inner { overflow: hidden; min-height: 0; }
         .bf-acc-desc {
-          padding: 0 12px 11px 46px;
-          font-size: 12.5px; line-height: 1.6; color: #6e6e73;
+          padding: 22px 24px;
+          font-size: 15px; line-height: 1.6; color: #6b6b70;
           opacity: 0; transform: translateY(-4px);
           transition: opacity .18s, transform .22s ${EASE};
         }
@@ -588,7 +592,7 @@ export default function BenefitsSection() {
                   display: 'flex',
                   flexDirection: 'column',
                   padding: '20px 14px 16px',
-                  gap: '4px',
+                  gap: '10px',
                 }}
               >
                 {ITEMS.map((item, i) => (
@@ -653,7 +657,8 @@ export default function BenefitsSection() {
                         inset: 0,
                         width: '100%',
                         height: '100%',
-                        objectFit: 'cover',
+                        objectFit: 'contain',
+                        objectPosition: 'center',
                         display: 'block',
                         opacity: show ? 1 : 0,
                         zIndex: active === idx ? 2 : 1,

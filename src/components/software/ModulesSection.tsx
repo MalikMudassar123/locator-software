@@ -59,38 +59,34 @@ export default function ModulesSection() {
 
         /* ── Desktop: text + showcase side by side, showcase dominant ── */
         .pm-grid {
-          max-width: 1280px; margin: 0 auto;
+          max-width: 1440px; margin: 0 auto;
           display: grid;
-          grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.4fr);
+          grid-template-columns: minmax(270px, 0.68fr) minmax(0, 1.64fr);
           gap: clamp(28px, 3.4vw, 56px);
           align-items: center;
         }
         /* zig-zag: showcase swaps to the left, text to the right */
-        .pm-grid.flip { grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.72fr); }
+        .pm-grid.flip { grid-template-columns: minmax(0, 1.64fr) minmax(270px, 0.68fr); }
         .pm-grid.flip .pm-text { order: 2; }
         .pm-grid.flip .pm-viz  { order: 1; }
 
         .pm-text { text-align: left; }
+        /* Small kicker label — the heading below carries the visual weight, not this. */
         .pm-tag {
           display: block;
-          font-size: clamp(22px,2.8vw,32px); font-weight: 800; letter-spacing: .04em;
-          color: #1360ee; text-transform: uppercase; margin-bottom: 16px;
+          font-size: 12px; font-weight: 600; letter-spacing: .14em;
+          color: #1360ee; text-transform: uppercase; margin-bottom: 10px;
         }
-        /* Rule on its own line above the label — unaffected by wrapping. */
-        .pm-tag span {
-          display: block; width: 34px; height: 3px;
-          background: #1360ee; border-radius: 2px; margin-bottom: 12px;
-        }
-        .pm-h2 { margin: 0; font-size: clamp(19px,2.2vw,26px); font-weight: 800; line-height: 1.25; letter-spacing: -.015em; color: rgb(72, 75, 76); }
-        .pm-lead { margin: 18px 0 0; font-size: clamp(14px,1.45vw,16px); line-height: 1.62; color: #6e6e73; max-width: 46ch; }
-        .pm-suited-label { margin: 22px 0 0; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: #1d1d1f; text-transform: uppercase; }
+        .pm-h2 { margin: 0; font-size: clamp(27px,3.6vw,40px); font-weight: 600; line-height: 1.15; letter-spacing: -.02em; color: rgb(72, 75, 76); }
+        .pm-lead { margin: 20px 0 0; font-size: clamp(14px,1.45vw,16px); font-weight: 400; line-height: 1.7; color: #6e6e73; max-width: 46ch; }
+        .pm-suited-label { margin: 26px 0 0; font-size: 11px; font-weight: 500; letter-spacing: .08em; color: #8a8a8f; text-transform: uppercase; }
         .pm-suited { margin: 14px 0 0; display: flex; flex-wrap: wrap; gap: 9px; }
-        .pm-suited span { font-size: 13.5px; font-weight: 600; color: #1d1d1f; background: #fff; border: 1px solid #e3e3e6; padding: 8px 14px; border-radius: 999px; }
+        .pm-suited span { font-size: 13px; font-weight: 600; color: #3a3a3c; background: #fff; border: 1px solid #e3e3e6; padding: 8px 14px; border-radius: 999px; }
 
         .pm-viz { min-width: 0; }
 
         /* ── Tablet / mobile: stack (text on top, showcase below) ── */
-        @media (max-width: 1080px) {
+        @media (max-width: 1180px) {
           .pm-grid, .pm-grid.flip { grid-template-columns: 1fr; gap: clamp(22px,4vw,34px); }
           .pm-grid.flip .pm-text { order: 0; }
           .pm-grid.flip .pm-viz  { order: 0; }
@@ -108,7 +104,7 @@ export default function ModulesSection() {
             <section key={mod.h2} id={mod.slug} className="pm-sec">
               <div className={`pm-grid${flip ? ' flip' : ''}`}>
                 <div className="pm-text" data-reveal={flip ? 'right' : 'left'}>
-                  <span className="pm-tag"><span />MODULE<span /></span>
+                  <span className="pm-tag">MODULE</span>
                   <h2 className="pm-h2">{mod.h2} {mod.h2Accent}</h2>
                   {mod.leads.map((p, i) => <p key={i} className="pm-lead">{p}</p>)}
                   <p className="pm-suited-label">{mod.suitedLabel}</p>

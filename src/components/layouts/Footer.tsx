@@ -6,26 +6,25 @@ import { useState } from 'react'
 
 const companyLinks = [
   { href: '/about', label: 'About' },
-  { href: '/careers', label: 'Careers' },
-  { href: '/partners', label: 'Partners' },
-  { href: '/why-locator', label: 'Why Locator' },
-  { href: '/blog', label: 'Blog' },
+  { href: '/about/purpose', label: 'Who We Are' },
+  { href: '/about/vision', label: 'Vision' },
+  { href: '/about/career', label: 'Careers' },
+  { href: '/about/newsroom', label: 'Newsroom' },
 ]
 
 const serviceLinks = [
-  { href: '/gps-tracker', label: 'GPS Tracker' },
-  { href: '/car-tracker', label: 'Car Tracker' },
-  { href: '/gps-tracking-system', label: 'GPS Tracking System' },
-  { href: '/car-gps-tracker', label: 'Car GPS Tracker' },
-  { href: '/car-tracking-system', label: 'Car Tracking System' },
-  { href: '/vehicle-tracking-system', label: 'Vehicle Tracking System' },
+  { href: '/service/fleet-telematics', label: 'Fleet Telematics' },
+  { href: '/service/video-telematics', label: 'Video Telematics' },
+  { href: '/service/smart-iot', label: 'Smart IoT & Asset Intelligence' },
+  { href: '/service/task-manager', label: 'Task Manager' },
+  { href: '/service/tracking-devices', label: 'Tracking Devices & Accessories' },
   { href: '/securepath', label: 'Securepath' },
   { href: '/asateel-certified-obu', label: 'Asateel Certified OBU' },
 ]
 
 const supportLinks = [
-  { href: '/faq', label: 'FAQ' },
-  { href: '/benefits-of-gps-tracking', label: 'Benefits Of GPS Tracking' },
+  { href: '/software#faq', label: 'FAQ' },
+  { href: '/software#benefits', label: 'Benefits Of GPS Tracking' },
 ]
 
 const socialLinks = [
@@ -96,6 +95,11 @@ export default function Footer() {
           ════════════════════════════════════════ */}
       <div style={{ position: 'relative', zIndex: 1, maxWidth: '1280px', margin: '0 auto', padding: '48px clamp(16px,3.5vw,48px) 0' }}>
 
+        {/* ── Secondary brand mark — same logo used across the Software pages ── */}
+        <div style={{ marginBottom: '36px', paddingLeft: '24px' }}>
+          <Image src="/llooogoo.png" alt="Locator" width={2617} height={911} style={{ width: 'auto', height: '48px' }} />
+        </div>
+
         {/* ── 5-column grid: [form] [company] [services] [support] [connect] ── */}
         <div style={{
           display: 'grid',
@@ -158,36 +162,44 @@ export default function Footer() {
           <div>
             <ColHeading>Connect</ColHeading>
 
-            {/* Compact map + overlay */}
-            <a
-              href="https://maps.google.com/?q=City+Tower+2+Sheikh+Zayed+Road+Dubai"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="footer-map"
-              style={{
-                display: 'block',
-                borderRadius: '10px',
-                overflow: 'hidden',
-                border: '1px solid #e7ebf3',
-                marginBottom: '12px',
-                position: 'relative',
-                boxShadow: '0 4px 14px rgba(19,96,238,0.08)',
-              }}
-            >
-              <iframe
-                title="Locator Dubai"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3610.1788!2d55.27076!3d25.20484!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f43348a67e24b%3A0xff45e502e1cbe99!2sCity%20Tower%202!5e0!3m2!1sen!2sae!4v1700000000000!5m2!1sen!2sae"
-                width="100%"
-                height="100"
-                style={{ border: 0, display: 'block', pointerEvents: 'none' }}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-              {/* "View map" pill */}
-              <div className="footer-map-pill" style={{ position: 'absolute', bottom: '7px', right: '7px', background: '#1360ee', borderRadius: '20px', padding: '3px 9px', color: '#fff', fontSize: '9px', fontWeight: 600, letterSpacing: '0.06em', pointerEvents: 'none', boxShadow: '0 2px 8px rgba(19,96,238,0.35)' }}>
-                VIEW MAP
+            {/* Map — framed like a premium photo mat so it reads as an intentional element, not an afterthought */}
+            <div className="footer-map-card">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '2px 3px 9px' }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1360ee" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
+                </svg>
+                <span style={{ fontSize: '11px', fontWeight: 700, color: '#1d1d1f', letterSpacing: '0.01em' }}>Find Us</span>
               </div>
-            </a>
+              <a
+                href="https://maps.google.com/?q=City+Tower+2+Sheikh+Zayed+Road+Dubai"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-map"
+                style={{
+                  display: 'block',
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  position: 'relative',
+                }}
+              >
+                <iframe
+                  title="Locator Dubai"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3610.1788!2d55.27076!3d25.20484!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f43348a67e24b%3A0xff45e502e1cbe99!2sCity%20Tower%202!5e0!3m2!1sen!2sae!4v1700000000000!5m2!1sen!2sae"
+                  width="100%"
+                  height="150"
+                  style={{ border: 0, display: 'block', pointerEvents: 'none' }}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+                {/* Soft scrim so Google's own attribution bar blends into our chrome instead of competing with it */}
+                <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '36px', background: 'linear-gradient(180deg, transparent, rgba(15,23,42,0.32))', pointerEvents: 'none' }} />
+                {/* "View map" pill */}
+                <div className="footer-map-pill" style={{ position: 'absolute', bottom: '9px', right: '9px', display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#1360ee', borderRadius: '20px', padding: '4px 10px', color: '#fff', fontSize: '9.5px', fontWeight: 600, letterSpacing: '0.06em', pointerEvents: 'none', boxShadow: '0 2px 8px rgba(19,96,238,0.35)' }}>
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+                  VIEW MAP
+                </div>
+              </a>
+            </div>
 
             {/* Address + phone stacked compactly */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
@@ -207,7 +219,7 @@ export default function Footer() {
               </a>
             </div>
 
-            <a href="/contact" className="footer-btn-outline">
+            <a href="/get-a-quote" className="footer-btn-outline">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
               </svg>
@@ -249,9 +261,9 @@ export default function Footer() {
               {' '}| All Rights Reserved
             </span>
             <span style={{ color: '#d5dae3', fontSize: '11px' }}>|</span>
-            <Link href="/sitemap" className="footer-textlink">
+            <a href="/sitemap.xml" className="footer-textlink">
               Sitemap
-            </Link>
+            </a>
           </div>
         </div>
       </div>
@@ -384,18 +396,25 @@ export default function Footer() {
           box-shadow: 0 4px 10px rgba(19,96,238,0.24);
         }
 
-        /* Map tile */
-        .footer-map {
-          transition: transform 300ms ${EASE}, box-shadow 300ms ${EASE};
+        /* Map — premium "photo mat" frame: soft border + generous inset padding + layered shadow */
+        .footer-map-card {
+          background: #ffffff;
+          border: 1px solid #e7ebf3;
+          border-radius: 18px;
+          padding: 8px;
+          margin-bottom: 12px;
+          box-shadow: 0 1px 2px rgba(15,23,42,0.04), 0 12px 28px -8px rgba(19,96,238,0.14);
+          transition: transform 320ms ${EASE}, box-shadow 320ms ${EASE}, border-color 320ms ${EASE};
         }
-        .footer-map:hover {
+        .footer-map-card:hover {
           transform: translateY(-3px);
-          box-shadow: 0 10px 24px rgba(19,96,238,0.16);
+          border-color: #d3ddf0;
+          box-shadow: 0 1px 2px rgba(15,23,42,0.04), 0 18px 38px -8px rgba(19,96,238,0.22);
         }
         .footer-map-pill {
           transition: transform 280ms ${EASE};
         }
-        .footer-map:hover .footer-map-pill {
+        .footer-map-card:hover .footer-map-pill {
           transform: scale(1.05);
         }
 

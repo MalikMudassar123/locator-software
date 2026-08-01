@@ -3,6 +3,7 @@
 // Fleet Manager — interactive wireframe showcase (Web dashboard only).
 // Ported from Locator-websites fm-data/fm-web.
 import { useState, useEffect, type ReactNode } from 'react'
+import BrowserChrome from '@/components/ScrollShowcase/BrowserChrome'
 
 const FM_VEHICLE = 'Rahba Camry 98359'
 const FM_VEHICLE_ALT = 'SKMC Camry 26635'
@@ -156,11 +157,8 @@ export default function FleetManagerShowcase() {
   return (
     <div className="ms-embed">
       <div className="ms-web-scroll">
-        <div className="ms-web-min" style={{ border: '1px solid #dce1e8', borderRadius: 16, overflow: 'hidden', background: '#fff', boxShadow: '0 6px 32px -8px rgba(30,41,59,.1),0 1px 2px rgba(0,0,0,.04)', display: 'flex', flexDirection: 'column', height: 520 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 18px', borderBottom: '1px solid #e2e8f0', background: '#f8fafc', flexShrink: 0 }}>
-        <div style={{ display: 'flex', gap: 6 }}>{[0, 1, 2].map(i => <span key={i} style={{ width: 11, height: 11, borderRadius: '50%', background: '#e0e0e3' }} />)}</div>
-        <span style={{ fontSize: 12.5, fontWeight: 700, color: '#94a3b8', marginLeft: 6 }}>Fleet Manager — Vehicle Detail</span>
-      </div>
+        <div className="ms-frame ms-web-min" style={{ height: 592 }}>
+      <BrowserChrome url="pro.mylocatorplus.com/fleet" />
       {/* Top tabs */}
       <div style={{ padding: '6px 16px 4px', flexShrink: 0 }}>
         <div style={{ display: 'flex', background: '#e8edf2', borderRadius: 10, padding: 3 }}>
@@ -180,7 +178,7 @@ export default function FleetManagerShowcase() {
         {subTabDefs.map(st => {
           const act = subTab === st.key
           return (
-            <button key={st.key} onClick={() => { setSubTab(st.key); setExpandedRow(null) }} style={{ flex: 1, padding: '7px 6px', borderRadius: 6, border: 'none', cursor: 'pointer', fontFamily: 'inherit', background: act ? '#2563eb' : st.inBg, color: act ? '#fff' : st.inColor, fontSize: 10.5, fontWeight: 700, letterSpacing: '0.03em', position: 'relative' }}>
+            <button key={st.key} onClick={() => { setSubTab(st.key); setExpandedRow(null) }} style={{ flex: 1, padding: '7px 6px', borderRadius: 6, border: 'none', cursor: 'pointer', fontFamily: 'inherit', background: act ? '#2563eb' : st.inBg, color: act ? '#fff' : st.inColor, fontSize: 10.5, fontWeight: 600, letterSpacing: '0.03em', position: 'relative' }}>
               {st.label}
               {act && <div style={{ position: 'absolute', bottom: -4, left: '50%', transform: 'translateX(-50%)', width: 0, height: 0, borderLeft: '4px solid transparent', borderRight: '4px solid transparent', borderTop: '4px solid #2563eb' }} />}
             </button>
@@ -189,37 +187,37 @@ export default function FleetManagerShowcase() {
       </div>
       {/* Content */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#eef3fb' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 16px', flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 16px', flexShrink: 0, flexWrap: 'wrap', rowGap: 6 }}>
           <span style={{ fontSize: 14, fontWeight: 600, color: '#475569' }}>{title}</span>
-          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
             {hType === 'reminder' ? (
               [{ l: 'Reminders', ic: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z" /><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" /></svg> }, { l: 'Add New', ic: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M12 8v8M8 12h8" /></svg> }, { l: 'History', ic: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2"><circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" /></svg> }].map(b => (
                 <button key={b.l} style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '5px 10px', borderRadius: 6, border: '1px solid #e2e8f0', background: '#fff', color: '#475569', fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap' }}>{b.ic}{b.l}</button>
               ))
             ) : (
               <>
-                <span style={{ fontSize: 12, fontWeight: 700, color: '#2563eb' }}>Total Cost : {tCost}</span>
+                <span style={{ fontSize: 12, fontWeight: 600, color: '#2563eb' }}>Total Cost : {tCost}</span>
                 <button style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '5px 10px', borderRadius: 6, border: '1px solid #e2e8f0', background: '#fff', color: '#475569', fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M12 8v8M8 12h8" /></svg>Add New
                 </button>
-                <button style={{ width: 26, height: 26, borderRadius: 6, border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer', display: 'grid', placeItems: 'center', fontSize: 14, fontWeight: 800, color: '#475569' }}>⋮</button>
+                <button style={{ width: 26, height: 26, borderRadius: 6, border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer', display: 'grid', placeItems: 'center', fontSize: 14, fontWeight: 600, color: '#475569' }}>⋮</button>
               </>
             )}
           </div>
         </div>
         {/* Vehicle bar */}
-        <div style={{ display: 'flex', alignItems: 'center', padding: '6px 16px 8px', gap: 10, flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', padding: '6px 16px 8px', gap: 10, flexShrink: 0, flexWrap: 'wrap', rowGap: 8 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 180 }}>
             <FMCarSvg />
-            <div><div style={{ fontSize: 13, fontWeight: 800, color: '#1e293b' }}>{vName}</div><FMSpeedLine /></div>
+            <div><div style={{ fontSize: 13, fontWeight: 600, color: '#1e293b' }}>{vName}</div><FMSpeedLine /></div>
           </div>
           {donut && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 2, flexShrink: 0 }}>
               <div style={{ position: 'relative' }}>
-                <div style={{ position: 'absolute', top: -2, left: 0, fontSize: 9, fontWeight: 700, color: '#64748b' }}>{donut.v[1]}</div>
+                <div style={{ position: 'absolute', top: -2, left: 0, fontSize: 9, fontWeight: 600, color: '#64748b' }}>{donut.v[1]}</div>
                 <FMDonut values={donut.v} colors={donut.c} />
-                <div style={{ position: 'absolute', top: -2, right: 0, fontSize: 9, fontWeight: 700, color: '#64748b' }}>{donut.v[0]}</div>
-                <div style={{ position: 'absolute', bottom: -2, right: 6, fontSize: 9, fontWeight: 700, color: '#64748b' }}>{donut.v[2]}</div>
+                <div style={{ position: 'absolute', top: -2, right: 0, fontSize: 9, fontWeight: 600, color: '#64748b' }}>{donut.v[0]}</div>
+                <div style={{ position: 'absolute', bottom: -2, right: 6, fontSize: 9, fontWeight: 600, color: '#64748b' }}>{donut.v[2]}</div>
               </div>
             </div>
           )}
@@ -229,7 +227,7 @@ export default function FleetManagerShowcase() {
                 style={{ textAlign: 'center', padding: '6px 14px', borderRadius: 8, background: bgM[s.c], minWidth: 75, cursor: 'pointer', transition: 'transform 0.15s ease, box-shadow 0.15s ease', transform: hoverStat === i ? 'translateY(-2px)' : 'none', boxShadow: hoverStat === i ? '0 4px 12px rgba(0,0,0,0.1)' : 'none' }}>
                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 1 }}><s.I color={txM[s.c]} /></div>
                 <div style={{ fontSize: 11, fontWeight: 600, color: '#475569' }}>{s.l}</div>
-                <div style={{ fontSize: 16, fontWeight: 800, color: txM[s.c] }}>{s.n}</div>
+                <div style={{ fontSize: 16, fontWeight: 600, color: txM[s.c] }}>{s.n}</div>
               </div>
             ))}
           </div>
@@ -248,7 +246,7 @@ export default function FleetManagerShowcase() {
                     {cols.map((col, ci) => (
                       <div key={ci}>
                         <div style={{ fontSize: 9.5, color: '#94a3b8', fontWeight: 600, marginBottom: 1, fontStyle: 'italic' }}>{col}</div>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: row.hlIdx === ci ? '#dc2626' : '#1e293b' }}>{row.cells[ci]}</div>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: row.hlIdx === ci ? '#dc2626' : '#1e293b' }}>{row.cells[ci]}</div>
                       </div>
                     ))}
                   </div>

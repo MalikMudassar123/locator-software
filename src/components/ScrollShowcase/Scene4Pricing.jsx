@@ -899,9 +899,16 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
         }}
       >
         <BrowserChrome />
+        {/* Spaces in these src paths are LITERAL, never %20. next/image expects an
+            unencoded src and percent-encodes it itself when building the
+            /_next/image?url=… request, so a pre-encoded path gets encoded twice —
+            % becomes %25, giving %2520, which the optimizer decodes back to the
+            literal characters "%20" and then looks for a file that does not exist.
+            The dev server tolerates that; Vercel's optimizer 404s, which is why
+            encoding these only ever broke in production. */}
         <div style={{ position:'relative', flex:1, background:'#fff' }}>
           <Image
-            src="/block%201/video%20teleframe.webp"
+            src="/block 1/video teleframe.webp"
             alt="Video telematics dashboard"
             fill
             sizes={`${FW}px`}
@@ -934,7 +941,7 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
         }}
       >
         <Image
-          src="/block%201/fdghgyhjhk.webp"
+          src="/block 1/fdghgyhjhk.webp"
           alt="Vehicle hover popup"
           fill
           sizes="250px"

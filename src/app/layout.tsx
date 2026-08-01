@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins, Inter } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/config/site";
+import ScrollRestoration from "@/components/ScrollRestoration";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -94,6 +95,7 @@ export default function RootLayout({
             }),
           }}
         />
+        <ScrollRestoration />
         {children}
       </body>
     </html>

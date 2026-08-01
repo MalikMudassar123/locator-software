@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from 'react'
 import BrowserChrome from '@/components/ScrollShowcase/BrowserChrome'
+import { PHONE_TITLE, PHONE_BAR_ICON } from './ModuleShowcaseStyles'
 
 const TM_STATUS_COLORS: Record<string, { bg: string; text: string; border: string }> = {
   Assigned:      { bg: '#EBF0FF', text: '#1360EF', border: '#c7d2fe' },
@@ -249,7 +250,7 @@ function TMWebDashboard() {
   const topBg = '#F3F7FA'; const accent = '#1360EF'
   return (
     <div className="ms-frame ms-web-min" style={{ height: 612 }}>
-      <BrowserChrome url="pro.mylocatorplus.com/tasks" />
+      <BrowserChrome variant="app" />
       <div style={{ display: 'grid', gridTemplateColumns: hasDetail ? '1fr 280px' : '1fr', flex: 1, overflow: 'hidden' }}>
       <div className="tm-task-panel" style={{ borderRight: hasDetail ? '1px solid #e2e8f0' : 'none' }}>
         {/* Toolbar */}
@@ -465,8 +466,8 @@ function TMMobileTaskDetail({ task, staffMember, onBack }: { task: any; staffMem
     <>
       <div style={{ background: '#1360EF', padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: 18, padding: 0, lineHeight: 1 }}>←</button>
-          <span style={{ color: '#fff', fontSize: 16, fontWeight: 600 }}>Task Details</span>
+          <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', ...PHONE_BAR_ICON, padding: 0, lineHeight: 1 }}>←</button>
+          <span style={{ color: '#fff', ...PHONE_TITLE }}>Task Details</span>
         </div>
       </div>
       <div style={{ flex: 1, overflowY: 'auto', padding: 14, background: '#F0F4F7' }}>
@@ -529,8 +530,10 @@ function TMMobileApp() {
             <>
               <div style={{ background: '#1360EF', padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ color: '#fff', fontSize: 17, fontWeight: 600 }}>Task Listing</span>
-                  <span style={{ background: 'rgba(255,255,255,0.3)', color: '#fff', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 5 }}>{allTasks.length}</span>
+                  <span style={{ color: '#fff', ...PHONE_TITLE }}>Task Listing</span>
+                  {/* Sized down with the title it sits beside — at 11px against a
+                      13px heading the count read as a second word, not a badge. */}
+                  <span style={{ background: 'rgba(255,255,255,0.3)', color: '#fff', fontSize: 10, fontWeight: 600, padding: '2px 6px', borderRadius: 5 }}>{allTasks.length}</span>
                 </div>
               </div>
               <div style={{ flex: 1, overflowY: 'auto', padding: 14, background: '#F0F4F7' }}>

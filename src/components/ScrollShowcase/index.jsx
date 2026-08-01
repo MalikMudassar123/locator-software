@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import Scene1Icons     from './Scene1Icons';
 import Scene4Pricing   from './Scene4Pricing';
+import SkipButton      from '@/components/common/SkipButton';
 
 const fleetFeatures = [
   {
@@ -301,9 +302,21 @@ export default function ScrollShowcase() {
             // ss-row--anim-right: on desktop, text appears on left (order:0), anim on right (order:1)
             // This preserves the zigzag visual on desktop while keeping anim-first on mobile
             className={`ss-row${!animLeft ? ' ss-row--anim-right' : ''}`}
+            data-skip-host
           >
             {animPanel}
             {textPanel}
+            {/* Absolutely positioned against the row (see .ss-row / .skip-btn) —
+                out of flow, so the row's height, the flex layout and the pin's
+                one-viewport measurement are all untouched. The row is also the
+                pinned element, so the button rides the frozen frame and stays
+                reachable for the whole pinned range, which is exactly the stretch
+                a skip is for. */}
+            <SkipButton
+              placement="bottom-right"
+              onBeforeSkip={(dir) => innerRefs.current[i]?.__skip?.(dir)}
+              onAfterSkip={() => innerRefs.current[i]?.__endSkip?.()}
+            />
           </div>
         );
       })}

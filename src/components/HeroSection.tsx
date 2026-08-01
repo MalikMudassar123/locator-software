@@ -221,7 +221,7 @@ export default function HeroSection() {
           zIndex: 7,
           pointerEvents: 'none',
           background:
-            'radial-gradient(50% 60% at 50% 75%, rgba(255, 221, 140, 1) 0%, rgba(255, 216, 130, 0.92) 20%, rgba(255, 205, 110, 0.68) 42%, rgba(255, 205, 110, 0.38) 65%, rgba(255, 205, 110, 0.12) 84%, rgba(255, 205, 110, 0) 96%)',
+            'radial-gradient(50% 60% at 50% 75%, rgba(255, 233, 180, 1) 0%, rgba(255, 229, 172, 0.92) 20%, rgba(255, 222, 158, 0.68) 42%, rgba(255, 222, 158, 0.38) 65%, rgba(255, 222, 158, 0.12) 84%, rgba(255, 222, 158, 0) 96%)',
           filter: 'blur(20px)',
         }}
       />
@@ -426,19 +426,12 @@ export default function HeroSection() {
         <Navbar />
       </div>
 
-      {/* Headline — three messages crossfade in place, CSS-only (no JS) */}
-      <div
-        className="hero-headline-wrap"
-        style={{
-          position: 'absolute',
-          top: '18%',
-          left: 0,
-          right: 0,
-          textAlign: 'center',
-          zIndex: 10,
-          padding: '0 1rem',
-        }}
-      >
+      {/* Headline — three messages crossfade in place, CSS-only (no JS).
+          Geometry lives entirely in .hero-headline-wrap: it is centred in the
+          band between the navbar and the skyline, which takes a min() over two
+          measurements that inline styles cannot express and that the mobile
+          override previously had to fight with !important. */}
+      <div className="hero-headline-wrap">
         <div className="hero-headline-stack">
           {heroHeadlines.map((item, i) => (
             <div

@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useRef, type ReactNode } from 'react'
+import { APP_DOT_COLORS } from '@/components/ScrollShowcase/BrowserChrome'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
@@ -22,10 +23,14 @@ function StageWrap({ title, accent = '#1360ee', children }: { title: string; acc
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 18px', borderBottom: '1px solid #e8e8eb', flexShrink: 0 }}>
+        {/* Neutral window controls, shared with BrowserChrome's 'app' variant —
+            this page frames the LOCATOR platform, not a browser, and both frames
+            appear on it. The title beside them stays: it names the module, which
+            is what an app window's title bar carries. */}
         <div style={{ display: 'flex', gap: '5px' }}>
-          <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#ff5f57', display: 'inline-block' }} />
-          <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#febc2e', display: 'inline-block' }} />
-          <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#28c840', display: 'inline-block' }} />
+          {APP_DOT_COLORS.map(c => (
+            <span key={c} style={{ width: '10px', height: '10px', borderRadius: '50%', background: c, display: 'inline-block' }} />
+          ))}
         </div>
         <span style={{ fontSize: '12px', fontWeight: 600, color: '#6e6e73', marginLeft: '6px', flex: 1 }}>{title}</span>
         <div style={{ width: '48px', height: '4px', borderRadius: '2px', background: accent, opacity: 0.35 }} />

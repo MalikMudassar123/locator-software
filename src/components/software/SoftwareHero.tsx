@@ -6,13 +6,20 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import SoftwareNavbar from '@/components/software/SoftwareNavbar'
+import HeroNotificationPhone from '@/components/software/HeroNotificationPhone'
 
-const PHONES = [
-  { src: '/hero/mobile-graphical-report.webp', alt: 'Locator app — graphical report', cls: 'sw-ph-2' },
-  { src: '/hero/mobile-dashboard.webp',        alt: 'Locator app — live dashboard',    cls: 'sw-ph-1' },
-  { src: '/hero/mobile-notifications.png',     alt: 'Locator app — notifications',     cls: 'sw-ph-0' },
-  { src: '/hero/mobile-summary.webp',          alt: 'Locator app — vehicle summary',   cls: 'sw-ph-1 sw-ph-r' },
-  { src: '/hero/mobile-map-view.webp',         alt: 'Locator app — live map view',     cls: 'sw-ph-2 sw-ph-r' },
+// Left to right across the fan. The centre slot is the one live screen — see
+// HeroNotificationPhone for why that one is markup and the other four are not.
+type Phone =
+  | { kind: 'image'; id: string; src: string; alt: string; cls: string }
+  | { kind: 'notifications'; id: string; cls: string }
+
+const PHONES: Phone[] = [
+  { kind: 'image', id: 'report',    src: '/hero/mobile-graphical-report.webp', alt: 'Locator app — graphical report', cls: 'sw-ph-2' },
+  { kind: 'image', id: 'notifs',    src: '/hero/mobile-notifications.png',     alt: 'Locator app — notifications',    cls: 'sw-ph-1' },
+  { kind: 'notifications', id: 'notifications',                                                                       cls: 'sw-ph-0' },
+  { kind: 'image', id: 'summary',   src: '/hero/mobile-summary.webp',          alt: 'Locator app — vehicle summary',  cls: 'sw-ph-1 sw-ph-r' },
+  { kind: 'image', id: 'map',       src: '/hero/mobile-map-view.webp',         alt: 'Locator app — live map view',    cls: 'sw-ph-2 sw-ph-r' },
 ]
 
 const clamp = (v: number, a = 0, b = 1) => Math.min(Math.max(v, a), b)
@@ -192,7 +199,11 @@ export default function SoftwareHero() {
         /* no per-layer padding → max-height:100% caps exactly to the stage,
            so a device can never grow up over the copy */
         .sw-layer-mobile { align-items: flex-end; }
-        .sw-layer-web { align-items: flex-end; }
+        /* Sits over the mobile fan and is faded, not removed, so at opacity 0 it
+           would still be the top hit-target and swallow the pointer before it
+           reached the centre phone's notification cards. Nothing in this layer
+           is interactive, so it never needs the pointer at all. */
+        .sw-layer-web { align-items: flex-end; pointer-events: none; }
 
         /* ── Mobile device fan ── */
         .sw-phone {
@@ -318,8 +329,10 @@ export default function SoftwareHero() {
               {/* Layer 1 — mobile fan (default) */}
               <div className="sw-layer sw-layer-mobile" ref={mobileRef}>
                 {PHONES.map((p) => (
-                  <div key={p.src} className={`sw-phone ${p.cls}`}>
-                    <Image src={p.src} alt={p.alt} fill sizes="(max-width: 520px) 72vw, (max-width: 820px) 42vw, 24vw" priority loading="eager" />
+                  <div key={p.id} className={`sw-phone ${p.cls}`}>
+                    {p.kind === 'notifications'
+                      ? <HeroNotificationPhone />
+                      : <Image src={p.src} alt={p.alt} fill sizes="(max-width: 520px) 72vw, (max-width: 820px) 42vw, 24vw" priority loading="eager" />}
                   </div>
                 ))}
               </div>

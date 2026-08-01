@@ -5,6 +5,7 @@
 import { useState } from 'react'
 import { ModuleTabs, StatusBar, BottomNav } from './TaskManagerShowcase'
 import BrowserChrome from '@/components/ScrollShowcase/BrowserChrome'
+import { PHONE_TITLE, PHONE_SECTION, PHONE_BAR_ICON } from './ModuleShowcaseStyles'
 
 const IM_MANDATORY = ['Registration Card', 'Insurance', 'Fuel', 'Wiper', 'Tyre', 'First Aid', 'AC', 'Engine', 'Service due', 'Fire Extinguisher Expiry']
 const IM_OPTIONAL = ['Spare tyre', 'Fire extinguisher']
@@ -75,7 +76,7 @@ function IMWebDashboard() {
   const [selLogIdx, setSelLogIdx] = useState(0)
   return (
     <div className="ms-frame ms-web-min" style={{ height: 652 }}>
-      <BrowserChrome url="pro.mylocatorplus.com/inspection" />
+      <BrowserChrome variant="app" />
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', borderBottom: '1px solid #f0f0f0', flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="1.5"><rect x="4" y="12" width="16" height="6" rx="2" /><circle cx="7.5" cy="18" r="2" /><circle cx="16.5" cy="18" r="2" /><path d="M6 12l2-5h8l2 5" /></svg>
@@ -215,7 +216,7 @@ function IMCollapsible({ title, items, mode, checked, onToggle }: { title: strin
     <div style={{ background: '#fff', borderRadius: 14, marginBottom: 12, border: '1px solid #f0f0f0', overflow: 'hidden' }}>
       <div onClick={() => setOpen(!open)} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '14px 16px', cursor: 'pointer' }}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1e293b" strokeWidth="2.5" strokeLinecap="round" style={{ transform: open ? 'rotate(0)' : 'rotate(180deg)', transition: 'transform 0.2s' }}><path d="M18 15l-6-6-6 6" /></svg>
-        <span style={{ fontSize: 15, fontWeight: 600, color: '#1e293b' }}>{title}</span>
+        <span style={{ ...PHONE_SECTION, color: '#1e293b' }}>{title}</span>
       </div>
       {open && (
         <div style={{ padding: '0 16px 12px' }}>
@@ -250,7 +251,7 @@ function IMDetailScreen({ onRecords }: { onRecords: () => void }) {
         {[0, 1, 2, 3, 4].map(i => <div key={i} style={{ width: 12, height: 12, borderRadius: '50%', background: i === 0 ? '#2563eb' : '#c7d2fe' }} />)}
       </div>
       <div style={{ textAlign: 'center', marginBottom: 14 }}>
-        <div style={{ fontSize: 17, fontWeight: 600, color: '#1e293b' }}>AA WC Van 58542</div>
+        <div style={{ ...PHONE_TITLE, color: '#1e293b' }}>AA WC Van 58542</div>
         <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 2 }}>Inspected On 19/06/2026</div>
         <div style={{ fontSize: 12, color: '#94a3b8' }}>Next Inspection On 19/06/2026</div>
       </div>
@@ -276,8 +277,10 @@ function IMRecordsModal({ onClose }: { onClose: () => void }) {
       <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)' }} onClick={onClose} />
       <div style={{ position: 'relative', marginTop: 'auto', background: '#fff', borderRadius: '20px 20px 0 0', maxHeight: '75%', display: 'flex', flexDirection: 'column', animation: 'emSlideUp 0.3s ease' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px', background: '#2563eb', borderRadius: '20px 20px 0 0' }}>
-          <span style={{ fontSize: 16, fontWeight: 600, color: '#fff' }}>Inspection Records</span>
-          <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: '50%', border: 'none', background: 'rgba(255,255,255,0.2)', cursor: 'pointer', color: '#fff', fontSize: 16, display: 'grid', placeItems: 'center' }}>✕</button>
+          <span style={{ ...PHONE_TITLE, color: '#fff' }}>Inspection Records</span>
+          {/* 14 to match the Add Expense sheet's close control, and so it does not
+              out-size the 13px title beside it. */}
+          <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: '50%', border: 'none', background: 'rgba(255,255,255,0.2)', cursor: 'pointer', color: '#fff', fontSize: 14, display: 'grid', placeItems: 'center' }}>✕</button>
         </div>
         <div style={{ display: 'flex', padding: '10px 18px', borderBottom: '1px solid #e2e8f0' }}>
           <span style={{ flex: 1, fontSize: 12, fontWeight: 600, color: '#64748b', fontStyle: 'italic' }}>Date</span>
@@ -311,8 +314,8 @@ function IMNewInspectionForm({ onBack, onSave }: { onBack: () => void; onSave: (
   return (
     <>
       <div style={{ background: '#1360EF', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
-        <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: 18, padding: 0, lineHeight: 1 }}>←</button>
-        <span style={{ color: '#fff', fontSize: 16, fontWeight: 600 }}>AA WC Van 58542</span>
+        <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', ...PHONE_BAR_ICON, padding: 0, lineHeight: 1 }}>←</button>
+        <span style={{ color: '#fff', ...PHONE_TITLE }}>AA WC Van 58542</span>
       </div>
       <div style={{ flex: 1, overflowY: 'auto', padding: 14, background: '#F0F4F7' }}>
         <IMCollapsible title="Mandatory" items={IM_MANDATORY} mode="form" checked={formChecked} onToggle={toggleCheck} />
@@ -352,8 +355,8 @@ function IMCompletedScreen({ onBack }: { onBack: () => void }) {
     <>
       <div style={{ background: '#1360EF', padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: 18, padding: 0, lineHeight: 1 }}>←</button>
-          <span style={{ color: '#fff', fontSize: 16, fontWeight: 600 }}>Inspection</span>
+          <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', ...PHONE_BAR_ICON, padding: 0, lineHeight: 1 }}>←</button>
+          <span style={{ color: '#fff', ...PHONE_TITLE }}>Inspection</span>
         </div>
       </div>
       <div style={{ flex: 1, overflowY: 'auto', padding: 14, background: '#F0F4F7' }}>
@@ -384,8 +387,8 @@ function IMMobileApp() {
             <>
               <div style={{ background: '#1360EF', padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ color: '#fff', fontSize: 17, cursor: 'pointer' }}>←</span>
-                  <span style={{ color: '#fff', fontSize: 17, fontWeight: 600 }}>Inspection</span>
+                  <span style={{ color: '#fff', ...PHONE_BAR_ICON, cursor: 'pointer' }}>←</span>
+                  <span style={{ color: '#fff', ...PHONE_TITLE }}>Inspection</span>
                 </div>
                 <button onClick={() => setScreen('form')} style={{ width: 30, height: 30, borderRadius: 8, border: '1px solid rgba(255,255,255,0.3)', background: 'transparent', cursor: 'pointer', display: 'grid', placeItems: 'center' }}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><circle cx="12" cy="12" r="9" /><path d="M12 8v8M8 12h8" /></svg>

@@ -390,6 +390,9 @@ export default forwardRef(function Scene1Icons(_props, ref) {
   // and simply flows past, so freezing the page there would strand the user staring
   // at a frozen screen for the length of an animation they did not ask to wait for.
   const pinnedRef = useRef(false);
+  // The user pressed Skip and the page is travelling to the next section. The
+  // state machine stands down for the duration — see skipToEnd.
+  const skippingRef = useRef(false);
 
   // Thresholds are per-state, which IS the hysteresis: the boundary that matters
   // depends on which way you are travelling, so there is no single point where a
@@ -414,6 +417,11 @@ export default forwardRef(function Scene1Icons(_props, ref) {
   // the state already matches the scroll position, or something is already running,
   // it does nothing.
   const settle = () => {
+    // A skip in progress owns the scroll position outright. Letting the machine
+    // run during it would do both of the things a skip exists to avoid: start a
+    // transition, and take the scroll lock that stops the page moving — which
+    // would freeze the page mid-skip and strand it between two sections.
+    if (skippingRef.current) return;
     if (busyRef.current) return;
     const from = stateRef.current;
     const to   = nextState();
@@ -971,11 +979,79 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     finishTransition(to);
   };
 
+  // ── Skip ──────────────────────────────────────────────────────────────────
+  // Called by the section's Skip button just BEFORE the page starts moving.
+  //
+  // The scene is jumped to the frame that belongs to the EDGE the user is leaving
+  // by, not torn down: they are about to watch this section slide off screen, and
+  // it should look settled as it goes. Going down that is the finished frame —
+  // dashboard and phone landed. Going up it is the arrival frame — the icon board,
+  // looping, exactly as someone scrolling down into the section would first meet
+  // it. Playing the remaining transitions out is not an option either way: they
+  // run on wall-clock time and the page is already moving.
+  //
+  // Releasing the scroll lock is the other half. A transition caught in flight is
+  // holding the page still; the skip cannot scroll anywhere until that is undone,
+  // and the transition's own completion callback will never fire now that it has
+  // been jumped past. forceUnlockScroll rather than unlockScroll for the same
+  // reason it is used on unmount: a stranded refcount must not outlive its owner.
+  const skipToEnd = (direction = 'down') => {
+    if (skippingRef.current) return;
+    skippingRef.current = true;
+
+    if (lockedRef.current) { lockedRef.current = false; forceUnlockScroll(); }
+    busyRef.current = false;
+
+    iconsTlRef.current?.pause();
+
+    // Callbacks cleared first. Both timelines carry whatever landing callback the
+    // last runTransition attached, and seeking would fire it — reporting a state
+    // the machine has already moved past.
+    const desktopTl = buildDesktop();
+    desktopTl.eventCallback('onComplete', null);
+    desktopTl.eventCallback('onReverseComplete', null);
+    desktopTl.timeScale(1);
+
+    const phoneTl = phoneTlRef.current;
+    if (phoneTl) {
+      phoneTl.eventCallback('onComplete', null);
+      phoneTl.eventCallback('onReverseComplete', null);
+      phoneTl.timeScale(1);
+    }
+
+    if (direction === 'up') {
+      // Rewound in reverse order, so the board is uncovered from the top down:
+      // the phone lifts off the dashboard, then the dashboard gives the icons
+      // back. Both are instant seeks, but keeping the order honest costs nothing
+      // and means the frame is never momentarily inconsistent.
+      phoneTl?.progress(0).pause();
+      desktopTl.progress(0).pause();
+      stateRef.current = ST_ICONS;
+      // ST_ICONS means the loop owns the board — the same handover finishTransition
+      // performs when a normal reverse lands here.
+      iconsTlRef.current?.resume();
+    } else {
+      desktopTl.progress(1).pause();
+      phoneTl?.progress(1).pause();
+      stateRef.current = ST_MOBILE;
+    }
+  };
+
+  // Called once the skip's scroll has come to rest. Re-evaluating against the
+  // landing position is what lets a user turn round and come straight back into
+  // the section, and have it run normally rather than be stuck on the frame the
+  // skip left it on.
+  const endSkip = () => {
+    if (!skippingRef.current) return;
+    skippingRef.current = false;
+    settle();
+  };
+
   return (
     <div
       ref={el => {
         outerRef.current = el;
-        if (el) { el.__play = play; el.__stop = stop; }
+        if (el) { el.__play = play; el.__stop = stop; el.__skip = skipToEnd; el.__endSkip = endSkip; }
         if (typeof ref === 'function') ref(el); else if (ref) ref.current = el;
       }}
       style={{ position:'relative', width:'100%', height: H * scale, overflow:'visible', display:'flex', justifyContent:'center', alignItems:'flex-start' }}

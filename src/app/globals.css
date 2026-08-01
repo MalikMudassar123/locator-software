@@ -148,6 +148,36 @@ main {
    sit outside the bottom edge (e.g. the road blend) are unaffected. */
 .hero-section-wrapper {
   overflow-x: clip !important;
+
+  /* ── Geometry the headline is centred against ──────────────────────────────
+     The headline sits in the band between the navbar and the skyline, and the
+     two edges of that band are driven by different things: the navbar is a fixed
+     height, the skyline's height follows viewport WIDTH (it is a fixed-ratio
+     image sized in vw), and the hero's own height follows viewport HEIGHT. No
+     single `top: %` can stay in the middle of a band whose edges move on
+     different axes — which is why the headline drifted far above the towers on
+     some screens and landed on them on others.
+
+     These mirror the values the navbar and the skyline are actually laid out
+     with; the media queries below track their breakpoints exactly. Change one
+     and change its twin. */
+
+  /* Navbar is `h-16 md:h-20` — Tailwind's md is 768px. */
+  --hero-nav-h: 4rem;
+
+  /* Skyline is /building image.png at 590×334 (ratio 0.5661), width-driven and
+     bottom-aligned, so its rendered height is simply width × ratio. */
+  --hero-skyline-h: calc(clamp(280px, 70vw, 590px) * 0.5661);
+
+  /* Floor on the band. On short viewports the navbar and the skyline together
+     leave almost nothing between them; without this the headline gets pushed up
+     under the navbar. Below this point the skyline is allowed to give ground
+     instead — the headline drifts over the top of it, which is thin spire and
+     sky rather than towers. */
+  --hero-headline-band-min: clamp(96px, 10vw, 120px);
+}
+@media (min-width: 768px) {
+  .hero-section-wrapper { --hero-nav-h: 5rem; }
 }
 
 /* Font Utility Classes */
@@ -842,6 +872,13 @@ h6 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  /* Containing block for the row's Skip button, which is position:absolute and
+     therefore out of flow. No offsets and no z-index, so this is inert for
+     everything that was already here: relative-with-auto-offsets does not move
+     the box and does not create a stacking context. It has to live on the row
+     rather than the section because the row is what ScrollTrigger pins, and the
+     button must travel with the frame it is offering to skip. */
+  position: relative;
 }
 .ss-anim-panel {
   order: 2;
@@ -1071,6 +1108,29 @@ h6 {
    HERO HEADLINE ROTATOR — three headline/subheading pairs
    crossfade in place, one 12s loop, 4s per message.
    ══════════════════════════════════════════════════════ */
+/* Spans the band between the navbar and the skyline and centres its content in
+   it, rather than being pinned to a fixed fraction of the hero. See the custom
+   properties on .hero-section-wrapper for why a percentage cannot work here.
+
+   `min()` is what keeps the two failure modes apart: normally the band stops at
+   the top of the skyline, but once the skyline would squeeze the band below its
+   floor the second term wins and the skyline gives way instead of the navbar. */
+.hero-headline-wrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--hero-nav-h);
+  bottom: min(
+    var(--hero-skyline-h),
+    calc(100% - var(--hero-nav-h) - var(--hero-headline-band-min))
+  );
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 1rem;
+  text-align: center;
+}
 .hero-headline-stack {
   position: relative;
   min-height: clamp(150px, 22vw, 210px);
@@ -1081,6 +1141,12 @@ h6 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  /* Each message is centred on the band's midline in its own right. The three
+     differ in height — one heading wraps to two lines where another does not,
+     and the third subheading is twice the length of the first — so aligning them
+     to the top of the stack made the block appear to shift up and down as they
+     crossfaded. Centred, every one of them sits on the same line. */
+  justify-content: center;
   opacity: 0;
   animation-duration: 12s;
   animation-timing-function: ease-in-out;
@@ -1128,8 +1194,10 @@ h6 {
     max-width: 92vw !important;
     width: 92vw !important;
   }
-  .hero-headline-wrap {
-    top: 13% !important;
+  /* Twin of the rule above — the skyline is 92vw wide here, so it is 92vw × the
+     image ratio tall. */
+  .hero-section-wrapper {
+    --hero-skyline-h: calc(92vw * 0.5661);
   }
   .hero-headline-stack {
     min-height: clamp(130px, 34vw, 175px);
@@ -1138,6 +1206,12 @@ h6 {
 @media (min-width: 641px) and (max-width: 1024px) {
   .hero-building-wrap {
     max-width: 72vw !important;
+  }
+  /* Twin of the rule above. 72vw is always the narrower of the two constraints
+     in this range (the wrap's other cap is 98% of the hero), so it is the used
+     width outright. */
+  .hero-section-wrapper {
+    --hero-skyline-h: calc(72vw * 0.5661);
   }
 }
 
@@ -2035,4 +2109,147 @@ h6 {
 @media (prefers-reduced-motion: reduce) {
   .hero-blue-orb-a,
   .hero-blue-orb-b { animation: none !important; }
+}
+
+/* ══════════════════════════════════════════════════════
+   SKIP BUTTON — additive overlay control
+   ══════════════════════════════════════════════════════
+   Rendered by components/common/SkipButton, on the two pinned showcase rows —
+   the only places on the homepage that hold the user through an animation.
+
+   LAYOUT-NEUTRAL BY CONSTRUCTION. Everything here is position:absolute, so the
+   control is out of flow: it cannot change a section's height, move a sibling,
+   or alter any existing spacing. Nothing in this block targets an element that
+   existed before it — every selector is under .skip-btn.
+
+   Colour is the page's own accent, #0a89dd — the same blue as the FLEET
+   TELEMATICS / VIDEO TELEMATICS eyebrows the button sits beneath, so it belongs
+   to the section rather than floating above it. At rest it is a white glass pill
+   with blue type and a blue-tinted shadow; hover fills it with the accent. */
+.skip-btn {
+  position: absolute;
+  z-index: 120;
+  --skip-accent: #0a89dd;
+  --skip-accent-deep: #0b6cc0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-family: var(--font-poppins), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.015em;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(14px) saturate(170%);
+  backdrop-filter: blur(14px) saturate(170%);
+  /* Hidden state. pointer-events off as well as opacity 0 — a fully transparent
+     button would still swallow clicks aimed at the section underneath. */
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.28s ease,
+    border-color 0.28s ease,
+    box-shadow 0.28s ease,
+    color 0.28s ease;
+
+  /* ── Resting finish ── */
+  color: var(--skip-accent);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.88) 0%,
+    rgba(238, 248, 255, 0.80) 100%
+  );
+  border: 1px solid rgba(10, 137, 221, 0.22);
+  box-shadow:
+    0 6px 20px rgba(10, 137, 221, 0.15),
+    0 1px 2px rgba(15, 23, 42, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+/* Hover commits to the accent outright. A tint-deepens-slightly hover on a pill
+   this small is barely perceptible; a solid fill reads as a definite state
+   change without the button having to grow or move much. */
+.skip-btn:hover {
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--skip-accent) 0%, var(--skip-accent-deep) 100%);
+  border-color: rgba(10, 137, 221, 0.95);
+  box-shadow:
+    0 10px 28px rgba(10, 137, 221, 0.36),
+    0 2px 6px rgba(10, 137, 221, 0.20),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+.skip-btn.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.skip-btn__label { display: block; }
+/* The chevron points the way the skip will actually go, and turns over when the
+   user reverses direction — it is the only signal that the button now means
+   "back to the previous section". Rotation and hover-nudge are written as one
+   transform per state because the two cannot be composed by the cascade. */
+.skip-btn__chevron {
+  display: block;
+  flex-shrink: 0;
+  opacity: 0.72;
+  transform: rotate(0deg);
+  transition: transform 0.34s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease;
+}
+.skip-btn:hover .skip-btn__chevron { transform: translateY(2px); opacity: 1; }
+.skip-btn--up .skip-btn__chevron { transform: rotate(180deg); }
+.skip-btn--up:hover .skip-btn__chevron { transform: translateY(-2px) rotate(180deg); }
+
+/* ── Placement ────────────────────────────────────────────────────────────────
+   Each variant owns its own resting/hover transform, because the centred one
+   carries a translateX(-50%) that a shared hover rule would wipe out. */
+.skip-btn--bottom-right {
+  right: clamp(16px, 3vw, 40px);
+  bottom: clamp(16px, 2.5vw, 34px);
+  transform: translateY(8px);
+}
+.skip-btn--bottom-right.is-visible { transform: translateY(0); }
+.skip-btn--bottom-right.is-visible:hover { transform: translateY(-2px); }
+
+.skip-btn--bottom-center {
+  left: 50%;
+  bottom: clamp(16px, 2.5vw, 34px);
+  transform: translate(-50%, 8px);
+}
+.skip-btn--bottom-center.is-visible { transform: translate(-50%, 0); }
+.skip-btn--bottom-center.is-visible:hover { transform: translate(-50%, -2px); }
+
+/* Keyboard focus gets a ring rather than borrowing the hover fill, so the two
+   states stay tellable apart when a pointer user tabs to it. */
+.skip-btn:focus-visible {
+  outline: none;
+  border-color: rgba(10, 137, 221, 0.6);
+  box-shadow:
+    0 0 0 3px rgba(10, 137, 221, 0.28),
+    0 8px 24px rgba(10, 137, 221, 0.20);
+}
+
+.skip-btn:active { opacity: 0.9; }
+
+@media (max-width: 640px) {
+  .skip-btn {
+    padding: 7px 12px;
+    font-size: 11.5px;
+    gap: 5px;
+  }
+  .skip-btn__chevron { width: 11px; height: 11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-btn,
+  .skip-btn__chevron { transition: opacity 0.2s ease; }
+  .skip-btn--bottom-right.is-visible:hover { transform: translateY(0); }
+  .skip-btn--bottom-center.is-visible:hover { transform: translate(-50%, 0); }
+  /* The rotation stays — it carries meaning, unlike the hover nudge. */
+  .skip-btn:hover .skip-btn__chevron { transform: rotate(0deg); }
+  .skip-btn--up:hover .skip-btn__chevron { transform: rotate(180deg); }
 }

@@ -93,7 +93,7 @@ export default function Footer() {
       {/* ════════════════════════════════════════
           MAIN CONTENT
           ════════════════════════════════════════ */}
-      <div style={{ position: 'relative', zIndex: 1, maxWidth: '1280px', margin: '0 auto', padding: '48px clamp(16px,3.5vw,48px) 0' }}>
+      <div style={{ position: 'relative', zIndex: 1, margin: '0 auto', padding: '48px 20px 0' }}>
 
         {/* ── Secondary brand mark — same logo used across the Software pages ── */}
         <div style={{ marginBottom: '36px', paddingLeft: '24px' }}>

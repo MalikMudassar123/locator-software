@@ -158,7 +158,7 @@ export default function FleetManagerShowcase() {
     <div className="ms-embed">
       <div className="ms-web-scroll">
         <div className="ms-frame ms-web-min" style={{ height: 592 }}>
-      <BrowserChrome url="pro.mylocatorplus.com/fleet" />
+      <BrowserChrome variant="app" />
       {/* Top tabs */}
       <div style={{ padding: '6px 16px 4px', flexShrink: 0 }}>
         <div style={{ display: 'flex', background: '#e8edf2', borderRadius: 10, padding: 3 }}>

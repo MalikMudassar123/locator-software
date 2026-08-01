@@ -254,6 +254,9 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
   // and simply flows past, so freezing the page there would strand the user staring
   // at a frozen screen for the length of an animation they did not ask to wait for.
   const pinnedRef    = useRef(false);
+  // The user pressed Skip and the page is travelling to the next section. The
+  // state machine stands down for the duration — see skipToEnd.
+  const skippingRef  = useRef(false);
 
   // Per-state thresholds — the boundary that applies depends on which way you are
   // travelling, which is the hysteresis: there is no single point where a few
@@ -271,6 +274,11 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
   // Idempotent: does nothing if a transition is running or the state already
   // matches the scroll position.
   const settle = () => {
+    // A skip in progress owns the scroll position outright. Letting the machine
+    // run during it would do both of the things a skip exists to avoid: start a
+    // transition, and take the scroll lock that stops the page moving — which
+    // would freeze the page mid-skip and strand it between two sections.
+    if (skippingRef.current) return;
     if (busyRef.current) return;
     const from = stateRef.current;
     const to   = nextState();
@@ -770,11 +778,56 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     finishTransition(to);
   };
 
+  // ── Skip ──────────────────────────────────────────────────────────────────
+  // Called by the section's Skip button just BEFORE the page starts moving.
+  // Same contract as Scene1Icons: jump the scene to the frame belonging to the
+  // edge the user is leaving by — the landed dashboard going down, the looping
+  // icon board going up — release any scroll lock a transition-in-flight is
+  // holding, and tell the machine where it now stands. The section is about to
+  // slide off screen and should look settled as it goes, not caught mid-dissolve.
+  const skipToEnd = (direction = 'down') => {
+    if (skippingRef.current) return;
+    skippingRef.current = true;
+
+    if (lockedRef.current) { lockedRef.current = false; forceUnlockScroll(); }
+    busyRef.current = false;
+
+    iconsTlRef.current?.pause();
+
+    // Callbacks cleared first: the timeline carries whatever landing callback the
+    // last runTransition attached, and seeking would fire it — reporting a state
+    // the machine has already moved past.
+    const tl = buildDesktop();
+    tl.eventCallback('onComplete', null);
+    tl.eventCallback('onReverseComplete', null);
+    tl.timeScale(1);
+
+    if (direction === 'up') {
+      tl.progress(0).pause();
+      stateRef.current = ST_ICONS;
+      // ST_ICONS means the loop owns the board — the same handover
+      // finishTransition performs when a normal reverse lands here.
+      iconsTlRef.current?.resume();
+    } else {
+      tl.progress(1).pause();
+      stateRef.current = ST_DESKTOP;
+    }
+  };
+
+  // Called once the skip's scroll has come to rest, so turning round and coming
+  // straight back into the section runs normally instead of leaving it stuck on
+  // the frame the skip left it on.
+  const endSkip = () => {
+    if (!skippingRef.current) return;
+    skippingRef.current = false;
+    settle();
+  };
+
   return (
     <div
       ref={el => {
         outerRef.current = el;
-        if (el) { el.__play = play; el.__stop = stop; }
+        if (el) { el.__play = play; el.__stop = stop; el.__skip = skipToEnd; el.__endSkip = endSkip; }
         if (typeof ref === 'function') ref(el); else if (ref) ref.current = el;
       }}
       style={{ position: 'relative', width: '100%', height: H * scale, overflow: 'visible', display:'flex', justifyContent:'center', alignItems:'flex-start' }}

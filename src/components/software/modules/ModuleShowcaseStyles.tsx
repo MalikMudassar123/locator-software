@@ -1,5 +1,19 @@
 // Shared CSS for the four interactive module wireframe showcases.
 // Ported from the Locator-websites standalone embeds. Rendered once.
+
+// ── Phone type scale ─────────────────────────────────────────────────────────
+// The handset mockups were typed as real handsets — a 17px app-bar title, which
+// is correct on a phone held at arm's length. But they sit on the page at the
+// same scale as the desktop dashboards, whose own content runs at 12.5–13px, so
+// beside them the app bars read as oversized rather than as headings.
+//
+// These bring every phone screen onto the dashboards' scale. Shared rather than
+// repeated inline because the three modules each carry several app bars, and the
+// point of the change is that they all match — one missed and it shows.
+export const PHONE_TITLE = { fontSize: 13, fontWeight: 600 } as const   // app bars, sheet headers, screen titles
+export const PHONE_SECTION = { fontSize: 12.5, fontWeight: 600 } as const // sub-section headings inside a screen
+export const PHONE_BAR_ICON = { fontSize: 15 } as const                 // back arrows — icons read smaller than text at equal px
+
 export default function ModuleShowcaseStyles() {
   return (
     <style>{`
@@ -43,6 +57,32 @@ export default function ModuleShowcaseStyles() {
         display: flex;
         flex-direction: column;
         position: relative;
+      }
+      /* ── Bezel ──────────────────────────────────────────────────
+         A hairline rim plus a light catch along the top edge, so the frame
+         reads as a machined window rather than a screenshot laid on the page.
+         The phone shell and the Benefits card both carry an edge already; this
+         is what the desktop dashboards were missing beside them.
+
+         Drawn as an overlay rather than a real CSS border, for two reasons. A border
+         would grow the box, and every showcase sets an explicit pixel height on
+         .ms-frame — the dashboards inside are laid out against it. And it has to
+         paint ON TOP of the chrome and the dashboard, which run edge to edge, or
+         the rim would disappear wherever content meets it.
+
+         Inset only: no outer ring or halo. .ms-web-scroll is an overflow-x:auto
+         container, which clips on both axes, so anything drawn outside the
+         frame's own box would be sliced off flat at the edge. */
+      .ms-frame::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        z-index: 4;
+        box-shadow:
+          inset 0 0 0 1px rgba(15,23,42,0.10),
+          inset 0 1px 0 rgba(255,255,255,0.65);
       }
 
       /* ── Task Manager web ──────────────────────────────────────── */

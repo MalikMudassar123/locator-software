@@ -5,6 +5,7 @@
 import { createContext, useContext, useState, useRef, useEffect, useMemo, type ReactNode } from 'react'
 import { ModuleTabs, StatusBar, BottomNav } from './TaskManagerShowcase'
 import BrowserChrome from '@/components/ScrollShowcase/BrowserChrome'
+import { PHONE_TITLE, PHONE_BAR_ICON } from './ModuleShowcaseStyles'
 
 const EM_CATEGORIES: Record<string, { icon: string; color: string; label: string }> = {
   '--': { icon: '💰', color: '#22c55e', label: 'Payment' },
@@ -124,7 +125,7 @@ function EMWebDashboard() {
   const cols = ['Date', 'Employee Name', 'Category', 'Description', 'Bill Amount', 'Paid Amount', 'Balance']
   return (
     <div className="ms-frame ms-web-min" style={{ height: 592 }}>
-      <BrowserChrome url="pro.mylocatorplus.com/expenses" />
+      <BrowserChrome variant="app" />
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px', borderBottom: '1px solid #f0f0f0', flexShrink: 0, flexWrap: 'wrap' }}>
@@ -197,7 +198,7 @@ function EMAddExpenseModal({ onClose }: { onClose: () => void }) {
       <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)' }} onClick={onClose} />
       <div style={{ position: 'relative', marginTop: 'auto', background: '#fff', borderRadius: '20px 20px 0 0', padding: '20px 18px 30px', maxHeight: '88%', overflowY: 'auto', animation: 'emSlideUp 0.3s ease' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
-          <span style={{ fontSize: 16, fontWeight: 600, color: '#1e293b' }}>Add Expense</span>
+          <span style={{ ...PHONE_TITLE, color: '#1e293b' }}>Add Expense</span>
           <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: '50%', border: '1px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer', fontSize: 14, display: 'grid', placeItems: 'center', color: '#64748b', padding: 0 }}>✕</button>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
@@ -269,8 +270,8 @@ function EMMobileDetail({ exp, onBack }: { exp: any; onBack: () => void }) {
   return (
     <>
       <div style={{ background: '#1360EF', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
-        <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: 18, padding: 0, lineHeight: 1 }}>←</button>
-        <span style={{ color: '#fff', fontSize: 16, fontWeight: 600 }}>Expense Details</span>
+        <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', ...PHONE_BAR_ICON, padding: 0, lineHeight: 1 }}>←</button>
+        <span style={{ color: '#fff', ...PHONE_TITLE }}>Expense Details</span>
       </div>
       <div style={{ flex: 1, overflowY: 'auto', padding: 14, background: '#F0F4F7' }}>
         <div style={{ background: '#fff', borderRadius: 14, padding: 16, marginBottom: 10, boxShadow: '0 1px 3px rgba(0,0,0,.05)', textAlign: 'center' }}>
@@ -314,8 +315,8 @@ function EMMobileApp() {
             <>
               <div style={{ background: '#1360EF', padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ color: '#fff', fontSize: 17, cursor: 'pointer' }}>←</span>
-                  <span style={{ color: '#fff', fontSize: 17, fontWeight: 600 }}>Expense Manager</span>
+                  <span style={{ color: '#fff', ...PHONE_BAR_ICON, cursor: 'pointer' }}>←</span>
+                  <span style={{ color: '#fff', ...PHONE_TITLE }}>Expense Manager</span>
                 </div>
                 <div style={{ display: 'flex', gap: 14 }}>
                   <span onClick={() => setShowAdd(true)} style={{ cursor: 'pointer' }}>

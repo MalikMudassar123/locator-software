@@ -919,10 +919,12 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
         onMouseLeave={() => gsap.to(popupRef.current, { scale: 1, duration: 0.35, ease: 'power3.out', transformOrigin: 'left center' })}
         style={{
           position:'absolute',
-          left: Math.max(0, FX - 30),
-          top: FY + 83,
-          width: 220,
-          height: 48,
+          left: Math.max(0, FX - 32),
+          top: FY + 91,
+          // Width and height stay in the artwork's ~4.58:1 ratio. objectFit:'contain'
+          // would letterbox rather than distort if they drift apart, so nudge both.
+          width: 196,
+          height: 43,
           opacity: 0,
           zIndex: 50,
           pointerEvents: 'auto',

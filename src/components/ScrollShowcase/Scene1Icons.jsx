@@ -6,6 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import BrowserChrome from './BrowserChrome';
 import { lockScroll, unlockScroll, forceUnlockScroll } from './scroll-lock';
+import { attachWheelSteps } from './wheel-steps';
 
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
@@ -393,6 +394,8 @@ export default forwardRef(function Scene1Icons(_props, ref) {
   // The user pressed Skip and the page is travelling to the next section. The
   // state machine stands down for the duration — see skipToEnd.
   const skippingRef = useRef(false);
+  // The pinning trigger, so a wheel step can map a state back to a scroll position.
+  const stRef = useRef(null);
 
   // Thresholds are per-state, which IS the hysteresis: the boundary that matters
   // depends on which way you are travelling, so there is no single point where a
@@ -454,6 +457,41 @@ export default forwardRef(function Scene1Icons(_props, ref) {
 
   const checkScroll = (self) => {
     progRef.current = self.progress;
+    settle();
+  };
+
+  // ── One wheel gesture, one state ──────────────────────────────────────────
+  // Where a wheel step parks the page for each state: the MIDDLE of that state's
+  // band, indexed by state. Landing just past a threshold would leave the very next
+  // scroll event free to cross straight back over it; the middle is the furthest
+  // point from both of the band's edges, so the same hysteresis that protects a
+  // distance-driven change protects a stepped one.
+  //
+  //   ST_ICONS   0.10   below TO_DESKTOP (0.30)
+  //   ST_DESKTOP 0.45   clear of TO_ICONS (0.22) and TO_MOBILE (0.66) either side
+  //   ST_MOBILE  0.84   above TO_DESK_BACK (0.56), with room left to scroll out
+  const BAND_POS = [0.10, 0.45, 0.84];
+
+  // One gesture from the wheel. Advances or retreats by exactly one state, and does
+  // it by MOVING THE PAGE to where that state lives rather than by setting the state
+  // directly — the row is pinned, so the move is invisible, and it keeps the scroll
+  // position and the committed state telling the same story. Setting the state alone
+  // would leave them disagreeing, and the next real scroll event would read that
+  // disagreement as a reason to change back.
+  const stepState = (dir) => {
+    const st = stRef.current;
+    if (!st || busyRef.current || skippingRef.current) return;
+    const to = stateRef.current + dir;
+    // Already at an end: nothing to step to, so the gesture is left to the page.
+    // Scrolling on out of the section is exactly what should happen there.
+    if (to < ST_ICONS || to > ST_MOBILE) return;
+    const span = st.end - st.start;
+    if (!(span > 0)) return;
+    progRef.current = BAND_POS[to];
+    const y = st.start + BAND_POS[to] * span;
+    if (typeof st.scroll === 'function') st.scroll(y); else window.scrollTo(0, y);
+    // Run the machine now rather than waiting for the trigger's own update: the
+    // transition should start on the gesture, not a frame or two after it.
     settle();
   };
 
@@ -524,7 +562,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
         buildPhoneTl();
         pinnedRef.current = true;
 
-        ScrollTrigger.create({
+        stRef.current = ScrollTrigger.create({
           trigger: row,
           start: 'top top',
           // Pin the entire row — text and mockups both hold still — for this much
@@ -558,6 +596,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
         // nothing left running to unfreeze it.
         return () => {
           pinnedRef.current = false;
+          stRef.current = null;
           if (lockedRef.current) { lockedRef.current = false; unlockScroll(); }
         };
       });
@@ -580,7 +619,17 @@ export default forwardRef(function Scene1Icons(_props, ref) {
       });
     }, el);
 
-    return () => ctx.revert();
+    // Wheel gestures step the state directly (see wheel-steps). Only while pinned
+    // and in range: below 1024px the row flows past normally, where moving the
+    // scroll position under the user would be a visible jump rather than the
+    // no-op it is inside a pin. Gated on stRef, so the mobile branch never arms it.
+    const detachWheel = attachWheelSteps({
+      isReady: () => pinnedRef.current && !!stRef.current?.isActive && !skippingRef.current,
+      isBusy:  () => busyRef.current,
+      onStep:  stepState,
+    });
+
+    return () => { detachWheel(); ctx.revert(); };
   }, []);
 
   // The intro is a one-shot that must be allowed to finish: killing it half-way

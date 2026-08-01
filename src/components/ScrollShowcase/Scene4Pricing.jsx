@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import BrowserChrome from './BrowserChrome';
 import { lockScroll, unlockScroll, forceUnlockScroll } from './scroll-lock';
+import { attachWheelSteps } from './wheel-steps';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -257,6 +258,8 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
   // The user pressed Skip and the page is travelling to the next section. The
   // state machine stands down for the duration — see skipToEnd.
   const skippingRef  = useRef(false);
+  // The pinning trigger, so a wheel step can map a state back to a scroll position.
+  const stRef        = useRef(null);
 
   // Per-state thresholds — the boundary that applies depends on which way you are
   // travelling, which is the hysteresis: there is no single point where a few
@@ -313,6 +316,38 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     settle();
   };
 
+  // ── One wheel gesture, one state ──────────────────────────────────────────
+  // Same accelerator as the fleet scene (see wheel-steps for why the thresholds
+  // alone are not enough). Where a wheel step parks the page for each state: the
+  // middle of that state's band, as far from its edges as the range allows, so a
+  // stepped change gets the same hysteresis a distance-driven one has.
+  //
+  //   ST_ICONS   0.12   below TO_DESKTOP (0.34)
+  //   ST_DESKTOP 0.72   well above TO_ICONS (0.26), with room left to scroll out
+  const BAND_POS = [0.12, 0.72];
+
+  // Advances or retreats by exactly one state, and does it by MOVING THE PAGE to
+  // where that state lives rather than setting the state directly — the row is
+  // pinned, so the move is invisible, and it keeps the scroll position and the
+  // committed state agreeing. Were they to disagree, the next real scroll event
+  // would read the difference as a reason to change back.
+  const stepState = (dir) => {
+    const st = stRef.current;
+    if (!st || busyRef.current || skippingRef.current) return;
+    const to = stateRef.current + dir;
+    // Already at an end: nothing to step to, so the gesture is left to the page and
+    // scrolls on out of the section, which is what should happen there.
+    if (to < ST_ICONS || to > ST_DESKTOP) return;
+    const span = st.end - st.start;
+    if (!(span > 0)) return;
+    progRef.current = BAND_POS[to];
+    const y = st.start + BAND_POS[to] * span;
+    if (typeof st.scroll === 'function') st.scroll(y); else window.scrollTo(0, y);
+    // Run the machine now rather than waiting for the trigger's own update, so the
+    // transition starts on the gesture instead of a frame or two after it.
+    settle();
+  };
+
   useEffect(() => {
     const el = outerRef.current;
     if (!el) return;
@@ -360,7 +395,7 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
       mm.add('(min-width: 1024px)', () => {
         pinnedRef.current = true;
 
-        ScrollTrigger.create({
+        stRef.current = ScrollTrigger.create({
           trigger: row,
           start: 'top top',
           // Purely a pacing choice: the state threshold is a fraction of this, so it
@@ -392,6 +427,7 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
         // nothing left running to unfreeze it.
         return () => {
           pinnedRef.current = false;
+          stRef.current = null;
           if (lockedRef.current) { lockedRef.current = false; unlockScroll(); }
         };
       });
@@ -411,7 +447,17 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
       });
     }, el);
 
-    return () => ctx.revert();
+    // Wheel gestures step the state directly (see wheel-steps). Only while pinned
+    // and in range: below 1024px the row flows past normally, where moving the
+    // scroll position under the user would be a visible jump rather than the no-op
+    // it is inside a pin. Gated on stRef, so the mobile branch never arms it.
+    const detachWheel = attachWheelSteps({
+      isReady: () => pinnedRef.current && !!stRef.current?.isActive && !skippingRef.current,
+      isBusy:  () => busyRef.current,
+      onStep:  stepState,
+    });
+
+    return () => { detachWheel(); ctx.revert(); };
   }, []);
 
   // The scene is a one-shot per stage now, so leaving the viewport must NOT kill

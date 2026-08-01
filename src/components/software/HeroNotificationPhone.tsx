@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
 // The centre handset in the software hero: the app screen as an image, with a
-// live push-notification stack over its lower third.
+// live push-notification pair across the middle of it.
 //
 // The stack is markup rather than part of the screenshot for the reason the
 // screenshot could not be: mobile-notifications.png was captured at real device
@@ -12,8 +12,8 @@ import { useEffect, useState } from 'react'
 // off the right edge, the bottom row sliced. Laid out live, each card wraps to
 // the width it is actually given and nothing is cut.
 //
-// It covers only the lower part on purpose. These read as notifications arriving
-// OVER an app, which needs the app still visible behind them.
+// It covers only a band of the screen on purpose. These read as notifications
+// arriving OVER an app, which needs the app still visible behind them.
 //
 // SIZING. Everything is in `cqw` — percentages of this component's own width —
 // with `container-type: inline-size` on the root. The phone box is fluid
@@ -31,7 +31,7 @@ const NOTIFICATIONS: Notification[] = [
   { vehicle: 'Sharmadi Support 54257', event: 'Exited',  zone: 'Locator Dubai Office', time: '12:08' },
 ]
 
-const VISIBLE = 5      // cards on screen at once
+const VISIBLE = 2      // cards on screen at once
 const INTERVAL = 2800  // ms between arrivals
 
 export default function HeroNotificationPhone() {
@@ -62,15 +62,29 @@ export default function HeroNotificationPhone() {
         .hnp { position: absolute; inset: 0; container-type: inline-size; }
         .hnp img { object-fit: contain; }
 
-        /* Lower third only — the app screen behind stays readable. Inset from
-           the edges so the cards sit inside the device's screen, not on its
-           bezel. overflow is deliberately NOT hidden: a hovered card lifts past
-           these bounds, which is the whole point of the hover. */
+        /* Two cards, sitting across the middle of the screen — clear of the
+           gauge above them and with the app visible below, so they read as
+           notifications arriving over a working app. Inset from the edges so
+           they sit inside the device's screen, not on its bezel. overflow is
+           deliberately NOT hidden: a hovered card lifts past these bounds,
+           which is the whole point of the hover.
+
+           Anchored by its BOTTOM, not centred with a transform, even though the
+           result is a centred pair. The stack's height oscillates by one card on
+           every cycle — a new card mounts at full height while the one above it
+           is still collapsing — and a centred box would split that oscillation
+           between both edges, rocking both visible cards half a card up and down
+           every 2.8s. Holding the bottom edge still puts all of the movement at
+           the top, where the card that is leaving is the only thing affected.
+
+           The value is in cqw (percent of the phone's WIDTH) like everything
+           else here; the box is 466/1000, so its height is ~214cqw and this puts
+           the pair's centre around 60% down the screen. */
         .hnp__stack {
           position: absolute;
           left: 6cqw;
           right: 6cqw;
-          bottom: 8cqw;
+          bottom: 63cqw;
           display: flex;
           flex-direction: column;
           gap: 2.4cqw;
@@ -173,7 +187,7 @@ export default function HeroNotificationPhone() {
           from { opacity: 0; transform: translateY(7cqw) scale(0.94); }
           to   { opacity: 1; transform: none; }
         }
-        /* max-height collapses the row as it fades, so the four below it slide up
+        /* max-height collapses the row as it fades, so the two below it slide up
            into the space rather than the whole stack jumping when the node goes.
            The value only has to EXCEED a real card's height — it is an animation
            bound, not a layout size, and the card is never actually clipped by it. */

@@ -570,7 +570,22 @@ export default function RoadSection() {
                       </div>
                     </div>
 
-                    {/* Pointer */}
+                    {/* Pointer — only the LOWER HALF of the rotated square is drawn.
+                        The card is translucent glass, so the half that overlaps it
+                        does not disappear behind it: the two fills stack and the
+                        whole diamond reads as a seam sitting on the card. Cutting it
+                        leaves a clean tail that continues out of the bubble.
+
+                        clip-path is applied in the element's own coordinates, BEFORE
+                        the 45° rotation — so the triangle below is the square's
+                        lower-right corner, which the rotation carries round to the
+                        bottom of the diamond. It keeps the right and bottom borders
+                        (the tail's two visible edges — the other two are already
+                        off) and the rounded corner that becomes the tip.
+
+                        No box-shadow: clip-path clips an element's outset shadow away
+                        with everything else, so it would only have been dead weight.
+                        The card's own shadow already carries the depth. */}
                     <div style={{
                       position: 'absolute',
                       bottom: '-6px',
@@ -585,7 +600,7 @@ export default function RoadSection() {
                       borderLeft: 'none',
                       transform: 'translateX(-50%) rotate(45deg)',
                       borderRadius: '3px',
-                      boxShadow: '2px 2px 6px -2px rgba(15, 23, 42, 0.15)',
+                      clipPath: 'polygon(100% 0%, 100% 100%, 0% 100%)',
                     }} />
                   </div>
                 </div>
@@ -795,7 +810,9 @@ export default function RoadSection() {
                   </div>
                 </div>
 
-                {/* Pointer */}
+                {/* Pointer — lower half only, exactly as the vehicle tooltip above.
+                    See the comment there for why the overlapping half has to be cut
+                    rather than left to hide behind a translucent card. */}
                 <div style={{
                   position: 'absolute',
                   bottom: '-6px',
@@ -810,7 +827,7 @@ export default function RoadSection() {
                   borderLeft: 'none',
                   transform: 'translateX(-50%) rotate(45deg)',
                   borderRadius: '3px',
-                  boxShadow: '2px 2px 6px -2px rgba(15, 23, 42, 0.15)',
+                  clipPath: 'polygon(100% 0%, 100% 100%, 0% 100%)',
                 }} />
               </div>
             </div>

@@ -2,19 +2,23 @@
 
 // Two finishes for the same window frame:
 //
-//   'browser'  a web page — coloured traffic lights and an address bar.
-//   'app'      the LOCATOR platform itself — neutral window controls and no
-//              address bar, because it is software rather than a page someone
-//              navigated to. A URL over a product screenshot invites the reader
-//              to go and type it in; there is no page there to visit.
+//   'browser'  a web page — carries an address bar.
+//   'app'      the LOCATOR platform itself — no address bar, because it is
+//              software rather than a page someone navigated to. A URL over a
+//              product screenshot invites the reader to go and type it in; there
+//              is no page there to visit.
 //
 // The homepage showcases stay on 'browser'; every frame on /software uses 'app'.
 
-// Exported so the hand-built frame in software/BenefitsSection can match exactly.
-// Two ramps drifting apart would show, on a page that puts both on screen.
-export const APP_DOT_COLORS = ['#c3ccd9', '#d2d9e3', '#e0e5ed'];
-
-const BROWSER_DOT_COLORS = ['#ff5f57', '#febc2e', '#28c840'];
+// The window controls are the same neutral greys in BOTH finishes. 'browser' used
+// to carry mac traffic lights (#ff5f57 / #febc2e / #28c840), and they were the one
+// saturated thing in these frames: three primary-colour dots in the corner of a
+// mock pull the eye away from the product screenshot they are framing, and they
+// read as another vendor's chrome next to a palette of blues and slate.
+//
+// One ramp for both, exported, because the hand-built frame in
+// software/BenefitsSection has to match it exactly and a second copy would drift.
+export const WINDOW_DOT_COLORS = ['#c3ccd9', '#d2d9e3', '#e0e5ed'];
 
 export default function BrowserChrome({
   url = 'https://pro.mylocatorplus.com/',
@@ -36,7 +40,7 @@ export default function BrowserChrome({
       }}
     >
       <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
-        {(isApp ? APP_DOT_COLORS : BROWSER_DOT_COLORS).map((c) => (
+        {WINDOW_DOT_COLORS.map((c) => (
           <span key={c} style={dot(c)} />
         ))}
       </div>

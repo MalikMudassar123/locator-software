@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, useRef, type ReactNode } from 'react'
-import { APP_DOT_COLORS } from '@/components/ScrollShowcase/BrowserChrome'
+import { WINDOW_DOT_COLORS } from '@/components/ScrollShowcase/BrowserChrome'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
@@ -23,12 +23,12 @@ function StageWrap({ title, accent = '#1360ee', children }: { title: string; acc
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 18px', borderBottom: '1px solid #e8e8eb', flexShrink: 0 }}>
-        {/* Neutral window controls, shared with BrowserChrome's 'app' variant —
-            this page frames the LOCATOR platform, not a browser, and both frames
-            appear on it. The title beside them stays: it names the module, which
-            is what an app window's title bar carries. */}
+        {/* Neutral window controls, shared with BrowserChrome — this page frames
+            the LOCATOR platform, not a browser, and both frames appear on it. The
+            title beside them stays: it names the module, which is what an app
+            window's title bar carries. */}
         <div style={{ display: 'flex', gap: '5px' }}>
-          {APP_DOT_COLORS.map(c => (
+          {WINDOW_DOT_COLORS.map(c => (
             <span key={c} style={{ width: '10px', height: '10px', borderRadius: '50%', background: c, display: 'inline-block' }} />
           ))}
         </div>
@@ -517,10 +517,20 @@ export default function BenefitsSection() {
         .bf-arrow:hover:not(:disabled) { border-color: #1360ee; color: #1360ee; background: #f0f4ff; }
         .bf-arrow:disabled { opacity: .3; cursor: default; }
 
+        /* Mirrors the arrow column on the other side of the card. The arrows are
+           outside the card, so on their own they push it 48px (34px column +
+           14px gap) to the right: the space left of the card ends up 48px wider
+           than the space right of it, and the card stops sharing a centre line
+           with the heading above it. Reserving the same width on the right
+           centres the card again — at every width, since below 900px the arrows
+           move above the card and this collapses with them. */
+        .bf-arrows-mirror { width: 34px; flex-shrink: 0; }
+
         @media (max-width: 900px) {
           /* Stack the arrows above the full-width card instead of beside it,
              so the card no longer gets squeezed into a narrow column. */
           .bf-row   { flex-direction: column !important; gap: 0 !important; }
+          .bf-arrows-mirror { display: none; }
           .bf-outer { flex-direction: column !important; }
           .bf-left  { width: 100% !important; border-right: none !important; border-bottom: 1px solid #e8e8eb; }
           .bf-right { min-height: 360px; }
@@ -529,7 +539,13 @@ export default function BenefitsSection() {
       `}</style>
 
       <section id="benefits" style={{ padding: 'clamp(56px,7vw,80px) 28px 24px', background: '#ffffff' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+        {/* Wider than the page's usual 1120px column, and matching ModulesSection's
+            1440px. Both blocks are the same kind of thing — a big interactive
+            showcase whose content is a screen, not prose — and at 1100px this one
+            was leaving a broad empty margin either side while squeezing the list
+            and the video it exists to show. Text sections keep the narrower column;
+            a paragraph does not want a 1440px measure. */}
+        <div style={{ maxWidth: '1440px', margin: '0 auto' }}>
 
           {/* ── Header — centered ── */}
           <div data-reveal style={{ marginBottom: '36px', textAlign: 'center' }}>
@@ -591,7 +607,12 @@ export default function BenefitsSection() {
               <div
                 className="bf-left"
                 style={{
-                  width: '270px',
+                  // 270px left the longest labels ('After-Hours Vehicle Alerts')
+                  // filling the pill edge to edge — the trigger row is nowrap
+                  // inside an overflow:hidden item, so there was nothing spare
+                  // before one started getting clipped — and gave the open item's
+                  // description a ~220px measure, which broke it over four lines.
+                  width: '330px',
                   flexShrink: 0,
                   borderRight: '1px solid #e4e4e8',
                   display: 'flex',
@@ -684,6 +705,9 @@ export default function BenefitsSection() {
                 )}
               </div>
             </div>
+
+            {/* Spacing, not content — see .bf-arrows-mirror. */}
+            <div className="bf-arrows-mirror" aria-hidden="true" />
           </div>
 
         </div>

@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
 import Image from 'next/image';
 import gsap from 'gsap';
+import { WINDOW_DOT_COLORS } from '@/components/ScrollShowcase/BrowserChrome';
 
 // Hook: returns a CSS scale factor so the scene canvas fits its container
 function useCanvasScale(canvasW, canvasH) {
@@ -318,7 +319,9 @@ function BrowserBar() {
   return (
     <div style={{ height:32, background:'linear-gradient(180deg,#f3f5f9,#e6eaf2)', borderBottom:'1px solid rgba(15,23,42,0.06)', display:'flex', alignItems:'center', padding:'0 12px', gap:10, flexShrink:0 }}>
       <div style={{ display:'flex', gap:6 }}>
-        {['#ff5f57','#febc2e','#28c840'].map(c=><div key={c} style={{ width:11,height:11,borderRadius:'50%',background:c }}/>)}
+        {/* Same neutral ramp as the showcase frames on this page — see
+            ScrollShowcase/BrowserChrome for why the traffic lights went. */}
+        {WINDOW_DOT_COLORS.map(c=><div key={c} style={{ width:11,height:11,borderRadius:'50%',background:c }}/>)}
       </div>
       <div style={{ flex:1, height:18, background:'#fff', borderRadius:9, display:'flex', alignItems:'center', justifyContent:'center', maxWidth:'62%', margin:'0 auto' }}>
         <span style={{ fontSize:9, color:'rgb(100, 116, 141)', fontWeight:600 }}>https://pro.mylocatorplus.com/</span>

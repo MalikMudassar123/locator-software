@@ -101,9 +101,15 @@ export default function Footer() {
         </div>
 
         {/* ── 5-column grid: [form] [company] [services] [support] [connect] ── */}
+        {/* Connect is the widest of the two fixed columns so the map reads as a proper
+            landscape panel rather than a thumbnail. The three link columns are no
+            longer an equal `repeat(3, 1fr)`: Services carries the longest labels and
+            Support only ever holds two short ones, so weighting them 1 / 1.1 / 0.8
+            spends the width where the text actually needs it instead of leaving a
+            column of dead space next to the map. */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'clamp(200px,22%,280px) repeat(3, 1fr) clamp(180px,20%,240px)',
+          gridTemplateColumns: 'clamp(190px,19%,250px) 1fr 1.1fr 0.8fr clamp(300px,28%,380px)',
           gap: 'clamp(20px,2.5vw,36px)',
           alignItems: 'start',
         }}
@@ -164,7 +170,7 @@ export default function Footer() {
 
             {/* Map — framed like a premium photo mat so it reads as an intentional element, not an afterthought */}
             <div className="footer-map-card">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '2px 3px 9px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '1px 4px 8px' }}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1360ee" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
                 </svg>
@@ -186,7 +192,7 @@ export default function Footer() {
                   title="Locator Dubai"
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3610.1788!2d55.27076!3d25.20484!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f43348a67e24b%3A0xff45e502e1cbe99!2sCity%20Tower%202!5e0!3m2!1sen!2sae!4v1700000000000!5m2!1sen!2sae"
                   width="100%"
-                  height="150"
+                  height="210"
                   style={{ border: 0, display: 'block', pointerEvents: 'none' }}
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
@@ -401,7 +407,9 @@ export default function Footer() {
           background: #ffffff;
           border: 1px solid #e7ebf3;
           border-radius: 18px;
-          padding: 8px;
+          /* Tight left/right so the map gets the width instead of the mat. Top keeps
+             a little more room for the "Find Us" label to sit off the border. */
+          padding: 7px 4px 4px;
           margin-bottom: 12px;
           box-shadow: 0 1px 2px rgba(15,23,42,0.04), 0 12px 28px -8px rgba(19,96,238,0.14);
           transition: transform 320ms ${EASE}, box-shadow 320ms ${EASE}, border-color 320ms ${EASE};

@@ -291,7 +291,13 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     // does nothing to stop the page moving under it — without this the pin runs out
     // of range mid-animation and releases, which is the section sliding upward while
     // the state is still changing.
-    if (pinnedRef.current) { lockScroll(); lockedRef.current = true; }
+    //
+    // Park BEFORE locking so the frozen position is a sane one — under a fast scroll
+    // the page can already be past the end of the pin by the time this runs, which
+    // would freeze a released section halfway off the screen with its animation still
+    // to play. See Scene1Icons for the full reasoning; it is invisible for the same
+    // reason a wheel step is.
+    if (pinnedRef.current) { parkInBand(to); lockScroll(); lockedRef.current = true; }
     runTransition(from, to);
   };
 
@@ -331,6 +337,21 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
   // pinned, so the move is invisible, and it keeps the scroll position and the
   // committed state agreeing. Were they to disagree, the next real scroll event
   // would read the difference as a reason to change back.
+  // Move the page to the middle of `state`'s band, keeping the recorded progress in
+  // agreement with it. Invisible while the row is pinned, which is what lets both a
+  // wheel step and settle() above use it. False when the trigger has no usable
+  // measurements yet, so callers decline rather than scroll to a garbage position.
+  const parkInBand = (state) => {
+    const st = stRef.current;
+    if (!st) return false;
+    const span = st.end - st.start;
+    if (!(span > 0)) return false;
+    progRef.current = BAND_POS[state];
+    const y = st.start + BAND_POS[state] * span;
+    if (typeof st.scroll === 'function') st.scroll(y); else window.scrollTo(0, y);
+    return true;
+  };
+
   const stepState = (dir) => {
     const st = stRef.current;
     if (!st || busyRef.current || skippingRef.current) return;
@@ -338,11 +359,7 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     // Already at an end: nothing to step to, so the gesture is left to the page and
     // scrolls on out of the section, which is what should happen there.
     if (to < ST_ICONS || to > ST_DESKTOP) return;
-    const span = st.end - st.start;
-    if (!(span > 0)) return;
-    progRef.current = BAND_POS[to];
-    const y = st.start + BAND_POS[to] * span;
-    if (typeof st.scroll === 'function') st.scroll(y); else window.scrollTo(0, y);
+    if (!parkInBand(to)) return;
     // Run the machine now rather than waiting for the trigger's own update, so the
     // transition starts on the gesture instead of a frame or two after it.
     settle();
@@ -376,7 +393,15 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
   // The scene resizes itself after mount (see the ResizeObserver above), which moves
   // the trigger's start. Without this it keeps stale measurements and the gate fires
   // at the wrong scroll position.
-  useEffect(() => { ScrollTrigger.refresh(); }, [scale]);
+  //
+  // refresh(true) is the safe/deferred form and the first pass is skipped — see
+  // Scene1Icons for why a bare refresh() mid-scroll is what un-pins both rows for a
+  // frame, and why the mount call is redundant.
+  const measuredRef = useRef(false);
+  useEffect(() => {
+    if (!measuredRef.current) { measuredRef.current = true; return; }
+    ScrollTrigger.refresh(true);
+  }, [scale]);
 
   // Trigger is the parent .ss-row, not this element: the row is what actually
   // travels through the viewport, and it is the box that needs pinning.
@@ -411,6 +436,9 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
           end: () => '+=' + window.innerHeight * 1.8,
           pin: true,
           pinSpacing: true,
+          // NO anticipatePin — see Scene1Icons. Pinning ahead of the trigger point puts
+          // a fixed, viewport-filling row on screen while the previous section is still
+          // showing, which is worse than the late latch it avoids.
           invalidateOnRefresh: true,
           onUpdate: checkScroll,
           // Also on refresh, so a reload partway down the section or a resize

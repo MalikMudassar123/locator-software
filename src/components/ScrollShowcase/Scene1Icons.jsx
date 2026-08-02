@@ -434,7 +434,16 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     // does nothing to stop the page moving under it — without this the pin runs out
     // of range mid-animation and releases, which is the section sliding upward while
     // the state is still changing.
-    if (pinnedRef.current) { lockScroll(); lockedRef.current = true; }
+    //
+    // Park BEFORE locking, so the position the lock freezes is a sane one. The lock
+    // holds the page wherever it happens to be at this instant, and under a fast
+    // scroll that is wherever momentum dumped it — which can already be past the end
+    // of the pin, i.e. frozen on a section that has been released and is halfway off
+    // the screen, with its animation still to play. Parking first puts the page in the
+    // middle of the band the incoming state owns, so a transition always runs with the
+    // row safely pinned no matter how far the scroll overshot. Invisible, for the same
+    // reason a wheel step is: scroll position inside a pinned range moves nothing.
+    if (pinnedRef.current) { parkInBand(to); lockScroll(); lockedRef.current = true; }
     runTransition(from, to);
   };
 
@@ -478,6 +487,22 @@ export default forwardRef(function Scene1Icons(_props, ref) {
   // position and the committed state telling the same story. Setting the state alone
   // would leave them disagreeing, and the next real scroll event would read that
   // disagreement as a reason to change back.
+  // Move the page to the middle of `state`'s band and keep the recorded progress
+  // agreeing with it. While the row is pinned this is invisible — scroll position
+  // inside a pinned range changes nothing on screen — which is what lets both a wheel
+  // step and settle() above use it. Returns false when the trigger has no usable
+  // measurements yet, so callers can decline rather than scroll to a garbage position.
+  const parkInBand = (state) => {
+    const st = stRef.current;
+    if (!st) return false;
+    const span = st.end - st.start;
+    if (!(span > 0)) return false;
+    progRef.current = BAND_POS[state];
+    const y = st.start + BAND_POS[state] * span;
+    if (typeof st.scroll === 'function') st.scroll(y); else window.scrollTo(0, y);
+    return true;
+  };
+
   const stepState = (dir) => {
     const st = stRef.current;
     if (!st || busyRef.current || skippingRef.current) return;
@@ -485,11 +510,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     // Already at an end: nothing to step to, so the gesture is left to the page.
     // Scrolling on out of the section is exactly what should happen there.
     if (to < ST_ICONS || to > ST_MOBILE) return;
-    const span = st.end - st.start;
-    if (!(span > 0)) return;
-    progRef.current = BAND_POS[to];
-    const y = st.start + BAND_POS[to] * span;
-    if (typeof st.scroll === 'function') st.scroll(y); else window.scrollTo(0, y);
+    if (!parkInBand(to)) return;
     // Run the machine now rather than waiting for the trigger's own update: the
     // transition should start on the gesture, not a frame or two after it.
     settle();
@@ -523,7 +544,25 @@ export default forwardRef(function Scene1Icons(_props, ref) {
   // The scene resizes itself after mount (see the ResizeObserver above), which moves
   // the pin start/end. Without this the trigger keeps stale measurements and the pin
   // engages a few pixels off, which shows up as a jump when it latches.
-  useEffect(() => { ScrollTrigger.refresh(); }, [scale]);
+  //
+  // refresh(TRUE) — the "safe" form — rather than a bare refresh(). They are not the
+  // same call: bare refresh() FORCES the work through immediately, and that work is to
+  // revert every trigger on the page (all pins dropped back into normal flow), remeasure
+  // and re-apply. Land that mid-scroll and it is a frame of both showcase rows collapsing
+  // onto each other. It also bypasses the guard ScrollTrigger keeps for precisely this,
+  // which defers a refresh until scrolling stops. The ResizeObserver driving this fires
+  // on layout changes that happen WHILE the user is scrolling — images landing, the pin
+  // spacer resizing — so it is not a hypothetical race. The safe form asks for the same
+  // remeasure through that scheduler instead of around it.
+  //
+  // Skipped on the first pass: the trigger measures itself when it is created in the
+  // layout effect below, which on mount has already run by the time this does. A refresh
+  // there only buys a second full-page remeasure that changes nothing.
+  const measuredRef = useRef(false);
+  useEffect(() => {
+    if (!measuredRef.current) { measuredRef.current = true; return; }
+    ScrollTrigger.refresh(true);
+  }, [scale]);
 
   // ── Pinned phone reveal ───────────────────────────────────────────────────
   // The desktop dashboard lands via the intro timeline and stays. Scrolling into the
@@ -579,6 +618,14 @@ export default forwardRef(function Scene1Icons(_props, ref) {
           end: () => '+=' + window.innerHeight * 2.2,
           pin: true,
           pinSpacing: true,
+          // NO anticipatePin. It was tried here and removed: it engages the pin BEFORE
+          // the page reaches the trigger point, scaled by scroll velocity, which is
+          // exactly the wrong trade for this layout. A row that pins early is
+          // position:fixed and covering the viewport while the page is still showing the
+          // section above it — the fleet row and the road/hero on screen together, which
+          // is the "views mixed up" this was supposed to help. It buys a smoother latch
+          // at the cost of showing the row somewhere it does not belong, and here the
+          // scroll lock is the thing that has to hold the section still, not the latch.
           invalidateOnRefresh: true,
           onUpdate: checkScroll,
           // Also run on refresh so a reload partway down the section, or a resize,

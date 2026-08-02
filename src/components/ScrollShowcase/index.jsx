@@ -218,8 +218,22 @@ export default function ScrollShowcase() {
     };
   }, []);
 
+  // The section's z-index is load-bearing, not decoration. Both rows in here get pinned,
+  // which makes them position:fixed and floats them over whatever the page is showing —
+  // and both neighbours were winning the paint order against them:
+  //
+  //   · the road wrapper above is z-index 200 (see app/page.tsx), which beats an
+  //     auto-level element regardless of DOM order;
+  //   · the FeatureSlider section below is also auto-level, but comes LATER in the DOM,
+  //     which wins between two auto-level siblings.
+  //
+  // So a pinned row could be painted UNDER the road on one side and under the slider on
+  // the other: the section it is supposed to be covering showing straight through it.
+  // 210 clears the road's 200 and, being an explicit level, the auto sibling below, so a
+  // pinned row always paints over whatever it overlaps. It stays far below the navbar
+  // (99999), and z-index creates no containing block, so pinning itself is unaffected.
   return (
-    <section style={{ background: '#f5f7fa', width: '100%', position: 'relative' }}>
+    <section style={{ background: '#f5f7fa', width: '100%', position: 'relative', zIndex: 210 }}>
       {textSections.map((s, i) => {
         const SceneComponent = SceneComponents[i];
         // Zigzag on desktop: even index (0) → text left, animation right

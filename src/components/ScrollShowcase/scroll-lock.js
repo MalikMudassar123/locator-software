@@ -52,20 +52,54 @@ const bind = () => {
   window.addEventListener('wheel', stop, { passive: false });
   window.addEventListener('touchmove', stop, { passive: false });
   window.addEventListener('keydown', stopKeys, { passive: false });
-  window.addEventListener('scroll', snapBack, { passive: true });
+  // The same idempotent handler is registered twice, for two different reasons.
+  //
+  // WINDOW, CAPTURE PHASE — this is the one that fixes fast scrolling. A page scroll
+  // event is dispatched AT `document`, and `window` sits above it in the propagation
+  // path, so a CAPTURE listener here runs before every listener on document — including
+  // ScrollTrigger's, which runs its entire update synchronously inside that handler.
+  //
+  // That ordering is the whole point. Previously the position was corrected AFTER
+  // ScrollTrigger had already read the moved value and updated: for one frame the pin
+  // saw a scroll position it was never supposed to see, advanced its progress, and
+  // could run out of range and release the row while its animation was still playing.
+  // Correcting in the capture phase means ScrollTrigger reads the restored position and
+  // never observes the excursion at all. Capture ordering is guaranteed by the DOM, not
+  // by which module happened to register first, which is what makes this reliable
+  // rather than a lucky import order.
+  window.addEventListener('scroll', snapBack, { capture: true, passive: true });
+  // DOCUMENT — backstop only. GSAP notes in ScrollTrigger's own setup that some
+  // browsers stop dispatching scroll on the window when scrolling very fast while the
+  // document keeps firing. snapBack compares before it writes, so being called twice in
+  // a frame costs one comparison and nothing else.
+  document.addEventListener('scroll', snapBack, { passive: true });
 };
 
 const unbind = () => {
   window.removeEventListener('wheel', stop);
   window.removeEventListener('touchmove', stop);
   window.removeEventListener('keydown', stopKeys);
-  window.removeEventListener('scroll', snapBack);
+  // The capture flag is part of a listener's identity — removing without it would
+  // leave the capture-phase listener attached and the page permanently snapping back
+  // to a stale position.
+  window.removeEventListener('scroll', snapBack, { capture: true });
+  document.removeEventListener('scroll', snapBack);
 };
 
 export function lockScroll() {
   if (typeof window === 'undefined') return;
-  if (depth++ > 0) return;
+  // Stamped on EVERY acquisition, not only on 0→1. The two showcase scenes share this
+  // module, so a scroll fast enough to carry from one row into the next while the first
+  // is still mid-transition has both of them holding the lock at once. Stamping only on
+  // the first acquisition left the second scene's lock pointing at the FIRST scene's
+  // position, and snapBack then hauled the page back a whole section while the second
+  // scene played — both state machines running, two sections fighting over the frame.
+  //
+  // The intra-scene hand-over this refcount exists for (finishTransition → settle →
+  // lock → unlock) is unaffected: the page is frozen across it, so scrollY has not
+  // moved and the re-stamp writes back the same value.
   lockedY = window.scrollY;
+  if (depth++ > 0) return;
   bind();
 }
 

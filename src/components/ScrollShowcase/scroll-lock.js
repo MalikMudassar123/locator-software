@@ -15,16 +15,49 @@
 // cannot be released early. The user's next scroll gesture then advances the next
 // state — which is also what makes "one scroll, one state" literally true.
 //
-// HOW. preventDefault on the input events is what actually stops it. The scroll
-// listener is a backstop for movement that cannot be prevented — dragging the
-// scrollbar, and momentum already handed to the compositor on some trackpads — and
-// snaps the position back to where the lock was taken.
+// HOW. preventDefault on the input events is what actually stops it — wheel, touch
+// and the scrolling keys are all cancellable, and between them they are every
+// gesture a user makes deliberately.
 //
-// Refcounted, because finishTransition may start the next transition before
-// releasing its own lock; that hand-over must not leave the page briefly free.
+// WHAT THIS LOCK DELIBERATELY DOES NOT DO IS FIGHT. A scrollbar drag is not
+// cancellable: the only defence available against it is to write the position back
+// on every scroll event, and against a pointer that is still holding the thumb that
+// is a tug-of-war, once per frame, for as long as the user cares to hold it. The
+// page visibly judders, and ScrollTrigger — which updates in between — reads an
+// oscillating position and desynchronises. That was the "dragging the scrollbar
+// breaks the animation state" failure outright.
+//
+// So movement is answered by SIZE, not by reflex. Below BREAK_PX it is rounding,
+// scroll anchoring or a few pixels of compositor momentum: correct it, which costs
+// one comparison. Above it, the user is unmistakably driving the page somewhere,
+// and the lock yields — it releases completely and tells its holders, who resolve
+// their scenes against the position the user actually chose. Yielding is what makes
+// aggressive scrolling deterministic instead of merely resisted.
+//
+// Refcounted, because a scene may start its next transition before releasing the
+// lock for the last one; that hand-over must not leave the page briefly free.
 
 let depth = 0;
 let lockedY = 0;
+
+// Holder → how many locks that holder currently has outstanding. A Map rather than
+// a Set because of the hand-over above: a scene can legitimately hold two at once
+// (finish → settle → lock → unlock), and the second release must not evict a holder
+// that is still relying on being told when the lock breaks.
+const breakers = new Map();
+
+let watchdog = null;
+
+// How far the page may move under a lock before we stop correcting it and yield.
+// Sized to sit well above the few pixels an anchor adjustment or a rounded
+// device-pixel ratio produces, and well below the hundreds a scrollbar drag moves
+// on its very first event.
+const BREAK_PX = 140;
+
+// A transition whose completion callback never fires must not freeze the page for
+// good. Comfortably longer than the longest scene transition (~4.5s), short enough
+// that a user who hits the bug is inconvenienced rather than stranded.
+const MAX_LOCK_MS = 9000;
 
 const stop = (e) => e.preventDefault();
 
@@ -45,7 +78,11 @@ const stopKeys = (e) => {
 // which then finds the position already correct and stops. Without the comparison
 // this would recurse every frame.
 const snapBack = () => {
-  if (window.scrollY !== lockedY) window.scrollTo(0, lockedY);
+  if (!depth) return;
+  const drift = window.scrollY - lockedY;
+  if (!drift) return;
+  if (Math.abs(drift) > BREAK_PX) { breakLock(); return; }
+  window.scrollTo(0, lockedY);
 };
 
 const bind = () => {
@@ -64,9 +101,9 @@ const bind = () => {
   // saw a scroll position it was never supposed to see, advanced its progress, and
   // could run out of range and release the row while its animation was still playing.
   // Correcting in the capture phase means ScrollTrigger reads the restored position and
-  // never observes the excursion at all. Capture ordering is guaranteed by the DOM, not
-  // by which module happened to register first, which is what makes this reliable
-  // rather than a lucky import order.
+  // never observes the excursion at all. It is also what lets a BREAK be clean: the
+  // lock is torn down and its holders told before ScrollTrigger updates, so the very
+  // first update after a break already runs under the new, unlocked rules.
   window.addEventListener('scroll', snapBack, { capture: true, passive: true });
   // DOCUMENT — backstop only. GSAP notes in ScrollTrigger's own setup that some
   // browsers stop dispatching scroll on the window when scrolling very fast while the
@@ -86,26 +123,58 @@ const unbind = () => {
   document.removeEventListener('scroll', snapBack);
 };
 
-export function lockScroll() {
+// Tear the lock down completely and tell everyone who was holding it. Holders must
+// treat this as "your lock is already gone" — they do NOT call unlockScroll after
+// being notified, or they would decrement a refcount that has already been zeroed.
+function breakLock() {
+  if (!depth) return;
+  const held = [...breakers.keys()];
+  depth = 0;
+  breakers.clear();
+  clearTimeout(watchdog);
+  watchdog = null;
+  unbind();
+  // After unbind, so a holder is free to scroll, seek or lock again from inside its
+  // own callback without meeting the listeners it is being released from.
+  held.forEach((fn) => { try { fn(); } catch { /* a broken holder must not block the rest */ } });
+}
+
+/**
+ * Take the lock.
+ *
+ * @param onBreak called if the lock yields to an uncancellable scroll (or times
+ *                out) rather than being released normally. The caller's lock is
+ *                already gone by then — it must not call unlockScroll for it.
+ */
+export function lockScroll(onBreak) {
   if (typeof window === 'undefined') return;
   // Stamped on EVERY acquisition, not only on 0→1. The two showcase scenes share this
-  // module, so a scroll fast enough to carry from one row into the next while the first
-  // is still mid-transition has both of them holding the lock at once. Stamping only on
-  // the first acquisition left the second scene's lock pointing at the FIRST scene's
-  // position, and snapBack then hauled the page back a whole section while the second
-  // scene played — both state machines running, two sections fighting over the frame.
+  // module, so a hand-over that crosses from one to the other must re-anchor rather
+  // than leave the second scene's lock pointing at the first scene's position —
+  // snapBack would then haul the page back a whole section while the second scene
+  // played, with both state machines running.
   //
-  // The intra-scene hand-over this refcount exists for (finishTransition → settle →
-  // lock → unlock) is unaffected: the page is frozen across it, so scrollY has not
-  // moved and the re-stamp writes back the same value.
+  // The intra-scene hand-over this refcount exists for (finish → settle → lock →
+  // unlock) is unaffected: the page is frozen across it, so scrollY has not moved and
+  // the re-stamp writes back the same value.
   lockedY = window.scrollY;
+  if (onBreak) breakers.set(onBreak, (breakers.get(onBreak) || 0) + 1);
+  clearTimeout(watchdog);
+  watchdog = setTimeout(breakLock, MAX_LOCK_MS);
   if (depth++ > 0) return;
   bind();
 }
 
-export function unlockScroll() {
+export function unlockScroll(onBreak) {
   if (typeof window === 'undefined' || depth === 0) return;
+  if (onBreak) {
+    const held = (breakers.get(onBreak) || 0) - 1;
+    if (held > 0) breakers.set(onBreak, held);
+    else breakers.delete(onBreak);
+  }
   if (--depth > 0) return;
+  clearTimeout(watchdog);
+  watchdog = null;
   unbind();
 }
 
@@ -115,5 +184,8 @@ export function unlockScroll() {
 export function forceUnlockScroll() {
   if (typeof window === 'undefined' || depth === 0) return;
   depth = 0;
+  breakers.clear();
+  clearTimeout(watchdog);
+  watchdog = null;
   unbind();
 }

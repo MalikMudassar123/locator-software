@@ -48,35 +48,45 @@ const MARKETS: Market[] = [
 
 const AUTOPLAY_MS = 3600
 
+// Rendered twice back-to-back so the rail always has more of itself to
+// scroll into — that's what makes the loop endless instead of hitting a wall.
+const LOOP_MARKETS = [...MARKETS, ...MARKETS]
+
 export default function ContactPresence() {
   const trackRef = useRef<HTMLDivElement>(null)
-  const [atStart, setAtStart] = useState(true)
-  const [atEnd, setAtEnd] = useState(false)
   // Paused whenever the rail is being read or touched — autoplay should never
   // yank a card out from under someone.
   const [paused, setPaused] = useState(false)
+  // Distance from a card to its clone one set later — subtracting it once the
+  // clone is reached snaps back to the equivalent real position invisibly.
+  const loopWidthRef = useRef(0)
 
-  // Arrow enablement is read off real scroll position rather than an index, so
-  // it stays correct however the user got there — drag, wheel, or keyboard.
-  const sync = useCallback(() => {
+  const measureLoopWidth = useCallback(() => {
     const el = trackRef.current
     if (!el) return
-    const max = el.scrollWidth - el.clientWidth
-    setAtStart(el.scrollLeft <= 2)
-    setAtEnd(el.scrollLeft >= max - 2)
+    const cards = el.querySelectorAll<HTMLElement>('.ctp-card')
+    if (cards.length < MARKETS.length * 2) return
+    loopWidthRef.current = cards[MARKETS.length].offsetLeft - cards[0].offsetLeft
   }, [])
 
   useEffect(() => {
+    measureLoopWidth()
+    window.addEventListener('resize', measureLoopWidth)
+    return () => window.removeEventListener('resize', measureLoopWidth)
+  }, [measureLoopWidth])
+
+  // Once a scroll (smooth or dragged) settles past the first copy, snap back
+  // by one loop-width so there's always another copy ahead to scroll into.
+  useEffect(() => {
     const el = trackRef.current
     if (!el) return
-    sync()
-    el.addEventListener('scroll', sync, { passive: true })
-    window.addEventListener('resize', sync)
-    return () => {
-      el.removeEventListener('scroll', sync)
-      window.removeEventListener('resize', sync)
+    const onSettle = () => {
+      const loopWidth = loopWidthRef.current
+      if (loopWidth && el.scrollLeft >= loopWidth) el.scrollLeft -= loopWidth
     }
-  }, [sync])
+    el.addEventListener('scrollend', onSettle)
+    return () => el.removeEventListener('scrollend', onSettle)
+  }, [])
 
   // Step by one card + gap, so a nudge always lands on a snap point.
   const scrollBy = useCallback((dir: 1 | -1) => {
@@ -84,21 +94,23 @@ export default function ContactPresence() {
     if (!el) return
     const card = el.querySelector<HTMLElement>('.ctp-card')
     const step = card ? card.offsetWidth + 18 : el.clientWidth * 0.8
+    // Stepping back past the start? Jump to the equivalent spot in the
+    // second copy first, so "previous" also loops forever.
+    const loopWidth = loopWidthRef.current
+    if (dir === -1 && loopWidth && el.scrollLeft - step < 0) el.scrollLeft += loopWidth
     el.scrollBy({ left: dir * step, behavior: 'smooth' })
   }, [])
 
-  // Autoplay: advance a card at a time, rewind to the head at the end.
+  // Autoplay: advance a card at a time, forever — the loop wrap above keeps
+  // there from ever being a "last" card to stop at.
   // Skipped entirely for reduced-motion users and while the tab is hidden.
   useEffect(() => {
     if (paused) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     const id = setInterval(() => {
-      const el = trackRef.current
-      if (!el || document.hidden) return
-      const max = el.scrollWidth - el.clientWidth
-      if (el.scrollLeft >= max - 2) el.scrollTo({ left: 0, behavior: 'smooth' })
-      else scrollBy(1)
+      if (document.hidden) return
+      scrollBy(1)
     }, AUTOPLAY_MS)
 
     return () => clearInterval(id)
@@ -158,8 +170,6 @@ export default function ContactPresence() {
         .ctp-arrow.r:hover:not(:disabled) { transform: translateY(-50%) translateX(3px) scale(1.06); }
         .ctp-arrow:active:not(:disabled) { transform: translateY(-50%) scale(.94); }
         .ctp-arrow:focus-visible { outline: none; box-shadow: 0 0 0 4px #fff, 0 0 0 7px #1360ee; }
-        /* Kept in the layout when spent, so the rail doesn't twitch. */
-        .ctp-arrow:disabled { opacity: 0; pointer-events: none; }
         .ctp-arrow svg { transition: transform .2s ${EASE}; }
         .ctp-arrow:hover:not(:disabled) svg { transform: scale(1.14); }
 
@@ -184,11 +194,13 @@ export default function ContactPresence() {
         }
         .ctp-fade.l { left: 0; background: linear-gradient(90deg, #f8fafe 12%, rgba(248,250,254,0)); }
         .ctp-fade.r { right: 0; background: linear-gradient(270deg, #f8fafe 12%, rgba(248,250,254,0)); }
-        .ctp-fade.off { opacity: 0; }
 
         .ctp-card {
           position: relative; overflow: hidden; flex: 0 0 auto;
-          width: clamp(248px, 30vw, 296px); scroll-snap-align: start;
+          /* Three cards + their two gaps exactly fill the visible rail, at any
+             desktop width — not pegged to the 1180px design width. */
+          width: calc((100% - 36px) / 3); min-width: 230px; max-width: 340px;
+          scroll-snap-align: start;
           display: flex; flex-direction: column;
           padding: clamp(22px,2.4vw,28px);
           background: #fff; border: 1px solid #e7ebf3; border-radius: 22px;
@@ -280,12 +292,12 @@ export default function ContactPresence() {
         onBlurCapture={() => setPaused(false)}
         onTouchStart={() => setPaused(true)}
       >
-        <div className={`ctp-fade l${atStart ? ' off' : ''}`} aria-hidden="true" />
-        <div className={`ctp-fade r${atEnd ? ' off' : ''}`} aria-hidden="true" />
+        <div className="ctp-fade l" aria-hidden="true" />
+        <div className="ctp-fade r" aria-hidden="true" />
 
         <button
           type="button" className="ctp-arrow l" aria-label="Previous markets"
-          onClick={() => scrollBy(-1)} disabled={atStart}
+          onClick={() => scrollBy(-1)}
         >
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
             <path d="M15 6 9 12l6 6" />
@@ -293,7 +305,7 @@ export default function ContactPresence() {
         </button>
         <button
           type="button" className="ctp-arrow r" aria-label="Next markets"
-          onClick={() => scrollBy(1)} disabled={atEnd}
+          onClick={() => scrollBy(1)}
         >
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
             <path d="m9 6 6 6-6 6" />
@@ -301,45 +313,52 @@ export default function ContactPresence() {
         </button>
 
         <div className="ctp-track" ref={trackRef} tabIndex={0} role="region" aria-label="Markets Locator operates in">
-          {MARKETS.map(m => (
-            <article className={`ctp-card${m.live ? '' : ' soon'}`} key={m.country}>
-              <div className="ctp-card-top">
-                <span className="ctp-flag">
-                  <Image src={m.flag} alt={`Flag of ${m.country}`} width={46} height={46} />
+          {LOOP_MARKETS.map((m, i) => {
+            const isClone = i >= MARKETS.length
+            return (
+              <article
+                className={`ctp-card${m.live ? '' : ' soon'}`}
+                key={`${m.country}-${i}`}
+                aria-hidden={isClone || undefined}
+              >
+                <div className="ctp-card-top">
+                  <span className="ctp-flag">
+                    <Image src={m.flag} alt={`Flag of ${m.country}`} width={46} height={46} />
+                  </span>
+                  <h3 className="ctp-country">{m.country}</h3>
+                </div>
+
+                <span className={`ctp-status ${m.live ? 'on' : 'off'}`}>
+                  <i />{m.live ? 'Live' : 'Coming Soon'}
                 </span>
-                <h3 className="ctp-country">{m.country}</h3>
-              </div>
 
-              <span className={`ctp-status ${m.live ? 'on' : 'off'}`}>
-                <i />{m.live ? 'Live' : 'Coming Soon'}
-              </span>
+                {m.live ? (
+                  <>
+                    <p className="ctp-place">{m.place}</p>
+                    {m.phone && (
+                      <a className="ctp-phone" href={m.phoneHref} tabIndex={isClone ? -1 : undefined}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1360ee" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.73 12 19.79 19.79 0 0 1 1.67 3.43 2 2 0 0 1 3.66 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8 8.09a16 16 0 0 0 5.91 5.91l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                        </svg>
+                        {m.phone}
+                      </a>
+                    )}
+                  </>
+                ) : (
+                  <p className="ctp-soon-copy">
+                    We&rsquo;re preparing to launch here. Register your interest and we&rsquo;ll be in touch first.
+                  </p>
+                )}
 
-              {m.live ? (
-                <>
-                  <p className="ctp-place">{m.place}</p>
-                  {m.phone && (
-                    <a className="ctp-phone" href={m.phoneHref}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1360ee" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.73 12 19.79 19.79 0 0 1 1.67 3.43 2 2 0 0 1 3.66 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8 8.09a16 16 0 0 0 5.91 5.91l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-                      </svg>
-                      {m.phone}
-                    </a>
-                  )}
-                </>
-              ) : (
-                <p className="ctp-soon-copy">
-                  We&rsquo;re preparing to launch here. Register your interest and we&rsquo;ll be in touch first.
-                </p>
-              )}
-
-              <a className="ctp-cta" href={m.href}>
-                {m.cta}
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14M13 6l6 6-6 6" />
-                </svg>
-              </a>
-            </article>
-          ))}
+                <a className="ctp-cta" href={m.href} tabIndex={isClone ? -1 : undefined}>
+                  {m.cta}
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </a>
+              </article>
+            )
+          })}
         </div>
       </div>
     </section>

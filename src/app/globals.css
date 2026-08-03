@@ -921,13 +921,22 @@ h6 {
        - the anim panel must NOT be position:sticky. Sticky and pin are two answers
          to the same problem and they fight: sticky keeps the panel in view by
          scrolling it inside a tall row, while the pin freezes the whole row. Used
-         together the panel drifts within the frozen frame. */
+         together the panel drifts within the frozen frame;
+       - the row must be OPAQUE. A pinned row is position:fixed and floats over the
+         page, and this one had no background of its own, so anything that ended up
+         behind it showed straight through — a released neighbouring row, the section
+         below, the road. It cost nothing to be right about while everything was in
+         its place, and cost a frame of two sections visibly on top of each other any
+         time they were not. The colour is the showcase section's own #f5f7fa, which
+         is what was showing through, so this changes no pixel that was ever correct
+         and covers every one that was not. */
   .ss-row {
     flex-direction: row;
     padding: 0 48px;
     height: 100vh;
     align-items: flex-start;
     justify-content: center;
+    background: #f5f7fa;
     /* Gutter BETWEEN the copy and the mockups, owned by the row so it holds in both
        zigzag directions automatically. This used to be attempted with margins on the
        anim panel, which put the 48px on the panel's OUTER side — away from the page

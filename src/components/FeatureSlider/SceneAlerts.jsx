@@ -280,7 +280,11 @@ export default forwardRef(function SceneAlerts(_props, ref) {
       style={{ position: 'relative', width: '100%', height: H * scale, overflow: 'hidden' }}
     >
     <div style={{
-      position: 'absolute', top: 0, left: 0,
+      // Centre the canvas when the panel is wider than it is. Scale caps at 1, so
+      // past W the canvas stops growing and `left: 0` left it hugging the left edge
+      // with every spare pixel dumped on the right. Visual width is W × scale, so
+      // pulling back half of that puts its centre on the panel's centre.
+      position: 'absolute', top: 0, left: '50%', marginLeft: -(W * scale) / 2,
       width: W, height: H,
       transform: `scale(${scale})`, transformOrigin: 'top left',
     }}>

@@ -91,6 +91,21 @@ export default function Navbar() {
       <style>{`
         .hn-chev { transition: transform .3s cubic-bezier(.22,.61,.36,1); flex-shrink: 0; }
 
+        /* ── Mobile drawer sizing ─────────────────────────────────────────────
+           100vh on mobile is the viewport WITH the URL bar retracted, so on first
+           paint the drawer is taller than what is actually visible and the bottom
+           CTA sits below the fold — unreachable until the user scrolls the page
+           behind it. dvh tracks the visible viewport; the vh line stays as the
+           fallback for browsers that don't know dvh.
+           inset instead of width:100vw: 100vw counts the scrollbar gutter on
+           desktop, which pushed the drawer a few px wider than the viewport. */
+        .hn-drawer {
+          position: fixed;
+          inset: 0;
+          height: 100vh;
+          height: 100dvh;
+        }
+
         /* ── Shutter mega-menu (drops from the top, full width) ─────────────── */
         .hn-backdrop {
           position: fixed; inset: 80px 0 0 0; z-index: 1000;
@@ -392,13 +407,8 @@ export default function Navbar() {
       {/* Mobile drawer — rendered via portal to escape any ancestor containing block */}
       {open && mounted && createPortal(
         <div
-          className="mobile-drawer-enter"
+          className="mobile-drawer-enter hn-drawer"
           style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
             zIndex: 99999,
             display: 'flex',
             flexDirection: 'column',

@@ -279,7 +279,8 @@ export default forwardRef(function SceneDashboard(_props, ref) {
       style={{ position: 'relative', width: '100%', height: H * scale, overflow: 'hidden' }}
     >
     <div style={{
-      position: 'absolute', top: 0, left: 0,
+      // Centre the canvas when the panel is wider than it is — see SceneAlerts.
+      position: 'absolute', top: 0, left: '50%', marginLeft: -(W * scale) / 2,
       width: W, height: H,
       transform: `scale(${scale})`, transformOrigin: 'top left',
     }}>

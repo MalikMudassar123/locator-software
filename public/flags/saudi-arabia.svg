@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" role="img" aria-label="Flag of Saudi Arabia">
+  <rect width="900" height="600" fill="#165D31"/>
+  <!-- Simplified emblem: the sword, with the inscription suggested as a band.
+       Swap in the official flag artwork for exact reproduction. -->
+  <g fill="#FFFFFF">
+    <rect x="215" y="392" width="440" height="26" rx="13"/>
+    <path d="M655 405 L740 380 L740 430 Z"/>
+    <rect x="180" y="382" width="46" height="46" rx="12"/>
+  </g>
+  <g fill="none" stroke="#FFFFFF" stroke-width="26" stroke-linecap="round">
+    <path d="M215 250 h150"/>
+    <path d="M405 250 h120"/>
+    <path d="M565 250 h120"/>
+    <path d="M270 180 h360"/>
+  </g>
+</svg>

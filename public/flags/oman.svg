@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" role="img" aria-label="Flag of Oman">
+  <rect x="260" width="640" height="200" fill="#FFFFFF"/>
+  <rect x="260" y="200" width="640" height="200" fill="#CE1126"/>
+  <rect x="260" y="400" width="640" height="200" fill="#008000"/>
+  <rect width="260" height="600" fill="#CE1126"/>
+  <!-- Simplified khanjar-and-swords emblem. Swap in the official artwork for
+       exact reproduction. -->
+  <g fill="none" stroke="#FFFFFF" stroke-width="17" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M60 96 L200 176"/>
+    <path d="M200 96 L60 176"/>
+    <path d="M130 92 v52"/>
+    <path d="M104 144 h52 v34 a26 26 0 0 1 -52 0 Z"/>
+    <path d="M112 178 q18 44 18 60 q0 -16 18 -60"/>
+  </g>
+</svg>

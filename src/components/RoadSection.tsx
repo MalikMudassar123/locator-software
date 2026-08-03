@@ -416,7 +416,7 @@ export default function RoadSection() {
                       background: 'rgba(255, 255, 255, 0.72)',
                       backdropFilter: 'blur(18px) saturate(150%)',
                       WebkitBackdropFilter: 'blur(18px) saturate(150%)',
-                      borderRadius: '18px',
+                      borderRadius: '20px',
                       border: '1px solid rgba(255, 255, 255, 0.7)',
                       boxShadow: `
                         inset 0 1px 0 rgba(255, 255, 255, 0.6),
@@ -588,10 +588,10 @@ export default function RoadSection() {
                         The card's own shadow already carries the depth. */}
                     <div style={{
                       position: 'absolute',
-                      bottom: '-6px',
+                      bottom: '-5px',
                       left: '50%',
-                      width: '14px',
-                      height: '14px',
+                      width: '13px',
+                      height: '13px',
                       background: 'rgba(255, 255, 255, 0.72)',
                       backdropFilter: 'blur(18px) saturate(150%)',
                       WebkitBackdropFilter: 'blur(18px) saturate(150%)',
@@ -599,7 +599,7 @@ export default function RoadSection() {
                       borderTop: 'none',
                       borderLeft: 'none',
                       transform: 'translateX(-50%) rotate(45deg)',
-                      borderRadius: '3px',
+                      borderRadius: '5px',
                       clipPath: 'polygon(100% 0%, 100% 100%, 0% 100%)',
                     }} />
                   </div>
@@ -656,7 +656,7 @@ export default function RoadSection() {
                   background: 'rgba(255, 255, 255, 0.72)',
                   backdropFilter: 'blur(18px) saturate(150%)',
                   WebkitBackdropFilter: 'blur(18px) saturate(150%)',
-                  borderRadius: '18px',
+                  borderRadius: '20px',
                   border: '1px solid rgba(255, 255, 255, 0.7)',
                   boxShadow: `
                     inset 0 1px 0 rgba(255, 255, 255, 0.6),
@@ -815,10 +815,10 @@ export default function RoadSection() {
                     rather than left to hide behind a translucent card. */}
                 <div style={{
                   position: 'absolute',
-                  bottom: '-6px',
+                  bottom: '-5px',
                   left: '50%',
-                  width: '14px',
-                  height: '14px',
+                  width: '13px',
+                  height: '13px',
                   background: 'rgba(255, 255, 255, 0.72)',
                   backdropFilter: 'blur(18px) saturate(150%)',
                   WebkitBackdropFilter: 'blur(18px) saturate(150%)',
@@ -826,7 +826,7 @@ export default function RoadSection() {
                   borderTop: 'none',
                   borderLeft: 'none',
                   transform: 'translateX(-50%) rotate(45deg)',
-                  borderRadius: '3px',
+                  borderRadius: '5px',
                   clipPath: 'polygon(100% 0%, 100% 100%, 0% 100%)',
                 }} />
               </div>

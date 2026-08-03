@@ -1,169 +1,227 @@
+'use client'
+
+import { useState } from 'react'
+import Image from 'next/image'
+
+const EASE = 'cubic-bezier(.22,.61,.36,1)'
+
+// Same expanding-rail pattern as the Industries section on
+// /service/video-telematics — real AI-camera frames with their REC/HUD overlay
+// baked in, so images use object-fit: contain and never get cropped.
 const CARDS = [
   {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="m15 10 4.553-2.069A1 1 0 0 1 21 8.871v6.258a1 1 0 0 1-1.447.894L15 14"/>
-        <rect x="2" y="7" width="13" height="10" rx="2"/>
-      </svg>
-    ),
     title: 'LIVE HD Video',
     desc: 'Stream real-time HD road and driver footage to improve driver behaviour, retrieve video on-demand, and enforce safer driving across your fleet.',
+    // A dark AI-camera frame like the other three — the light dashboard-UI
+    // screenshot that was here read as a bright slab against the panel.
+    image: '/service_page/Industries we serve/Transportation & Logistics.webp',
   },
   {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
-        <path d="m9 12 2 2 4-4"/>
-      </svg>
-    ),
     title: 'Collision Prevention',
     desc: 'Analyse incidents with video evidence and deploy AI audible alerts to warn drivers instantly, reducing future collision risks.',
+    image: '/service_page/Industries we serve/Field Services & Recovery Vehicles.webp',
   },
   {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/>
-        <circle cx="12" cy="12" r="3"/>
-        <path d="M12 5V3M12 21v-2M5 12H3M21 12h-2"/>
-      </svg>
-    ),
-    title: 'Operational Efficiency',
+    title: 'Driver Monitoring',
     desc: 'AI driver monitoring detects drowsiness and distraction — yawning, eye closure, phone use, looking away — helping managers take proactive safety actions.',
+    image: '/service_page/Industries we serve/School Districtse.webp',
   },
   {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M3 3v16a2 2 0 0 0 2 2h16"/>
-        <path d="m19 9-5 5-4-4-3 3"/>
-      </svg>
-    ),
-    title: 'Cost Savings',
+    title: 'Cargo & Cost Savings',
     desc: 'Cut costs from accidents, insurance claims, vehicle damage, and fraud disputes with undeniable recorded proof that protects your business.',
+    image: '/service_page/Industries we serve/Warehouse.webp',
   },
 ]
 
+const STATS = [
+  { v: '4K', l: 'Camera resolution' },
+  { v: '24/7', l: 'Live monitoring' },
+  { v: 'AI', l: 'Driver detection' },
+]
+
 export default function DashcamShowcase() {
+  const [active, setActive] = useState(0)
+
   return (
     <>
       <style>{`
-        .dc-wrap {
-          position: relative;
-          border-radius: 34px;
-          overflow: hidden;
-          isolation: isolate;
-          background: #1A1E25;
-          padding: clamp(52px,6vw,76px) clamp(28px,5vw,56px);
-          color: #fff;
-        }
-        .dc-wrap::before { content: none; }
-        .dc-wrap::after { content: none; }
-
-        @keyframes dcRingPulse {
-          0%,100% { opacity: .08; transform: scale(1); }
-          50%      { opacity: .14; transform: scale(1.04); }
-        }
-        .dc-ring {
-          position: absolute; border-radius: 50%;
-          border: 1px solid rgba(255,255,255,.15);
-          pointer-events: none;
-          animation: dcRingPulse 6s ease-in-out infinite;
+        .dc-rail {
+          display: flex; gap: clamp(8px,1vw,12px);
+          height: clamp(420px,46vw,560px);
         }
 
-        /* horizontal card rows */
-        .dc-card-row {
-          display: flex;
-          gap: 16px;
-          align-items: flex-start;
-          padding: 18px 0;
-          border-bottom: 1px solid rgba(255,255,255,.1);
+        /* Panel is a column: media zone on top, text zone below it in normal
+           flow — never stacked/overlaid, so the text can't cover the photo. */
+        .dc-panel {
+          position: relative; overflow: hidden;
+          display: flex; flex-direction: column;
+          flex: 1 1 0; min-width: 0;
+          border: 0; padding: 0; cursor: pointer;
+          border-radius: clamp(18px,2vw,24px);
+          background: #0d1426;
+          font-family: inherit; text-align: left;
+          transition: flex-grow .62s ${EASE}, box-shadow .5s ${EASE};
+          box-shadow: 0 18px 40px -26px rgba(13,20,38,.5);
         }
-        .dc-card-row:first-child { padding-top: 0; }
-        .dc-card-row:last-child  { border-bottom: none; padding-bottom: 0; }
-
-        .dc-card-icon {
-          width: 44px; height: 44px; flex-shrink: 0;
-          border-radius: 13px;
-          background: rgba(255,255,255,.14);
-          border: 1px solid rgba(255,255,255,.22);
-          display: grid; place-items: center;
-          font-size: 20px;
+        /* The open panel takes the space; the rest stay as slim spines. */
+        .dc-panel[aria-expanded="true"] {
+          flex-grow: 5.4;
+          box-shadow: 0 40px 80px -34px rgba(13,20,38,.62);
         }
 
-        @media (max-width: 880px) {
-          .dc-outer-grid { grid-template-columns: 1fr !important; }
+        .dc-media {
+          position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden;
+          background: #0b1120;
+        }
+        /* 16:9 frames inside a tall panel leave letterbox bands — this soft
+           glow behind them makes that space read as intentional depth. */
+        .dc-media::before {
+          content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+          background: radial-gradient(58% 58% at 50% 45%, rgba(19,96,238,.18), transparent 72%);
+        }
+        .dc-panel img {
+          position: absolute; inset: 0;
+          width: 100%; height: 100%; object-fit: contain;
+          transition: transform .7s ${EASE}, filter .5s ${EASE};
+        }
+        .dc-veil {
+          position: absolute; inset: 0;
+          background: rgba(9,14,28,.55);
+          transition: background .5s ${EASE};
+        }
+        .dc-panel[aria-expanded="true"] .dc-veil { background: rgba(9,14,28,.08); }
+        .dc-panel[aria-expanded="false"]:hover img { transform: scale(1.06); }
+
+        /* Accent bar marks the open panel. */
+        .dc-panel::after {
+          content: ''; position: absolute; left: 0; right: 0; bottom: 0;
+          height: 3px; background: #1360ee;
+          transform: scaleX(0); transform-origin: left;
+          transition: transform .5s ${EASE}; z-index: 3;
+        }
+        .dc-panel[aria-expanded="true"]::after { transform: scaleX(1); }
+
+        /* ── Collapsed: vertical spine label, over the media zone only ── */
+        .dc-spine {
+          position: absolute; inset: 0; z-index: 2;
+          display: flex; align-items: center; justify-content: center;
+          writing-mode: vertical-rl; transform: rotate(180deg);
+          padding: 26px 0;
+          font-size: clamp(13px,1.25vw,16px); font-weight: 800;
+          letter-spacing: .1em; text-transform: uppercase; color: #fff;
+          white-space: nowrap; overflow: hidden;
+          text-shadow: 0 2px 12px rgba(9,14,28,.85), 0 1px 3px rgba(9,14,28,.7);
+          transition: opacity .34s ${EASE};
+        }
+        .dc-panel[aria-expanded="true"] .dc-spine { opacity: 0; pointer-events: none; }
+
+        /* ── Expanded: solid text row below the photo ── */
+        .dc-body {
+          flex: 0 0 auto; position: relative; z-index: 2;
+          max-height: 0; opacity: 0; overflow: hidden;
+          padding: 0 clamp(20px,2.2vw,28px);
+          background: #0a0f1e;
+          border-top: 1px solid rgba(255,255,255,.08);
+          transition: max-height .5s ${EASE}, opacity .4s ${EASE}, padding .5s ${EASE};
+        }
+        .dc-panel[aria-expanded="true"] .dc-body {
+          max-height: 280px; opacity: 1;
+          padding: clamp(18px,2.2vw,26px) clamp(20px,2.2vw,28px);
+        }
+        .dc-body h3 {
+          margin: 0 0 10px;
+          font-size: clamp(20px,2.2vw,29px); font-weight: 800;
+          letter-spacing: -.02em; line-height: 1.12; color: #fff;
+        }
+        .dc-body p {
+          margin: 0; max-width: 52ch;
+          font-size: clamp(13px,1.1vw,14.5px); line-height: 1.6;
+          color: rgba(255,255,255,.9);
+        }
+
+        /* Stats sit under the rail as a quiet footer to the section. */
+        .dc-stats {
+          display: flex; flex-wrap: wrap; gap: clamp(20px,3vw,44px);
+          justify-content: center;
+          margin-top: clamp(28px,3.4vw,40px);
+        }
+        .dc-stat { border-left: 2px solid #d7e1f4; padding-left: 14px; }
+        .dc-stat b { display: block; font-size: 19px; font-weight: 800; letter-spacing: -.02em; color: #1d1d1f; }
+        .dc-stat span { display: block; margin-top: 3px; font-size: 12px; font-weight: 600; color: #8e97a8; }
+
+        /* Stack on narrow screens — spines don't work at phone widths. */
+        @media (max-width: 860px) {
+          .dc-rail { flex-direction: column; height: auto; }
+          .dc-panel { flex: 0 0 auto; height: 92px; transition: height .55s ${EASE}; }
+          .dc-panel[aria-expanded="true"] { height: 430px; }
+          .dc-panel[aria-expanded="true"] .dc-body { max-height: 210px; }
+          .dc-spine {
+            writing-mode: horizontal-tb; transform: none;
+            justify-content: flex-start; padding: 0 24px;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .dc-panel, .dc-panel img, .dc-veil, .dc-body, .dc-spine, .dc-panel::after {
+            transition: none;
+          }
         }
       `}</style>
 
-      <section id="dashcam" style={{ padding: 'clamp(40px,5vw,56px) 28px', scrollMarginTop: '84px' }}>
-        <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
-          <div className="dc-wrap">
+      <section id="dashcam" style={{ padding: 'clamp(56px,7vw,88px) 28px', background: '#fff', scrollMarginTop: '84px' }}>
+        <div style={{ maxWidth: '1180px', margin: '0 auto' }}>
+          <div data-reveal style={{ textAlign: 'center', maxWidth: '680px', margin: '0 auto clamp(36px,5vw,52px)' }}>
+            <span style={{ fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
+              <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
+              AI Video Telematics
+            </span>
+            <h2 style={{ margin: 0, fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+              AI-Powered Dash Cameras &amp; MDVR
+            </h2>
+            <p style={{ margin: '16px 0 0', fontSize: 'clamp(14px,1.2vw,15.5px)', lineHeight: 1.7, color: '#6e6e73' }}>
+              Real-time driver monitoring, cargo surveillance, and multi-camera recording for trucks,
+              taxis, buses, delivery vehicles, and commercial fleets.
+            </p>
+          </div>
 
-            {/* Rings */}
-            <div className="dc-ring" style={{ width: '420px', height: '420px', top: '-140px', right: '-100px', animationDelay: '0s' }} />
-            <div className="dc-ring" style={{ width: '280px', height: '280px', top: '-60px', right: '-20px', animationDelay: '-3s' }} />
-
-            <div style={{ position: 'relative', zIndex: 1 }}>
-              <div
-                className="dc-outer-grid"
-                style={{ display: 'grid', gridTemplateColumns: '1fr 1.45fr', gap: '56px', alignItems: 'center' }}
+          <div className="dc-rail" data-reveal>
+            {CARDS.map((c, i) => (
+              <button
+                key={c.title}
+                className="dc-panel"
+                aria-expanded={i === active}
+                aria-label={c.title}
+                onMouseEnter={() => setActive(i)}
+                onFocus={() => setActive(i)}
+                onClick={() => setActive(i)}
               >
-
-                {/* ── Left: heading + stats ── */}
-                <div data-reveal="left">
-                  <span style={{
-                    display: 'block', fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800,
-                    letterSpacing: '.04em', color: 'rgba(255,255,255,.85)',
-                    marginBottom: '16px', textTransform: 'uppercase' as const,
-                  }}>
-                    <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: 'rgba(255,255,255,.5)', borderRadius: '2px' }} /></span>
-                    AI Video Telematics
-                  </span>
-
-                  <h2 style={{ fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, letterSpacing: '-.015em', lineHeight: 1.25, color: '#fff', margin: '0 0 18px' }}>
-                    AI-Powered Dash Cameras &amp; MDVR
-                  </h2>
-
-                  <p style={{ fontSize: 'clamp(14px,1.45vw,16px)', lineHeight: 1.65, color: 'rgba(255,255,255,.78)', margin: '0 0 12px' }}>
-                    Improve fleet safety with real-time driver monitoring, cargo surveillance, and multi-camera recording for trucks, taxis, buses, delivery vehicles, and commercial fleets.
-                  </p>
-                  <p style={{ fontSize: 'clamp(14px,1.45vw,16px)', lineHeight: 1.65, color: 'rgba(255,255,255,.6)', margin: 0 }}>
-                    Monitor vehicles on the road, drivers en-route, cargo areas, loading operations, parking yards, depots, and customer delivery points.
-                  </p>
-
-                  {/* Stats */}
-                  <div style={{ display: 'flex', gap: '20px', marginTop: '32px', paddingTop: '28px', borderTop: '1px solid rgba(255,255,255,.10)' }}>
-                    {[
-                      { v: '4K', l: 'Camera resolution' },
-                      { v: '24/7', l: 'Live monitoring' },
-                      { v: 'AI', l: 'Driver detection' },
-                    ].map((s, i) => (
-                      <div key={i} style={{ borderLeft: '2px solid rgba(255,255,255,.3)', paddingLeft: '14px' }}>
-                        <div style={{ fontSize: '17px', fontWeight: 800, color: '#fff', letterSpacing: '-.02em' }}>{s.v}</div>
-                        <div style={{ fontSize: '11px', color: 'rgba(255,255,255,.6)', marginTop: '2px', fontWeight: 500 }}>{s.l}</div>
-                      </div>
-                    ))}
-                  </div>
+                <div className="dc-media">
+                  <Image
+                    src={c.image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 860px) 100vw, 60vw"
+                    style={{ objectFit: 'contain' }}
+                  />
+                  <span className="dc-veil" />
+                  <span className="dc-spine">{c.title}</span>
                 </div>
 
-                {/* ── Right: vertical card rows ── */}
-                <div data-reveal="right" data-reveal-delay="120" style={{ background: '#2A2B2F', borderRadius: '22px', border: '1px solid rgba(255,255,255,.08)', padding: '8px 24px 8px' }}>
-                  {CARDS.map((c, i) => (
-                    <div key={i} className="dc-card-row">
-                      <div className="dc-card-icon">{c.icon}</div>
-                      <div>
-                        <div style={{ fontSize: '14.5px', fontWeight: 700, color: '#fff', marginBottom: '5px', letterSpacing: '-.01em' }}>
-                          {c.title}
-                        </div>
-                        <div style={{ fontSize: '13px', lineHeight: 1.6, color: 'rgba(255,255,255,.65)' }}>
-                          {c.desc}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                <div className="dc-body">
+                  <h3>{c.title}</h3>
+                  <p>{c.desc}</p>
                 </div>
+              </button>
+            ))}
+          </div>
 
+          <div className="dc-stats" data-reveal>
+            {STATS.map(s => (
+              <div className="dc-stat" key={s.l}>
+                <b>{s.v}</b>
+                <span>{s.l}</span>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>

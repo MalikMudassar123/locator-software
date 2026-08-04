@@ -24,7 +24,7 @@ const serviceLinks = [
 
 const supportLinks = [
   { href: '/software#faq', label: 'FAQ' },
-  { href: '/software#benefits', label: 'Benefits Of GPS Tracking' },
+  { href: '/benefits-of-gps-tracking', label: 'Benefits Of GPS Tracking' },
 ]
 
 const socialLinks = [

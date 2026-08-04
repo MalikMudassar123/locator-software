@@ -3,6 +3,7 @@ import { Poppins, Inter } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/config/site";
 import ScrollRestoration from "@/components/ScrollRestoration";
+import ContactDock from "@/components/common/ContactDock";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -97,6 +98,9 @@ export default function RootLayout({
         />
         <ScrollRestoration />
         {children}
+        {/* Last in the body so it paints over page content without needing to
+            out-bid anyone on z-index. It is position:fixed and adds no height. */}
+        <ContactDock />
       </body>
     </html>
   );

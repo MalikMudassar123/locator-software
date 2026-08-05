@@ -28,12 +28,12 @@ export default function BenefitsClosing() {
 
         .bgc-quote {
           margin: 0;
-          font-size: clamp(21px,2.9vw,34px); font-weight: 700;
+          font-size: max(clamp(21px,2.9vw,34px), min(2.361vw, 49.3px)); font-weight: 700;
           line-height: 1.36; letter-spacing: -.028em; color: #1d1d1f;
         }
         .bgc-note {
           margin: clamp(22px,3vw,30px) 0 0;
-          font-size: clamp(14px,1.25vw,15.5px); line-height: 1.75; color: #6e6e73;
+          font-size: max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px)); line-height: 1.75; color: #6e6e73;
         }
       `}</style>
 

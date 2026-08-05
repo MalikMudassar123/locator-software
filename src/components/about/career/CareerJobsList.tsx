@@ -47,7 +47,7 @@ export default function CareerJobsList() {
 
         .cjl-h2 {
           margin: 0 0 clamp(28px,4vw,44px); text-align: center;
-          font-size: clamp(24px,3vw,36px); font-weight: 800; letter-spacing: -.02em; color: #1d1d1f;
+          font-size: max(clamp(24px,3vw,36px), min(2.500vw, 52.2px)); font-weight: 800; letter-spacing: -.02em; color: #1d1d1f;
           text-transform: uppercase;
         }
 
@@ -65,11 +65,11 @@ export default function CareerJobsList() {
           transition: border-color .18s ${EASE}, box-shadow .18s ${EASE};
         }
         .cjl-search:focus-within { border-color: #1360ee; box-shadow: 0 0 0 4px rgba(19,96,238,.12); background: #fff; }
-        .cjl-search input { flex: 1; border: 0; outline: 0; background: transparent; font-family: inherit; font-size: 14px; color: #1d1d1f; }
+        .cjl-search input { flex: 1; border: 0; outline: 0; background: transparent; font-family: inherit; font-size: var(--f-14); color: #1d1d1f; }
         .cjl-search input::placeholder { color: #aab0bd; }
         .cjl-search svg { flex-shrink: 0; color: #9aa2b1; }
 
-        .cjl-count { margin: 0 0 8px; font-size: 13px; color: #8b93a3; }
+        .cjl-count { margin: 0 0 8px; font-size: var(--f-13); color: #8b93a3; }
         .cjl-count b { color: #1d1d1f; }
 
         .cjl-list { border-top: 1px solid #eef1f7; }
@@ -80,13 +80,13 @@ export default function CareerJobsList() {
           text-decoration: none; transition: background .2s ${EASE}, padding-left .2s ${EASE};
         }
         .cjl-row:hover { background: #f7f9fd; padding-left: 14px; }
-        .cjl-row-title { margin: 0 0 4px; font-size: clamp(15px,1.5vw,17px); font-weight: 800; letter-spacing: -.01em; color: #1d1d1f; text-transform: uppercase; }
-        .cjl-row-dept { margin: 0; font-size: 13px; color: #8b93a3; }
-        .cjl-row-loc { flex-shrink: 0; text-align: right; font-size: 13.5px; color: #52525e; }
+        .cjl-row-title { margin: 0 0 4px; font-size: max(clamp(15px,1.5vw,17px), min(1.181vw, 24.65px)); font-weight: 800; letter-spacing: -.01em; color: #1d1d1f; text-transform: uppercase; }
+        .cjl-row-dept { margin: 0; font-size: var(--f-13); color: #8b93a3; }
+        .cjl-row-loc { flex-shrink: 0; text-align: right; font-size: var(--f-13-5); color: #52525e; }
         .cjl-row-arrow { flex-shrink: 0; color: #c3cbd9; transition: transform .2s ${EASE}, color .2s ${EASE}; }
         .cjl-row:hover .cjl-row-arrow { color: #1360ee; transform: translateX(4px); }
 
-        .cjl-empty { padding: 40px 8px; text-align: center; color: #8b93a3; font-size: 14px; }
+        .cjl-empty { padding: 40px 8px; text-align: center; color: #8b93a3; font-size: var(--f-14); }
       `}</style>
 
       <div className="cjl-inner">

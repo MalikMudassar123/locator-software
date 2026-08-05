@@ -13,7 +13,7 @@ export default function IndustriesHero() {
         .ih-crumbs {
           display: flex; align-items: center; gap: 8px;
           max-width: var(--w-1280); margin: 0 auto; padding: 16px 28px;
-          font-size: 14px; color: #6e6e73;
+          font-size: var(--f-14); color: #6e6e73;
         }
         .ih-crumbs a { color: #1d1d1f; font-weight: 600; text-decoration: none; transition: color .18s ease; }
         .ih-crumbs a:hover { color: #1360ee; }
@@ -40,12 +40,12 @@ export default function IndustriesHero() {
         .ih-content { max-width: min(760px, 90vw); }
 
         .ih-title {
-          margin: 0; font-size: clamp(32px,5.2vw,64px); font-weight: 800;
+          margin: 0; font-size: max(clamp(32px,5.2vw,64px), min(4.444vw, 92.8px)); font-weight: 800;
           text-transform: uppercase; line-height: 1.04; letter-spacing: -.01em;
           color: #fff; text-shadow: 0 4px 26px rgba(0,0,0,.3);
         }
 
-        .ih-lead { margin: 18px 0 0; max-width: 62ch; font-size: clamp(14.5px,1.3vw,17px); line-height: 1.72; color: rgba(255,255,255,.86); }
+        .ih-lead { margin: 18px 0 0; max-width: 62ch; font-size: max(clamp(14.5px,1.3vw,17px), min(1.181vw, 24.65px)); line-height: 1.72; color: rgba(255,255,255,.86); }
       `}</style>
 
       <section className="ih-hero">

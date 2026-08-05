@@ -134,9 +134,13 @@ function WireTask() {
 
 function WireExpense() {
   return (
-    <svg width="100%" height="100%" viewBox={`0 0 ${vb.w} ${vb.h}`} preserveAspectRatio="xMidYMid meet"
+    // viewBox is the CARD rect (3,3,564,384), not the whole 620x440 canvas, and the
+    // aspect is deliberately NOT preserved: together those stretch the skeleton to
+    // exactly the box the wrapper gives it, which is the box the picture fills. The
+    // residual non-uniform scale is under 6%, which is nothing on a wireframe.
+    <svg width="100%" height="100%" viewBox="3 3 564 384" preserveAspectRatio="none"
       style={{ position:'absolute', inset:0 }}>
-      <rect width={vb.w} height={vb.h} fill="#fafbff"/>
+      <rect x="3" y="3" width="564" height="384" fill="#fafbff"/>
       <W d={r(3,3,564,384)} s="#7c3aed" sw={1.4} o={0.7}/>
       <W d={l(3,34,567,34)} s="#a78bfa" sw={0.9} o={0.6}/>
       <W d={ci(18,18,5)} s="#f87171" sw={0.9} o={0.65}/>
@@ -195,7 +199,13 @@ function WireExpense() {
 
 function WireInspection() {
   return (
-    <svg width="100%" height="100%" viewBox={`0 0 ${vb.w} ${vb.h}`} preserveAspectRatio="xMidYMid meet"
+    // The viewBox is the IMAGE REGION of the canvas (the comment below records where
+    // that is), not the whole 620x440, and the aspect is not preserved — so the
+    // skeleton stretches to exactly the box its wrapper gives it, which is the box
+    // the picture fills. Both are AR 2.19, so the residual distortion is 1.6%.
+    // The browser chrome that used to be drawn here at y<34 is now the real
+    // BrowserBar in the wrapper, which is why it is outside this viewBox.
+    <svg width="100%" height="100%" viewBox="4 99 610 283" preserveAspectRatio="none"
       style={{ position:'absolute', inset:0 }}>
       {/* Calibrated to kjiuguy.png (3064×1400), objectFit:contain in 480×360.
           Image content occupies vb x 0→620, y 99→382  (WX=ix·0.2024, WY=98.9+iy·0.2023). */}
@@ -294,7 +304,11 @@ function WireInspection() {
 
 function WireFleet() {
   return (
-    <svg width="100%" height="100%" viewBox={`0 0 ${vb.w} ${vb.h}`} preserveAspectRatio="xMidYMid meet"
+    // viewBox is the card's BODY (below the chrome divider at y=34), stretched to the
+    // box the wrapper gives it — which is the box the picture fills. The chrome that
+    // used to be drawn here is now the real BrowserBar above, so the three dots stay
+    // perfectly round; only the body linework takes the stretch.
+    <svg width="100%" height="100%" viewBox="3 34 564 353" preserveAspectRatio="none"
       style={{ position:'absolute', inset:0 }}>
       <rect width={vb.w} height={vb.h} fill="#fafbff"/>
       <W d={r(3,3,564,384)} s="#7c3aed" sw={1.4} o={0.7}/>
@@ -336,9 +350,17 @@ function WireFleet() {
 
 // ─── Browser bar (shared) ─────────────────────────────────────────────────────
 
+// The browser chrome's height, and the Expense Manager artwork's true aspect
+// (the FILE is 1800x1076). Both are shared so the wireframe and the picture are
+// laid out from the same two numbers instead of each guessing.
+const BAR_H = 32;
+const EXPENSE_AR = '1800 / 1076';
+const INSPECTION_AR = '1800 / 822';
+const FLEET_AR = '1600 / 858';
+
 function BrowserBar() {
   return (
-    <div style={{ height:32, background:'linear-gradient(180deg,#f3f5f9,#e6eaf2)', borderBottom:'1px solid rgba(15,23,42,0.06)', display:'flex', alignItems:'center', padding:'0 12px', gap:10, flexShrink:0 }}>
+    <div style={{ height:BAR_H, background:'linear-gradient(180deg,#f3f5f9,#e6eaf2)', borderBottom:'1px solid rgba(15,23,42,0.06)', display:'flex', alignItems:'center', padding:'0 12px', gap:10, flexShrink:0 }}>
       <div style={{ display:'flex', gap:6 }}>
         {/* Same neutral ramp as the showcase frames on this page — see
             ScrollShowcase/BrowserChrome for why the traffic lights went. */}
@@ -909,18 +931,38 @@ const SceneExpense = forwardRef(function SceneExpense(_, ref) {
 
   return (
     <div style={{ position:'absolute', inset:0, zIndex:10 }}>
-      <div ref={wireRef} style={{ position:'absolute', inset:0, opacity:0 }}><WireExpense/></div>
+      {/* The wireframe is the SKELETON OF THE PICTURE BELOW IT, so it has to occupy
+          exactly the same box — same top edge, same width, same height. It used to
+          be `inset:0` with preserveAspectRatio="xMidYMid meet", which fitted a
+          620x440 viewBox into this tall portrait panel and then CENTRED it, so the
+          skeleton was drawn 84-151px lower than the picture and ~60px narrower.
+          The two never registered, which is why the image looked like it appeared
+          out of empty space above the wireframe rather than resolving onto it.
+
+          Mirroring the card's own structure here — the same BAR_H strip, then the
+          same EXPENSE_AR box — makes this wrapper exactly as tall as the card at
+          every width, with no shared magic numbers to drift. */}
+      <div ref={wireRef} style={{ position:'absolute', top:0, left:0, right:0, opacity:0, borderRadius:14, overflow:'hidden' }}>
+        <div style={{ height:BAR_H }}/>
+        <div style={{ width:'100%', aspectRatio:EXPENSE_AR }}/>
+        <WireExpense/>
+      </div>
       <div ref={mainImgRef} style={{ position:'absolute', inset:0, opacity:0 }}>
         <div style={{ position:'absolute', top:0, left:0, right:0, display:'flex', flexDirection:'column', borderRadius:14, overflow:'hidden', background:'#fff' }}>
           <BrowserBar/>
-          <div style={{ position:'relative', width:'100%', aspectRatio:'1448 / 1060', overflow:'hidden' }}>
+          {/* aspectRatio is the FILE's own 1800x1076. It was 1448/1060 (AR 1.366)
+              while the picture is AR 1.673, so `contain` fitted the picture to the
+              width and left 60-110px of white BELOW it, inside the white card —
+              invisible white-on-white, but it is what made the card bottom-heavy
+              and pushed the card's edge away from where the wireframe ended. */}
+          <div style={{ position:'relative', width:'100%', aspectRatio:EXPENSE_AR, overflow:'hidden' }}>
             <Image
               src="/software images/software images/Expense Manager/main.webp"
               alt="Expense Manager"
-              width={1448}
-              height={1086}
-              sizes="700px"
-              style={{ position:'absolute', top:0, left:0, width:'100%', height:'auto', display:'block', objectFit:'contain' }}
+              width={1800}
+              height={1076}
+              sizes="(min-width:1600px) 45vw, (min-width:1024px) 38vw, 100vw"
+              style={{ position:'absolute', top:0, left:0, width:'100%', height:'auto', display:'block' }}
             />
           </div>
         </div>
@@ -931,9 +973,10 @@ const SceneExpense = forwardRef(function SceneExpense(_, ref) {
         ref={mobileRef}
         onMouseEnter={() => gsap.to(mobileRef.current, { scale: 1.05, duration: 0.35, ease:'power3.out' })}
         onMouseLeave={() => gsap.to(mobileRef.current, { scale: 1,    duration: 0.35, ease:'power3.out' })}
+        className="fs-phone"
         style={{
           position:'absolute',
-          left:'-2%', top:'18%',
+          left:'-2%', top:'19%',
           opacity:0, zIndex:40,
           cursor:'pointer',
           willChange:'opacity, transform',
@@ -948,7 +991,6 @@ const SceneExpense = forwardRef(function SceneExpense(_, ref) {
           style={{
             borderRadius:16,
             boxShadow:'0 18px 50px rgba(15,23,42,0.22), 0 4px 14px rgba(15,23,42,0.10)',
-            display:'block',
           }}
         />
       </div>
@@ -960,7 +1002,7 @@ const SceneExpense = forwardRef(function SceneExpense(_, ref) {
         onMouseLeave={() => gsap.to(popupRef.current, { scale: 1,    duration: 0.35, ease:'power3.out' })}
         style={{
           position:'absolute',
-          left:'-13%', top:'calc(45% - 4px)',
+          left:'-13%', top:'calc(39% - 12px)',
           width:'58%', height:'calc(10% + 4px)',
           opacity:0, zIndex:50,
           cursor:'pointer',
@@ -1013,16 +1055,32 @@ const SceneInspection = forwardRef(function SceneInspection(_, ref) {
 
   return (
     <div style={{ position:'absolute', inset:0, zIndex:10 }}>
-      <div ref={wireRef} style={{ position:'absolute', inset:0, opacity:0 }}><WireInspection/></div>
+      {/* Wireframe and picture are laid out from ONE structure: the same BrowserBar,
+          then the same INSPECTION_AR box. Previously the wireframe was `inset:0`
+          with preserveAspectRatio="xMidYMid meet", which centred a 620x440 canvas in
+          the tall panel and drew the app frame 137-245px BELOW the picture. Carrying
+          the real BrowserBar here too means the frame is already on screen while the
+          skeleton draws, so the picture resolves into it instead of replacing it. */}
+      <div ref={wireRef} style={{ position:'absolute', top:0, left:0, right:0, opacity:0, borderRadius:14, overflow:'hidden', background:'#fff' }}>
+        <BrowserBar/>
+        <div style={{ position:'relative', width:'100%', aspectRatio:INSPECTION_AR, overflow:'hidden' }}>
+          <WireInspection/>
+        </div>
+      </div>
       <div ref={mainImgRef} style={{ position:'absolute', inset:0, opacity:0 }}>
-        <div style={{ position:'absolute', inset:0, display:'flex', flexDirection:'column', background:'#fff', borderRadius:14, overflow:'hidden' }}>
+        {/* Was `inset:0` with a flex:1 body, so the card filled the whole 746px wrap
+            while the picture is only ~317px tall — ~400px of blank white card. Now
+            the card is exactly as tall as the artwork it holds. */}
+        <div style={{ position:'absolute', top:0, left:0, right:0, display:'flex', flexDirection:'column', background:'#fff', borderRadius:14, overflow:'hidden' }}>
           <BrowserBar/>
-          <div style={{ position:'relative', flex:1 }}>
+          <div style={{ position:'relative', width:'100%', aspectRatio:INSPECTION_AR, overflow:'hidden' }}>
             <Image
               src="/software images/software images/Inspection/kjiuguy.webp"
               alt="Inspection"
-              fill sizes="700px"
-              style={{ objectFit:'contain', objectPosition:'left top' }}
+              width={1800}
+              height={822}
+              sizes="(min-width:1600px) 45vw, (min-width:1024px) 38vw, 100vw"
+              style={{ position:'absolute', top:0, left:0, width:'100%', height:'auto', display:'block' }}
             />
           </div>
         </div>
@@ -1033,9 +1091,10 @@ const SceneInspection = forwardRef(function SceneInspection(_, ref) {
         ref={mobileRef}
         onMouseEnter={() => gsap.to(mobileRef.current, { scale: 1.05, duration: 0.35, ease:'power3.out' })}
         onMouseLeave={() => gsap.to(mobileRef.current, { scale: 1,    duration: 0.35, ease:'power3.out' })}
+        className="fs-phone"
         style={{
           position:'absolute',
-          left:'calc(-3% + 9px)', top:'calc(32% + 20px)',
+          left:'calc(-3% + 1px)', top:'calc(15% + 45px)',
           opacity:0, zIndex:40,
           cursor:'pointer',
           willChange:'opacity, transform',
@@ -1090,16 +1149,30 @@ const SceneFleet = forwardRef(function SceneFleet(_, ref) {
 
   return (
     <div style={{ position:'absolute', inset:0, zIndex:10 }}>
-      <div ref={wireRef} style={{ position:'absolute', inset:0, opacity:0 }}><WireFleet/></div>
+      {/* Same one-structure rule as the other three slides: the real BrowserBar, then
+          a FLEET_AR box. The wireframe used to be `inset:0` with xMidYMid meet, which
+          centred a 620x440 canvas in the tall panel and drew the skeleton well below
+          the picture; carrying the real bar here keeps the chrome pixel-accurate and
+          leaves only the body linework to the SVG. */}
+      <div ref={wireRef} style={{ position:'absolute', top:0, left:0, right:0, opacity:0, borderRadius:14, overflow:'hidden', background:'#fff' }}>
+        <BrowserBar/>
+        <div style={{ position:'relative', width:'100%', aspectRatio:FLEET_AR, overflow:'hidden' }}>
+          <WireFleet/>
+        </div>
+      </div>
       <div ref={mainImgRef} style={{ position:'absolute', inset:0, opacity:0 }}>
-        <div style={{ position:'absolute', inset:0, display:'flex', flexDirection:'column', background:'#fff', borderRadius:14, overflow:'hidden' }}>
+        {/* Was `inset:0` with a flex:1 body: the card filled the whole 746px wrap while
+            this artwork is only ~373px tall, leaving ~340px of blank white card. */}
+        <div style={{ position:'absolute', top:0, left:0, right:0, display:'flex', flexDirection:'column', background:'#fff', borderRadius:14, overflow:'hidden' }}>
           <BrowserBar/>
-          <div style={{ position:'relative', flex:1 }}>
+          <div style={{ position:'relative', width:'100%', aspectRatio:FLEET_AR, overflow:'hidden' }}>
             <Image
               src="/software images/software images/Fleet Manager/hyuiuyku.webp"
               alt="Fleet Manager"
-              fill sizes="700px"
-              style={{ objectFit:'contain', objectPosition:'center top' }}
+              width={1600}
+              height={858}
+              sizes="(min-width:1600px) 45vw, (min-width:1024px) 38vw, 100vw"
+              style={{ position:'absolute', top:0, left:0, width:'100%', height:'auto', display:'block' }}
             />
           </div>
         </div>
@@ -1112,7 +1185,7 @@ const SceneFleet = forwardRef(function SceneFleet(_, ref) {
         onMouseLeave={() => gsap.to(popupRef.current, { scale: 1,    duration: 0.35, ease:'power3.out' })}
         style={{
           position:'absolute',
-          left:'-9%', top:'18%',
+          left:'-9%', top:'calc(12% + 8px)',
           width:'42%', height:'10%',
           opacity:0, zIndex:50,
           cursor:'pointer',
@@ -1211,11 +1284,11 @@ export default function FeatureSlider() {
           <div style={{ fontSize:'var(--sc-13)', fontWeight:700, color:'#0a89dd', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:'var(--sc-24)' }}>
             {slide.eyebrow}
           </div>
-          <h2 style={{ fontSize:'clamp(24px, 3vw, var(--sc-36))', fontWeight:800, lineHeight:1.2, color:'#484b4c', margin:'0 0 var(--sc-16)', maxWidth:'100%', width:'100%' }}>
+          <h2 style={{ fontSize:'var(--t-h2)', fontWeight:800, lineHeight:1.2, color:'#484b4c', margin:'0 0 var(--sc-16)', maxWidth:'100%', width:'100%' }}>
             Run Your Road Team Smarter<br/>
             <span style={{ fontWeight:700 }}>Empowering field teams,</span>
           </h2>
-          <p style={{ fontSize:'clamp(14px, 1.3vw, var(--sc-16))', color:'#8090bc', lineHeight:1.7, margin:'0 0 var(--sc-28)', maxWidth:'100%' }}>
+          <p style={{ fontSize:'var(--t-lead)', color:'#8090bc', lineHeight:1.7, margin:'0 0 var(--sc-28)', maxWidth:'100%' }}>
             Manage, track, and optimize your field workforce in real time<span style={{ color:'#9ca3af' }}> fleets</span>
           </p>
 
@@ -1232,10 +1305,15 @@ export default function FeatureSlider() {
                 onMouseLeave={e=>e.currentTarget.style.color='#9ca3af'}>‹</button>
 
               <div ref={cardRef} style={{ flex:1, minWidth:0 }}>
-                <div style={{ fontSize:'var(--sc-18)', fontWeight:700, color:'#696b6b', marginBottom:'var(--sc-14)', lineHeight:1.35 }}>
+                <div style={{ fontSize:'var(--t-h3)', fontWeight:700, color:'#696b6b', marginBottom:'var(--sc-14)', lineHeight:1.35 }}>
                   {slide.cardTitle}
                 </div>
-                <p style={{ fontSize:'var(--sc-14-5)', color:'#8090bc', lineHeight:1.78, margin:0 }}>
+                {/* Reserve three lines whatever the slide says. The four descriptions
+                    are 145-189 characters, so the card was a different height on each
+                    one and the whole left column shifted up or down as the carousel
+                    paged. em-based, so it tracks the type rather than pinning a pixel
+                    height that only holds at one width. */}
+                <p style={{ fontSize:'var(--sc-14-5)', color:'#8090bc', lineHeight:1.78, margin:0, minHeight:'calc(3 * 1.78em)' }}>
                   {slide.cardDesc}
                 </p>
               </div>

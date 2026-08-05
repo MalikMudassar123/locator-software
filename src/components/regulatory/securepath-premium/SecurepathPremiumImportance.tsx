@@ -24,21 +24,21 @@ export default function SecurepathPremiumImportance() {
             </div>
 
             <div data-reveal="right">
-              <h2 style={{ margin: '0 0 18px', fontSize: 'clamp(22px,2.8vw,30px)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-.02em', color: '#1360ee' }}>
+              <h2 style={{ margin: '0 0 18px', fontSize: 'max(clamp(22px,2.8vw,30px), min(2.083vw, 43.5px))', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-.02em', color: '#1360ee' }}>
                 Importance of SecurePath Premium
               </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+                <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
                   The Security Industry Regulatory Agency (SIRA) has implemented strict regulations to ensure the safety and protection of businesses. One of the key requirements set by SIRA is the Certificate of Installation for GPS Trackers. This certificate is mandatory for businesses to ensure compliance set by the authorities. SecurePath Premium offers a comprehensive solution that helps businesses meet these regulations and obtain the necessary certification.
                 </p>
-                <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+                <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
                   By subscribing to SecurePath Premium, business owners can ensure that their GPS tracking systems are installed and maintained according to SIRA&apos;s guidelines. This not only helps them comply with regulations but also enhances the overall security of their operations.
                 </p>
               </div>
             </div>
           </div>
 
-          <p data-reveal style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+          <p data-reveal style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
             Failure to comply can result in penalties, fines, or even legal consequences. By utilizing SecurePath Premium, business owners can have peace of mind knowing that they are operating within the legal framework and taking proactive measures to protect their assets.
           </p>
 

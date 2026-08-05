@@ -91,10 +91,10 @@ export default function ContactChannels() {
         .ctc-inner { max-width: var(--w-1180); margin: 0 auto; }
 
         .ctc-head { max-width: 620px; margin-bottom: clamp(28px,3.6vw,44px); }
-        .ctc-eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: clamp(12px,1.05vw,13.5px); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1360ee; }
+        .ctc-eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: max(clamp(12px,1.05vw,13.5px), min(0.938vw, 19.57px)); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1360ee; }
         .ctc-eyebrow i { display: block; width: 28px; height: 2.5px; background: #1360ee; border-radius: 2px; }
-        .ctc-title { margin: 10px 0 0; font-size: clamp(25px,2.7vw,33px); font-weight: 800; letter-spacing: -.028em; color: #1d1d1f; line-height: 1.16; }
-        .ctc-sub { margin: 12px 0 0; font-size: clamp(14px,1.2vw,15.5px); line-height: 1.7; color: #6e6e73; }
+        .ctc-title { margin: 10px 0 0; font-size: max(clamp(25px,2.7vw,33px), min(2.292vw, 47.85px)); font-weight: 800; letter-spacing: -.028em; color: #1d1d1f; line-height: 1.16; }
+        .ctc-sub { margin: 12px 0 0; font-size: max(clamp(14px,1.2vw,15.5px), min(1.076vw, 22.47px)); line-height: 1.7; color: #6e6e73; }
 
         .ctc-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: clamp(14px,1.6vw,20px); }
         @media (max-width: 1000px) { .ctc-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
@@ -146,9 +146,9 @@ export default function ContactChannels() {
         }
         .ctc-ic svg { width: 24px; height: 24px; }
 
-        .ctc-label { font-size: 10.5px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; color: #9aa3b2; }
-        .ctc-name { margin: 7px 0 0; font-size: 18px; font-weight: 800; letter-spacing: -.025em; color: #1d1d1f; }
-        .ctc-desc { margin: 9px 0 16px; font-size: 13.5px; line-height: 1.65; color: #6e6e73; }
+        .ctc-label { font-size: var(--f-10-5); font-weight: 800; letter-spacing: .13em; text-transform: uppercase; color: #9aa3b2; }
+        .ctc-name { margin: 7px 0 0; font-size: var(--f-18); font-weight: 800; letter-spacing: -.025em; color: #1d1d1f; }
+        .ctc-desc { margin: 9px 0 16px; font-size: var(--f-13-5); line-height: 1.65; color: #6e6e73; }
 
         /* Small human detail: what actually happens when you use this channel. */
         .ctc-meta {
@@ -156,13 +156,13 @@ export default function ContactChannels() {
           margin-bottom: 18px; padding: 5px 11px; border-radius: 999px;
           background: color-mix(in srgb, var(--from) 11%, transparent);
           color: color-mix(in srgb, var(--to) 88%, #000);
-          font-size: 11px; font-weight: 700; letter-spacing: .01em;
+          font-size: var(--f-11); font-weight: 700; letter-spacing: .01em;
         }
         .ctc-meta i { width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 
         .ctc-action {
           margin-top: auto; display: inline-flex; align-items: center; gap: 7px;
-          font-size: 14px; font-weight: 800; letter-spacing: -.01em;
+          font-size: var(--f-14); font-weight: 800; letter-spacing: -.01em;
           color: color-mix(in srgb, var(--to) 90%, #000); word-break: break-word;
         }
         .ctc-action svg { flex-shrink: 0; transition: transform .22s ${EASE}; }

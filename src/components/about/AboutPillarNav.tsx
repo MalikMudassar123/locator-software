@@ -27,7 +27,7 @@ export default function AboutPillarNav({ current }: { current: string }) {
 
       <section style={{ padding: '0 28px clamp(56px,7vw,88px)', background: '#f7f9fc' }}>
         <div style={{ maxWidth: 'var(--w-1120)', margin: '0 auto' }}>
-          <p data-reveal style={{ margin: '0 0 20px', fontSize: '12px', fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: '#9a9aa2' }}>
+          <p data-reveal style={{ margin: '0 0 20px', fontSize: 'var(--f-12)', fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: '#9a9aa2' }}>
             Explore more about Locator
           </p>
           <div className="apn-grid">
@@ -42,8 +42,8 @@ export default function AboutPillarNav({ current }: { current: string }) {
               >
                 <span className="apn-icon" style={{ background: `${p.accent}14`, color: p.accent }}>{p.icon}</span>
                 <span>
-                  <span style={{ display: 'block', fontSize: '15px', fontWeight: 800, color: '#1d1d1f' }}>{p.name}</span>
-                  <span style={{ display: 'block', fontSize: '12.5px', color: '#8e8e93', marginTop: '2px' }}>{p.tagline}</span>
+                  <span style={{ display: 'block', fontSize: 'var(--f-15)', fontWeight: 800, color: '#1d1d1f' }}>{p.name}</span>
+                  <span style={{ display: 'block', fontSize: 'var(--f-12-5)', color: '#8e8e93', marginTop: '2px' }}>{p.tagline}</span>
                 </span>
                 <svg className="apn-go" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />

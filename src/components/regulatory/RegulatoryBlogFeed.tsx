@@ -45,11 +45,11 @@ export default function RegulatoryBlogFeed() {
           box-shadow: 0 6px 18px rgba(15,23,42,.14);
           text-align: center; line-height: 1.1;
         }
-        .rbf-date-day { display: block; font-size: 16px; font-weight: 800; color: #1d1d1f; }
-        .rbf-date-month { display: block; font-size: 10.5px; font-weight: 600; color: #8e8e93; }
+        .rbf-date-day { display: block; font-size: var(--f-16); font-weight: 800; color: #1d1d1f; }
+        .rbf-date-month { display: block; font-size: var(--f-10-5); font-weight: 600; color: #8e8e93; }
         .rbf-img-wrap { border-radius: 12px; overflow: hidden; }
         .rbf-read {
-          color: #1360ee; font-weight: 700; font-size: 13.5px;
+          color: #1360ee; font-weight: 700; font-size: var(--f-13-5);
           text-decoration: underline; text-underline-offset: 2px;
         }
       `}</style>
@@ -66,10 +66,10 @@ export default function RegulatoryBlogFeed() {
                 <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
               </svg>
             </div>
-            <h2 style={{ margin: '0 0 12px', fontSize: 'clamp(24px,3vw,34px)', fontWeight: 700, color: '#1d1d1f' }}>
+            <h2 style={{ margin: '0 0 12px', fontSize: 'max(clamp(24px,3vw,34px), min(2.361vw, 49.3px))', fontWeight: 700, color: '#1d1d1f' }}>
               From Our Blog List Latest Feed
             </h2>
-            <p style={{ margin: '0 auto', maxWidth: '520px', fontSize: '15px', color: '#8e8e93', lineHeight: 1.6 }}>
+            <p style={{ margin: '0 auto', maxWidth: '520px', fontSize: 'var(--f-15)', color: '#8e8e93', lineHeight: 1.6 }}>
               We are right here to share the valuable insights on our area of Expertise. We help you to master on managing your Vehicle &amp; Team.
             </p>
           </div>
@@ -87,10 +87,10 @@ export default function RegulatoryBlogFeed() {
                   </div>
                 </div>
                 <div>
-                  <h3 style={{ margin: '0 0 10px', fontSize: '16.5px', fontWeight: 700, lineHeight: 1.35, color: '#1d1d1f' }}>
+                  <h3 style={{ margin: '0 0 10px', fontSize: 'var(--f-16-5)', fontWeight: 700, lineHeight: 1.35, color: '#1d1d1f' }}>
                     {p.title}
                   </h3>
-                  <p style={{ margin: '0 0 14px', fontSize: '13.5px', lineHeight: 1.7, color: '#6e6e73' }}>
+                  <p style={{ margin: '0 0 14px', fontSize: 'var(--f-13-5)', lineHeight: 1.7, color: '#6e6e73' }}>
                     {p.excerpt}
                   </p>
                   <span className="rbf-read">Read More</span>

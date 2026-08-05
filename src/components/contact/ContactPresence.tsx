@@ -129,10 +129,10 @@ export default function ContactPresence() {
         .ctp-head { margin-bottom: clamp(26px,3.4vw,40px); }
         /* Eyebrow / title / sub share one scale across every contact section —
            the eyebrow sits close enough to the headline to read as its kicker. */
-        .ctp-eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: clamp(12px,1.05vw,13.5px); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1360ee; }
+        .ctp-eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: max(clamp(12px,1.05vw,13.5px), min(0.938vw, 19.57px)); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1360ee; }
         .ctp-eyebrow i { display: block; width: 28px; height: 2.5px; background: #1360ee; border-radius: 2px; }
-        .ctp-title { margin: 10px 0 0; font-size: clamp(25px,2.7vw,33px); font-weight: 800; letter-spacing: -.028em; line-height: 1.16; color: #1d1d1f; }
-        .ctp-sub { margin: 12px 0 0; max-width: 56ch; font-size: clamp(14px,1.2vw,15.5px); line-height: 1.7; color: #6e6e73; }
+        .ctp-title { margin: 10px 0 0; font-size: max(clamp(25px,2.7vw,33px), min(2.292vw, 47.85px)); font-weight: 800; letter-spacing: -.028em; line-height: 1.16; color: #1d1d1f; }
+        .ctp-sub { margin: 12px 0 0; max-width: 56ch; font-size: max(clamp(14px,1.2vw,15.5px), min(1.076vw, 22.47px)); line-height: 1.7; color: #6e6e73; }
 
         /* ── Arrows: floating on the rail, vertically centred ── */
         .ctp-arrow {
@@ -226,12 +226,12 @@ export default function ContactPresence() {
         }
         .ctp-card:hover .ctp-flag { transform: scale(1.07); }
         .ctp-flag img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .ctp-country { margin: 0; font-size: 17px; font-weight: 800; letter-spacing: -.025em; line-height: 1.2; color: #1d1d1f; }
+        .ctp-country { margin: 0; font-size: var(--f-17); font-weight: 800; letter-spacing: -.025em; line-height: 1.2; color: #1d1d1f; }
 
         .ctp-status {
           display: inline-flex; align-items: center; gap: 7px; align-self: flex-start;
           margin-top: 18px; padding: 6px 12px; border-radius: 999px;
-          font-size: 10.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+          font-size: var(--f-10-5); font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
         }
         .ctp-status.on { background: rgba(19,146,63,.1); color: #13923f; }
         .ctp-status.off { background: #f2f4f8; color: #7b8395; }
@@ -243,20 +243,20 @@ export default function ContactPresence() {
           70% { box-shadow: 0 0 0 6px rgba(19,146,63,0); }
         }
 
-        .ctp-place { margin: 14px 0 0; white-space: pre-line; font-size: 13.5px; line-height: 1.65; color: #6e6e73; }
+        .ctp-place { margin: 14px 0 0; white-space: pre-line; font-size: var(--f-13-5); line-height: 1.65; color: #6e6e73; }
         .ctp-phone {
           display: inline-flex; align-items: center; gap: 7px; margin-top: 10px;
-          font-size: 13.5px; font-weight: 700; color: #1d1d1f; text-decoration: none;
+          font-size: var(--f-13-5); font-weight: 700; color: #1d1d1f; text-decoration: none;
           transition: color .18s ${EASE};
         }
         .ctp-phone:hover { color: #1360ee; }
 
         /* Coming-soon cards carry no address, so this holds the card height. */
-        .ctp-soon-copy { margin: 14px 0 0; font-size: 13.5px; line-height: 1.65; color: #6e6e73; }
+        .ctp-soon-copy { margin: 14px 0 0; font-size: var(--f-13-5); line-height: 1.65; color: #6e6e73; }
 
         .ctp-cta {
           display: inline-flex; align-items: center; gap: 7px; margin-top: auto; padding-top: 22px;
-          font-size: 13.5px; font-weight: 800; color: #1360ee; text-decoration: none;
+          font-size: var(--f-13-5); font-weight: 800; color: #1360ee; text-decoration: none;
         }
         .ctp-cta svg { transition: transform .2s ${EASE}; }
         .ctp-card:hover .ctp-cta svg { transform: translateX(4px); }

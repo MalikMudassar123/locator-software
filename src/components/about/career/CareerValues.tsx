@@ -19,11 +19,11 @@ export default function CareerValues() {
         .cv-inner { max-width: var(--w-900); margin: 0 auto; text-align: center; }
         .cv-h2 {
           margin: 0 0 clamp(32px,4vw,44px);
-          font-size: clamp(19px,2.6vw,30px); font-weight: 800; letter-spacing: -.01em;
+          font-size: max(clamp(19px,2.6vw,30px), min(2.083vw, 43.5px)); font-weight: 800; letter-spacing: -.01em;
           color: #1d1d1f; text-transform: uppercase; line-height: 1.3;
         }
         .cv-list { display: flex; flex-wrap: wrap; justify-content: center; column-gap: clamp(20px,3vw,40px); row-gap: clamp(14px,2vw,20px); }
-        .cv-item { font-size: clamp(14px,1.4vw,16px); font-weight: 700; color: #1360ee; }
+        .cv-item { font-size: max(clamp(14px,1.4vw,16px), min(1.111vw, 23.2px)); font-weight: 700; color: #1360ee; }
       `}</style>
 
       <div className="cv-inner">

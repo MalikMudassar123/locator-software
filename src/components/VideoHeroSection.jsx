@@ -240,7 +240,7 @@ export default function VideoHeroSection({
             #f2f4f8 40%,
             #eef0f4 100%
           );
-          padding: clamp(48px, 7vw, 96px) 0 clamp(56px, 8vw, 110px);
+          padding: var(--s-section-y) 0;
           overflow: hidden;
           font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
             sans-serif;
@@ -283,7 +283,7 @@ export default function VideoHeroSection({
         }
 
         .vhs__headline {
-          font-size: clamp(26px, 4vw, 48px);
+          font-size: var(--t-display);
           font-weight: 700;
           color: var(--headline);
           letter-spacing: -0.025em;
@@ -292,7 +292,7 @@ export default function VideoHeroSection({
         }
 
         .vhs__subline {
-          font-size: clamp(14px, 1.4vw, 17px);
+          font-size: var(--t-lead);
           color: var(--subline);
           font-weight: 400;
           line-height: 1.6;
@@ -538,8 +538,8 @@ export default function VideoHeroSection({
           left: 50%;
           transform: translate(-50%, -50%) scale(1);
           z-index: 5;
-          width: clamp(52px, 7vw, 72px);
-          height: clamp(52px, 7vw, 72px);
+          width: var(--i-play);
+          height: var(--i-play);
           border-radius: 50%;
           border: none;
           cursor: pointer;

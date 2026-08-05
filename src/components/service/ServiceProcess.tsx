@@ -123,7 +123,7 @@ export default function ServiceProcess() {
         }
 
         .proc-num {
-          font-size: 11px; font-weight: 800;
+          font-size: var(--f-11); font-weight: 800;
           font-family: ui-monospace, 'Cascadia Code', monospace;
           letter-spacing: .06em;
           position: absolute; top: clamp(14px,2vw,20px); right: clamp(14px,2vw,20px);
@@ -141,7 +141,7 @@ export default function ServiceProcess() {
           {/* Header */}
           <div data-reveal style={{ textAlign: 'center', marginBottom: '48px' }}>
             <span style={{
-              fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em',
+              fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em',
               color: '#1360ee', textTransform: 'uppercase' as const,
               display: 'block', marginBottom: '16px',
             }}>
@@ -150,7 +150,7 @@ export default function ServiceProcess() {
             </span>
             <h2 style={{
               margin: '0 auto',
-              fontSize: 'clamp(19px,2.2vw,26px)',
+              fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))',
               fontWeight: 800, lineHeight: 1.08,
               letterSpacing: '-.015em', color: '#1d1d1f',
               maxWidth: '560px',
@@ -159,7 +159,7 @@ export default function ServiceProcess() {
             </h2>
             <p style={{
               margin: '16px auto 0', maxWidth: '500px',
-              fontSize: 'clamp(14px,1.35vw,16px)', color: '#6e6e73', lineHeight: 1.6,
+              fontSize: 'max(clamp(14px,1.35vw,16px), min(1.111vw, 23.2px))', color: '#6e6e73', lineHeight: 1.6,
             }}>
               From consultation to live fleet tracking — we handle everything so your team can focus on operations.
             </p>
@@ -194,7 +194,7 @@ export default function ServiceProcess() {
 
                 <h3 style={{
                   margin: 0,
-                  fontSize: 'clamp(15px,1.5vw,18px)',
+                  fontSize: 'max(clamp(15px,1.5vw,18px), min(1.250vw, 26.1px))',
                   fontWeight: 800, lineHeight: 1.2,
                   letterSpacing: '-.018em', color: '#1d1d1f',
                 }}>
@@ -203,7 +203,7 @@ export default function ServiceProcess() {
 
                 <p style={{
                   margin: 0,
-                  fontSize: 'clamp(13px,1.2vw,14.5px)',
+                  fontSize: 'max(clamp(13px,1.2vw,14.5px), min(1.007vw, 21.02px))',
                   lineHeight: 1.65, color: '#6e6e73',
                 }}>
                   {step.desc}
@@ -214,12 +214,12 @@ export default function ServiceProcess() {
 
           {/* Bottom CTA row */}
           <div data-reveal style={{ textAlign: 'center', marginTop: '44px' }}>
-            <p style={{ fontSize: 'clamp(14px,1.35vw,16px)', color: '#6e6e73', margin: '0 0 20px' }}>
+            <p style={{ fontSize: 'max(clamp(14px,1.35vw,16px), min(1.111vw, 23.2px))', color: '#6e6e73', margin: '0 0 20px' }}>
               Ready to get started? Most fleets go live in under 48 hours.
             </p>
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
               <button style={{
-                fontFamily: 'inherit', fontSize: '14px', fontWeight: 700,
+                fontFamily: 'inherit', fontSize: 'var(--f-14)', fontWeight: 700,
                 padding: '12px 26px', borderRadius: '999px', border: 'none',
                 background: '#1360ee', color: '#fff', cursor: 'pointer',
                 transition: '.18s cubic-bezier(.22,.61,.36,1)',
@@ -227,7 +227,7 @@ export default function ServiceProcess() {
                 Book a free site visit
               </button>
               <button style={{
-                fontFamily: 'inherit', fontSize: '14px', fontWeight: 700,
+                fontFamily: 'inherit', fontSize: 'var(--f-14)', fontWeight: 700,
                 padding: '12px 26px', borderRadius: '999px',
                 border: '1.5px solid #e3e3e6', background: '#fff',
                 color: '#1d1d1f', cursor: 'pointer',

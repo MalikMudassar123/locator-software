@@ -99,18 +99,18 @@ export default function NewsroomRail() {
 
         .nrr-card { border: 1px solid #e7ecf6; border-radius: 16px; background: #fff; box-shadow: 0 2px 10px rgba(11,18,32,.03); overflow: hidden; }
         .nrr-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 18px 12px; }
-        .nrr-head h3 { margin: 0; font-size: 15.5px; font-weight: 800; letter-spacing: -.015em; color: #0b1220; }
+        .nrr-head h3 { margin: 0; font-size: var(--f-15-5); font-weight: 800; letter-spacing: -.015em; color: #0b1220; }
 
         .nrr-live-pill {
           display: inline-flex; align-items: center; gap: 6px;
-          font-size: 10.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+          font-size: var(--f-10-5); font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
           color: #22a06b; background: rgba(34,160,107,.1); padding: 4px 9px; border-radius: 999px;
         }
         .nrr-live-pill i { width: 6px; height: 6px; border-radius: 50%; background: #22a06b; animation: nrr-blink 1.6s ease-in-out infinite; }
         @keyframes nrr-blink { 50% { opacity: .25; } }
         @media (prefers-reduced-motion: reduce) { .nrr-live-pill i { animation: none; } }
 
-        .nrr-viewall { font-size: 12px; font-weight: 700; color: #1360ee; text-decoration: none; white-space: nowrap; }
+        .nrr-viewall { font-size: var(--f-12); font-weight: 700; color: #1360ee; text-decoration: none; white-space: nowrap; }
         .nrr-viewall:hover { text-decoration: underline; }
 
         .nrr-list { padding: 0 12px 12px; display: flex; flex-direction: column; gap: 8px; }
@@ -172,18 +172,18 @@ export default function NewsroomRail() {
         .nrr-ico { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; }
 
         .nrr-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 3px; }
-        .nrr-src { font-size: 9.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #97a1b3; }
-        .nrr-time { font-size: 10.5px; color: #a7b0c0; white-space: nowrap; }
+        .nrr-src { font-size: var(--f-9-5); font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #97a1b3; }
+        .nrr-time { font-size: var(--f-10-5); color: #a7b0c0; white-space: nowrap; }
 
-        .nrr-title { margin: 0 0 2px; font-size: 13px; font-weight: 750; letter-spacing: -.01em; color: #0b1220; line-height: 1.35; }
-        .nrr-body { margin: 0 0 7px; font-size: 11.5px; line-height: 1.5; color: #7a8394; }
-        .nrr-cta { font-size: 11.5px; font-weight: 700; color: #1360ee; }
+        .nrr-title { margin: 0 0 2px; font-size: var(--f-13); font-weight: 750; letter-spacing: -.01em; color: #0b1220; line-height: 1.35; }
+        .nrr-body { margin: 0 0 7px; font-size: var(--f-11-5); line-height: 1.5; color: #7a8394; }
+        .nrr-cta { font-size: var(--f-11-5); font-weight: 700; color: #1360ee; }
         .nrr-item:hover .nrr-cta { text-decoration: underline; }
 
         .nrr-foot { padding: 0 12px 14px; }
         .nrr-foot a {
           display: block; text-align: center; padding: 11px; border-radius: 10px;
-          font-size: 12.5px; font-weight: 700; color: #1360ee; text-decoration: none;
+          font-size: var(--f-12-5); font-weight: 700; color: #1360ee; text-decoration: none;
           background: rgba(19,96,238,.06); transition: background .18s ${EASE};
         }
         .nrr-foot a:hover { background: rgba(19,96,238,.12); }
@@ -207,10 +207,10 @@ export default function NewsroomRail() {
         }
         .nrr-dur {
           position: absolute; left: 5px; bottom: 5px; z-index: 2;
-          font-size: 9.5px; font-weight: 700; color: #fff;
+          font-size: var(--f-9-5); font-weight: 700; color: #fff;
           background: rgba(0,0,0,.72); padding: 2px 5px; border-radius: 4px;
         }
-        .nrr-vid-title { margin: 0; font-size: 12px; font-weight: 650; line-height: 1.4; color: #2b3446; }
+        .nrr-vid-title { margin: 0; font-size: var(--f-12); font-weight: 650; line-height: 1.4; color: #2b3446; }
       `}</style>
 
       <aside className="nrr">

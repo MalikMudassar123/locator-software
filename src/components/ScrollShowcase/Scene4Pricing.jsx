@@ -767,9 +767,15 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
     const row = el.closest('.ss-row');
     if (!row) return;
 
+    // Built here rather than inside the gsap.context callback below: the wheel
+    // handlers at the bottom of this effect are OUTSIDE that callback's scope, so
+    // a `machine` declared in there is not in scope by the time they close over
+    // it. getMachine memoises into machineRef, so this is still the one instance
+    // the ScrollTriggers use.
+    const machine = getMachine();
+
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
-      const machine = getMachine();
 
       // Desktop: pin the whole row so the section holds still in view while the
       // wireframe draws and the dashboard lands — the scene plays where the user is

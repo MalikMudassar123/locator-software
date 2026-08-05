@@ -17,7 +17,7 @@ export default function NewsroomComingSoon() {
         }
         .nrc-btn {
           display: inline-flex; align-items: center; gap: 8px;
-          font-family: inherit; font-size: 14px; font-weight: 700;
+          font-family: inherit; font-size: var(--f-14); font-weight: 700;
           padding: 13px 28px; border-radius: 999px; text-decoration: none;
           background: #1360ee; color: #fff; box-shadow: 0 10px 24px rgba(19,96,238,.3);
           transition: .18s ${EASE};
@@ -33,10 +33,10 @@ export default function NewsroomComingSoon() {
               <path d="M8 8l14-4v20L8 20V8z" />
             </svg>
           </div>
-          <h2 style={{ margin: '0 0 14px', fontSize: 'clamp(22px,2.6vw,30px)', fontWeight: 800, letterSpacing: '-.02em', color: '#1d1d1f' }}>
+          <h2 style={{ margin: '0 0 14px', fontSize: 'max(clamp(22px,2.6vw,30px), min(2.083vw, 43.5px))', fontWeight: 800, letterSpacing: '-.02em', color: '#1d1d1f' }}>
             We&rsquo;re just getting started
           </h2>
-          <p style={{ margin: '0 auto 30px', maxWidth: '480px', fontSize: 'clamp(14px,1.3vw,16px)', lineHeight: 1.7, color: '#6e6e73' }}>
+          <p style={{ margin: '0 auto 30px', maxWidth: '480px', fontSize: 'max(clamp(14px,1.3vw,16px), min(1.111vw, 23.2px))', lineHeight: 1.7, color: '#6e6e73' }}>
             Check back soon for company news, product announcements, and milestones from the Locator team. In the meantime, we&rsquo;d love to hear from you.
           </p>
           <Link href="/contact" className="nrc-btn">

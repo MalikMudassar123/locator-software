@@ -18,7 +18,7 @@ export default function AsateelHero() {
         .asa-topbar { display: flex; justify-content: flex-end; padding: 0 4px 8px; max-width: var(--w-1280); margin: 0 auto; }
         .asa-phone-top {
           display: inline-flex; align-items: center; gap: 8px;
-          color: #fff; font-size: 16px; font-weight: 800;
+          color: #fff; font-size: var(--f-16); font-weight: 800;
           text-decoration: none;
         }
 
@@ -35,7 +35,7 @@ export default function AsateelHero() {
 
         .asa-back {
           display: inline-flex; align-items: center; gap: 6px;
-          color: rgba(255,255,255,.8); font-size: 13px; font-weight: 600;
+          color: rgba(255,255,255,.8); font-size: var(--f-13); font-weight: 600;
           text-decoration: none; margin-bottom: 18px;
           transition: color .18s ease, gap .18s ease;
         }
@@ -55,7 +55,7 @@ export default function AsateelHero() {
           display: grid; place-items: center; background: rgba(19,96,238,.12); color: #1360ee;
         }
         .asa-btn-icon svg { width: 15px; height: 15px; }
-        .asa-btn-text { font-size: clamp(13.5px,1.15vw,15px); line-height: 1.35; text-align: left; }
+        .asa-btn-text { font-size: max(clamp(13.5px,1.15vw,15px), min(1.042vw, 21.75px)); line-height: 1.35; text-align: left; }
         @media (max-width: 640px) {
           .asa-hero-cta-row { flex-direction: column; }
           .asa-btn { flex: none; width: 100%; }
@@ -83,7 +83,7 @@ export default function AsateelHero() {
               Regulatory GPS Certifications
             </Link>
 
-            <h1 style={{ margin: 0, fontSize: 'clamp(28px,3.8vw,44px)', fontWeight: 700, lineHeight: 1.14, color: '#fff' }}>
+            <h1 style={{ margin: 0, fontSize: 'max(clamp(28px,3.8vw,44px), min(3.056vw, 63.8px))', fontWeight: 700, lineHeight: 1.14, color: '#fff' }}>
               A Reliable <span style={{ color: '#fff', fontWeight: 800 }}>ASATEEL</span> Certified OBU Installation Company
             </h1>
 

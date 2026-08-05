@@ -15,7 +15,7 @@ export default function NewsroomHero() {
         .nrh-crumbs {
           display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
           max-width: var(--w-1280); margin: 0 auto; padding: 16px 28px;
-          font-size: 14px; color: #6e6e73;
+          font-size: var(--f-14); color: #6e6e73;
         }
         .nrh-crumbs a { color: #1d1d1f; font-weight: 600; text-decoration: none; transition: color .18s ease; }
         .nrh-crumbs a:hover { color: #1360ee; }
@@ -43,25 +43,25 @@ export default function NewsroomHero() {
 
         .nrh-eyebrow {
           display: inline-flex; align-items: center; gap: 12px;
-          font-size: clamp(13px,1.15vw,15px); font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+          font-size: max(clamp(13px,1.15vw,15px), min(1.042vw, 21.75px)); font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
           color: #9ec2ff; margin-bottom: 16px;
           text-shadow: 0 2px 12px rgba(0,0,0,.35);
         }
         .nrh-eyebrow i { display: block; width: 34px; height: 3px; background: #9ec2ff; border-radius: 2px; }
 
         .nrh-title {
-          margin: 0; font-size: clamp(30px,4.6vw,56px); font-weight: 800;
+          margin: 0; font-size: max(clamp(30px,4.6vw,56px), min(3.889vw, 81.2px)); font-weight: 800;
           line-height: 1.08; letter-spacing: -.02em; color: #fff; max-width: 20ch;
           text-shadow: 0 2px 4px rgba(0,0,0,.45), 0 8px 34px rgba(0,0,0,.4);
         }
 
-        .nrh-lead { margin: 16px 0 0; max-width: 60ch; font-size: clamp(14px,1.25vw,16.5px); line-height: 1.72; color: rgba(255,255,255,.86); }
+        .nrh-lead { margin: 16px 0 0; max-width: 60ch; font-size: max(clamp(14px,1.25vw,16.5px), min(1.146vw, 23.93px)); line-height: 1.72; color: rgba(255,255,255,.86); }
 
         .nrh-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: clamp(22px,3vw,30px); }
         .nrh-btn {
           display: inline-flex; align-items: center; gap: 9px;
           padding: 13px 22px; border-radius: 11px; text-decoration: none;
-          font-size: 13.5px; font-weight: 700; letter-spacing: .01em;
+          font-size: var(--f-13-5); font-weight: 700; letter-spacing: .01em;
           transition: transform .18s ${EASE}, background .18s ${EASE}, box-shadow .18s ${EASE}, border-color .18s ${EASE};
         }
         .nrh-btn-primary { background: #1360ee; color: #fff; border: 1.5px solid #1360ee; box-shadow: 0 12px 26px -10px rgba(19,96,238,.7); }

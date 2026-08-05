@@ -63,16 +63,16 @@ export default function BenefitsIndex() {
         .bgx-head { max-width: 720px; margin-bottom: clamp(40px,5vw,64px); }
         .bgx-eyebrow {
           display: flex; align-items: center; gap: 12px; margin: 0 0 18px;
-          font-size: 12px; font-weight: 700; letter-spacing: .14em;
+          font-size: var(--f-12); font-weight: 700; letter-spacing: .14em;
           text-transform: uppercase; color: #0a89dd;
         }
         .bgx-eyebrow::before { content: ''; width: 30px; height: 2px; background: #0a89dd; border-radius: 2px; }
         .bgx-h2 {
-          margin: 0; font-size: clamp(27px,3.6vw,44px); font-weight: 800;
+          margin: 0; font-size: max(clamp(27px,3.6vw,44px), min(3.056vw, 63.8px)); font-weight: 800;
           line-height: 1.12; letter-spacing: -.03em; color: #1d1d1f;
         }
         .bgx-sub {
-          margin: 18px 0 0; font-size: clamp(15px,1.4vw,17px);
+          margin: 18px 0 0; font-size: max(clamp(15px,1.4vw,17px), min(1.181vw, 24.65px));
           line-height: 1.72; color: #6e6e73;
         }
 
@@ -118,7 +118,7 @@ export default function BenefitsIndex() {
 
         .bgx-num {
           font-family: ui-monospace, 'Cascadia Code', 'SF Mono', monospace;
-          font-size: clamp(26px,3vw,38px); font-weight: 700;
+          font-size: max(clamp(26px,3vw,38px), min(2.639vw, 55.1px)); font-weight: 700;
           line-height: 1; letter-spacing: -.03em;
           color: #dfe4ec; font-variant-numeric: tabular-nums;
           transition: color .3s ${EASE};
@@ -127,12 +127,12 @@ export default function BenefitsIndex() {
 
         .bgx-title {
           margin: 0; padding-top: 2px;
-          font-size: clamp(17px,1.8vw,21px); font-weight: 700;
+          font-size: max(clamp(17px,1.8vw,21px), min(1.458vw, 30.45px)); font-weight: 700;
           line-height: 1.32; letter-spacing: -.02em; color: #1d1d1f;
         }
         .bgx-desc {
           margin: 0; padding-top: 2px;
-          font-size: clamp(14px,1.25vw,15.5px); line-height: 1.78; color: #6e6e73;
+          font-size: max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px)); line-height: 1.78; color: #6e6e73;
         }
 
         /* ── Narrow ──────────────────────────────────────────────────────────
@@ -143,7 +143,7 @@ export default function BenefitsIndex() {
           .bgx-row { grid-template-columns: 52px 1fr; gap: 14px; }
           .bgx-title { grid-column: 2; }
           .bgx-desc { grid-column: 2; padding-top: 8px; }
-          .bgx-num { font-size: 22px; }
+          .bgx-num { font-size: var(--f-22); }
           .bgx-row:hover { transform: none; }
         }
 

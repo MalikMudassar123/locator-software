@@ -113,7 +113,7 @@ export default function DeviceCarousel() {
         .dv-head { max-width: var(--w-1240); margin: 0 auto clamp(24px,3vw,40px); padding: 0 28px; text-align: center; }
         .dv-eyebrow {
           display: block;
-          font-size: clamp(22px,2.8vw,32px); font-weight: 800; letter-spacing: .04em;
+          font-size: max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px)); font-weight: 800; letter-spacing: .04em;
           color: #1360ee; text-transform: uppercase; margin-bottom: 16px;
         }
         /* Rule above the label — never stranded when the label wraps. */
@@ -121,8 +121,8 @@ export default function DeviceCarousel() {
           content: ''; display: block; width: 34px; height: 3px;
           background: #1360ee; border-radius: 2px; margin: 0 auto 12px;
         }
-        .dv-h2 { margin: 0 0 10px; font-size: clamp(19px,2.2vw,26px); font-weight: 800; line-height: 1.25; letter-spacing: -.015em; color: #1d1d1f; }
-        .dv-sub { margin: 0 auto; max-width: 56ch; font-size: clamp(13.5px,1.25vw,15.5px); line-height: 1.7; color: #52525e; }
+        .dv-h2 { margin: 0 0 10px; font-size: max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px)); font-weight: 800; line-height: 1.25; letter-spacing: -.015em; color: #1d1d1f; }
+        .dv-sub { margin: 0 auto; max-width: 56ch; font-size: max(clamp(13.5px,1.25vw,15.5px), min(1.076vw, 22.47px)); line-height: 1.7; color: #52525e; }
 
         /* ── Full-width stage ────────────────────────────────── */
         .dv-stage {
@@ -175,7 +175,7 @@ export default function DeviceCarousel() {
 
         .dv-index {
           position: absolute; top: clamp(16px,2vw,26px); left: clamp(18px,2.2vw,30px);
-          font-size: clamp(38px,5vw,68px); font-weight: 800; line-height: 1;
+          font-size: max(clamp(38px,5vw,68px), min(4.722vw, 98.6px)); font-weight: 800; line-height: 1;
           letter-spacing: -.04em; color: #f0f3f9; user-select: none; pointer-events: none;
         }
 
@@ -226,15 +226,15 @@ export default function DeviceCarousel() {
           display: flex; align-items: flex-end; justify-content: space-between;
           gap: 14px; min-width: 0;
         }
-        .dv-kicker { display: block; font-size: 10px; font-weight: 700; letter-spacing: .09em; color: #1360ee; text-transform: uppercase; margin-bottom: 7px; }
+        .dv-kicker { display: block; font-size: var(--f-10); font-weight: 700; letter-spacing: .09em; color: #1360ee; text-transform: uppercase; margin-bottom: 7px; }
         .dv-name {
-          margin: 0 0 6px; font-size: clamp(18px,2vw,25px); font-weight: 800;
+          margin: 0 0 6px; font-size: max(clamp(18px,2vw,25px), min(1.736vw, 36.25px)); font-weight: 800;
           line-height: 1.14; letter-spacing: -.025em; color: #1d1d1f;
           display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
         /* Two lines max, so a long tagline can never push the panel past the card. */
         .dv-tag {
-          margin: 0; max-width: 42ch; font-size: clamp(12.5px,1.05vw,13.5px);
+          margin: 0; max-width: 42ch; font-size: max(clamp(12.5px,1.05vw,13.5px), min(0.938vw, 19.57px));
           line-height: 1.5; color: #52525e;
           display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
@@ -242,21 +242,21 @@ export default function DeviceCarousel() {
         .dv-specs { display: flex; gap: 0; min-width: 0; overflow: hidden; }
         .dv-spec { padding: 0 clamp(10px,1.2vw,16px); border-left: 1px solid #e2e8f4; white-space: nowrap; }
         .dv-spec:first-child { border-left: none; padding-left: 0; }
-        .dv-spec-l { display: block; font-size: 9.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: #9aa2b1; margin-bottom: 3px; }
-        .dv-spec-v { font-size: 12px; font-weight: 700; color: #1d1d1f; }
+        .dv-spec-l { display: block; font-size: var(--f-9-5); font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: #9aa2b1; margin-bottom: 3px; }
+        .dv-spec-v { font-size: var(--f-12); font-weight: 700; color: #1d1d1f; }
         @media (max-width: 560px) { .dv-specs { display: none; } }
 
         .dv-cta {
           flex-shrink: 0; display: inline-flex; align-items: center; gap: 10px;
           padding: 12px 20px; border-radius: 11px; text-decoration: none;
-          background: #1360ee; color: #fff; font-size: 13.5px; font-weight: 700;
+          background: #1360ee; color: #fff; font-size: var(--f-13-5); font-weight: 700;
           box-shadow: 0 10px 24px rgba(19,96,238,.28); transition: .18s ${EASE};
           white-space: nowrap;
         }
         .dv-cta:hover { background: #0d4fd4; transform: translateY(-1px); box-shadow: 0 12px 28px rgba(19,96,238,.38); }
         .dv-cta svg { transition: transform .2s ${EASE}; }
         .dv-cta:hover svg { transform: translateX(3px); }
-        .dv-soon { flex-shrink: 0; font-size: 13.5px; font-weight: 700; color: #9aa2b1; white-space: nowrap; padding: 14px 0; }
+        .dv-soon { flex-shrink: 0; font-size: var(--f-13-5); font-weight: 700; color: #9aa2b1; white-space: nowrap; padding: 14px 0; }
 
         /* Side cards show the product only — no competing text. */
         .dv-item:not([data-pos="0"]) .dv-panel,
@@ -298,7 +298,7 @@ export default function DeviceCarousel() {
         .dv-thumb[aria-current="true"] img { opacity: 1; }
 
         .dv-meter { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: clamp(20px,2.5vw,28px); }
-        .dv-count { font-size: 12.5px; font-weight: 700; color: #6e6e73; font-variant-numeric: tabular-nums; }
+        .dv-count { font-size: var(--f-12-5); font-weight: 700; color: #6e6e73; font-variant-numeric: tabular-nums; }
         .dv-count b { color: #1d1d1f; }
         .dv-track { width: clamp(120px,18vw,220px); height: 2px; background: #e7ebf3; border-radius: 2px; overflow: hidden; }
         .dv-fill { height: 100%; background: #1360ee; border-radius: 2px; transition: width .5s ${EASE}; }
@@ -319,7 +319,7 @@ export default function DeviceCarousel() {
         }
         @keyframes dv-pop { from { opacity: 0; transform: translateY(16px) scale(.97) } to { opacity: 1; transform: none } }
         .dv-lb-inner img { width: 100%; height: auto; max-height: 62vh; object-fit: contain; display: block; }
-        .dv-lb-cap { margin: 20px 0 0; text-align: center; font-size: 17px; font-weight: 800; color: #1d1d1f; letter-spacing: -.015em; }
+        .dv-lb-cap { margin: 20px 0 0; text-align: center; font-size: var(--f-17); font-weight: 800; color: #1d1d1f; letter-spacing: -.015em; }
         .dv-lb-close {
           position: absolute; top: 14px; right: 14px;
           width: 38px; height: 38px; border-radius: 11px;

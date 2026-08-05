@@ -32,7 +32,7 @@ export default function SoftwareCTA() {
         /* Buttons */
         .cta-btn {
           display: inline-flex; align-items: center; justify-content: center;
-          font-family: inherit; font-size: 14px; font-weight: 700;
+          font-family: inherit; font-size: var(--f-14); font-weight: 700;
           padding: 13px 26px; border-radius: 999px;
           text-decoration: none;
           transition: .18s cubic-bezier(.22,.61,.36,1);
@@ -62,18 +62,18 @@ export default function SoftwareCTA() {
 
             <div data-reveal="zoom" style={{ position: 'relative', zIndex: 1 }}>
               {/* Tag */}
-              <span style={{ display: 'block', fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: 'rgba(255,255,255,.85)', marginBottom: '16px', textTransform: 'uppercase' }}>
+              <span style={{ display: 'block', fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: 'rgba(255,255,255,.85)', marginBottom: '16px', textTransform: 'uppercase' }}>
                 <span style={{ display: 'block', marginBottom: '12px' }}>
                   <span style={{ display: 'inline-block', width: '34px', height: '3px', background: 'rgba(255,255,255,.5)', borderRadius: '2px' }} />
                 </span>
                 Get Started Today
               </span>
 
-              <h2 style={{ fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, letterSpacing: '-.015em', color: '#fff', lineHeight: 1.25, maxWidth: '26ch', margin: '0 auto 16px' }}>
+              <h2 style={{ fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, letterSpacing: '-.015em', color: '#fff', lineHeight: 1.25, maxWidth: '26ch', margin: '0 auto 16px' }}>
                 Put your whole fleet on one platform.
               </h2>
 
-              <p style={{ margin: '0 auto', maxWidth: '480px', fontSize: 'clamp(14px,1.45vw,16px)', color: 'rgba(255,255,255,.76)', lineHeight: 1.65 }}>
+              <p style={{ margin: '0 auto', maxWidth: '480px', fontSize: 'max(clamp(14px,1.45vw,16px), min(1.111vw, 23.2px))', color: 'rgba(255,255,255,.76)', lineHeight: 1.65 }}>
                 Get a quote, book a live demo, and see Locator running on your own vehicles within days.
               </p>
 
@@ -94,8 +94,8 @@ export default function SoftwareCTA() {
                   { icon: '✓', text: 'Setup within 48 hours' },
                   { icon: '✓', text: 'Dedicated support team' },
                 ].map((t, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '7px', fontSize: '12.5px', color: 'rgba(255,255,255,.72)', fontWeight: 500 }}>
-                    <span style={{ width: '18px', height: '18px', borderRadius: '50%', background: 'rgba(255,255,255,.2)', display: 'grid', placeItems: 'center', fontSize: '10px', fontWeight: 800, flexShrink: 0, color: '#fff' }}>{t.icon}</span>
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '7px', fontSize: 'var(--f-12-5)', color: 'rgba(255,255,255,.72)', fontWeight: 500 }}>
+                    <span style={{ width: '18px', height: '18px', borderRadius: '50%', background: 'rgba(255,255,255,.2)', display: 'grid', placeItems: 'center', fontSize: 'var(--f-10)', fontWeight: 800, flexShrink: 0, color: '#fff' }}>{t.icon}</span>
                     {t.text}
                   </div>
                 ))}

@@ -74,14 +74,14 @@ export default function ModulesSection() {
         /* Small kicker label — the heading below carries the visual weight, not this. */
         .pm-tag {
           display: block;
-          font-size: 12px; font-weight: 600; letter-spacing: .14em;
+          font-size: var(--f-12); font-weight: 600; letter-spacing: .14em;
           color: #1360ee; text-transform: uppercase; margin-bottom: 10px;
         }
-        .pm-h2 { margin: 0; font-size: clamp(27px,3.6vw,40px); font-weight: 600; line-height: 1.15; letter-spacing: -.02em; color: rgb(72, 75, 76); }
-        .pm-lead { margin: 20px 0 0; font-size: clamp(14px,1.45vw,16px); font-weight: 400; line-height: 1.7; color: #6e6e73; max-width: 46ch; }
-        .pm-suited-label { margin: 26px 0 0; font-size: 11px; font-weight: 500; letter-spacing: .08em; color: #8a8a8f; text-transform: uppercase; }
+        .pm-h2 { margin: 0; font-size: max(clamp(27px,3.6vw,40px), min(2.778vw, 58px)); font-weight: 600; line-height: 1.15; letter-spacing: -.02em; color: rgb(72, 75, 76); }
+        .pm-lead { margin: 20px 0 0; font-size: max(clamp(14px,1.45vw,16px), min(1.111vw, 23.2px)); font-weight: 400; line-height: 1.7; color: #6e6e73; max-width: 46ch; }
+        .pm-suited-label { margin: 26px 0 0; font-size: var(--f-11); font-weight: 500; letter-spacing: .08em; color: #8a8a8f; text-transform: uppercase; }
         .pm-suited { margin: 14px 0 0; display: flex; flex-wrap: wrap; gap: 9px; }
-        .pm-suited span { font-size: 13px; font-weight: 600; color: #3a3a3c; background: #fff; border: 1px solid #e3e3e6; padding: 8px 14px; border-radius: 999px; }
+        .pm-suited span { font-size: var(--f-13); font-weight: 600; color: #3a3a3c; background: #fff; border: 1px solid #e3e3e6; padding: 8px 14px; border-radius: 999px; }
 
         .pm-viz { min-width: 0; }
 

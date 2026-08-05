@@ -48,7 +48,7 @@ export default function NewsroomWatch() {
 
         .nyw-loading {
           position: absolute; inset: 0; z-index: 3; display: grid; place-items: center; gap: 12px;
-          align-content: center; color: rgba(255,255,255,.85); font-size: 13px; font-weight: 600;
+          align-content: center; color: rgba(255,255,255,.85); font-size: var(--f-13); font-weight: 600;
         }
         .nyw-spin {
           width: 34px; height: 34px; border-radius: 50%;
@@ -63,20 +63,20 @@ export default function NewsroomWatch() {
         .nyw-bar-fill { display: block; height: 100%; background: #e63946; width: 0; }
         .nyw-stage[data-playing='true'] .nyw-bar-fill { animation: nyw-fill 14s linear forwards; }
         @keyframes nyw-fill { to { width: 62%; } }
-        .nyw-bar-meta { display: flex; justify-content: space-between; margin-top: 6px; font-size: 11px; color: rgba(255,255,255,.8); font-variant-numeric: tabular-nums; }
+        .nyw-bar-meta { display: flex; justify-content: space-between; margin-top: 6px; font-size: var(--f-11); color: rgba(255,255,255,.8); font-variant-numeric: tabular-nums; }
 
         /* ── Title block ── */
-        .nyw-title { margin: 16px 0 10px; font-size: clamp(17px,2vw,21px); font-weight: 800; letter-spacing: -.02em; line-height: 1.3; color: #0b1220; }
+        .nyw-title { margin: 16px 0 10px; font-size: max(clamp(17px,2vw,21px), min(1.458vw, 30.45px)); font-weight: 800; letter-spacing: -.02em; line-height: 1.3; color: #0b1220; }
 
         .nyw-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .nyw-channel { display: flex; align-items: center; gap: 11px; }
-        .nyw-avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: #1360ee; color: #fff; font-size: 16px; font-weight: 800; }
-        .nyw-cname { margin: 0; display: flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 700; color: #0b1220; }
+        .nyw-avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: #1360ee; color: #fff; font-size: var(--f-16); font-weight: 800; }
+        .nyw-cname { margin: 0; display: flex; align-items: center; gap: 4px; font-size: var(--f-14); font-weight: 700; color: #0b1220; }
         .nyw-cname svg { color: #9aa2b1; }
 
         /* ── Description ── */
         .nyw-desc { margin: 14px 0 0; padding: 14px 16px; border-radius: 12px; background: #f0f2f5; }
-        .nyw-desc-text { margin: 0; font-size: 13.5px; line-height: 1.6; color: #3d4657; white-space: pre-line; }
+        .nyw-desc-text { margin: 0; font-size: var(--f-13-5); line-height: 1.6; color: #3d4657; white-space: pre-line; }
 
         /* ── Playlist rail ── */
         .nyw-rail { display: flex; flex-direction: column; gap: 6px; }
@@ -84,9 +84,9 @@ export default function NewsroomWatch() {
           border: 1px solid #e3e6ea; border-radius: 12px; padding: 14px 16px; margin-bottom: 6px;
           display: flex; align-items: start; justify-content: space-between; gap: 12px;
         }
-        .nyw-rail-head h3 { margin: 0 0 3px; font-size: 15px; font-weight: 800; letter-spacing: -.015em; color: #0b1220; }
-        .nyw-rail-head p { margin: 0; font-size: 12px; color: #6b7484; }
-        .nyw-rail-count { font-size: 12px; color: #8b93a3; white-space: nowrap; }
+        .nyw-rail-head h3 { margin: 0 0 3px; font-size: var(--f-15); font-weight: 800; letter-spacing: -.015em; color: #0b1220; }
+        .nyw-rail-head p { margin: 0; font-size: var(--f-12); color: #6b7484; }
+        .nyw-rail-count { font-size: var(--f-12); color: #8b93a3; white-space: nowrap; }
 
         .nyw-row {
           display: grid; grid-template-columns: minmax(112px,150px) minmax(0,1fr); gap: 10px; align-items: start;
@@ -101,21 +101,21 @@ export default function NewsroomWatch() {
         .nyw-thumb img { object-fit: cover; }
         .nyw-thumb-dur {
           position: absolute; right: 4px; bottom: 4px; z-index: 2;
-          font-size: 10.5px; font-weight: 600; color: #fff;
+          font-size: var(--f-10-5); font-weight: 600; color: #fff;
           background: rgba(0,0,0,.8); padding: 1px 4px; border-radius: 3px;
           font-variant-numeric: tabular-nums;
         }
         .nyw-nowplaying {
           position: absolute; inset: 0; z-index: 2; display: grid; place-items: center;
-          background: rgba(0,0,0,.5); color: #fff; font-size: 10px; font-weight: 800;
+          background: rgba(0,0,0,.5); color: #fff; font-size: var(--f-10); font-weight: 800;
           letter-spacing: .1em; text-transform: uppercase;
         }
 
         .nyw-row-title {
-          margin: 0 0 4px; font-size: 12.8px; font-weight: 700; line-height: 1.36; color: #0b1220;
+          margin: 0 0 4px; font-size: var(--f-12-8); font-weight: 700; line-height: 1.36; color: #0b1220;
           display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
-        .nyw-row-meta { margin: 0; font-size: 11.5px; color: #6b7484; line-height: 1.45; }
+        .nyw-row-meta { margin: 0; font-size: var(--f-11-5); color: #6b7484; line-height: 1.45; }
       `}</style>
 
       <div>

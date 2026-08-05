@@ -30,7 +30,7 @@ export default function CareerTeamSpotlight() {
       <style>{`
         .cts-section { padding: clamp(56px,7vw,88px) 28px; background: #f4f6fa; }
         .cts-inner { max-width: var(--w-1120); margin: 0 auto; }
-        .cts-h2 { margin: 0 0 clamp(28px,4vw,40px); text-align: center; font-size: clamp(22px,2.8vw,32px); font-weight: 800; letter-spacing: -.01em; color: #1360ee; text-transform: uppercase; }
+        .cts-h2 { margin: 0 0 clamp(28px,4vw,40px); text-align: center; font-size: max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px)); font-weight: 800; letter-spacing: -.01em; color: #1360ee; text-transform: uppercase; }
 
         .cts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px,2vw,22px); }
         @media (max-width: 760px) { .cts-grid { grid-template-columns: 1fr; } }
@@ -54,8 +54,8 @@ export default function CareerTeamSpotlight() {
         .cts-card[data-playing="true"] .cts-logo { opacity: 0; }
 
         .cts-text { position: absolute; z-index: 2; left: clamp(16px,2vw,22px); right: clamp(16px,2vw,22px); bottom: clamp(18px,2.4vw,26px); text-align: left; transition: opacity .3s ${EASE}; }
-        .cts-tag { display: block; margin-bottom: 8px; font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.7); }
-        .cts-title { margin: 0; font-size: clamp(19px,2.2vw,25px); font-weight: 800; letter-spacing: -.015em; line-height: 1.2; color: #fff; max-width: 22ch; }
+        .cts-tag { display: block; margin-bottom: 8px; font-size: var(--f-11); font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.7); }
+        .cts-title { margin: 0; font-size: max(clamp(19px,2.2vw,25px), min(1.736vw, 36.25px)); font-weight: 800; letter-spacing: -.015em; line-height: 1.2; color: #fff; max-width: 22ch; }
         .cts-card[data-playing="true"] .cts-text { opacity: 0; pointer-events: none; }
 
         .cts-play {

@@ -12,7 +12,7 @@ export default function ShahinHero() {
 
         .shn-back {
           display: inline-flex; align-items: center; gap: 6px;
-          color: #6e6e73; font-size: 13px; font-weight: 600;
+          color: #6e6e73; font-size: var(--f-13); font-weight: 600;
           text-decoration: none; margin-bottom: 18px;
           transition: color .18s ease, gap .18s ease;
         }
@@ -21,7 +21,7 @@ export default function ShahinHero() {
         .shn-topbar { display: flex; justify-content: flex-end; padding: 0 4px 8px; max-width: var(--w-1200); margin: 0 auto; }
         .shn-phone-top {
           display: inline-flex; align-items: center; gap: 8px;
-          color: #1360ee; font-size: 16px; font-weight: 800;
+          color: #1360ee; font-size: var(--f-16); font-weight: 800;
           text-decoration: none;
         }
 
@@ -54,7 +54,7 @@ export default function ShahinHero() {
         .shn-btn-primary .shn-btn-icon { background: rgba(255,255,255,.22); color: #fff; }
         .shn-btn-secondary .shn-btn-icon { background: rgba(19,96,238,.1); color: #1360ee; }
         .shn-btn-icon svg { width: 15px; height: 15px; }
-        .shn-btn-text { font-size: clamp(13.5px,1.15vw,15px); line-height: 1.35; text-align: left; }
+        .shn-btn-text { font-size: max(clamp(13.5px,1.15vw,15px), min(1.042vw, 21.75px)); line-height: 1.35; text-align: left; }
         @media (max-width: 640px) {
           .shn-hero-cta-row { flex-direction: column; }
           .shn-btn { flex: none; width: 100%; }
@@ -83,7 +83,7 @@ export default function ShahinHero() {
               Regulatory GPS Certifications
             </Link>
 
-            <h1 style={{ margin: 0, maxWidth: '620px', fontSize: 'clamp(32px,4.4vw,58px)', fontWeight: 800, lineHeight: 1.14, letterSpacing: '-.025em', color: '#1d1d1f' }}>
+            <h1 style={{ margin: 0, maxWidth: '620px', fontSize: 'max(clamp(32px,4.4vw,58px), min(4.028vw, 84.1px))', fontWeight: 800, lineHeight: 1.14, letterSpacing: '-.025em', color: '#1d1d1f' }}>
               <span style={{ color: '#1360ee' }}>SHAHIN:</span> Your Reliable and Effective GPS Provider for Seamless Registration
             </h1>
 

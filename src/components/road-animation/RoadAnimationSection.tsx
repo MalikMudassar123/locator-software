@@ -75,10 +75,10 @@ function FeatureCard({
 
       {/* Text */}
       <div style={{ paddingTop: 2 }}>
-        <p style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', lineHeight: 1.35, marginBottom: 6 }}>
+        <p style={{ fontSize: 'var(--f-14)', fontWeight: 600, color: '#0f172a', lineHeight: 1.35, marginBottom: 6 }}>
           {title}
         </p>
-        <p style={{ fontSize: 12.5, color: '#94a3b8', lineHeight: 1.6 }}>
+        <p style={{ fontSize: 'var(--f-12-5)', color: '#94a3b8', lineHeight: 1.6 }}>
           {desc}
         </p>
       </div>

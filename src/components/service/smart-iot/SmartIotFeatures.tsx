@@ -68,11 +68,11 @@ export default function SmartIotFeatures() {
       <section style={{ padding: 'clamp(56px,7vw,88px) 28px', background: '#fff' }}>
         <div style={{ maxWidth: 'var(--w-1180)', margin: '0 auto' }}>
           <div data-reveal style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto clamp(36px,5vw,52px)' }}>
-            <span style={{ fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
+            <span style={{ fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
               <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
               One connected platform
             </span>
-            <h2 style={{ margin: 0, fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+            <h2 style={{ margin: 0, fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               Intelligence that ties every asset together
             </h2>
           </div>
@@ -81,8 +81,8 @@ export default function SmartIotFeatures() {
             {FEATURES.map((f, i) => (
               <div key={f.title} className="sif-card" data-reveal data-reveal-delay={String((i % 4) * 80)} style={{ '--sif-accent': f.accent } as React.CSSProperties}>
                 <div className="sif-ic" style={{ background: `${f.accent}14`, color: f.accent }}>{f.icon}</div>
-                <h3 style={{ margin: 0, fontSize: 'clamp(15px,1.5vw,17px)', fontWeight: 800, lineHeight: 1.3, color: '#1d1d1f' }}>{f.title}</h3>
-                <p style={{ margin: 0, fontSize: 'clamp(13px,1.2vw,14.5px)', lineHeight: 1.65, color: '#6e6e73' }}>{f.desc}</p>
+                <h3 style={{ margin: 0, fontSize: 'max(clamp(15px,1.5vw,17px), min(1.181vw, 24.65px))', fontWeight: 800, lineHeight: 1.3, color: '#1d1d1f' }}>{f.title}</h3>
+                <p style={{ margin: 0, fontSize: 'max(clamp(13px,1.2vw,14.5px), min(1.007vw, 21.02px))', lineHeight: 1.65, color: '#6e6e73' }}>{f.desc}</p>
               </div>
             ))}
           </div>

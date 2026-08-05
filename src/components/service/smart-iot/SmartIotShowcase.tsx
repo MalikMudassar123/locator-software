@@ -59,14 +59,14 @@ export default function SmartIotShowcase() {
           <div key={b.title} id={b.id} className={`sis-block${i % 2 === 1 ? ' flip' : ''}`}>
             <div className="sis-grid">
               <div className="sis-text" data-reveal={i % 2 === 1 ? 'right' : 'left'}>
-                <span style={{ display: 'block', fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', marginBottom: '16px' }}>
+                <span style={{ display: 'block', fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', marginBottom: '16px' }}>
                   <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
                   {b.eyebrow}
                 </span>
-                <h2 style={{ margin: '0 0 16px', fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+                <h2 style={{ margin: '0 0 16px', fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-.015em', color: '#1d1d1f' }}>
                   {b.title}
                 </h2>
-                <p style={{ margin: 0, fontSize: 'clamp(14px,1.3vw,16px)', lineHeight: 1.8, color: '#52525e', maxWidth: '52ch' }}>
+                <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.3vw,16px), min(1.111vw, 23.2px))', lineHeight: 1.8, color: '#52525e', maxWidth: '52ch' }}>
                   {b.body}
                 </p>
               </div>

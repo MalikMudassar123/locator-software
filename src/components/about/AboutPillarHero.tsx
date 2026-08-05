@@ -33,7 +33,7 @@ export default function AboutPillarHero({
 
         /* Title: solid section accent — bold and clean, no gradient. */
         .apx-title {
-          margin: 0; font-size: clamp(32px,4.6vw,58px); font-weight: 800;
+          margin: 0; font-size: max(clamp(32px,4.6vw,58px), min(4.028vw, 84.1px)); font-weight: 800;
           line-height: 1.06; letter-spacing: -.03em; color: var(--tab-accent);
         }
 
@@ -46,7 +46,7 @@ export default function AboutPillarHero({
         }
         .apx-lead {
           margin: 0 auto; max-width: 820px;
-          font-size: clamp(16px,1.7vw,20px); line-height: 1.7;
+          font-size: max(clamp(16px,1.7vw,20px), min(1.389vw, 29px)); line-height: 1.7;
           font-weight: 500; color: #1d1d1f; text-align: center;
         }
       `}</style>
@@ -64,7 +64,7 @@ export default function AboutPillarHero({
             {active.icon}
           </div>
 
-          <span className="apx-anim" style={{ animationDelay: '.08s', display: 'block', fontSize: 'clamp(13px,1.15vw,15px)', fontWeight: 700, letterSpacing: '.13em', color: active.accent, textTransform: 'uppercase', marginBottom: '16px' }}>
+          <span className="apx-anim" style={{ animationDelay: '.08s', display: 'block', fontSize: 'max(clamp(13px,1.15vw,15px), min(1.042vw, 21.75px))', fontWeight: 700, letterSpacing: '.13em', color: active.accent, textTransform: 'uppercase', marginBottom: '16px' }}>
             <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: active.accent, borderRadius: '2px' }} /></span>
             {active.tagline}
           </span>

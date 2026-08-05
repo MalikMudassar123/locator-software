@@ -975,6 +975,13 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     const row = el.closest('.ss-row');
     if (!row) return;
 
+    // Built here rather than inside the gsap.context callback below: the wheel
+    // handlers at the bottom of this effect are OUTSIDE that callback's scope, so
+    // a `machine` declared in there is not in scope by the time they close over
+    // it. getMachine memoises into machineRef, so this is still the one instance
+    // the ScrollTriggers use.
+    const machine = getMachine();
+
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
 
@@ -994,8 +1001,6 @@ export default forwardRef(function Scene1Icons(_props, ref) {
           { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(1.6)' }, 0.65);
         phoneTlRef.current = tl;
       };
-
-      const machine = getMachine();
 
       // Desktop: pin the whole row so nothing moves while the phone is revealed.
       mm.add('(min-width: 1024px)', () => {

@@ -32,7 +32,7 @@ function StageWrap({ title, accent = '#1360ee', children }: { title: string; acc
             <span key={c} style={{ width: '10px', height: '10px', borderRadius: '50%', background: c, display: 'inline-block' }} />
           ))}
         </div>
-        <span style={{ fontSize: '12px', fontWeight: 600, color: '#6e6e73', marginLeft: '6px', flex: 1 }}>{title}</span>
+        <span style={{ fontSize: 'var(--f-12)', fontWeight: 600, color: '#6e6e73', marginLeft: '6px', flex: 1 }}>{title}</span>
         <div style={{ width: '48px', height: '4px', borderRadius: '2px', background: accent, opacity: 0.35 }} />
       </div>
       <div style={{ flex: 1, overflow: 'hidden' }}>{children}</div>
@@ -61,11 +61,11 @@ function GPSStage() {
               <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: v.c, border: '2.5px solid #fff', boxShadow: `0 0 0 4px ${v.c}40` }} />
             </div>
           ))}
-          <div style={{ position: 'absolute', right: '12px', top: '12px', background: '#fff', borderRadius: '10px', padding: '10px 13px', boxShadow: '0 4px 18px rgba(0,0,0,.12)', fontSize: '11.5px', minWidth: '128px' }}>
+          <div style={{ position: 'absolute', right: '12px', top: '12px', background: '#fff', borderRadius: '10px', padding: '10px 13px', boxShadow: '0 4px 18px rgba(0,0,0,.12)', fontSize: 'var(--f-11-5)', minWidth: '128px' }}>
             <div style={{ fontWeight: 700, color: '#1d1d1f', marginBottom: '4px' }}>VAN-204</div>
             <div style={{ color: '#6e6e73', marginBottom: '3px' }}>62 km/h</div>
             <div style={{ color: '#6e6e73', marginBottom: '6px' }}>Jebel Ali, Dubai</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#1fbf5b', fontWeight: 700, fontSize: '11px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#1fbf5b', fontWeight: 700, fontSize: 'var(--f-11)' }}>
               <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#1fbf5b', display: 'inline-block' }} /> Live
             </div>
           </div>
@@ -78,8 +78,8 @@ function GPSStage() {
             { l: 'Offline',v: '1',  c: '#ff5f57' },
           ].map((s, i) => (
             <div key={i} style={{ background: '#f5f5f7', borderRadius: '10px', padding: '10px 4px', textAlign: 'center' }}>
-              <div style={{ fontSize: '18px', fontWeight: 800, color: s.c, letterSpacing: '-.02em' }}>{s.v}</div>
-              <div style={{ fontSize: '10px', color: '#6e6e73', marginTop: '2px', fontWeight: 600 }}>{s.l}</div>
+              <div style={{ fontSize: 'var(--f-18)', fontWeight: 800, color: s.c, letterSpacing: '-.02em' }}>{s.v}</div>
+              <div style={{ fontSize: 'var(--f-10)', color: '#6e6e73', marginTop: '2px', fontWeight: 600 }}>{s.l}</div>
             </div>
           ))}
         </div>
@@ -103,14 +103,14 @@ function DashboardStage() {
             { l: 'Fuel Saved',     v: '18 L',     sub: 'vs manual routing', c: '#c2740a' },
           ].map((k, i) => (
             <div key={i} style={{ background: '#f5f5f7', borderRadius: '12px', padding: '13px' }}>
-              <div style={{ fontSize: '10.5px', color: '#6e6e73', fontWeight: 600, marginBottom: '5px' }}>{k.l}</div>
-              <div style={{ fontSize: '15px', fontWeight: 800, color: k.c, letterSpacing: '-.02em' }}>{k.v}</div>
-              <div style={{ fontSize: '10px', color: '#a1a1a6', marginTop: '3px' }}>{k.sub}</div>
+              <div style={{ fontSize: 'var(--f-10-5)', color: '#6e6e73', fontWeight: 600, marginBottom: '5px' }}>{k.l}</div>
+              <div style={{ fontSize: 'var(--f-15)', fontWeight: 800, color: k.c, letterSpacing: '-.02em' }}>{k.v}</div>
+              <div style={{ fontSize: 'var(--f-10)', color: '#a1a1a6', marginTop: '3px' }}>{k.sub}</div>
             </div>
           ))}
         </div>
         <div style={{ flex: 1, background: '#f5f5f7', borderRadius: '12px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px', minHeight: '80px' }}>
-          <div style={{ fontSize: '10.5px', fontWeight: 700, color: '#6e6e73' }}>Trips per day — this week</div>
+          <div style={{ fontSize: 'var(--f-10-5)', fontWeight: 700, color: '#6e6e73' }}>Trips per day — this week</div>
           <div style={{ display: 'flex', alignItems: 'flex-end', gap: '5px', flex: 1 }}>
             {bars.map((h, i) => (
               <div key={i} style={{ flex: 1, borderRadius: '4px 4px 0 0', background: i === 6 ? '#1360ee' : '#dde3f0', height: `${h}%`, transition: 'height .3s' }} />
@@ -118,7 +118,7 @@ function DashboardStage() {
           </div>
           <div style={{ display: 'flex', gap: '5px' }}>
             {['M','T','W','T','F','S','S'].map((d, i) => (
-              <div key={i} style={{ flex: 1, textAlign: 'center', fontSize: '9px', color: i === 6 ? '#1360ee' : '#a1a1a6', fontWeight: 700 }}>{d}</div>
+              <div key={i} style={{ flex: 1, textAlign: 'center', fontSize: 'var(--f-9)', color: i === 6 ? '#1360ee' : '#a1a1a6', fontWeight: 700 }}>{d}</div>
             ))}
           </div>
         </div>
@@ -133,7 +133,7 @@ function IdleStage() {
   return (
     <StageWrap title="Idle Alerts — 3 active" accent="#c2740a">
       <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <div style={{ background: '#fff8ee', border: '1px solid #ffd27e', borderRadius: '10px', padding: '10px 14px', fontSize: '12px', color: '#c2740a', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ background: '#fff8ee', border: '1px solid #ffd27e', borderRadius: '10px', padding: '10px 14px', fontSize: 'var(--f-12)', color: '#c2740a', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span>⚠️</span> 3 vehicles idling beyond 10-min threshold
         </div>
         {[
@@ -144,14 +144,14 @@ function IdleStage() {
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '11px 14px', background: '#fff', border: '1px solid #e8e8eb', borderRadius: '12px' }}>
             <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#ff9f0a', flexShrink: 0 }} />
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontWeight: 700, fontSize: '13px', color: '#1d1d1f' }}>{a.v}</div>
-              <div style={{ fontSize: '11px', color: '#6e6e73', marginTop: '1px' }}>{a.loc}</div>
+              <div style={{ fontWeight: 700, fontSize: 'var(--f-13)', color: '#1d1d1f' }}>{a.v}</div>
+              <div style={{ fontSize: 'var(--f-11)', color: '#6e6e73', marginTop: '1px' }}>{a.loc}</div>
             </div>
             <div style={{ textAlign: 'right', marginRight: '4px' }}>
-              <div style={{ fontWeight: 800, fontSize: '13px', color: '#c2740a' }}>{a.dur}</div>
-              <div style={{ fontSize: '10px', color: '#a1a1a6' }}>since {a.since}</div>
+              <div style={{ fontWeight: 800, fontSize: 'var(--f-13)', color: '#c2740a' }}>{a.dur}</div>
+              <div style={{ fontSize: 'var(--f-10)', color: '#a1a1a6' }}>since {a.since}</div>
             </div>
-            <button style={{ background: '#fff3e3', color: '#c2740a', border: 'none', borderRadius: '8px', padding: '5px 10px', fontSize: '11px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>Alert</button>
+            <button style={{ background: '#fff3e3', color: '#c2740a', border: 'none', borderRadius: '8px', padding: '5px 10px', fontSize: 'var(--f-11)', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>Alert</button>
           </div>
         ))}
       </div>
@@ -167,19 +167,19 @@ function AfterHoursStage() {
       <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
         <div style={{ background: 'linear-gradient(135deg,#1a1a2e,#16213e)', borderRadius: '14px', padding: '18px', color: '#fff' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginBottom: '14px' }}>
-            <span style={{ fontSize: '22px' }}>🌙</span>
+            <span style={{ fontSize: 'var(--f-22)' }}>🌙</span>
             <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 800, fontSize: '13.5px' }}>After-Hours Movement</div>
-              <div style={{ fontSize: '11px', color: 'rgba(255,255,255,.55)', marginTop: '2px' }}>11:42 PM · 14 Mar 2025</div>
+              <div style={{ fontWeight: 800, fontSize: 'var(--f-13-5)' }}>After-Hours Movement</div>
+              <div style={{ fontSize: 'var(--f-11)', color: 'rgba(255,255,255,.55)', marginTop: '2px' }}>11:42 PM · 14 Mar 2025</div>
             </div>
-            <span style={{ background: '#7c3aed', borderRadius: '8px', padding: '4px 10px', fontSize: '10.5px', fontWeight: 700 }}>Alert</span>
+            <span style={{ background: '#7c3aed', borderRadius: '8px', padding: '4px 10px', fontSize: 'var(--f-10-5)', fontWeight: 700 }}>Alert</span>
           </div>
           {[
             { l: 'Vehicle',  v: 'TRK-118' },
             { l: 'Location', v: 'Al Quoz Industrial' },
             { l: 'Speed',    v: '48 km/h' },
           ].map((r, i) => (
-            <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', padding: '7px 0', borderBottom: i < 2 ? '1px solid rgba(255,255,255,.08)' : 'none' }}>
+            <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--f-12)', padding: '7px 0', borderBottom: i < 2 ? '1px solid rgba(255,255,255,.08)' : 'none' }}>
               <span style={{ color: 'rgba(255,255,255,.5)' }}>{r.l}</span>
               <span style={{ fontWeight: 700 }}>{r.v}</span>
             </div>
@@ -188,8 +188,8 @@ function AfterHoursStage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
           {[{ l: 'Off-hours trips', v: '1', c: '#7c3aed' }, { l: 'Distance covered', v: '14 km', c: '#1d1d1f' }].map((s, i) => (
             <div key={i} style={{ background: '#f5f5f7', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-              <div style={{ fontWeight: 800, fontSize: '15px', color: s.c }}>{s.v}</div>
-              <div style={{ fontSize: '10px', color: '#6e6e73', marginTop: '2px' }}>{s.l}</div>
+              <div style={{ fontWeight: 800, fontSize: 'var(--f-15)', color: s.c }}>{s.v}</div>
+              <div style={{ fontSize: 'var(--f-10)', color: '#6e6e73', marginTop: '2px' }}>{s.l}</div>
             </div>
           ))}
         </div>
@@ -207,8 +207,8 @@ function RouteHistoryStage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '7px' }}>
           {[{ l: 'Total trips', v: '3' }, { l: 'Total km', v: '69 km' }, { l: 'Drive time', v: '1h 40m' }].map((s, i) => (
             <div key={i} style={{ background: '#edfff4', borderRadius: '10px', padding: '10px 6px', textAlign: 'center' }}>
-              <div style={{ fontWeight: 800, fontSize: '15px', color: '#13923f' }}>{s.v}</div>
-              <div style={{ fontSize: '10px', color: '#6e6e73', marginTop: '2px' }}>{s.l}</div>
+              <div style={{ fontWeight: 800, fontSize: 'var(--f-15)', color: '#13923f' }}>{s.v}</div>
+              <div style={{ fontSize: 'var(--f-10)', color: '#6e6e73', marginTop: '2px' }}>{s.l}</div>
             </div>
           ))}
         </div>
@@ -220,10 +220,10 @@ function RouteHistoryStage() {
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '11px 14px', background: '#fff', border: '1px solid #e8e8eb', borderRadius: '12px' }}>
             <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#13923f', flexShrink: 0 }} />
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontWeight: 700, fontSize: '12.5px', color: '#1d1d1f', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.from} → {t.to}</div>
-              <div style={{ fontSize: '10.5px', color: '#6e6e73', marginTop: '2px' }}>{t.time} · {t.dist}</div>
+              <div style={{ fontWeight: 700, fontSize: 'var(--f-12-5)', color: '#1d1d1f', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.from} → {t.to}</div>
+              <div style={{ fontSize: 'var(--f-10-5)', color: '#6e6e73', marginTop: '2px' }}>{t.time} · {t.dist}</div>
             </div>
-            <div style={{ fontSize: '11.5px', fontWeight: 700, color: '#13923f', flexShrink: 0 }}>{t.dur}</div>
+            <div style={{ fontSize: 'var(--f-11-5)', fontWeight: 700, color: '#13923f', flexShrink: 0 }}>{t.dur}</div>
           </div>
         ))}
       </div>
@@ -245,12 +245,12 @@ function ServiceStage() {
       <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {items.map((it, i) => (
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '11px 14px', background: '#fff', border: '1px solid #e8e8eb', borderRadius: '12px' }}>
-            <span style={{ fontSize: '18px' }}>{it.icon}</span>
+            <span style={{ fontSize: 'var(--f-18)' }}>{it.icon}</span>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontWeight: 700, fontSize: '13px', color: '#1d1d1f' }}>{it.l}</div>
-              <div style={{ fontSize: '11px', color: '#6e6e73', marginTop: '1px' }}>{it.v}</div>
+              <div style={{ fontWeight: 700, fontSize: 'var(--f-13)', color: '#1d1d1f' }}>{it.l}</div>
+              <div style={{ fontSize: 'var(--f-11)', color: '#6e6e73', marginTop: '1px' }}>{it.v}</div>
             </div>
-            <span style={{ fontSize: '11px', fontWeight: 700, padding: '4px 10px', borderRadius: '999px', background: it.badge, color: it.bc, whiteSpace: 'nowrap' }}>{it.due}</span>
+            <span style={{ fontSize: 'var(--f-11)', fontWeight: 700, padding: '4px 10px', borderRadius: '999px', background: it.badge, color: it.bc, whiteSpace: 'nowrap' }}>{it.due}</span>
           </div>
         ))}
       </div>
@@ -272,12 +272,12 @@ function TasksStage() {
       <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {tasks.map((t, i) => (
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '11px 14px', background: '#fff', border: '1px solid #e8e8eb', borderRadius: '12px' }}>
-            <span style={{ fontSize: '18px' }}>{t.icon}</span>
+            <span style={{ fontSize: 'var(--f-18)' }}>{t.icon}</span>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontWeight: 700, fontSize: '13px', color: '#1d1d1f', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.t}</div>
-              <div style={{ fontSize: '11px', color: '#6e6e73', marginTop: '1px' }}>{t.s}</div>
+              <div style={{ fontWeight: 700, fontSize: 'var(--f-13)', color: '#1d1d1f', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.t}</div>
+              <div style={{ fontSize: 'var(--f-11)', color: '#6e6e73', marginTop: '1px' }}>{t.s}</div>
             </div>
-            <span style={{ fontSize: '11px', fontWeight: 700, padding: '4px 10px', borderRadius: '999px', background: t.bg, color: t.bc, whiteSpace: 'nowrap' }}>{t.badge}</span>
+            <span style={{ fontSize: 'var(--f-11)', fontWeight: 700, padding: '4px 10px', borderRadius: '999px', background: t.bg, color: t.bc, whiteSpace: 'nowrap' }}>{t.badge}</span>
           </div>
         ))}
       </div>
@@ -299,15 +299,15 @@ function ExpenseStage() {
       <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {items.map((it, i) => (
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '11px 14px', background: '#fff', border: '1px solid #e8e8eb', borderRadius: '12px' }}>
-            <span style={{ fontSize: '18px' }}>{it.icon}</span>
+            <span style={{ fontSize: 'var(--f-18)' }}>{it.icon}</span>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontWeight: 700, fontSize: '13px', color: '#1d1d1f', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{it.t}</div>
-              <div style={{ fontSize: '11px', color: '#6e6e73', marginTop: '1px' }}>{it.s}</div>
+              <div style={{ fontWeight: 700, fontSize: 'var(--f-13)', color: '#1d1d1f', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{it.t}</div>
+              <div style={{ fontSize: 'var(--f-11)', color: '#6e6e73', marginTop: '1px' }}>{it.s}</div>
             </div>
-            <div style={{ fontWeight: 800, fontSize: '13px', color: '#1d1d1f', flexShrink: 0, marginRight: '4px' }}>{it.amt}</div>
+            <div style={{ fontWeight: 800, fontSize: 'var(--f-13)', color: '#1d1d1f', flexShrink: 0, marginRight: '4px' }}>{it.amt}</div>
             {it.review
-              ? <button style={{ background: '#fff0f2', color: '#c0384d', border: 'none', borderRadius: '8px', padding: '5px 10px', fontSize: '11px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>Review</button>
-              : <span style={{ fontSize: '13px', fontWeight: 800, color: '#13923f' }}>✓</span>}
+              ? <button style={{ background: '#fff0f2', color: '#c0384d', border: 'none', borderRadius: '8px', padding: '5px 10px', fontSize: 'var(--f-11)', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>Review</button>
+              : <span style={{ fontSize: 'var(--f-13)', fontWeight: 800, color: '#13923f' }}>✓</span>}
           </div>
         ))}
       </div>
@@ -340,8 +340,8 @@ function GeofenceStage() {
             { e: 'TRK-118 exited Depot zone',  t: '09:28', c: '#c0384d' },
           ].map((ev, i) => (
             <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '9px 12px', background: '#f5f5f7', borderRadius: '9px' }}>
-              <span style={{ fontSize: '12px', fontWeight: 600, color: ev.c }}>{ev.e}</span>
-              <span style={{ fontSize: '11px', color: '#6e6e73' }}>{ev.t}</span>
+              <span style={{ fontSize: 'var(--f-12)', fontWeight: 600, color: ev.c }}>{ev.e}</span>
+              <span style={{ fontSize: 'var(--f-11)', color: '#6e6e73' }}>{ev.t}</span>
             </div>
           ))}
         </div>
@@ -362,10 +362,10 @@ function AIRouteStage() {
             { label: 'AI Optimized',  dist: '36 km', time: '54 min', fuel: '3.9 L', c: '#7c3aed', bg: '#f3f0ff', border: 'rgba(124,58,237,.25)', best: true },
           ].map((r, i) => (
             <div key={i} style={{ background: r.bg, borderRadius: '14px', padding: '15px', border: `1.5px solid ${r.border}`, position: 'relative' }}>
-              {r.best && <div style={{ position: 'absolute', top: '10px', right: '10px', background: '#7c3aed', color: '#fff', fontSize: '9px', fontWeight: 700, padding: '3px 8px', borderRadius: '999px', letterSpacing: '.04em' }}>BEST</div>}
-              <div style={{ fontSize: '11.5px', fontWeight: 700, color: r.c, marginBottom: '10px' }}>{r.label}</div>
+              {r.best && <div style={{ position: 'absolute', top: '10px', right: '10px', background: '#7c3aed', color: '#fff', fontSize: 'var(--f-9)', fontWeight: 700, padding: '3px 8px', borderRadius: '999px', letterSpacing: '.04em' }}>BEST</div>}
+              <div style={{ fontSize: 'var(--f-11-5)', fontWeight: 700, color: r.c, marginBottom: '10px' }}>{r.label}</div>
               {[{ l: 'Distance', v: r.dist }, { l: 'Travel time', v: r.time }, { l: 'Fuel est.', v: r.fuel }].map((s, j) => (
-                <div key={j} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', marginBottom: '6px' }}>
+                <div key={j} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--f-11-5)', marginBottom: '6px' }}>
                   <span style={{ color: '#6e6e73' }}>{s.l}</span>
                   <span style={{ fontWeight: 700, color: '#1d1d1f' }}>{s.v}</span>
                 </div>
@@ -374,10 +374,10 @@ function AIRouteStage() {
           ))}
         </div>
         <div style={{ background: '#f3f0ff', borderRadius: '12px', padding: '13px 16px', display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <span style={{ fontSize: '22px' }}>🤖</span>
+          <span style={{ fontSize: 'var(--f-22)' }}>🤖</span>
           <div>
-            <div style={{ fontWeight: 700, fontSize: '12.5px', color: '#7c3aed' }}>Saves 28 min · 12 km · 1.3 L fuel</div>
-            <div style={{ fontSize: '11px', color: '#6e6e73', marginTop: '3px' }}>Avoids 2 congestion points on Sheikh Zayed Rd</div>
+            <div style={{ fontWeight: 700, fontSize: 'var(--f-12-5)', color: '#7c3aed' }}>Saves 28 min · 12 km · 1.3 L fuel</div>
+            <div style={{ fontSize: 'var(--f-11)', color: '#6e6e73', marginTop: '3px' }}>Avoids 2 congestion points on Sheikh Zayed Rd</div>
           </div>
         </div>
       </div>
@@ -480,11 +480,11 @@ export default function BenefitsSection() {
           width: 26px; height: 26px; border-radius: 50%;
           border: 1.5px solid #c8c8d0;
           display: grid; place-items: center;
-          flex-shrink: 0; color: #8888a0; font-size: 17px; line-height: 1;
+          flex-shrink: 0; color: #8888a0; font-size: var(--f-17); line-height: 1;
           transition: border-color .2s ${EASE}, color .2s ${EASE}, transform .35s cubic-bezier(.34,1.3,.64,1);
         }
         .bf-pill-lbl {
-          font-size: 14px; font-weight: 600; color: #3a3a3c;
+          font-size: var(--f-14); font-weight: 600; color: #3a3a3c;
           letter-spacing: -.01em; transition: color .15s;
         }
 
@@ -497,7 +497,7 @@ export default function BenefitsSection() {
         .bf-acc-inner { overflow: hidden; min-height: 0; }
         .bf-acc-desc {
           padding: 22px 24px;
-          font-size: 15px; line-height: 1.6; color: #6b6b70;
+          font-size: var(--f-15); line-height: 1.6; color: #6b6b70;
           opacity: 0; transform: translateY(-4px);
           transition: opacity .18s, transform .22s ${EASE};
         }
@@ -550,7 +550,7 @@ export default function BenefitsSection() {
           {/* ── Header — centered ── */}
           <div data-reveal style={{ marginBottom: '36px', textAlign: 'center' }}>
             <span style={{
-              fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em',
+              fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em',
               color: '#1360ee', textTransform: 'uppercase' as const,
               display: 'block', marginBottom: '16px',
             }}>
@@ -559,7 +559,7 @@ export default function BenefitsSection() {
             </span>
             <h2 style={{
               margin: '0 auto',
-              fontSize: 'clamp(19px,2.2vw,26px)',
+              fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))',
               fontWeight: 800, lineHeight: 1.25,
               letterSpacing: '-.015em', color: '#1d1d1f',
               maxWidth: '600px',
@@ -612,7 +612,18 @@ export default function BenefitsSection() {
                   // inside an overflow:hidden item, so there was nothing spare
                   // before one started getting clipped — and gave the open item's
                   // description a ~220px measure, which broke it over four lines.
-                  width: '330px',
+                  //
+                  // Now widened again, and on the site-wide vw scale (same
+                  // max(BASE, min(K vw, BASE x 1.45)) formula as --w-*), because
+                  // the card grew to 1440 but this column did not: every extra
+                  // pixel of card width was landing in the video panel, which is
+                  // already wider than the 1726x1512 (aspect 1.14) clips it
+                  // holds. object-fit: contain then pillarboxed them, and the
+                  // panel background showed as slabs either side. At this width
+                  // the panel lands at ~1.15 — the video fills it edge to edge —
+                  // and the open item's description gets a real measure instead
+                  // of a 250px ribbon.
+                  width: 'max(470px, min(30.13vw, 681px))',
                   flexShrink: 0,
                   borderRight: '1px solid #e4e4e8',
                   display: 'flex',
@@ -653,7 +664,12 @@ export default function BenefitsSection() {
                 className="bf-right"
                 style={{
                   flex: 1,
-                  background: '#eef2f8',   // light placeholder — never a black box
+                  // White, not a tinted grey: the clips are 1726x1512 and the
+                  // panel's aspect moves with the viewport, so contain always
+                  // leaves a few pixels over on one axis. Against the card's own
+                  // white that residue reads as padding; against a tint it read
+                  // as two grey slabs bracketing the video. Still never black.
+                  background: '#ffffff',
                   overflow: 'hidden',
                   position: 'relative',
                 }}

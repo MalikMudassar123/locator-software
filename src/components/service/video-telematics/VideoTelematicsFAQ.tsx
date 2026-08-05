@@ -96,7 +96,7 @@ export default function VideoTelematicsFAQ() {
           cursor: pointer; font-family: inherit; text-align: left;
         }
         .vtfq-num {
-          font-size: 10px; font-weight: 700;
+          font-size: var(--f-10); font-weight: 700;
           font-family: ui-monospace, 'Cascadia Code', monospace;
           color: #c4c4d0; padding-top: 3px; flex-shrink: 0;
           width: 18px; letter-spacing: .02em;
@@ -104,7 +104,7 @@ export default function VideoTelematicsFAQ() {
         }
         .vtfq-item.on .vtfq-num { color: #1360ee; }
         .vtfq-qtext {
-          flex: 1; font-size: 14px; font-weight: 700;
+          flex: 1; font-size: var(--f-14); font-weight: 700;
           line-height: 1.45; letter-spacing: -.01em; color: #1d1d1f;
           transition: color .18s ${EASE};
         }
@@ -130,7 +130,7 @@ export default function VideoTelematicsFAQ() {
         .vtfq-ans {
           margin: 0;
           padding: 0 18px 20px 50px;
-          font-size: 13.5px; line-height: 1.72; color: #6e6e73;
+          font-size: var(--f-13-5); line-height: 1.72; color: #6e6e73;
           opacity: 0;
           transform: translateY(-7px);
           transition: opacity .22s 0s, transform .28s 0s ${EASE};
@@ -160,14 +160,14 @@ export default function VideoTelematicsFAQ() {
 
           <div data-reveal style={{ textAlign: 'center', marginBottom: '40px' }}>
             <span style={{
-              fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em',
+              fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em',
               color: '#1360ee', textTransform: 'uppercase' as const,
               display: 'block', marginBottom: '16px',
             }}>
               <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
               FAQ
             </span>
-            <h2 style={{ margin: 0, fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+            <h2 style={{ margin: 0, fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               Frequently Asked Questions
             </h2>
           </div>
@@ -193,7 +193,7 @@ export default function VideoTelematicsFAQ() {
             ))}
           </div>
 
-          <p data-reveal style={{ margin: '24px 0 0', textAlign: 'center', fontSize: '13px', color: '#a1a1a6', lineHeight: 1.55 }}>
+          <p data-reveal style={{ margin: '24px 0 0', textAlign: 'center', fontSize: 'var(--f-13)', color: '#a1a1a6', lineHeight: 1.55 }}>
             Can&apos;t find what you&apos;re looking for?{' '}
             <Link href="/contact" style={{ color: '#1360ee', fontWeight: 700, textDecoration: 'none' }}>
               Contact our team

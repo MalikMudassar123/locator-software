@@ -80,10 +80,10 @@ function IMWebDashboard() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', borderBottom: '1px solid #f0f0f0', flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="1.5"><rect x="4" y="12" width="16" height="6" rx="2" /><circle cx="7.5" cy="18" r="2" /><circle cx="16.5" cy="18" r="2" /><path d="M6 12l2-5h8l2 5" /></svg>
-          <span style={{ fontSize: 15, fontWeight: 600, color: '#1e293b' }}>SKMC Camry 26635</span>
+          <span style={{ fontSize: 'var(--f-15)', fontWeight: 600, color: '#1e293b' }}>SKMC Camry 26635</span>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button style={{ background: '#dc2626', color: '#fff', border: 'none', padding: '7px 14px', borderRadius: 6, fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 5 }}>
+          <button style={{ background: '#dc2626', color: '#fff', border: 'none', padding: '7px 14px', borderRadius: 6, fontSize: 'var(--f-11)', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 5 }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" /></svg>
             MOVE TO SERVICING
           </button>
@@ -117,18 +117,18 @@ function IMWebDashboard() {
           </div>
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderBottom: '1px solid #f0f0f0', flexShrink: 0 }}>
-              <span style={{ fontSize: 13, fontWeight: 600, color: '#1e293b' }}>Inspection Logs</span>
+              <span style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: '#1e293b' }}>Inspection Logs</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>
             </div>
             <div style={{ flex: 1, overflowY: 'auto' }}>
               {IM_LOGS.map((log, i) => (
                 <div key={i} onClick={() => setSelLogIdx(i)} style={{ display: 'flex', alignItems: 'center', padding: '9px 14px', cursor: 'pointer', background: selLogIdx === i ? '#dbeafe' : i % 2 === 0 ? '#fff' : '#fafbfc', borderBottom: '1px solid #f5f5f5', borderLeft: selLogIdx === i ? '3px solid #2563eb' : '3px solid transparent' }}>
-                  <span style={{ fontSize: 11.5, color: '#475569', width: '52%', whiteSpace: 'nowrap' }}>{log.date}</span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11.5, fontWeight: 600, color: '#1e293b', width: '35%' }}>
+                  <span style={{ fontSize: 'var(--f-11-5)', color: '#475569', width: '52%', whiteSpace: 'nowrap' }}>{log.date}</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 'var(--f-11-5)', fontWeight: 600, color: '#1e293b', width: '35%' }}>
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M9 12l2 2 4-4" /></svg>
                     {log.inspector}
                   </span>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: '#1e293b', width: '13%', textAlign: 'right' }}>{log.score}</span>
+                  <span style={{ fontSize: 'var(--f-12)', fontWeight: 600, color: '#1e293b', width: '13%', textAlign: 'right' }}>{log.score}</span>
                 </div>
               ))}
             </div>
@@ -137,7 +137,7 @@ function IMWebDashboard() {
         {/* RIGHT */}
         <div style={{ width: '55%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px 12px', flexShrink: 0, borderBottom: '1px solid #f0f0f0' }}>
-            <span style={{ fontSize: 15, fontWeight: 600, color: '#1360EF' }}>Inspection Report</span>
+            <span style={{ fontSize: 'var(--f-15)', fontWeight: 600, color: '#1360EF' }}>Inspection Report</span>
             <button style={{ width: 30, height: 30, borderRadius: 6, border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer', display: 'grid', placeItems: 'center' }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" /></svg>
             </button>
@@ -146,13 +146,13 @@ function IMWebDashboard() {
             {[{ title: 'Mandatory', items: IM_MANDATORY, empties: 2 }, { title: 'Optional', items: IM_OPTIONAL, empties: 0 }].map(sec => (
               <div key={sec.title} style={{ marginBottom: 16 }}>
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: 8 }}>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: '#1e293b', flex: 1 }}>{sec.title}</span>
-                  <span style={{ fontSize: 10, fontWeight: 600, color: '#94a3b8', width: 60, textAlign: 'center' }}>Prev</span>
-                  <span style={{ fontSize: 10, fontWeight: 600, color: '#94a3b8', width: 60, textAlign: 'center' }}>Current</span>
+                  <span style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: '#1e293b', flex: 1 }}>{sec.title}</span>
+                  <span style={{ fontSize: 'var(--f-10)', fontWeight: 600, color: '#94a3b8', width: 60, textAlign: 'center' }}>Prev</span>
+                  <span style={{ fontSize: 'var(--f-10)', fontWeight: 600, color: '#94a3b8', width: 60, textAlign: 'center' }}>Current</span>
                 </div>
                 {sec.items.map(item => (
                   <div key={item} style={{ display: 'flex', alignItems: 'center', padding: '6px 0', borderBottom: '1px solid #f5f5f5' }}>
-                    <span style={{ fontSize: 12.5, color: '#475569', flex: 1 }}>{item}</span>
+                    <span style={{ fontSize: 'var(--f-12-5)', color: '#475569', flex: 1 }}>{item}</span>
                     <div style={{ width: 60, display: 'flex', justifyContent: 'center' }}><IMCheck checked={IM_CHECKLIST_PREV[item]} color="#94a3b8" /></div>
                     <div style={{ width: 60, display: 'flex', justifyContent: 'center' }}><IMCheck checked={IM_CHECKLIST_CURRENT[item]} color="#22c55e" /></div>
                   </div>
@@ -160,37 +160,37 @@ function IMWebDashboard() {
                 {Array.from({ length: sec.empties }).map((_, i) => (
                   <div key={'e' + i} style={{ display: 'flex', alignItems: 'center', padding: '6px 0', borderBottom: '1px solid #f5f5f5' }}>
                     <span style={{ flex: 1 }} />
-                    <div style={{ width: 60, textAlign: 'center', fontSize: 12, color: '#cbd5e1', fontWeight: 600 }}>— —</div>
-                    <div style={{ width: 60, textAlign: 'center', fontSize: 12, color: '#cbd5e1', fontWeight: 600 }}>— —</div>
+                    <div style={{ width: 60, textAlign: 'center', fontSize: 'var(--f-12)', color: '#cbd5e1', fontWeight: 600 }}>— —</div>
+                    <div style={{ width: 60, textAlign: 'center', fontSize: 'var(--f-12)', color: '#cbd5e1', fontWeight: 600 }}>— —</div>
                   </div>
                 ))}
               </div>
             ))}
             <div style={{ marginBottom: 16 }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>Scratches/Dents</div>
+              <div style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>Scratches/Dents</div>
               {IM_SCRATCHES.map((s, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', background: '#f8fafc', borderRadius: 10, marginBottom: 6, border: '1px solid #f0f0f0' }}>
                   <div style={{ width: 36, height: 36, borderRadius: 8, background: '#e2e8f0', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="1.5"><rect x="4" y="12" width="16" height="6" rx="2" /><circle cx="7.5" cy="18" r="1.5" /><circle cx="16.5" cy="18" r="1.5" /><path d="M6 12l2-5h8l2 5" /></svg>
                   </div>
-                  <div style={{ flex: 1 }}><div style={{ fontSize: 13, fontWeight: 600, color: '#1e293b' }}>{s.type}</div><div style={{ fontSize: 11, color: '#94a3b8' }}>{s.desc}</div></div>
-                  <span style={{ padding: '4px 12px', borderRadius: 6, background: '#2563eb', color: '#fff', fontSize: 11, fontWeight: 600 }}>{s.location}</span>
+                  <div style={{ flex: 1 }}><div style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: '#1e293b' }}>{s.type}</div><div style={{ fontSize: 'var(--f-11)', color: '#94a3b8' }}>{s.desc}</div></div>
+                  <span style={{ padding: '4px 12px', borderRadius: 6, background: '#2563eb', color: '#fff', fontSize: 'var(--f-11)', fontWeight: 600 }}>{s.location}</span>
                 </div>
               ))}
             </div>
             <div style={{ marginBottom: 16 }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>Photos</div>
+              <div style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>Photos</div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
                 {[0, 1, 2, 3, 4, 5].map(i => <IMPhotoPlaceholder key={i} size={'100%'} />)}
               </div>
             </div>
             <div>
-              <div style={{ fontSize: 13, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>Driver Details</div>
+              <div style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>Driver Details</div>
               <div style={{ padding: 14, background: '#f8fafc', borderRadius: 10, border: '1px solid #f0f0f0' }}>
                 <svg width="140" height="50" viewBox="0 0 140 50" style={{ display: 'block', margin: '0 auto 6px' }}>
                   <path d="M15 40 Q25 15 40 30 Q55 45 70 20 Q85 5 100 25 Q110 35 125 15" fill="none" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" />
                 </svg>
-                <div style={{ textAlign: 'center', fontSize: 13, fontWeight: 600, color: '#1e293b' }}>FEROZ KHEL</div>
+                <div style={{ textAlign: 'center', fontSize: 'var(--f-13)', fontWeight: 600, color: '#1e293b' }}>FEROZ KHEL</div>
               </div>
             </div>
           </div>
@@ -222,7 +222,7 @@ function IMCollapsible({ title, items, mode, checked, onToggle }: { title: strin
         <div style={{ padding: '0 16px 12px' }}>
           {items.map((item, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderTop: i > 0 ? '1px solid #f5f5f5' : 'none' }}>
-              <span style={{ fontSize: 13.5, color: '#1e293b' }}>{item}</span>
+              <span style={{ fontSize: 'var(--f-13-5)', color: '#1e293b' }}>{item}</span>
               {mode === 'view' ? (
                 <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#22c55e', display: 'grid', placeItems: 'center' }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round"><path d="M5 13l4 4L19 7" /></svg>
@@ -245,18 +245,18 @@ function IMDetailScreen({ onRecords }: { onRecords: () => void }) {
     <div style={{ flex: 1, overflowY: 'auto', background: '#F0F4F7' }}>
       <div style={{ margin: 14, background: '#fff', borderRadius: 16, padding: 16, position: 'relative', boxShadow: '0 1px 4px rgba(0,0,0,.04)' }}>
         <img src="/cars/car-top.webp" alt="car top" style={{ width: '100%', maxHeight: 160, objectFit: 'contain' }} />
-        <div style={{ position: 'absolute', top: 12, right: 12, width: 52, height: 52, borderRadius: '50%', background: '#22c55e', display: 'grid', placeItems: 'center', color: '#fff', fontSize: 20, fontWeight: 600, boxShadow: '0 2px 8px rgba(34,197,94,.4)' }}>83</div>
+        <div style={{ position: 'absolute', top: 12, right: 12, width: 52, height: 52, borderRadius: '50%', background: '#22c55e', display: 'grid', placeItems: 'center', color: '#fff', fontSize: 'var(--f-20)', fontWeight: 600, boxShadow: '0 2px 8px rgba(34,197,94,.4)' }}>83</div>
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 10 }}>
         {[0, 1, 2, 3, 4].map(i => <div key={i} style={{ width: 12, height: 12, borderRadius: '50%', background: i === 0 ? '#2563eb' : '#c7d2fe' }} />)}
       </div>
       <div style={{ textAlign: 'center', marginBottom: 14 }}>
         <div style={{ ...PHONE_TITLE, color: '#1e293b' }}>AA WC Van 58542</div>
-        <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 2 }}>Inspected On 19/06/2026</div>
-        <div style={{ fontSize: 12, color: '#94a3b8' }}>Next Inspection On 19/06/2026</div>
+        <div style={{ fontSize: 'var(--f-12)', color: '#94a3b8', marginTop: 2 }}>Inspected On 19/06/2026</div>
+        <div style={{ fontSize: 'var(--f-12)', color: '#94a3b8' }}>Next Inspection On 19/06/2026</div>
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', gap: 10, marginBottom: 16 }}>
-        <button onClick={onRecords} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 18px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
+        <button onClick={onRecords} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 18px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 'var(--f-13)', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 3v18" /></svg>Records
         </button>
         <button style={{ width: 38, height: 38, borderRadius: 8, border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer', display: 'grid', placeItems: 'center' }}>
@@ -280,19 +280,19 @@ function IMRecordsModal({ onClose }: { onClose: () => void }) {
           <span style={{ ...PHONE_TITLE, color: '#fff' }}>Inspection Records</span>
           {/* 14 to match the Add Expense sheet's close control, and so it does not
               out-size the 13px title beside it. */}
-          <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: '50%', border: 'none', background: 'rgba(255,255,255,0.2)', cursor: 'pointer', color: '#fff', fontSize: 14, display: 'grid', placeItems: 'center' }}>✕</button>
+          <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: '50%', border: 'none', background: 'rgba(255,255,255,0.2)', cursor: 'pointer', color: '#fff', fontSize: 'var(--f-14)', display: 'grid', placeItems: 'center' }}>✕</button>
         </div>
         <div style={{ display: 'flex', padding: '10px 18px', borderBottom: '1px solid #e2e8f0' }}>
-          <span style={{ flex: 1, fontSize: 12, fontWeight: 600, color: '#64748b', fontStyle: 'italic' }}>Date</span>
-          <span style={{ flex: 1, fontSize: 12, fontWeight: 600, color: '#64748b', fontStyle: 'italic' }}>Inspected By</span>
-          <span style={{ width: 50, fontSize: 12, fontWeight: 600, color: '#64748b', fontStyle: 'italic', textAlign: 'center' }}>Score</span>
+          <span style={{ flex: 1, fontSize: 'var(--f-12)', fontWeight: 600, color: '#64748b', fontStyle: 'italic' }}>Date</span>
+          <span style={{ flex: 1, fontSize: 'var(--f-12)', fontWeight: 600, color: '#64748b', fontStyle: 'italic' }}>Inspected By</span>
+          <span style={{ width: 50, fontSize: 'var(--f-12)', fontWeight: 600, color: '#64748b', fontStyle: 'italic', textAlign: 'center' }}>Score</span>
         </div>
         <div style={{ overflowY: 'auto', flex: 1 }}>
           {IM_MOBILE_RECORDS.map((r, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', padding: '12px 18px', borderBottom: '1px solid #f5f5f5' }}>
-              <span style={{ flex: 1, fontSize: 12.5, color: '#475569' }}>{r.date}</span>
-              <span style={{ flex: 1, fontSize: 12.5, fontWeight: 600, color: '#1e293b' }}>{r.inspector}</span>
-              <span style={{ width: 50, fontSize: 13, fontWeight: 600, color: '#1e293b', textAlign: 'center' }}>{r.score}</span>
+              <span style={{ flex: 1, fontSize: 'var(--f-12-5)', color: '#475569' }}>{r.date}</span>
+              <span style={{ flex: 1, fontSize: 'var(--f-12-5)', fontWeight: 600, color: '#1e293b' }}>{r.inspector}</span>
+              <span style={{ width: 50, fontSize: 'var(--f-13)', fontWeight: 600, color: '#1e293b', textAlign: 'center' }}>{r.score}</span>
             </div>
           ))}
         </div>
@@ -306,7 +306,7 @@ function IMNewInspectionForm({ onBack, onSave }: { onBack: () => void; onSave: (
   const toggleCheck = (item: string) => setFormChecked(prev => ({ ...prev, [item]: !prev[item] }))
   const signBtn = (
     <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-      <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 18px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
+      <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 18px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 'var(--f-13)', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z" /></svg>Sign
       </button>
     </div>
@@ -327,24 +327,24 @@ function IMNewInspectionForm({ onBack, onSave }: { onBack: () => void; onSave: (
           </button>
         </div>
         <div style={{ background: '#fff', borderRadius: 14, padding: '14px 16px', marginBottom: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid #f0f0f0' }}>
-          <span style={{ fontSize: 14, fontWeight: 600, color: '#1e293b' }}>Scratches / Dents</span><span style={{ fontSize: 14, fontWeight: 600, color: '#64748b' }}>0</span>
+          <span style={{ fontSize: 'var(--f-14)', fontWeight: 600, color: '#1e293b' }}>Scratches / Dents</span><span style={{ fontSize: 'var(--f-14)', fontWeight: 600, color: '#64748b' }}>0</span>
         </div>
         <div style={{ background: '#fff', borderRadius: 14, padding: '14px 16px', marginBottom: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid #f0f0f0' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><span style={{ fontSize: 14, fontWeight: 600, color: '#1e293b' }}>Photos</span><span style={{ fontSize: 14, fontWeight: 600, color: '#2563eb' }}>0</span></div>
-          <button style={{ width: 34, height: 34, borderRadius: 8, background: '#2563eb', border: 'none', color: '#fff', cursor: 'pointer', fontSize: 18, fontWeight: 600, display: 'grid', placeItems: 'center' }}>+</button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><span style={{ fontSize: 'var(--f-14)', fontWeight: 600, color: '#1e293b' }}>Photos</span><span style={{ fontSize: 'var(--f-14)', fontWeight: 600, color: '#2563eb' }}>0</span></div>
+          <button style={{ width: 34, height: 34, borderRadius: 8, background: '#2563eb', border: 'none', color: '#fff', cursor: 'pointer', fontSize: 'var(--f-18)', fontWeight: 600, display: 'grid', placeItems: 'center' }}>+</button>
         </div>
         <div style={{ background: '#fff', borderRadius: 14, padding: 16, marginBottom: 12, border: '1px solid #f0f0f0' }}>
-          <div style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>Remarks</div>
-          <textarea placeholder="Add details..." style={{ width: '100%', border: '1px solid #e2e8f0', borderRadius: 10, padding: '11px 14px', fontSize: 13, fontFamily: 'inherit', minHeight: 80, resize: 'vertical', outline: 'none', boxSizing: 'border-box', color: '#1e293b' }} />
+          <div style={{ fontSize: 'var(--f-14)', fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>Remarks</div>
+          <textarea placeholder="Add details..." style={{ width: '100%', border: '1px solid #e2e8f0', borderRadius: 10, padding: '11px 14px', fontSize: 'var(--f-13)', fontFamily: 'inherit', minHeight: 80, resize: 'vertical', outline: 'none', boxSizing: 'border-box', color: '#1e293b' }} />
         </div>
         {['Inspector Signature', 'Driver Signature'].map(lbl => (
           <div key={lbl} style={{ background: '#fff', borderRadius: 14, padding: 16, marginBottom: 12, border: '1px solid #f0f0f0' }}>
-            <div style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>{lbl}</div>
-            <input placeholder="Ijaz" style={{ width: '100%', border: '1px solid #e2e8f0', borderRadius: 10, padding: '11px 14px', fontSize: 13, fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box', color: '#1e293b', marginBottom: 8 }} />
+            <div style={{ fontSize: 'var(--f-14)', fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>{lbl}</div>
+            <input placeholder="Ijaz" style={{ width: '100%', border: '1px solid #e2e8f0', borderRadius: 10, padding: '11px 14px', fontSize: 'var(--f-13)', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box', color: '#1e293b', marginBottom: 8 }} />
             {signBtn}
           </div>
         ))}
-        <button onClick={onSave} style={{ width: '100%', padding: '14px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 12, fontSize: 16, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', marginBottom: 12 }}>Save</button>
+        <button onClick={onSave} style={{ width: '100%', padding: '14px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 12, fontSize: 'var(--f-16)', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', marginBottom: 12 }}>Save</button>
       </div>
     </>
   )
@@ -362,12 +362,12 @@ function IMCompletedScreen({ onBack }: { onBack: () => void }) {
       <div style={{ flex: 1, overflowY: 'auto', padding: 14, background: '#F0F4F7' }}>
         <IMCollapsible title="Optional" items={IM_OPTIONAL} mode="view" />
         <div style={{ background: '#fff', borderRadius: 14, padding: 16, marginBottom: 12, border: '1px solid #f0f0f0' }}>
-          <div style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 4 }}>Remarks</div><div style={{ fontSize: 13, color: '#475569' }}>good</div>
+          <div style={{ fontSize: 'var(--f-14)', fontWeight: 600, color: '#1e293b', marginBottom: 4 }}>Remarks</div><div style={{ fontSize: 'var(--f-13)', color: '#475569' }}>good</div>
         </div>
         {['Driver Signature', 'Inspector Signature'].map(lbl => (
           <div key={lbl} style={{ background: '#fff', borderRadius: 14, padding: 16, marginBottom: 12, border: '1px solid #f0f0f0' }}>
-            <div style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 4 }}>{lbl}</div>
-            <IMSignatureSVG /><div style={{ fontSize: 13, fontWeight: 600, color: '#1e293b', marginTop: 4 }}>Ijaz</div>
+            <div style={{ fontSize: 'var(--f-14)', fontWeight: 600, color: '#1e293b', marginBottom: 4 }}>{lbl}</div>
+            <IMSignatureSVG /><div style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: '#1e293b', marginTop: 4 }}>Ijaz</div>
           </div>
         ))}
       </div>

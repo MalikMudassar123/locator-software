@@ -4,19 +4,27 @@ import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { siteConfig } from '@/config/site'
 import { SKIP_HOST_ATTR } from '@/lib/skip-scroll'
+import SupportChat from './SupportChat'
 
 // ── Floating contact dock ────────────────────────────────────────────────────
 //
-// Two always-visible actions in the bottom-right corner: WhatsApp and Call.
+// Three always-visible actions on the right edge, in TWO groups at opposite ends
+// of the viewport: WhatsApp and Call ride under the navbar at the top, the
+// support chat sits in the bottom-right corner.
+//
+// WHY SPLIT. The pair hands the visitor to an outside app; the chat keeps them
+// on the page. Stacking all three together made the chat look like a third phone
+// shortcut. Sending it to the opposite corner is also simply where a chat widget
+// belongs — it is the one convention on this page worth borrowing, and it gives
+// the pair the whole top edge to itself.
 //
 // DELIBERATELY NOT A TOGGLE. The usual pattern is one FAB that fans its channels
 // out on tap, and with a long list that earns its keep. With two, it only puts an
-// extra tap in front of the two things the page most wants a visitor to do. Both
-// are on screen and one tap away; the polish goes into the resting state and the
-// hover, not into hiding them.
+// extra tap in front of the two things the page most wants a visitor to do.
 //
-// LAYOUT CONTRACT. position:fixed and nothing else — it adds no height, shifts no
-// sibling, and is mounted once in the root layout rather than per page.
+// LAYOUT CONTRACT. Two position:fixed roots and nothing else — they add no
+// height, shift no sibling, and are mounted once in the root layout rather than
+// per page.
 //
 // Z-INDEX. 900, which is BELOW the navbars' overlays on purpose: the shutter
 // mega-menu (1000/1001) and the mobile drawer (99999, portalled to body) must
@@ -55,11 +63,13 @@ const ACTIONS: Action[] = [
     id: 'call',
     label: `Call ${siteConfig.phoneDisplay}`,
     href: `tel:${siteConfig.phone}`,
-    // The page's own accent, so the pair reads as one control rather than as two
-    // unrelated brand badges stacked on each other.
-    from: '#0a89dd',
-    to: '#0b6cc0',
-    glow: 'rgba(10, 137, 221, 0.45)',
+    // Same green family as WhatsApp — one shade lighter and one degree cooler, so
+    // the two read as a single "talk to us now" pair rather than as two unrelated
+    // brand badges. The page's own blue is reserved for the chat button below,
+    // which is the one action that belongs to the site rather than to a phone app.
+    from: '#3ddc72',
+    to: '#1aa851',
+    glow: 'rgba(37, 211, 102, 0.42)',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.03-.24c1.12.37 2.33.57 3.56.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.4 21 3 13.6 3 4.5a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.24.2 2.44.57 3.56a1 1 0 0 1-.25 1.03z" />
@@ -70,19 +80,24 @@ const ACTIONS: Action[] = [
 
 export default function ContactDock() {
   const [visible, setVisible] = useState(false)
-  // A pinned showcase row is on screen, and its Skip control owns this corner.
+  // A pinned showcase row is on screen, and its Skip control owns the corner the
+  // chat launcher now sits in.
   const [shifted, setShifted] = useState(false)
   const pathname = usePathname()
 
   // ── Sharing the corner with the Skip control ────────────────────────────────
   // The pinned showcase rows each carry a Skip button, absolutely positioned
-  // bottom-right of the row — the same corner as the dock, at overlapping offsets.
-  // Rather than move either control's resting position, the dock steps up above the
-  // Skip pill for exactly as long as one is on screen, so both stay reachable and
-  // neither is ever covered.
+  // bottom-right of the row at clamp(16px, 2.5vw, 34px) — the same corner as the
+  // chat launcher, at overlapping offsets. Rather than move either control's
+  // resting position, the launcher steps up above the Skip pill for exactly as
+  // long as one is on screen, so both stay reachable and neither is ever covered.
   //
-  // The threshold matches SkipButton's own reveal margin, so the two changes happen
-  // on the same frame instead of the dock jumping before the pill has appeared.
+  // Only the chat is lifted: the WhatsApp/Call pair is at the top edge and has
+  // nothing to avoid.
+  //
+  // The threshold matches SkipButton's own reveal margin, so the two changes
+  // happen on the same frame instead of the launcher jumping before the pill has
+  // appeared.
   useEffect(() => {
     const hosts = document.querySelectorAll(`[${SKIP_HOST_ATTR}]`)
     // No skip hosts on this route, so there is nothing to step aside for. The reset
@@ -104,8 +119,8 @@ export default function ContactDock() {
     hosts.forEach((h) => obs.observe(h))
     return () => {
       obs.disconnect()
-      // Leaving a route that had skip hosts: drop the offset, or the dock would
-      // stay parked 58px up on a page with nothing there to avoid.
+      // Leaving a route that had skip hosts: drop the offset, or the launcher
+      // would stay parked 58px up on a page with nothing there to avoid.
       setShifted(false)
     }
     // Re-scanned per route: the dock is mounted once in the root layout and does
@@ -129,60 +144,100 @@ export default function ContactDock() {
     return () => cancelAnimationFrame(id)
   }, [])
 
+  const state = `${visible ? ' is-visible' : ''}${shifted ? ' is-shifted' : ''}`
+
   return (
-    <div className={`cdock${visible ? ' is-visible' : ''}${shifted ? ' is-shifted' : ''}`}>
-      {ACTIONS.map((a, i) => (
-        <a
-          key={a.id}
-          href={a.href}
-          aria-label={a.label}
-          {...(a.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-          className={`cdock__btn cdock__btn--${a.id}`}
-          style={
-            {
-              '--from': a.from,
-              '--to': a.to,
-              '--glow': a.glow,
-              // Staggered from the bottom up, so the stack assembles rather than
-              // appearing all at once.
-              '--delay': `${i * 80}ms`,
-            } as React.CSSProperties
-          }
-        >
-          {/* aria-hidden: the anchor's aria-label already names the action, and a
-              screen reader announcing both would read it twice. */}
-          <span className="cdock__label" aria-hidden="true">
-            {a.label}
-          </span>
-          <span className="cdock__icon">{a.icon}</span>
-        </a>
-      ))}
+    <>
+      <div className={`cdock${state}`}>
+        {ACTIONS.map((a, i) => (
+          <a
+            key={a.id}
+            href={a.href}
+            aria-label={a.label}
+            {...(a.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+            className={`cdock__btn cdock__btn--${a.id}`}
+            style={
+              {
+                '--from': a.from,
+                '--to': a.to,
+                '--glow': a.glow,
+                // Staggered top-down, so the stack assembles rather than appearing
+                // all at once.
+                '--delay': `${i * 80}ms`,
+              } as React.CSSProperties
+            }
+          >
+            {/* aria-hidden: the anchor's aria-label already names the action, and a
+                screen reader announcing both would read it twice. */}
+            <span className="cdock__label" aria-hidden="true">
+              {a.label}
+            </span>
+            <span className="cdock__icon">{a.icon}</span>
+          </a>
+        ))}
+      </div>
+
+      {/* Opposite corner. Its own fixed root rather than a third item in the stack
+          above — the two groups genuinely live at opposite ends of the viewport,
+          and only this one has to dodge the Skip pill. */}
+      <div className={`cdock-chat${state}`}>
+        <SupportChat />
+      </div>
 
       <style jsx>{`
-        .cdock {
+        /* Shared geometry, declared on both roots. SupportChat reads these same
+           custom properties for its launcher size and panel anchor, so the two
+           files can never drift into disagreeing about where the dock is or how
+           big it is. */
+        .cdock,
+        .cdock-chat {
           position: fixed;
-          /* env() keeps the dock clear of the iOS home indicator and of a landscape
-             notch; the fallback in each calc is what non-iOS browsers use. */
-          right: calc(20px + env(safe-area-inset-right, 0px));
-          /* --lift is 0 normally and clears the Skip pill while one is on screen —
-             see the note on the observer above. Animated rather than switched so the
-             dock visibly steps aside instead of teleporting. */
-          --lift: 0px;
-          bottom: calc(20px + var(--lift) + env(safe-area-inset-bottom, 0px));
+          --cd-edge: 20px;
+          --cd-top: 100px;
+          --cd-bottom: 22px;
+          --cd-size: 48px;
+          --cd-radius: 16px;
+          /* env() keeps both roots clear of a landscape notch and of the iOS home
+             indicator; the fallback in each calc is what non-iOS browsers use. */
+          right: calc(var(--cd-edge) + env(safe-area-inset-right, 0px));
           z-index: 900;
-          display: flex;
-          flex-direction: column;
-          align-items: flex-end;
-          gap: 14px;
-          transition: bottom 0.42s cubic-bezier(0.16, 1, 0.3, 1);
           /* Nothing here should ever intercept a click meant for the page — only the
              buttons themselves take pointer events. */
           pointer-events: none;
         }
-        /* The Skip pill's own bottom offset is clamp(16px, 2.5vw, 34px) and it stands
-           about 40px tall, so this clears it with a gap left over at every width. */
-        .cdock.is-shifted {
-          --lift: 58px;
+
+        .cdock {
+          /* Clears the 80px navbar with room to spare, so the pair never collides
+             with the logo row or the Get a Quote pill. */
+          top: calc(var(--cd-top) + env(safe-area-inset-top, 0px));
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 12px;
+        }
+
+        .cdock-chat {
+          /* --cd-lift is 0 normally and clears the Skip pill while one is on screen
+             — see the note on the observer above. Animated rather than switched so
+             the launcher visibly steps aside instead of teleporting. */
+          --cd-lift: 0px;
+          bottom: calc(var(--cd-bottom) + var(--cd-lift) + env(safe-area-inset-bottom, 0px));
+          /* Opacity only, never transform. A transform on this element would make
+             it the containing block for the chat panel's position:fixed, and the
+             panel would anchor to a 48px button instead of to the viewport. */
+          opacity: 0;
+          transition:
+            bottom 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+            opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1) 160ms;
+        }
+        .cdock-chat.is-visible {
+          opacity: 1;
+        }
+        /* The Skip pill's own bottom offset is clamp(16px, 2.5vw, 34px) and it
+           stands about 40px tall, so this clears it with a gap left over at every
+           width. */
+        .cdock-chat.is-shifted {
+          --cd-lift: 58px;
         }
 
         .cdock__btn {
@@ -191,12 +246,12 @@ export default function ContactDock() {
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 56px;
-          height: 56px;
+          width: var(--cd-size);
+          height: var(--cd-size);
           /* A squircle rather than a full circle: it matches the rounded-square
              language the icon cards use across the site, and reads as a control
              rather than as a chat bubble. */
-          border-radius: 18px;
+          border-radius: var(--cd-radius);
           background: linear-gradient(140deg, var(--from) 0%, var(--to) 100%);
           color: #fff;
           text-decoration: none;
@@ -208,7 +263,7 @@ export default function ContactDock() {
             0 4px 12px -4px rgba(15, 23, 42, 0.28),
             inset 0 1px 0 rgba(255, 255, 255, 0.28);
           opacity: 0;
-          transform: translateY(14px) scale(0.86);
+          transform: translateY(-12px) scale(0.86);
           transition:
             opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1) var(--delay),
             transform 0.42s cubic-bezier(0.16, 1, 0.3, 1) var(--delay),
@@ -221,8 +276,8 @@ export default function ContactDock() {
 
         .cdock__icon {
           display: block;
-          width: 26px;
-          height: 26px;
+          width: 22px;
+          height: 22px;
           transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .cdock__icon :global(svg) {
@@ -262,9 +317,9 @@ export default function ContactDock() {
           position: absolute;
           right: calc(100% + 12px);
           white-space: nowrap;
-          padding: 8px 14px;
-          border-radius: 12px;
-          font-size: 13px;
+          padding: 7px 13px;
+          border-radius: 11px;
+          font-size: var(--f-13);
           font-weight: 600;
           letter-spacing: -0.01em;
           color: #0f172a;
@@ -317,22 +372,23 @@ export default function ContactDock() {
 
         /* ── Touch ────────────────────────────────────────────────────────────
            No hover to reveal a label with, so the label never renders and the
-           buttons take the corner alone. Slightly smaller, and tucked a little
-           closer to the edge, to leave more of a small screen to the page. */
+           buttons take the edge alone. Slightly smaller, tucked closer in, and
+           raised to sit under the shorter mobile navbar. */
         @media (hover: none), (max-width: 640px) {
-          .cdock {
-            right: calc(14px + env(safe-area-inset-right, 0px));
-            bottom: calc(14px + var(--lift) + env(safe-area-inset-bottom, 0px));
-            gap: 12px;
+          .cdock,
+          .cdock-chat {
+            --cd-edge: 12px;
+            --cd-top: 88px;
+            --cd-bottom: 16px;
+            --cd-size: 44px;
+            --cd-radius: 15px;
           }
-          .cdock__btn {
-            width: 52px;
-            height: 52px;
-            border-radius: 17px;
+          .cdock {
+            gap: 10px;
           }
           .cdock__icon {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
           }
           .cdock__label {
             display: none;
@@ -342,9 +398,7 @@ export default function ContactDock() {
         /* Motion is decoration here — the dock must still appear, and every action
            must still work, with all of it switched off. */
         @media (prefers-reduced-motion: reduce) {
-          .cdock {
-            transition: none;
-          }
+          .cdock-chat,
           .cdock__btn,
           .cdock__icon,
           .cdock__label {
@@ -360,6 +414,6 @@ export default function ContactDock() {
           }
         }
       `}</style>
-    </div>
+    </>
   )
 }

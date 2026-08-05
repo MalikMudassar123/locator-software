@@ -103,16 +103,16 @@ export default function ContactForm() {
           background: #fff; border: 1px solid #e7ebf3; border-radius: 22px;
           padding: clamp(22px,3vw,40px); box-shadow: 0 30px 60px -34px rgba(20,40,90,.22);
         }
-        .ctf-eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: clamp(12px,1.05vw,13.5px); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1360ee; margin-bottom: 10px; }
+        .ctf-eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: max(clamp(12px,1.05vw,13.5px), min(0.938vw, 19.57px)); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1360ee; margin-bottom: 10px; }
         .ctf-eyebrow i { display: block; width: 28px; height: 2.5px; background: #1360ee; border-radius: 2px; }
-        .ctf-title { margin: 0 0 8px; font-size: clamp(22px,2.4vw,30px); font-weight: 800; letter-spacing: -.028em; line-height: 1.16; color: #1d1d1f; }
-        .ctf-sub { margin: 0 0 24px; font-size: 14.5px; line-height: 1.65; color: #6e6e73; }
+        .ctf-title { margin: 0 0 8px; font-size: max(clamp(22px,2.4vw,30px), min(2.083vw, 43.5px)); font-weight: 800; letter-spacing: -.028em; line-height: 1.16; color: #1d1d1f; }
+        .ctf-sub { margin: 0 0 24px; font-size: var(--f-14-5); line-height: 1.65; color: #6e6e73; }
 
         .ctf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         @media (max-width: 520px) { .ctf-grid { grid-template-columns: 1fr; } }
         .ctf-field { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
         .ctf-field.full { grid-column: 1 / -1; }
-        .ctf-label { font-size: 12.5px; font-weight: 700; color: #3f4453; }
+        .ctf-label { font-size: var(--f-12-5); font-weight: 700; color: #3f4453; }
         .ctf-label b { color: #e5484d; }
 
         /* Control shell — holds the input plus its leading/trailing glyph. */
@@ -126,7 +126,7 @@ export default function ContactForm() {
         .ctf-control:focus-within .ctf-control-ic { color: #1360ee; }
 
         .ctf-input, .ctf-textarea, .ctf-select {
-          font-family: inherit; font-size: 14px; color: #1d1d1f; width: 100%;
+          font-family: inherit; font-size: var(--f-14); color: #1d1d1f; width: 100%;
           padding: 14px 15px 14px 44px; border-radius: 12px;
           border: 1.5px solid #e4e8f0; background: #fbfcfe;
           transition: border-color .18s ${EASE}, box-shadow .18s ${EASE}, background .18s ${EASE};
@@ -155,20 +155,20 @@ export default function ContactForm() {
         .ctf-drop input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
         .ctf-drop svg { flex-shrink: 0; }
         .ctf-drop-main {
-          font-size: 13.5px; font-weight: 700; color: inherit;
+          font-size: var(--f-13-5); font-weight: 700; color: inherit;
           min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
         }
         .ctf-drop.has-file { border-style: solid; border-color: #1360ee; background: #f5f8ff; color: #1360ee; }
-        .ctf-hint { margin: 8px 0 0; font-size: 11.5px; line-height: 1.5; color: #9aa3b2; text-align: center; }
+        .ctf-hint { margin: 8px 0 0; font-size: var(--f-11-5); line-height: 1.5; color: #9aa3b2; text-align: center; }
         .ctf-hint.err { color: #e5484d; font-weight: 600; }
 
-        .ctf-consent { display: flex; gap: 10px; align-items: flex-start; margin-top: 18px; font-size: 12.5px; line-height: 1.6; color: #6e6e73; }
+        .ctf-consent { display: flex; gap: 10px; align-items: flex-start; margin-top: 18px; font-size: var(--f-12-5); line-height: 1.6; color: #6e6e73; }
         .ctf-consent input { width: 16px; height: 16px; margin-top: 1px; accent-color: #1360ee; flex-shrink: 0; }
 
         /* Trust line under the button — quiet, but it belongs to the form. */
         .ctf-secure {
           display: flex; align-items: center; justify-content: center; gap: 7px;
-          margin: 14px 0 0; font-size: 12px; line-height: 1.5; color: #9aa3b2;
+          margin: 14px 0 0; font-size: var(--f-12); line-height: 1.5; color: #9aa3b2;
         }
         .ctf-secure svg { flex-shrink: 0; }
 
@@ -176,7 +176,7 @@ export default function ContactForm() {
           margin-top: 20px; width: 100%;
           display: inline-flex; align-items: center; justify-content: center; gap: 10px;
           padding: 16px 24px; border-radius: 12px; border: none; cursor: pointer;
-          font-family: inherit; font-size: 15px; font-weight: 700; color: #fff;
+          font-family: inherit; font-size: var(--f-15); font-weight: 700; color: #fff;
           background: #1360ee; box-shadow: 0 12px 26px -10px rgba(19,96,238,.6);
           transition: background .18s ${EASE}, transform .18s ${EASE}, box-shadow .18s ${EASE};
         }
@@ -203,7 +203,7 @@ export default function ContactForm() {
           position: absolute; left: 14px; bottom: 14px;
           display: inline-flex; align-items: center; gap: 7px;
           background: #1360ee; color: #fff; border-radius: 999px; padding: 8px 15px;
-          font-size: 11.5px; font-weight: 700; letter-spacing: .04em; text-decoration: none;
+          font-size: var(--f-11-5); font-weight: 700; letter-spacing: .04em; text-decoration: none;
           box-shadow: 0 8px 20px rgba(19,96,238,.4);
           transition: transform .18s ${EASE}, background .18s ${EASE};
         }

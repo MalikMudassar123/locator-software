@@ -28,36 +28,36 @@ export default function SecurepathExplainer() {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '36px' }}>
-              <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+              <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
                 In the modern world, GPS tracking systems have seamlessly intertwined themselves into the fabric of everyday life, offering a wide range of applications from safeguarding individuals to optimizing commercial operations.
               </p>
-              <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+              <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
                 <a href="https://www.sira.gov.ae" target="_blank" rel="noopener noreferrer">Security Industries Regulatory Agency (SIRA Dubai)</a> initiated a process by which all Rental vehicles and some other security related vehicles in Dubai and some other Emirates has to install a GPS Tracking Device with Certificate of Installation.
               </p>
-              <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+              <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
                 Through <a href="https://securepath.ae" target="_blank" rel="noopener noreferrer">SecurePath</a> login or <a href="https://www.sira.gov.ae" target="_blank" rel="noopener noreferrer">SIRA</a> Portal Login, customer can monitor the activities of the vehicles with encrypted data.
               </p>
-              <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+              <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
                 As a reliable GPS Tracking company, we always aim to ensure that the GPS tracker installed in the vehicles aligned as per <a href="https://securepath.ae" target="_blank" rel="noopener noreferrer">SecurePath</a> regulations.
               </p>
             </div>
 
-            <h3 style={{ margin: '0 0 14px', fontSize: 'clamp(19px,2.2vw,24px)', fontWeight: 800, letterSpacing: '-.02em', color: '#1360ee' }}>
+            <h3 style={{ margin: '0 0 14px', fontSize: 'max(clamp(19px,2.2vw,24px), min(1.667vw, 34.8px))', fontWeight: 800, letterSpacing: '-.02em', color: '#1360ee' }}>
               What is SecurePath?
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '36px' }}>
-              <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+              <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
                 Securepath is a mandatory registration system introduced by the Security Industry Regulatory Agency (SIRA) in collaboration with the Roads and Transport Authority (RTA). This system aims to enhance security measures within the car rental industry in Dubai.
               </p>
-              <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+              <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
                 Securepath ensures that all car rental companies operating in Dubai are registered with SIRA, thereby ensuring that they meet the necessary safety and security standards. By registering in SecurePath, it ensures transparency and accountability within the car rental industry.
               </p>
             </div>
 
-            <h3 style={{ margin: '0 0 14px', fontSize: 'clamp(19px,2.2vw,24px)', fontWeight: 800, letterSpacing: '-.02em', color: '#1360ee' }}>
+            <h3 style={{ margin: '0 0 14px', fontSize: 'max(clamp(19px,2.2vw,24px), min(1.667vw, 34.8px))', fontWeight: 800, letterSpacing: '-.02em', color: '#1360ee' }}>
               Features of SecurePath GPS Tracking Systems
             </h3>
-            <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+            <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
               Renowned for their innovative and user-friendly design, <a href="https://securepath.ae" target="_blank" rel="noopener noreferrer">SecurePath</a> GPS Tracking Systems are loaded with a robust suite of features. The system provides real-time tracking and geo-fencing capabilities, sending prompt alerts when tracked assets venture beyond designated zones. Detailed reporting gives users a comprehensive overview of their vehicles&apos; status and location, invaluable in managing resources effectively. The advanced technology at <a href="https://securepath.ae" target="_blank" rel="noopener noreferrer">SecurePath</a>&apos;s core ensures pinpoint accuracy and steadfast reliability, providing users with peace of mind.
             </p>
           </div>

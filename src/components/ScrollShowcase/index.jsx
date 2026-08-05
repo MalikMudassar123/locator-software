@@ -269,7 +269,7 @@ export default function ScrollShowcase() {
                 preferred size are untouched, so this is the same type ramp it always
                 was and simply stops climbing later on a large display. */}
             <h2 style={{
-              fontSize: 'clamp(24px, 3vw, var(--sc-36))',
+              fontSize: 'var(--t-h2)',
               fontWeight: 800,
               lineHeight: 1.15,
               color: '#484b4c',
@@ -279,7 +279,7 @@ export default function ScrollShowcase() {
               {s.headline}
             </h2>
             <p style={{
-              fontSize: 'clamp(13px, 1.2vw, var(--sc-15))',
+              fontSize: 'var(--t-lead)',
               lineHeight: 1.65,
               color: '#8090bc',
               margin: '0 0 var(--sc-28)',
@@ -292,10 +292,10 @@ export default function ScrollShowcase() {
 
             {s.subHeadline && (
               <>
-                <h3 style={{ fontSize: 'clamp(15px, 1.4vw, var(--sc-18))', fontWeight: 700, color: '#696b6b', margin: '0 0 10px', maxWidth: '100%' }}>
+                <h3 style={{ fontSize: 'var(--t-h3)', fontWeight: 700, color: '#696b6b', margin: '0 0 10px', maxWidth: '100%' }}>
                   {s.subHeadline}
                 </h3>
-                <p style={{ fontSize: 'clamp(12px, 1.1vw, var(--sc-14))', lineHeight: 1.6, color: '#8090bc', margin: '0 0 var(--sc-24)', maxWidth: 'max(560px, min(35vw, 760px))' }}>
+                <p style={{ fontSize: 'var(--t-body)', lineHeight: 1.6, color: '#8090bc', margin: '0 0 var(--sc-24)', maxWidth: 'max(560px, min(35vw, 760px))' }}>
                   {s.subBody}
                 </p>
               </>

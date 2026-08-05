@@ -47,7 +47,7 @@ export default function SecurepathPremiumFAQ() {
           cursor: pointer; font-family: inherit; text-align: left;
         }
         .sppfq-num {
-          font-size: 10px; font-weight: 700;
+          font-size: var(--f-10); font-weight: 700;
           font-family: ui-monospace, 'Cascadia Code', monospace;
           color: #c4c4d0; padding-top: 3px; flex-shrink: 0;
           width: 18px; letter-spacing: .02em;
@@ -55,7 +55,7 @@ export default function SecurepathPremiumFAQ() {
         }
         .sppfq-item.on .sppfq-num { color: #1360ee; }
         .sppfq-qtext {
-          flex: 1; font-size: 14.5px; font-weight: 700;
+          flex: 1; font-size: var(--f-14-5); font-weight: 700;
           line-height: 1.45; letter-spacing: -.01em; color: #1d1d1f;
           transition: color .18s ${EASE};
         }
@@ -81,7 +81,7 @@ export default function SecurepathPremiumFAQ() {
         .sppfq-ans {
           margin: 0;
           padding: 0 18px 20px 50px;
-          font-size: 13.5px; line-height: 1.72; color: #6e6e73;
+          font-size: var(--f-13-5); line-height: 1.72; color: #6e6e73;
           opacity: 0;
           transform: translateY(-7px);
           transition: opacity .22s 0s, transform .28s 0s ${EASE};
@@ -111,7 +111,7 @@ export default function SecurepathPremiumFAQ() {
         <div style={{ maxWidth: 'var(--w-1080)', margin: '0 auto' }}>
 
           <div data-reveal style={{ marginBottom: '32px' }}>
-            <h2 style={{ margin: 0, fontSize: 'clamp(22px,2.8vw,30px)', fontWeight: 800, lineHeight: 1.15, letterSpacing: '-.02em', color: '#1d1d1f' }}>
+            <h2 style={{ margin: 0, fontSize: 'max(clamp(22px,2.8vw,30px), min(2.083vw, 43.5px))', fontWeight: 800, lineHeight: 1.15, letterSpacing: '-.02em', color: '#1d1d1f' }}>
               Frequently Asked Questions (FAQ)
             </h2>
           </div>

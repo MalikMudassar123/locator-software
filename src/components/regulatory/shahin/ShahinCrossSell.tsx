@@ -16,23 +16,23 @@ export default function ShahinCrossSell() {
     <section style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#f7f9fc' }}>
       <div style={{ maxWidth: 'var(--w-900)', margin: '0 auto' }} data-reveal>
 
-        <h2 style={{ margin: '0 0 18px', fontSize: 'clamp(22px,2.8vw,30px)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-.02em', color: '#1360ee' }}>
+        <h2 style={{ margin: '0 0 18px', fontSize: 'max(clamp(22px,2.8vw,30px), min(2.083vw, 43.5px))', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-.02em', color: '#1360ee' }}>
           <Link href="/securepath-premium" style={{ color: 'inherit', textDecoration: 'none' }}>
             SecurePath Premium: The Platform to Monitor the Vehicles
           </Link>
         </h2>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '20px' }}>
-          <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+          <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
             Securepath Premium, a GPS tracking solution, managed by <strong style={{ color: '#1d1d1f' }}>SIRA (Security Industry Regulatory Agency)</strong> in Dubai to enhance the security and monitoring of freight transport and cargo vehicles.
           </p>
-          <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+          <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
             Securepath Premium offers advanced tracking capabilities, allowing real-time monitoring of vehicles through GPS technology. With this system in place, SIRA can effectively track and manage freight transport and cargo vehicles to ensure their safety and compliance with regulations.
           </p>
-          <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+          <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
             The integration of SHAHIN with Securepath Premium further enhances the functionality of the system. It enables seamless access to vehicle registration data, providing valuable insights into ownership details and ensuring that only authorized vehicles are on the road.
           </p>
-          <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+          <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
             Here is the importance of SHAHIN portal and how SecurePath Premium can contribute to the companies&apos; operations.
           </p>
         </div>
@@ -43,9 +43,9 @@ export default function ShahinCrossSell() {
               <span style={{
                 width: 24, height: 24, borderRadius: '6px', flexShrink: 0, marginTop: '2px',
                 background: 'rgba(19,96,238,.12)', color: '#1360ee',
-                display: 'grid', placeItems: 'center', fontSize: 12, fontWeight: 800,
+                display: 'grid', placeItems: 'center', fontSize: 'var(--f-12)', fontWeight: 800,
               }}>✓</span>
-              <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+              <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
                 <strong style={{ color: '#1d1d1f' }}>{p.title}</strong>{' '}
                 {p.desc}
               </p>
@@ -56,7 +56,7 @@ export default function ShahinCrossSell() {
         <div style={{ marginTop: '28px' }}>
           <Link href="/securepath-premium" style={{
             display: 'inline-flex', alignItems: 'center', gap: '8px',
-            fontSize: '14px', fontWeight: 700, color: '#fff',
+            fontSize: 'var(--f-14)', fontWeight: 700, color: '#fff',
             background: '#1360ee', borderRadius: '999px', padding: '13px 26px',
             textDecoration: 'none', transition: '.18s cubic-bezier(.22,.61,.36,1)',
           }}>

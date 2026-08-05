@@ -168,7 +168,7 @@ export default function SoftwareHero() {
         }
 
         .sw-btn {
-          font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
+          font-family: inherit; font-size: var(--f-14); font-weight: 700; cursor: pointer;
           padding: 12px 24px; border-radius: 999px; border: none;
           transition: .18s cubic-bezier(.22,.61,.36,1);
           display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; text-decoration: none;
@@ -305,13 +305,13 @@ export default function SoftwareHero() {
 
           <div className="sw-hero-body">
             <div className="sw-copy">
-              <p style={{ display: 'block', fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', color: '#1360ee', marginBottom: 'clamp(8px,1.4vh,14px)' }}>
+              <p style={{ display: 'block', fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', color: '#1360ee', marginBottom: 'clamp(8px,1.4vh,14px)' }}>
                 Locator Fleet Telematics
               </p>
-              <h1 style={{ fontSize: 'clamp(21px,2.5vw,28px)', fontWeight: 800, lineHeight: 1.18, letterSpacing: '-.015em', color: '#1d1d1f', maxWidth: '40ch', margin: '0 auto' }}>
+              <h1 style={{ fontSize: 'max(clamp(21px,2.5vw,28px), min(1.944vw, 40.6px))', fontWeight: 800, lineHeight: 1.18, letterSpacing: '-.015em', color: '#1d1d1f', maxWidth: '40ch', margin: '0 auto' }}>
                 One Platform for Complete Fleet Visibility <span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px', marginLeft: '8px', verticalAlign: 'middle' }} />
               </h1>
-              <p style={{ maxWidth: '560px', margin: 'clamp(8px,1.4vh,14px) auto 0', fontSize: 'clamp(13px, 1.35vw, 16px)', lineHeight: 1.5, color: '#3a3a3c' }}>
+              <p style={{ maxWidth: '560px', margin: 'clamp(8px,1.4vh,14px) auto 0', fontSize: 'max(clamp(13px, 1.35vw, 16px), min(1.111vw, 23.2px))', lineHeight: 1.5, color: '#3a3a3c' }}>
                 GPS tracking, telematics, tasks, expenses, inspections, maintenance and AI dashcams for your whole fleet, on web and mobile.
               </p>
               <div style={{ display: 'flex', gap: '14px', justifyContent: 'center', marginTop: 'clamp(14px, 2.2vh, 24px)', flexWrap: 'wrap' }}>
@@ -319,7 +319,7 @@ export default function SoftwareHero() {
                 <button className="sw-btn sw-btn-ghost">Get a demo →</button>
               </div>
               <p style={{ marginTop: 'clamp(8px,1.4vh,14px)' }}>
-                <Link href="#dashcam" style={{ color: '#1360ee', fontWeight: 700, fontSize: '15px', textDecoration: 'none' }}>
+                <Link href="#dashcam" style={{ color: '#1360ee', fontWeight: 700, fontSize: 'var(--f-15)', textDecoration: 'none' }}>
                   Watch how it works ›
                 </Link>
               </p>

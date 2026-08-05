@@ -84,7 +84,7 @@ export default function BenefitsImpact() {
         .bgi.is-in .bgi-item::before { transform: scaleX(1); }
 
         .bgi-value {
-          font-size: clamp(46px,6vw,76px); font-weight: 800;
+          font-size: max(clamp(46px,6vw,76px), min(5.278vw, 110.2px)); font-weight: 800;
           line-height: 1; letter-spacing: -.04em;
           /* Tabular figures: without them the width of each digit changes as the
              counter runs and the whole row jitters sideways while it counts. */
@@ -94,7 +94,7 @@ export default function BenefitsImpact() {
 
         .bgi-label {
           margin: 16px 0 0; max-width: 26ch;
-          font-size: clamp(13.5px,1.2vw,15px); line-height: 1.65;
+          font-size: max(clamp(13.5px,1.2vw,15px), min(1.042vw, 21.75px)); line-height: 1.65;
           color: rgba(255,255,255,.56);
         }
 

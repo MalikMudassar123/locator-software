@@ -41,7 +41,7 @@ export default function BenefitsHero() {
 
         .bgt-crumb {
           display: flex; align-items: center; gap: 9px;
-          font-size: 13px; font-weight: 500; color: #9aa1ad; margin-bottom: clamp(22px,3vw,34px);
+          font-size: var(--f-13); font-weight: 500; color: #9aa1ad; margin-bottom: clamp(22px,3vw,34px);
         }
         .bgt-crumb a { color: #6e6e73; text-decoration: none; transition: color .2s ${EASE}; }
         .bgt-crumb a:hover { color: #0a89dd; }
@@ -49,7 +49,7 @@ export default function BenefitsHero() {
 
         .bgt-eyebrow {
           display: flex; align-items: center; gap: 12px;
-          font-size: 12px; font-weight: 700; letter-spacing: .14em;
+          font-size: var(--f-12); font-weight: 700; letter-spacing: .14em;
           text-transform: uppercase; color: #0a89dd; margin-bottom: 20px;
         }
         .bgt-eyebrow::before {
@@ -58,7 +58,7 @@ export default function BenefitsHero() {
 
         .bgt-title {
           margin: 0; max-width: 15ch;
-          font-size: clamp(38px,6vw,74px); font-weight: 800;
+          font-size: max(clamp(38px,6vw,74px), min(5.139vw, 107.3px)); font-weight: 800;
           line-height: 1.02; letter-spacing: -.035em; color: #1d1d1f;
         }
         /* The one word that carries the page. Weight and colour do the emphasis —
@@ -68,7 +68,7 @@ export default function BenefitsHero() {
 
         .bgt-lead {
           margin: clamp(22px,3vw,30px) 0 0; max-width: 62ch;
-          font-size: clamp(16px,1.6vw,19px); line-height: 1.72; color: #6e6e73;
+          font-size: max(clamp(16px,1.6vw,19px), min(1.319vw, 27.55px)); line-height: 1.72; color: #6e6e73;
         }
 
         .bgt-rule {

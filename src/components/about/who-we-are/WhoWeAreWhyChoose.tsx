@@ -36,11 +36,11 @@ export default function WhoWeAreWhyChoose() {
       <section style={{ padding: 'clamp(56px,7vw,92px) 28px', background: '#fff' }}>
         <div style={{ maxWidth: 'var(--w-1000)', margin: '0 auto' }}>
           <div data-reveal style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto clamp(40px,5vw,56px)' }}>
-            <span style={{ display: 'block', fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', marginBottom: '16px' }}>
+            <span style={{ display: 'block', fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', marginBottom: '16px' }}>
               <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
               Why Businesses Choose LOCATOR
             </span>
-            <h2 style={{ margin: 0, fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+            <h2 style={{ margin: 0, fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               Advanced technology, practical business expertise
             </h2>
           </div>
@@ -53,7 +53,7 @@ export default function WhoWeAreWhyChoose() {
                     <path d="M20 6L9 17l-5-5" />
                   </svg>
                 </span>
-                <span style={{ fontSize: 'clamp(14px,1.3vw,15.5px)', fontWeight: 600, color: '#1d1d1f' }}>{r}</span>
+                <span style={{ fontSize: 'max(clamp(14px,1.3vw,15.5px), min(1.076vw, 22.47px))', fontWeight: 600, color: '#1d1d1f' }}>{r}</span>
               </div>
             ))}
           </div>

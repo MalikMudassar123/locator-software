@@ -54,7 +54,7 @@ const INPUT_BASE: React.CSSProperties = {
   borderRadius: '8px',
   padding: '8px 11px',
   color: '#1d1d1f',
-  fontSize: '12px',
+  fontSize: 'var(--f-12)',
   outline: 'none',
   width: '100%',
   fontFamily: 'inherit',
@@ -125,7 +125,7 @@ export default function Footer() {
             boxShadow: '0 6px 24px rgba(19,96,238,0.06)',
             transition: `box-shadow 320ms ${EASE}, transform 320ms ${EASE}`,
           }}>
-            <h3 style={{ color: '#1360ee', fontSize: '13px', fontWeight: 700, marginBottom: '14px', letterSpacing: '0.03em', display: 'flex', alignItems: 'center', gap: '7px' }}>
+            <h3 style={{ color: '#1360ee', fontSize: 'var(--f-13)', fontWeight: 700, marginBottom: '14px', letterSpacing: '0.03em', display: 'flex', alignItems: 'center', gap: '7px' }}>
               <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#1360ee', display: 'inline-block', flexShrink: 0, boxShadow: '0 0 0 3px rgba(19,96,238,0.14)' }} />
               Quick Contact
             </h3>
@@ -150,7 +150,7 @@ export default function Footer() {
                 Send Message
               </button>
             </div>
-            <p style={{ marginTop: '10px', color: '#9aa3b2', fontSize: '9.5px', lineHeight: 1.5 }}>
+            <p style={{ marginTop: '10px', color: '#9aa3b2', fontSize: 'var(--f-9-5)', lineHeight: 1.5 }}>
               We use cookies to give you the best experience on our website.
             </p>
           </div>
@@ -174,7 +174,7 @@ export default function Footer() {
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1360ee" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
                 </svg>
-                <span style={{ fontSize: '11px', fontWeight: 700, color: '#1d1d1f', letterSpacing: '0.01em' }}>Find Us</span>
+                <span style={{ fontSize: 'var(--f-11)', fontWeight: 700, color: '#1d1d1f', letterSpacing: '0.01em' }}>Find Us</span>
               </div>
               <a
                 href="https://maps.google.com/?q=City+Tower+2+Sheikh+Zayed+Road+Dubai"
@@ -200,7 +200,7 @@ export default function Footer() {
                 {/* Soft scrim so Google's own attribution bar blends into our chrome instead of competing with it */}
                 <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '36px', background: 'linear-gradient(180deg, transparent, rgba(15,23,42,0.32))', pointerEvents: 'none' }} />
                 {/* "View map" pill */}
-                <div className="footer-map-pill" style={{ position: 'absolute', bottom: '9px', right: '9px', display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#1360ee', borderRadius: '20px', padding: '4px 10px', color: '#fff', fontSize: '9.5px', fontWeight: 600, letterSpacing: '0.06em', pointerEvents: 'none', boxShadow: '0 2px 8px rgba(19,96,238,0.35)' }}>
+                <div className="footer-map-pill" style={{ position: 'absolute', bottom: '9px', right: '9px', display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#1360ee', borderRadius: '20px', padding: '4px 10px', color: '#fff', fontSize: 'var(--f-9-5)', fontWeight: 600, letterSpacing: '0.06em', pointerEvents: 'none', boxShadow: '0 2px 8px rgba(19,96,238,0.35)' }}>
                   <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
                   VIEW MAP
                 </div>
@@ -213,7 +213,7 @@ export default function Footer() {
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1360ee" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginTop: '1px', flexShrink: 0 }}>
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
                 </svg>
-                <span style={{ color: '#5a6472', fontSize: '11.5px', lineHeight: 1.5 }}>
+                <span style={{ color: '#5a6472', fontSize: 'var(--f-11-5)', lineHeight: 1.5 }}>
                   City Tower 2, Sheikh Zayed Road, Dubai, UAE
                 </span>
               </div>
@@ -259,14 +259,14 @@ export default function Footer() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-            <span style={{ color: '#8a93a2', fontSize: '11px' }}>
+            <span style={{ color: '#8a93a2', fontSize: 'var(--f-11)' }}>
               Copyright 2026{' '}
               <a href="https://aryzetech.com" target="_blank" rel="noopener noreferrer" className="footer-textlink">
                 Synosys
               </a>
               {' '}| All Rights Reserved
             </span>
-            <span style={{ color: '#d5dae3', fontSize: '11px' }}>|</span>
+            <span style={{ color: '#d5dae3', fontSize: 'var(--f-11)' }}>|</span>
             <a href="/sitemap.xml" className="footer-textlink">
               Sitemap
             </a>
@@ -305,7 +305,7 @@ export default function Footer() {
         .footer-link {
           position: relative;
           color: #5a6472;
-          font-size: 13px;
+          font-size: var(--f-13);
           text-decoration: none;
           display: inline-flex;
           align-items: center;
@@ -354,7 +354,7 @@ export default function Footer() {
           border-radius: 8px;
           padding: 9px;
           color: #fff;
-          font-size: 12px;
+          font-size: var(--f-12);
           font-weight: 600;
           cursor: pointer;
           font-family: inherit;
@@ -384,7 +384,7 @@ export default function Footer() {
           border-radius: 7px;
           padding: 8px 14px;
           color: #1360ee;
-          font-size: 11px;
+          font-size: var(--f-11);
           font-weight: 600;
           text-decoration: none;
           letter-spacing: 0.04em;
@@ -432,7 +432,7 @@ export default function Footer() {
           gap: 7px;
           align-items: center;
           color: #1d1d1f;
-          font-size: 13px;
+          font-size: var(--f-13);
           font-weight: 600;
           text-decoration: none;
           transition: color 280ms ${EASE}, transform 280ms ${EASE};
@@ -494,7 +494,7 @@ function ColHeading({ children }: { children: React.ReactNode }) {
   return (
     <h4 style={{
       color: '#1360ee',
-      fontSize: '10.5px',
+      fontSize: 'var(--f-10-5)',
       fontWeight: 700,
       letterSpacing: '0.13em',
       textTransform: 'uppercase',

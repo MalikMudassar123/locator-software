@@ -25,7 +25,7 @@ export default function RegulatoryHeader({
         }
         .reg-hd-back {
           display: inline-flex; align-items: center; gap: 6px;
-          color: #6e6e73; font-size: 13px; font-weight: 600;
+          color: #6e6e73; font-size: var(--f-13); font-weight: 600;
           text-decoration: none; margin-bottom: 20px;
           transition: color .18s ease, gap .18s ease;
         }
@@ -45,17 +45,17 @@ export default function RegulatoryHeader({
             </Link>
           )}
           <span style={{
-            fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em',
+            fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em',
             color: '#1360ee', textTransform: 'uppercase' as const,
             display: 'block', marginBottom: '16px',
           }}>
             <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
             {eyebrow}
           </span>
-          <h1 style={{ margin: 0, fontSize: 'clamp(21px,2.5vw,28px)', fontWeight: 800, lineHeight: 1.18, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+          <h1 style={{ margin: 0, fontSize: 'max(clamp(21px,2.5vw,28px), min(1.944vw, 40.6px))', fontWeight: 800, lineHeight: 1.18, letterSpacing: '-.015em', color: '#1d1d1f' }}>
             {title}
           </h1>
-          <p style={{ margin: '12px auto 0', maxWidth: 540, fontSize: 'clamp(13.5px, 1.25vw, 15.5px)', lineHeight: 1.55, color: '#6e6e73' }}>
+          <p style={{ margin: '12px auto 0', maxWidth: 540, fontSize: 'max(clamp(13.5px, 1.25vw, 15.5px), min(1.076vw, 22.47px))', lineHeight: 1.55, color: '#6e6e73' }}>
             {subtitle}
           </p>
         </div>

@@ -28,26 +28,26 @@ export default function ContactHero() {
 
         .cth-eyebrow {
           display: block;
-          font-size: clamp(11px,1vw,13px); font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
+          font-size: max(clamp(11px,1vw,13px), min(0.903vw, 18.85px)); font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
           color: #4d94ff; margin-bottom: clamp(10px,1.4vw,16px);
         }
 
         .cth-title {
-          margin: 0; font-size: clamp(34px,5.4vw,60px); font-weight: 800;
+          margin: 0; font-size: max(clamp(34px,5.4vw,60px), min(4.167vw, 87px)); font-weight: 800;
           line-height: 1.05; letter-spacing: -.03em; color: #fff;
           text-shadow: 0 2px 4px rgba(0,0,0,.4), 0 10px 36px rgba(0,0,0,.35);
         }
 
         .cth-lead {
           margin: clamp(12px,1.6vw,18px) 0 0; max-width: 44ch;
-          font-size: clamp(14px,1.2vw,16px); line-height: 1.7; color: rgba(255,255,255,.82);
+          font-size: max(clamp(14px,1.2vw,16px), min(1.111vw, 23.2px)); line-height: 1.7; color: rgba(255,255,255,.82);
         }
 
         /* Breadcrumb sits inside the banner, under the copy. */
         .cth-crumbs {
           display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
           margin-top: clamp(20px,3vw,34px);
-          font-size: 13.5px; color: rgba(255,255,255,.55);
+          font-size: var(--f-13-5); color: rgba(255,255,255,.55);
         }
         .cth-crumbs a { color: rgba(255,255,255,.85); font-weight: 600; text-decoration: none; transition: color .18s ease; }
         .cth-crumbs a:hover { color: #fff; }

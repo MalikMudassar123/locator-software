@@ -50,8 +50,8 @@ export default function FilterSelect({
         .fsl-trigger:focus-visible {
           outline: 0; border-color: #1360ee; background: #fff; box-shadow: 0 0 0 4px rgba(19,96,238,.12);
         }
-        .fsl-label { display: block; font-size: 10.5px; font-weight: 700; letter-spacing: .04em; color: #9aa2b1; }
-        .fsl-value { display: block; font-size: 14px; color: #1d1d1f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .fsl-label { display: block; font-size: var(--f-10-5); font-weight: 700; letter-spacing: .04em; color: #9aa2b1; }
+        .fsl-value { display: block; font-size: var(--f-14); color: #1d1d1f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .fsl-chevron {
           position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: #9aa2b1; pointer-events: none;
           transition: transform .22s ${EASE};
@@ -72,7 +72,7 @@ export default function FilterSelect({
           display: flex; align-items: center; justify-content: space-between; gap: 10px;
           width: 100%; text-align: left; padding: 10px 12px; border-radius: 9px;
           border: 0; background: none; cursor: pointer;
-          font-family: inherit; font-size: 14px; color: #3a3a44;
+          font-family: inherit; font-size: var(--f-14); color: #3a3a44;
           transition: background .14s ${EASE}, color .14s ${EASE};
         }
         .fsl-opt:hover { background: #f4f8ff; color: #1360ee; }

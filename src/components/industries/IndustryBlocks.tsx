@@ -49,13 +49,13 @@ export default function IndustryBlocks({ industry }: { industry: Industry }) {
         .ixb-grid.flip .ixb-viz { order: 1; }
 
         .ixb-text { text-align: left; }
-        .ixb-h2 { margin: 0; font-size: clamp(26px,3vw,38px); font-weight: 800; line-height: 1.14; letter-spacing: -.025em; color: #1d1d1f; max-width: 18ch; }
-        .ixb-sub { margin: 12px 0 0; font-size: clamp(16px,1.6vw,19px); font-weight: 700; letter-spacing: -.01em; color: #1360ee; }
-        .ixb-desc { margin: 18px 0 0; font-size: clamp(14px,1.35vw,15.5px); line-height: 1.72; color: #6e6e73; max-width: 52ch; }
+        .ixb-h2 { margin: 0; font-size: max(clamp(26px,3vw,38px), min(2.639vw, 55.1px)); font-weight: 800; line-height: 1.14; letter-spacing: -.025em; color: #1d1d1f; max-width: 18ch; }
+        .ixb-sub { margin: 12px 0 0; font-size: max(clamp(16px,1.6vw,19px), min(1.319vw, 27.55px)); font-weight: 700; letter-spacing: -.01em; color: #1360ee; }
+        .ixb-desc { margin: 18px 0 0; font-size: max(clamp(14px,1.35vw,15.5px), min(1.076vw, 22.47px)); line-height: 1.72; color: #6e6e73; max-width: 52ch; }
 
-        .ixb-features-label { margin: 22px 0 0; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: #1d1d1f; text-transform: uppercase; }
+        .ixb-features-label { margin: 22px 0 0; font-size: var(--f-11-5); font-weight: 700; letter-spacing: .06em; color: #1d1d1f; text-transform: uppercase; }
         .ixb-features { margin: 14px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
-        .ixb-features li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; line-height: 1.5; color: #3a3a3c; }
+        .ixb-features li { display: flex; align-items: flex-start; gap: 10px; font-size: var(--f-14); line-height: 1.5; color: #3a3a3c; }
         .ixb-features svg { flex-shrink: 0; margin-top: 2px; color: #1360ee; }
 
         .ixb-viz { min-width: 0; max-width: 480px; width: 100%; }

@@ -13,12 +13,12 @@ export default function IndustriesGrid() {
 
         .ig-head { max-width: 640px; margin: 0 0 clamp(28px,3.6vw,44px); }
         .ig-eyebrow {
-          display: block; font-size: clamp(22px,2.8vw,32px); font-weight: 800; letter-spacing: .04em;
+          display: block; font-size: max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px)); font-weight: 800; letter-spacing: .04em;
           color: #1360ee; text-transform: uppercase; margin-bottom: 16px;
         }
         .ig-eyebrow span { display: block; width: 34px; height: 3px; background: #1360ee; border-radius: 2px; margin-bottom: 12px; }
-        .ig-h2 { margin: 0; font-size: clamp(21px,2.5vw,28px); font-weight: 800; line-height: 1.2; letter-spacing: -.015em; color: #1d1d1f; }
-        .ig-lead { margin: 14px 0 0; font-size: clamp(14px,1.3vw,16px); line-height: 1.65; color: #6e6e73; max-width: 56ch; }
+        .ig-h2 { margin: 0; font-size: max(clamp(21px,2.5vw,28px), min(1.944vw, 40.6px)); font-weight: 800; line-height: 1.2; letter-spacing: -.015em; color: #1d1d1f; }
+        .ig-lead { margin: 14px 0 0; font-size: max(clamp(14px,1.3vw,16px), min(1.111vw, 23.2px)); line-height: 1.65; color: #6e6e73; max-width: 56ch; }
 
         .ig-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: clamp(20px,2.4vw,28px); }
         @media (max-width: 980px) { .ig-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
@@ -38,12 +38,12 @@ export default function IndustriesGrid() {
 
         .ig-card-body { padding: 20px 22px 24px; flex: 1; display: flex; flex-direction: column; }
         .ig-card-title {
-          margin: 0 0 14px; font-size: clamp(17px,1.9vw,21px); font-weight: 800;
+          margin: 0 0 14px; font-size: max(clamp(17px,1.9vw,21px), min(1.458vw, 30.45px)); font-weight: 800;
           text-transform: uppercase; line-height: 1.22; letter-spacing: -.01em; color: #1d1d1f;
         }
         .ig-card-tag {
           margin-top: auto; align-self: flex-start;
-          font-size: 12.5px; font-weight: 600; color: #3a3a3c;
+          font-size: var(--f-12-5); font-weight: 600; color: #3a3a3c;
           border: 1px solid #dfe2e8; border-radius: 999px; padding: 8px 15px;
           transition: background .2s ${EASE}, border-color .2s ${EASE}, color .2s ${EASE};
         }

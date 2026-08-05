@@ -333,11 +333,11 @@ export default function Navbar() {
                 // invisible on one of them, so the three colours flip with the bar. The
                 // hero set is lifted straight from the hero gradient itself — cyan #08b2e0
                 // and the sunrise glow #fbeabc — so the streak looks native to the page.
-                '--cta-c1': isPanelOpen ? '#0a84e3' : '#7fe6ff',
-                '--cta-c2': isPanelOpen ? '#eaa62a' : '#ffd98a',
+                '--cta-c1': isPanelOpen ? '#00a6f5' : '#5fe0ff',
+                '--cta-c2': isPanelOpen ? '#ffb01f' : '#ffc84f',
                 '--cta-c3': isPanelOpen ? '#1360ee' : '#ffffff',
-                '--cta-glow': isPanelOpen ? 'rgba(19,96,238,0.7)' : 'rgba(190,235,255,0.95)',
-                '--cta-track': isPanelOpen ? 'rgba(19,96,238,0.22)' : 'rgba(255,255,255,0.38)',
+                '--cta-glow': isPanelOpen ? 'rgba(19,120,255,0.78)' : 'rgba(202,240,255,0.95)',
+                '--cta-track': isPanelOpen ? 'rgba(19,96,238,0.24)' : 'rgba(255,255,255,0.45)',
               } as React.CSSProperties}
             >
               <span className="nav-cta-ring" aria-hidden="true" />

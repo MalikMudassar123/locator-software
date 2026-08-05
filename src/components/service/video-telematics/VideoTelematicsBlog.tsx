@@ -77,7 +77,7 @@ export default function VideoTelematicsBlog() {
           <div data-reveal style={{ textAlign: 'center', marginBottom: '44px' }}>
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
-              fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em',
+              fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em',
               color: '#1360ee', textTransform: 'uppercase' as const,
               marginBottom: '16px',
             }}>
@@ -85,10 +85,10 @@ export default function VideoTelematicsBlog() {
               From Our Blog
               <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
             </span>
-            <h2 style={{ margin: '0 0 14px', fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+            <h2 style={{ margin: '0 0 14px', fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               Insights on <span style={{ color: '#1360ee' }}>video telematics</span>
             </h2>
-            <p style={{ margin: '0 auto', maxWidth: '480px', fontSize: 'clamp(13.5px,1.25vw,15px)', lineHeight: 1.65, color: '#6e6e73' }}>
+            <p style={{ margin: '0 auto', maxWidth: '480px', fontSize: 'max(clamp(13.5px,1.25vw,15px), min(1.042vw, 21.75px))', lineHeight: 1.65, color: '#6e6e73' }}>
               Guides on AI dashcams, driver monitoring, and video evidence for UAE fleets.
             </p>
           </div>
@@ -101,7 +101,7 @@ export default function VideoTelematicsBlog() {
                   <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(8,14,50,.65) 0%, rgba(8,14,50,.15) 40%, transparent 100%)' }} />
                   <span style={{
                     position: 'absolute', top: '12px', left: '12px',
-                    fontSize: '10px', fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase' as const,
+                    fontSize: 'var(--f-10)', fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase' as const,
                     padding: '4px 10px', borderRadius: '999px',
                     background: 'rgba(255,255,255,.18)', color: '#fff',
                     backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
@@ -112,17 +112,17 @@ export default function VideoTelematicsBlog() {
                 </div>
 
                 <div style={{ padding: '20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                  <h3 style={{ margin: '0 0 10px', fontSize: '15px', fontWeight: 800, letterSpacing: '-.015em', lineHeight: 1.32, color: '#1d1d1f' }}>
+                  <h3 style={{ margin: '0 0 10px', fontSize: 'var(--f-15)', fontWeight: 800, letterSpacing: '-.015em', lineHeight: 1.32, color: '#1d1d1f' }}>
                     {post.title}
                   </h3>
-                  <p style={{ margin: 0, fontSize: '13px', lineHeight: 1.6, color: '#6e6e73', flex: 1 }}>
+                  <p style={{ margin: 0, fontSize: 'var(--f-13)', lineHeight: 1.6, color: '#6e6e73', flex: 1 }}>
                     {post.excerpt}
                   </p>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '16px', paddingTop: '14px', borderTop: '1px solid #f0f0f3' }}>
-                    <span style={{ width: '26px', height: '26px', borderRadius: '50%', background: post.authorBg, display: 'grid', placeItems: 'center', fontSize: '9.5px', fontWeight: 800, color: '#fff', flexShrink: 0 }}>
+                    <span style={{ width: '26px', height: '26px', borderRadius: '50%', background: post.authorBg, display: 'grid', placeItems: 'center', fontSize: 'var(--f-9-5)', fontWeight: 800, color: '#fff', flexShrink: 0 }}>
                       {post.author}
                     </span>
-                    <span className="vtb-cta" style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '12.5px', fontWeight: 700, color: post.catColor }}>
+                    <span className="vtb-cta" style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: 'var(--f-12-5)', fontWeight: 700, color: post.catColor }}>
                       Read <span>→</span>
                     </span>
                   </div>

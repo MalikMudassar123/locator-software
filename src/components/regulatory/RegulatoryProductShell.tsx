@@ -35,7 +35,7 @@ export default function RegulatoryProductShell({ slug }: { slug: string }) {
 
           <p data-reveal style={{
             textAlign: 'center', margin: '0 auto', maxWidth: '620px',
-            fontSize: 'clamp(15px,1.5vw,17px)', lineHeight: 1.75, color: '#3a3a3c',
+            fontSize: 'max(clamp(15px,1.5vw,17px), min(1.181vw, 24.65px))', lineHeight: 1.75, color: '#3a3a3c',
           }}>
             {product.description}
           </p>
@@ -50,9 +50,9 @@ export default function RegulatoryProductShell({ slug }: { slug: string }) {
                 <span style={{
                   width: 22, height: 22, borderRadius: '50%', flexShrink: 0,
                   background: `${product.accent}18`, color: product.accent,
-                  display: 'grid', placeItems: 'center', fontSize: 12, fontWeight: 800,
+                  display: 'grid', placeItems: 'center', fontSize: 'var(--f-12)', fontWeight: 800,
                 }}>✓</span>
-                <span style={{ fontSize: '13.5px', fontWeight: 600, color: '#1d1d1f' }}>{f}</span>
+                <span style={{ fontSize: 'var(--f-13-5)', fontWeight: 600, color: '#1d1d1f' }}>{f}</span>
               </div>
             ))}
           </div>
@@ -60,7 +60,7 @@ export default function RegulatoryProductShell({ slug }: { slug: string }) {
           <div data-reveal style={{ textAlign: 'center', marginTop: '44px' }}>
             <Link href="/contact" style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
-              fontSize: '14px', fontWeight: 700, color: '#fff',
+              fontSize: 'var(--f-14)', fontWeight: 700, color: '#fff',
               background: '#1360ee', borderRadius: '999px', padding: '13px 28px',
               textDecoration: 'none', transition: '.18s cubic-bezier(.22,.61,.36,1)',
             }}>

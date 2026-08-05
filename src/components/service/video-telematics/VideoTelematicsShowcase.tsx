@@ -66,20 +66,20 @@ export default function VideoTelematicsShowcase() {
         <div className="vts-grid" style={{ maxWidth: 'var(--w-1180)', margin: '0 auto' }}>
 
           <div data-reveal="left">
-            <span style={{ fontSize: '13px', fontWeight: 700, color: '#1360ee', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: '18px', display: 'block' }}>
+            <span style={{ fontSize: 'var(--f-13)', fontWeight: 700, color: '#1360ee', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: '18px', display: 'block' }}>
               Video Telematics
             </span>
-            <h2 style={{ fontSize: 'clamp(24px,3vw,36px)', fontWeight: 800, lineHeight: 1.15, color: '#1d1d1f', margin: '0 0 16px' }}>
+            <h2 style={{ fontSize: 'max(clamp(24px,3vw,36px), min(2.500vw, 52.2px))', fontWeight: 800, lineHeight: 1.15, color: '#1d1d1f', margin: '0 0 16px' }}>
               Enhance Fleet Visibility with Video Telematics
             </h2>
-            <p style={{ fontSize: 'clamp(13px,1.2vw,15px)', lineHeight: 1.65, color: '#6e6e73', margin: '0 0 28px', maxWidth: 440 }}>
+            <p style={{ fontSize: 'max(clamp(13px,1.2vw,15px), min(1.042vw, 21.75px))', lineHeight: 1.65, color: '#6e6e73', margin: '0 0 28px', maxWidth: 440 }}>
               Live HD video insights to monitor drivers, road conditions, and on-road operations with ease.
             </p>
 
-            <h3 style={{ fontSize: 'clamp(15px,1.4vw,18px)', fontWeight: 700, color: '#1d1d1f', margin: '0 0 10px' }}>
+            <h3 style={{ fontSize: 'max(clamp(15px,1.4vw,18px), min(1.250vw, 26.1px))', fontWeight: 700, color: '#1d1d1f', margin: '0 0 10px' }}>
               AI-Powered Fleet Dash Cameras &amp; MDVR Safety
             </h3>
-            <p style={{ fontSize: 'clamp(12px,1.1vw,14px)', lineHeight: 1.6, color: '#6e6e73', margin: '0 0 24px', maxWidth: 440 }}>
+            <p style={{ fontSize: 'max(clamp(12px,1.1vw,14px), min(0.972vw, 20.3px))', lineHeight: 1.6, color: '#6e6e73', margin: '0 0 24px', maxWidth: 440 }}>
               Real-time driver monitoring, cargo surveillance, and multi-camera recording for trucks, taxis, buses, and commercial fleets.
             </p>
 
@@ -88,7 +88,7 @@ export default function VideoTelematicsShowcase() {
                 <div key={f.title} className="vts-fcard">
                   <span className="vts-fcard-icon">{f.icon}</span>
                   <span>
-                    <span style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#1d1d1f' }}>{f.title}</span>
+                    <span style={{ display: 'block', fontSize: 'var(--f-13)', fontWeight: 700, color: '#1d1d1f' }}>{f.title}</span>
                   </span>
                 </div>
               ))}
@@ -101,7 +101,7 @@ export default function VideoTelematicsShowcase() {
                 {['#ff5f57', '#febc2e', '#28c840'].map(c => (
                   <span key={c} style={{ width: 9, height: 9, borderRadius: '50%', background: c, display: 'inline-block' }} />
                 ))}
-                <span style={{ marginLeft: 8, fontSize: 11, color: '#94a3b8' }}>pro.mylocatorplus.com/video</span>
+                <span style={{ marginLeft: 8, fontSize: 'var(--f-11)', color: '#94a3b8' }}>pro.mylocatorplus.com/video</span>
               </div>
               <Image
                 src="/block 1/video teleframe.webp"

@@ -52,7 +52,7 @@ export default function AsateelStats() {
       <section style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#fff' }}>
         <div style={{ maxWidth: 'var(--w-1080)', margin: '0 auto' }}>
 
-          <h2 data-reveal style={{ margin: '0 0 40px', fontSize: 'clamp(24px,3vw,36px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.02em', color: '#1d1d1f' }}>
+          <h2 data-reveal style={{ margin: '0 0 40px', fontSize: 'max(clamp(24px,3vw,36px), min(2.500vw, 52.2px))', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.02em', color: '#1d1d1f' }}>
             Why Hire LOCATOR?
           </h2>
 
@@ -68,8 +68,8 @@ export default function AsateelStats() {
                     {r.icon}
                   </div>
                   <div>
-                    <h3 style={{ margin: '0 0 6px', fontSize: '16px', fontWeight: 800, color: '#1360ee' }}>{r.title}</h3>
-                    <p style={{ margin: 0, fontSize: '13.5px', lineHeight: 1.65, color: '#6e6e73' }}>{r.desc}</p>
+                    <h3 style={{ margin: '0 0 6px', fontSize: 'var(--f-16)', fontWeight: 800, color: '#1360ee' }}>{r.title}</h3>
+                    <p style={{ margin: 0, fontSize: 'var(--f-13-5)', lineHeight: 1.65, color: '#6e6e73' }}>{r.desc}</p>
                   </div>
                 </div>
               ))}
@@ -78,8 +78,8 @@ export default function AsateelStats() {
             <div data-reveal="right" className="asa-stat-mini-grid">
               {STATS.map(s => (
                 <div key={s.label} className="asa-stat-box" style={{ background: s.bg, boxShadow: s.bg === '#fff' ? '0 2px 12px rgba(0,0,0,.06)' : '0 10px 26px rgba(19,96,238,.18)' }}>
-                  <span style={{ fontSize: 'clamp(20px,2.4vw,26px)', fontWeight: 800, letterSpacing: '-.02em', color: s.color }}>{s.value}</span>
-                  <span style={{ fontSize: '13px', fontWeight: 600, color: s.bg === '#fff' ? '#1d1d1f' : 'rgba(255,255,255,.9)' }}>{s.label}</span>
+                  <span style={{ fontSize: 'max(clamp(20px,2.4vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, letterSpacing: '-.02em', color: s.color }}>{s.value}</span>
+                  <span style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: s.bg === '#fff' ? '#1d1d1f' : 'rgba(255,255,255,.9)' }}>{s.label}</span>
                 </div>
               ))}
             </div>

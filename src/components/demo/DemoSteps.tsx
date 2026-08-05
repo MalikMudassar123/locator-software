@@ -143,14 +143,14 @@ export default function DemoSteps() {
         .ds-badge {
           position: absolute; top: -6px; right: -6px; z-index: 3;
           min-width: 22px; height: 22px; padding: 0 5px; border-radius: 999px;
-          background: #1360ee; color: #fff; font-size: 10.5px; font-weight: 800;
+          background: #1360ee; color: #fff; font-size: var(--f-10-5); font-weight: 800;
           display: grid; place-items: center; box-shadow: 0 5px 12px -3px rgba(19,96,238,.55);
           border: 2px solid #fff;
         }
 
         .ds-text { padding-right: 12px; }
-        .ds-step-title { margin: 5px 0 5px; font-size: clamp(14px,1.35vw,16px); font-weight: 800; letter-spacing: -.015em; color: #1d1d1f; line-height: 1.25; }
-        .ds-step-desc { margin: 0; font-size: 12.5px; line-height: 1.55; color: #6e6e73; }
+        .ds-step-title { margin: 5px 0 5px; font-size: max(clamp(14px,1.35vw,16px), min(1.111vw, 23.2px)); font-weight: 800; letter-spacing: -.015em; color: #1d1d1f; line-height: 1.25; }
+        .ds-step-desc { margin: 0; font-size: var(--f-12-5); line-height: 1.55; color: #6e6e73; }
 
         /* ── Connector: an empty spacer until its stream is revealed. No solid
               line ever draws, so a connection can't show before its steps. ── */

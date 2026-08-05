@@ -84,10 +84,10 @@ export default function RegulatoryGrid() {
             <div className="reg-icon-wrap" style={{ background: `${p.accent}15`, color: p.accent }}>
               {p.icon}
             </div>
-            <h3 style={{ margin: 0, fontSize: 'clamp(15px,1.4vw,17px)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+            <h3 style={{ margin: 0, fontSize: 'max(clamp(15px,1.4vw,17px), min(1.181vw, 24.65px))', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               {p.name}
             </h3>
-            <p className="reg-tagline" style={{ margin: 0, fontSize: 'clamp(12.5px,1.05vw,13.5px)', lineHeight: 1.5, color: '#6e6e73' }}>
+            <p className="reg-tagline" style={{ margin: 0, fontSize: 'max(clamp(12.5px,1.05vw,13.5px), min(0.938vw, 19.57px))', lineHeight: 1.5, color: '#6e6e73' }}>
               {p.tagline}
             </p>
           </Link>

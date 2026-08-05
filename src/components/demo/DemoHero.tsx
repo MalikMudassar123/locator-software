@@ -12,10 +12,10 @@ export default function DemoHero() {
         }
         .dh-inner { max-width: var(--w-1180); margin: 0 auto; text-align: center; padding-top: clamp(8px,1.4vw,16px); }
 
-        .dh-title { margin: 0; font-size: clamp(30px,4.4vw,52px); font-weight: 800; line-height: 1.08; letter-spacing: -.03em; color: #1d1d1f; }
+        .dh-title { margin: 0; font-size: max(clamp(30px,4.4vw,52px), min(3.611vw, 75.4px)); font-weight: 800; line-height: 1.08; letter-spacing: -.03em; color: #1d1d1f; }
         .dh-title b { color: #1360ee; font-weight: 800; }
 
-        .dh-crumbs { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; font-size: 13px; color: #6e6e73; }
+        .dh-crumbs { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; font-size: var(--f-13); color: #6e6e73; }
         .dh-crumbs a { color: #6e6e73; text-decoration: none; font-weight: 600; transition: color .18s ease; }
         .dh-crumbs a:hover { color: #1360ee; }
         .dh-crumbs .cur { color: #1360ee; font-weight: 700; }

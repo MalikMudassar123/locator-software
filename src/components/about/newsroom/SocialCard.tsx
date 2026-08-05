@@ -69,14 +69,14 @@ export default function SocialCard({ post }: { post: SocialPost }) {
           width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center;
           color: #fff; flex-shrink: 0;
         }
-        .nsc-name { margin: 0; display: flex; align-items: center; gap: 5px; font-size: 14px; font-weight: 700; color: #0b1220; line-height: 1.25; }
+        .nsc-name { margin: 0; display: flex; align-items: center; gap: 5px; font-size: var(--f-14); font-weight: 700; color: #0b1220; line-height: 1.25; }
         .nsc-verified { color: #1360ee; flex-shrink: 0; }
-        .nsc-sub { margin: 1px 0 0; font-size: 12px; color: #6b7484; line-height: 1.35; }
-        .nsc-meta { margin: 1px 0 0; display: flex; align-items: center; gap: 4px; font-size: 12px; color: #8b93a3; }
+        .nsc-sub { margin: 1px 0 0; font-size: var(--f-12); color: #6b7484; line-height: 1.35; }
+        .nsc-meta { margin: 1px 0 0; display: flex; align-items: center; gap: 4px; font-size: var(--f-12); color: #8b93a3; }
         .nsc-follow {
           border: 0; background: transparent; cursor: pointer; font-family: inherit;
           display: inline-flex; align-items: center; gap: 5px;
-          font-size: 13.5px; font-weight: 700; color: #1360ee;
+          font-size: var(--f-13-5); font-weight: 700; color: #1360ee;
           padding: 5px 9px; border-radius: 6px; transition: background .16s ${EASE};
         }
         .nsc-follow:hover { background: rgba(19,96,238,.08); }
@@ -84,11 +84,11 @@ export default function SocialCard({ post }: { post: SocialPost }) {
         /* ── Body ── */
         .nsc-text {
           margin: 11px 0 0; padding: 0 16px 12px;
-          font-size: 14px; line-height: 1.5; color: #1b2433; white-space: pre-line;
+          font-size: var(--f-14); line-height: 1.5; color: #1b2433; white-space: pre-line;
         }
         .nsc-more {
           border: 0; background: transparent; padding: 0; cursor: pointer; font-family: inherit;
-          font-size: 14px; color: #8b93a3;
+          font-size: var(--f-14); color: #8b93a3;
         }
         .nsc-more:hover { color: #1360ee; text-decoration: underline; }
 
@@ -105,7 +105,7 @@ export default function SocialCard({ post }: { post: SocialPost }) {
         /* ── Reaction counts ── */
         .nsc-counts {
           display: flex; align-items: center; gap: 6px;
-          padding: 9px 16px; font-size: 12.5px; color: #6b7484;
+          padding: 9px 16px; font-size: var(--f-12-5); color: #6b7484;
         }
         .nsc-reacts { display: inline-flex; align-items: center; }
         .nsc-react {
@@ -125,7 +125,7 @@ export default function SocialCard({ post }: { post: SocialPost }) {
           display: inline-flex; align-items: center; justify-content: center; gap: 7px;
           border: 0; background: transparent; cursor: pointer; font-family: inherit;
           padding: 11px 6px; border-radius: 8px;
-          font-size: 13px; font-weight: 600; color: #6b7484;
+          font-size: var(--f-13); font-weight: 600; color: #6b7484;
           transition: background .16s ${EASE}, color .16s ${EASE};
         }
         .nsc-action:hover { background: #f2f4f7; color: #1b2433; }

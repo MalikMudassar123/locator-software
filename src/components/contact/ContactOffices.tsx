@@ -96,13 +96,13 @@ export default function ContactOffices() {
           padding: 7px 16px 7px 8px; border-radius: 999px;
           background: #fff; border: 1px solid #e2e9f6;
           box-shadow: 0 10px 26px -16px rgba(20,40,90,.5);
-          font-size: clamp(12px,1.05vw,13.5px); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1360ee;
+          font-size: max(clamp(12px,1.05vw,13.5px), min(0.938vw, 19.57px)); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1360ee;
         }
         .cto-pill img { border-radius: 50%; display: block; }
 
         .cto-title {
           margin: clamp(10px,1.2vw,14px) 0 0;
-          font-size: clamp(30px,3.6vw,46px); font-weight: 800;
+          font-size: max(clamp(30px,3.6vw,46px), min(3.194vw, 66.7px)); font-weight: 800;
           letter-spacing: -.035em; line-height: 1.05; color: #1d1d1f;
         }
         /* Brand-blue wash on the wordmark keeps it a graphic element, not a shout. */
@@ -110,7 +110,7 @@ export default function ContactOffices() {
           background: linear-gradient(180deg, #1d1d1f 0%, #1d1d1f 48%, #1360ee 148%);
           -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .cto-sub { margin: clamp(12px,1.5vw,18px) auto 0; max-width: 54ch; font-size: clamp(14px,1.2vw,16px); line-height: 1.7; color: #6e6e73; }
+        .cto-sub { margin: clamp(12px,1.5vw,18px) auto 0; max-width: 54ch; font-size: max(clamp(14px,1.2vw,16px), min(1.111vw, 23.2px)); line-height: 1.7; color: #6e6e73; }
 
         /* ── Two office panels ── */
         .cto-grid {
@@ -145,7 +145,7 @@ export default function ContactOffices() {
 
         .cto-n {
           position: absolute; z-index: 2; top: clamp(14px,1.8vw,20px); left: clamp(18px,2.2vw,26px);
-          font-size: 12px; font-weight: 800; letter-spacing: .16em; color: rgba(255,255,255,.72);
+          font-size: var(--f-12); font-weight: 800; letter-spacing: .16em; color: rgba(255,255,255,.72);
           text-shadow: 0 2px 10px rgba(0,0,0,.5);
         }
         .cto-badge {
@@ -155,7 +155,7 @@ export default function ContactOffices() {
           background: rgba(255,255,255,.16); color: #fff;
           border: 1px solid rgba(255,255,255,.3);
           -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-          font-size: 10.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+          font-size: var(--f-10-5); font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
           white-space: nowrap;
         }
         .cto-badge i { width: 6px; height: 6px; border-radius: 50%; background: #6fa8ff; box-shadow: 0 0 0 3px rgba(111,168,255,.28); }
@@ -165,11 +165,11 @@ export default function ContactOffices() {
           bottom: clamp(16px,2vw,22px);
         }
         .cto-city {
-          margin: 0; font-size: clamp(26px,3.2vw,40px); font-weight: 800;
+          margin: 0; font-size: max(clamp(26px,3.2vw,40px), min(2.778vw, 58px)); font-weight: 800;
           letter-spacing: -.035em; line-height: 1.05; color: #fff;
           text-shadow: 0 2px 4px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
         }
-        .cto-emirate { margin: 7px 0 0; font-size: 12.5px; font-weight: 600; letter-spacing: .02em; color: rgba(255,255,255,.76); }
+        .cto-emirate { margin: 7px 0 0; font-size: var(--f-12-5); font-weight: 600; letter-spacing: .02em; color: rgba(255,255,255,.76); }
 
         .cto-body {
           position: relative; display: flex; flex-direction: column; flex: 1;
@@ -195,10 +195,10 @@ export default function ContactOffices() {
         }
         .cto-card:hover .cto-row-ic { transform: translateY(-1px); }
         .cto-row-ic svg { width: 18px; height: 18px; }
-        .cto-row-label { font-size: 10.5px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; color: #9aa3b2; }
+        .cto-row-label { font-size: var(--f-10-5); font-weight: 800; letter-spacing: .13em; text-transform: uppercase; color: #9aa3b2; }
         .cto-row-value {
           display: block; margin-top: 4px; white-space: pre-line;
-          font-size: 14.5px; font-weight: 600; line-height: 1.6; color: #1d1d1f;
+          font-size: var(--f-14-5); font-weight: 600; line-height: 1.6; color: #1d1d1f;
           text-decoration: none; transition: color .18s ${EASE};
         }
         a.cto-row-value:hover { color: #1360ee; }

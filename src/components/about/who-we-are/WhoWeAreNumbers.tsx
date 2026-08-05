@@ -78,7 +78,7 @@ export default function WhoWeAreNumbers() {
         .wwn-head { text-align: center; max-width: 720px; margin: 0 auto clamp(36px,4.4vw,56px); }
         .wwn-eyebrow {
           display: block;
-          font-size: clamp(22px,2.8vw,32px); font-weight: 800; letter-spacing: .04em;
+          font-size: max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px)); font-weight: 800; letter-spacing: .04em;
           color: #6ea2ff; text-transform: uppercase; margin-bottom: 16px;
         }
         /* Single rule above the label — flanking rules break on wrap. */
@@ -88,7 +88,7 @@ export default function WhoWeAreNumbers() {
           margin: 0 auto 12px;
         }
         .wwn-h2 {
-          margin: 0; font-size: clamp(19px,2.2vw,26px); font-weight: 800;
+          margin: 0; font-size: max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px)); font-weight: 800;
           line-height: 1.25; letter-spacing: -.02em; color: #fff; text-wrap: balance;
         }
 
@@ -123,16 +123,16 @@ export default function WhoWeAreNumbers() {
         .wwn-grid[data-in="true"] .wwn-rule { transform: scaleX(1); }
 
         .wwn-value {
-          font-size: clamp(36px,4.4vw,58px); font-weight: 800; line-height: 1;
+          font-size: max(clamp(36px,4.4vw,58px), min(4.028vw, 84.1px)); font-weight: 800; line-height: 1;
           letter-spacing: -.04em; font-variant-numeric: tabular-nums;
           color: #fff; margin-bottom: 14px;
         }
         .wwn-suffix { color: #4d8cff; }
         .wwn-label {
-          font-size: clamp(14px,1.25vw,15.5px); font-weight: 700;
+          font-size: max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px)); font-weight: 700;
           color: #fff; letter-spacing: -.01em; line-height: 1.3; margin-bottom: 9px;
         }
-        .wwn-desc { margin: 0; font-size: 13px; line-height: 1.65; color: rgba(255,255,255,.55); }
+        .wwn-desc { margin: 0; font-size: var(--f-13); line-height: 1.65; color: rgba(255,255,255,.55); }
 
         @media (prefers-reduced-motion: reduce) {
           .wwn-item, .wwn-rule { transition: none; opacity: 1; transform: none; }

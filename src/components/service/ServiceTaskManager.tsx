@@ -44,18 +44,18 @@ export default function ServiceTaskManager() {
         .pm-text { text-align: left; }
         .pm-tag {
           display: block;
-          font-size: clamp(22px,2.8vw,32px); font-weight: 800; letter-spacing: .04em;
+          font-size: max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px)); font-weight: 800; letter-spacing: .04em;
           color: #1360ee; text-transform: uppercase; margin-bottom: 16px;
         }
         .pm-tag span {
           display: block; width: 34px; height: 3px;
           background: #1360ee; border-radius: 2px; margin-bottom: 12px;
         }
-        .pm-h2 { margin: 0; font-size: clamp(19px,2.2vw,26px); font-weight: 800; line-height: 1.25; letter-spacing: -.015em; color: rgb(72, 75, 76); }
-        .pm-lead { margin: 18px 0 0; font-size: clamp(14px,1.45vw,16px); line-height: 1.62; color: #6e6e73; max-width: 46ch; }
-        .pm-suited-label { margin: 22px 0 0; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: #1d1d1f; text-transform: uppercase; }
+        .pm-h2 { margin: 0; font-size: max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px)); font-weight: 800; line-height: 1.25; letter-spacing: -.015em; color: rgb(72, 75, 76); }
+        .pm-lead { margin: 18px 0 0; font-size: max(clamp(14px,1.45vw,16px), min(1.111vw, 23.2px)); line-height: 1.62; color: #6e6e73; max-width: 46ch; }
+        .pm-suited-label { margin: 22px 0 0; font-size: var(--f-11-5); font-weight: 700; letter-spacing: .06em; color: #1d1d1f; text-transform: uppercase; }
         .pm-suited { margin: 14px 0 0; display: flex; flex-wrap: wrap; gap: 9px; }
-        .pm-suited span { font-size: 13.5px; font-weight: 600; color: #1d1d1f; background: #fff; border: 1px solid #e3e3e6; padding: 8px 14px; border-radius: 999px; }
+        .pm-suited span { font-size: var(--f-13-5); font-weight: 600; color: #1d1d1f; background: #fff; border: 1px solid #e3e3e6; padding: 8px 14px; border-radius: 999px; }
 
         .pm-viz { min-width: 0; }
 

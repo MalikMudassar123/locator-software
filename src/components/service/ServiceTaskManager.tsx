@@ -34,7 +34,7 @@ export default function ServiceTaskManager() {
         .pm-sec { padding: clamp(40px,5vw,76px) clamp(24px,6vw,96px); border-top: 1px solid #f0f0f3; scroll-margin-top: 84px; }
 
         .pm-grid {
-          max-width: 1280px; margin: 0 auto;
+          max-width: var(--w-1280); margin: 0 auto;
           display: grid;
           grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.4fr);
           gap: clamp(28px, 3.4vw, 56px);

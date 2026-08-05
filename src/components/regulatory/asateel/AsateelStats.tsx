@@ -50,7 +50,7 @@ export default function AsateelStats() {
       `}</style>
 
       <section style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#fff' }}>
-        <div style={{ maxWidth: '1080px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'var(--w-1080)', margin: '0 auto' }}>
 
           <h2 data-reveal style={{ margin: '0 0 40px', fontSize: 'clamp(24px,3vw,36px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.02em', color: '#1d1d1f' }}>
             Why Hire LOCATOR?

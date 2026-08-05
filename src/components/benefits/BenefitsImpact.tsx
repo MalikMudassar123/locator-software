@@ -65,7 +65,7 @@ export default function BenefitsImpact() {
       <style>{`
         .bgi { background: #0f1117; color: #fff; padding: clamp(56px,7vw,92px) 28px; }
         .bgi-inner {
-          max-width: 1120px; margin: 0 auto;
+          max-width: var(--w-1120); margin: 0 auto;
           display: grid; grid-template-columns: repeat(3, 1fr);
           gap: clamp(28px,4vw,56px);
         }

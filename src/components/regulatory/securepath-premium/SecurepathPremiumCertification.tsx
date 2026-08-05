@@ -1,7 +1,7 @@
 export default function SecurepathPremiumCertification() {
   return (
     <section style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#fff' }}>
-      <div data-reveal style={{ maxWidth: '1180px', margin: '0 auto' }}>
+      <div data-reveal style={{ maxWidth: 'var(--w-1180)', margin: '0 auto' }}>
         <h2 style={{ margin: '0 0 18px', fontSize: 'clamp(22px,2.8vw,30px)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-.02em', color: '#1360ee' }}>
           SecurePath Premium Certification in Dubai
         </h2>

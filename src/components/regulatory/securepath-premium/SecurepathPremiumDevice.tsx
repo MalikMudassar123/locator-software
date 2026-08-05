@@ -10,7 +10,7 @@ export default function SecurepathPremiumDevice() {
       `}</style>
 
       <section style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#fff' }}>
-        <div style={{ maxWidth: '1180px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'var(--w-1180)', margin: '0 auto' }}>
 
           <div className="spp-dev-grid" style={{ marginBottom: '28px' }}>
             <div data-reveal="left">

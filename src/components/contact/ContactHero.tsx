@@ -22,7 +22,7 @@ export default function ContactHero() {
         .cth-body {
           position: relative; z-index: 2; height: 100%;
           display: flex; flex-direction: column; justify-content: center;
-          max-width: 1280px; margin: 0 auto; padding: clamp(24px,3vw,40px) 28px;
+          max-width: var(--w-1280); margin: 0 auto; padding: clamp(24px,3vw,40px) 28px;
         }
         .cth-content { max-width: min(560px, 92vw); }
 

@@ -66,7 +66,7 @@ export default function SoftwareBlog() {
       `}</style>
 
       <section id="blogs" style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#f5f6fa' }}>
-        <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'var(--w-1120)', margin: '0 auto' }}>
 
           {/* Header */}
           <div data-reveal style={{ textAlign: 'center', marginBottom: '44px' }}>

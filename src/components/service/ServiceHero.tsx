@@ -287,7 +287,7 @@ export default function ServiceHero() {
           gap: clamp(10px, 1.6vh, 24px);
           padding: clamp(24px, 5vh, 56px) 24px clamp(40px, 8vh, 80px);
         }
-        .srv-copy { text-align: center; max-width: 1120px; width: 100%; }
+        .srv-copy { text-align: center; max-width: var(--w-1120); width: 100%; }
         @media (prefers-reduced-motion: no-preference) {
           .srv-copy { animation: srvHeroRise .9s cubic-bezier(.22,.61,.36,1) .05s both; }
         }
@@ -305,7 +305,7 @@ export default function ServiceHero() {
 
         .srv-stage {
           position: relative; flex: 1 1 auto; min-height: 0;
-          width: 100%; max-width: 1240px; margin: 0 auto;
+          width: 100%; max-width: var(--w-1240); margin: 0 auto;
         }
         .srv-glow {
           position: absolute; left: 50%; bottom: 6%;

@@ -112,7 +112,7 @@ export default function ShahinFAQ() {
             }),
           }}
         />
-        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'var(--w-900)', margin: '0 auto' }}>
 
           <div data-reveal style={{ marginBottom: '28px' }}>
             <h2 style={{ margin: 0, fontSize: 'clamp(22px,2.8vw,30px)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-.02em', color: '#1d1d1f' }}>

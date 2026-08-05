@@ -26,7 +26,7 @@ export default function SecurepathPremiumVehicleList() {
       `}</style>
 
       <section style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#fff' }}>
-        <div style={{ maxWidth: '1180px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'var(--w-1180)', margin: '0 auto' }}>
           <h2 data-reveal style={{ margin: '0 0 14px', fontSize: 'clamp(22px,2.8vw,30px)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-.02em', color: '#1360ee' }}>
             List of Vehicles comes under SecurePath Premium
           </h2>

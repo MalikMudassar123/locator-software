@@ -1,22 +1,43 @@
 import type { Metadata } from "next";
-import { Poppins, Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { siteConfig } from "@/config/site";
 import ScrollRestoration from "@/components/ScrollRestoration";
 import ContactDock from "@/components/common/ContactDock";
 
-const poppins = Poppins({
+// Self-hosted rather than next/font/google.
+//
+// `next/font/google` downloads these at BUILD time, so any machine that cannot
+// reach fonts.googleapis.com — a corporate proxy, a VPN, an offline CI runner —
+// fails the build outright rather than degrading. The files in ./fonts are the
+// exact same latin-subset woff2 files Google serves for these families and
+// weights, so nothing about the rendered type changes; next/font/google was
+// already self-hosting these same bytes into the bundle. The only difference is
+// that the fetch now happened once, by hand, instead of on every clean build.
+//
+// To refresh: request the css2 URL for the family with a modern browser
+// User-Agent (an old UA gets you ttf instead of woff2), keep the @font-face
+// blocks commented `/* latin */`, and download their src URLs.
+const poppins = localFont({
   variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
+  src: [
+    { path: "./fonts/Poppins-300.woff2", weight: "300", style: "normal" },
+    { path: "./fonts/Poppins-400.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/Poppins-500.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/Poppins-600.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/Poppins-700.woff2", weight: "700", style: "normal" },
+  ],
 });
 
-const inter = Inter({
+// Inter ships as a VARIABLE font: Google returns one file for 400/500/600 alike,
+// so it is declared once with the range rather than three times with the same src.
+const inter = localFont({
   variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
   display: "swap",
+  src: [
+    { path: "./fonts/Inter-Variable.woff2", weight: "400 600", style: "normal" },
+  ],
 });
 
 export const metadata: Metadata = {

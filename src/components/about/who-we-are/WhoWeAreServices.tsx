@@ -116,7 +116,7 @@ export default function WhoWeAreServices() {
       <style>{`
         .wws-section { position: relative; padding: clamp(56px,7vw,96px) 28px; background: #fff; overflow: hidden; }
         .wws-head { text-align: center; max-width: 640px; margin: 0 auto clamp(44px,6vw,72px); }
-        .wws-wrap { position: relative; max-width: 1120px; margin: 0 auto; }
+        .wws-wrap { position: relative; max-width: var(--w-1120); margin: 0 auto; }
 
         .wws-spine { position: absolute; top: 8px; bottom: 8px; left: 50%; width: 3px; transform: translateX(-50%); background: #e2e8f4; border-radius: 3px; z-index: 0; }
         .wws-fill { position: relative; width: 100%; height: 0; background: linear-gradient(180deg, #1360ee 0%, #7c3aed 55%, #13923f 100%); border-radius: 3px; transition: height .15s linear; }

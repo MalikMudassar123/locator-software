@@ -105,17 +105,20 @@ export default function SoftwareNavbar() {
         .swn-spacer { height: 64px; }
 
         .swn-bar {
-          max-width: 1600px; margin: 0 auto;
-          padding: 0 clamp(16px, 3.5vw, 48px);
+          /* Ceiling raised so the bar keeps pace with the page content beneath it.
+             It can only ever bind above a 1600px viewport — below that the bar is
+             already viewport-width minus its padding, so nothing here changes. */
+          max-width: max(1600px, min(94vw, 2320px)); margin: 0 auto;
+          padding: 0 clamp(16px, 3.5vw, var(--nav-pad));
           height: 64px;
           display: flex; align-items: center; justify-content: space-between; gap: 16px;
         }
 
         .swn-link {
           position: relative;
-          font-size: 14px; font-weight: 600; color: #3a3a44;
+          font-size: var(--nav-link); font-weight: 600; color: #3a3a44;
           white-space: nowrap;
-          padding: 8px 14px; border-radius: 10px;
+          padding: max(8px, min(0.24vw + 4.3px, 10.5px)) max(14px, min(0.42vw + 7.5px, 18px)); border-radius: 10px;
           text-decoration: none; background: none; border: none;
           font-family: inherit; cursor: pointer;
           display: inline-flex; align-items: center; gap: 5px;
@@ -225,8 +228,8 @@ export default function SoftwareNavbar() {
 
         .swn-cta {
           position: relative; overflow: hidden; isolation: isolate;
-          font-size: 14px; font-weight: 700; cursor: pointer;
-          padding: 10px 22px; border-radius: 999px; border: none;
+          font-size: var(--nav-link); font-weight: 700; cursor: pointer;
+          padding: var(--nav-cta-py) max(22px, min(0.66vw + 11.7px, 29px)); border-radius: 999px; border: none;
           background: linear-gradient(135deg, #1f6dff 0%, #1360ee 55%, #0d4fd4 100%);
           color: #fff; font-family: inherit; white-space: nowrap;
           box-shadow: 0 4px 14px rgba(19,96,238,0.35), inset 0 1px 0 rgba(255,255,255,0.25);
@@ -254,7 +257,7 @@ export default function SoftwareNavbar() {
           <div className="swn-bar">
             {/* Logo */}
             <Link href="/" className="swn-logo" onMouseEnter={() => setActiveMenu(null)} style={{ display: 'flex', alignItems: 'center', flexShrink: 0, textDecoration: 'none' }}>
-              <Image src="/llooogoo.png" alt="Locator" width={2617} height={911} style={{ width: 'auto', height: '42px', objectFit: 'contain' }} priority />
+              <Image src="/llooogoo.png" alt="Locator" width={2617} height={911} style={{ width: 'auto', height: 'max(42px, min(1.26vw + 22px, 55px))', objectFit: 'contain' }} priority />
             </Link>
 
             {/* Nav links */}

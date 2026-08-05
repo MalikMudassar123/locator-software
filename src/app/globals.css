@@ -105,6 +105,138 @@
    that block made dark-OS users render a dark background (a visual bug / flash
    on refresh). The .dark class block above is retained for opt-in dark mode. */
 
+/* ══════════════════════════════════════════════════════
+   LARGE-DISPLAY CONTAINER WIDTHS
+   Every content container on the home page used to stop at a hard pixel cap
+   (1400 / 1280 / 1100), so from ~1500px up the page stopped growing and the
+   extra viewport turned into empty gutters — a 2560px monitor showed a 1400px
+   page with 580px of dead space on each side.
+
+   Each token is `max(BASE, min(K vw, CAP))`, which is deliberately three
+   things at once:
+
+     · max(BASE, …)   the value can never come out BELOW the pixel cap it
+                      replaces, so no layout at or under standard desktop can
+                      shift by even a pixel. Every one of these crosses over
+                      above 1570px — verified at 1440px, where 86/80/70vw are
+                      1238/1152/1008px and the BASE therefore still wins.
+     · min(…, CAP)    growth stops before line lengths become unreadable;
+                      past ~2300px the page is centred with even margins again,
+                      which is the correct look for ultra-wide, not a bug.
+     · K vw           between those two the container tracks the viewport
+                      continuously — no breakpoint jumps.
+
+   Pick the token by what the container HOLDS, not by its old number:
+     --w-wide    two-column showcase rows (copy + mockup)
+     --w-mid     three-up card grids
+     --w-narrow  centred media / two-up card grids
+
+   Text-measure caps (a subheading's 620–700px, the showcase paragraphs' 560px)
+   are NOT these tokens and must stay put — they exist to keep a line of prose
+   readable, and that limit does not change because the monitor got wider.
+   ══════════════════════════════════════════════════════ */
+:root {
+  /* Widest of the three: these rows carry two columns side by side, so they can
+     use more of the screen than a centred grid before anything reads as stretched. */
+  --w-wide: max(1400px, min(94vw, 2200px));
+  --w-mid: max(1280px, min(80vw, 1840px));
+  --w-narrow: max(1100px, min(70vw, 1520px));
+
+  /* ── Site-wide container widths ──────────────────────────────────────────────
+     The same idea as the three named tokens above, but keyed by the flat pixel
+     value each one replaces, because the rest of the app expresses its containers
+     as bare numbers rather than roles. --w-1180 is what used to be `1180px`.
+
+     Every one is `max(BASE, min(K vw, BASE x 1.45))` with K = BASE / 15.6, which
+     puts the crossover at exactly 1560px for all of them. So every page keeps its
+     current layout to the pixel up to 1536, then grows in step — the relative
+     hierarchy between a 900px block and a 1280px one is preserved, because both
+     scale by the same factor.
+
+     Only containers are on this scale. Reading measures (anything under ~900px:
+     a 620px blurb, a 700px subheading) are deliberately left as flat pixels — a
+     wider monitor does not make a long line of prose easier to read. */
+  --w-900: max(900px, min(57.69vw, 1305px));
+  --w-920: max(920px, min(58.97vw, 1334px));
+  --w-940: max(940px, min(60.26vw, 1363px));
+  --w-960: max(960px, min(61.54vw, 1392px));
+  --w-1000: max(1000px, min(64.1vw, 1450px));
+  --w-1080: max(1080px, min(69.23vw, 1566px));
+  --w-1120: max(1120px, min(71.79vw, 1624px));
+  --w-1160: max(1160px, min(74.36vw, 1682px));
+  --w-1180: max(1180px, min(75.64vw, 1711px));
+  --w-1200: max(1200px, min(76.92vw, 1740px));
+  --w-1240: max(1240px, min(79.49vw, 1798px));
+  --w-1280: max(1280px, min(82.05vw, 1856px));
+  --w-1440: max(1440px, min(92.31vw, 2088px));
+
+
+  /* ── Showcase copy scale ────────────────────────────────────────────────────
+     The type and cards inside the two showcase copy columns were all hard pixel
+     values, so widening the column left 12.5px card text and a 36px headline
+     sitting in a 740px column on a 2560px monitor. The column grew; nothing in it
+     did.
+
+     Each token is named for the value it replaces — --sc-14 is what used to be a
+     flat 14px — and is `max(BASE, min(K vw, J vh, CEILING))`:
+
+       · max(BASE, …)  can never resolve below the pixel value it replaces, so no
+                       size anywhere can shrink. Every crossover lands between
+                       1553px and 1566px, so 1280 / 1366 / 1440 / 1536 are exact.
+       · K vw          growth tracks viewport width, K = BASE / 15.6.
+       · J vh          growth ALSO tracks viewport height, J = BASE / 7.4. This is
+                       load-bearing, not symmetry: the ScrollShowcase rows are
+                       pinned at exactly 100vh, so type that grew on width alone
+                       would overflow the pinned frame in a wide, short window.
+                       With this term such a window simply stays at BASE.
+       · CEILING       roughly +36%, reached around 2200px.
+
+     Both showcase sections share these — they sit next to each other and any
+     divergence in type size reads as one of them being wrong. */
+  --sc-12-5: max(12.5px, min(0.80vw, 1.69vh, 17px));
+  --sc-13: max(13px, min(0.83vw, 1.76vh, 18px));
+  --sc-14: max(14px, min(0.90vw, 1.89vh, 19px));
+  --sc-14-5: max(14.5px, min(0.93vw, 1.96vh, 20px));
+  --sc-15: max(15px, min(0.96vw, 2.03vh, 21px));
+  --sc-16: max(16px, min(1.03vw, 2.16vh, 22px));
+  --sc-18: max(18px, min(1.15vw, 2.43vh, 25px));
+  --sc-20: max(20px, min(1.28vw, 2.70vh, 27px));
+  --sc-22: max(22px, min(1.41vw, 2.97vh, 30px));
+  --sc-24: max(24px, min(1.54vw, 3.24vh, 33px));
+  --sc-28: max(28px, min(1.79vw, 3.78vh, 38px));
+  --sc-36: max(36px, min(2.31vw, 4.86vh, 50px));
+  --sc-42: max(42px, min(2.69vw, 5.68vh, 56px));
+
+  /* ── Header scale ───────────────────────────────────────────────────────────
+     The bar is edge-to-edge already, but everything standing in it was a flat pixel
+     size that stopped growing around 1560px — a 120px logo and 14px links marooned
+     in a 2560px-wide bar.
+
+     Ramps are affine (`K vw + C`) and tuned to pass through the old value at
+     ~1560px, so 1440 and 1536 are exact; the max() floor means none of them can
+     resolve below what they replace.
+
+     The bar's own HEIGHT is deliberately not here. It stays h-16 / md:h-20, because
+     --hero-nav-h below is its twin and the hero's headline band is measured from it
+     — the skyline's width budget is derived from that same number. Growing the bar
+     would silently re-open geometry that is currently balanced, for a bar that is
+     already well proportioned to its contents at these sizes. */
+  --nav-pad: max(50px, min(3.2vw, 88px));
+  --nav-logo-h: max(40px, min(1.2vw + 21px, 52px));
+  --nav-link: max(14px, min(0.3vw + 9.3px, 17px));
+  --nav-gap: max(24px, min(1vw + 8.4px, 34px));
+  --nav-flag: max(32px, min(0.8vw + 19.5px, 40px));
+  --nav-cta-py: max(10px, min(0.3vw + 5.3px, 13px));
+  --nav-cta-px: max(26px, min(0.8vw + 13.5px, 34px));
+  --nav-cta-fs: max(13px, min(0.25vw + 9.1px, 15.5px));
+
+  /* The video card inside the --w-narrow stage. Kept in step with it so the
+     card keeps occupying ~78% of the stage at every width, instead of the stage
+     growing away from a fixed 800px card and stranding the decorative blocks
+     that are positioned against the stage's edges. */
+  --w-video: max(800px, min(50vw, 1120px));
+}
+
 /* Base Styles */
 * {
   box-sizing: border-box;
@@ -166,8 +298,13 @@ main {
   --hero-nav-h: 4rem;
 
   /* Skyline is /building image.png at 590×334 (ratio 0.5661), width-driven and
-     bottom-aligned, so its rendered height is simply width × ratio. */
-  --hero-skyline-h: calc(clamp(280px, 70vw, 590px) * 0.5661);
+     bottom-aligned, so its rendered height is simply width × ratio.
+
+     TWIN of .hero-building-wrap's maxWidth in HeroSection.tsx — the expression must
+     match it exactly or this band stops describing where the skyline actually is.
+     See the note there for why the width is bounded by viewport HEIGHT: the band
+     below is what pays for it. */
+  --hero-skyline-h: calc(max(590px, min(52vw, 119vh - 512px, 1100px)) * 0.5661);
 
   /* Floor on the band. On short viewports the navbar and the skyline together
      leave almost nothing between them; without this the headline gets pushed up
@@ -178,6 +315,26 @@ main {
 }
 @media (min-width: 768px) {
   .hero-section-wrapper { --hero-nav-h: 5rem; }
+}
+
+/* ══════════════════════════════════════════════════════
+   HEADER — large-display sizing
+   These rules are deliberately UNLAYERED. Tailwind v4 puts its utilities in
+   @layer utilities, and any unlayered rule beats a layered one outright, so
+   these win over `gap-6` and `text-sm` on the same elements without needing
+   !important or a specificity fight.
+   ══════════════════════════════════════════════════════ */
+.hn-navlinks {
+  gap: var(--nav-gap);
+}
+.hn-navlinks > li > a,
+.hn-navlinks > li > button {
+  font-size: var(--nav-link);
+}
+/* The flag is an <Image> with width/height ATTRIBUTES, which CSS overrides. */
+.hn-flag {
+  width: var(--nav-flag);
+  height: var(--nav-flag);
 }
 
 /* Font Utility Classes */
@@ -865,7 +1022,9 @@ h6 {
    SCROLL SHOWCASE — responsive sticky/stacked layout
    ══════════════════════════════════════════════════════ */
 .ss-row {
-  max-width: 1400px;
+  /* Was a flat 1400px — see --w-wide in the token block above. Identical below
+     ~1630px, tracks the viewport past it. */
+  max-width: var(--w-wide);
   margin: 0 auto;
   padding: 0 24px;
   display: flex;
@@ -998,6 +1157,16 @@ h6 {
   user-select: text !important;
   -webkit-touch-callout: default !important;
 }
+/* Feature-card icon glyphs. These are authored as width="22" height="22" attributes
+   on each inline <svg>, which no amount of scaling the 42px tile around them would
+   change — the tile grew on a large display and the glyph stayed 22px, floating in
+   it. A CSS width/height beats the presentation attributes, and every icon carries
+   viewBox="0 0 24 24", so they redraw at the new size rather than being stretched. */
+.ss-feature-grid svg {
+  width: var(--sc-22);
+  height: var(--sc-22);
+}
+
 /* Only the decorative SVG icons remain non-selectable so they don't intercept the caret */
 .ss-text-panel svg,
 .ss-text-panel svg *,
@@ -1023,7 +1192,9 @@ h6 {
    on top of each other, so any difference in these three reads as the page shifting
    sideways between them. Change them together or not at all. */
 .fs-container {
-  max-width: 1400px;
+  /* The same token .ss-row uses — that is what "change them together or not at
+     all" means now that the measure scales. */
+  max-width: var(--w-wide);
   margin: 0 auto;
   padding: 0 24px;
   display: flex;
@@ -1044,11 +1215,15 @@ h6 {
    scenes are stacked `position:absolute; inset:0` so they can crossfade, and
    absolute children contribute nothing to their parent's height.
 
-   It still has to be the height the scenes actually render at, which is
-   H × min(1, wrapWidth / W). Every scene here is W=540; the tallest (SceneGPS)
-   is H=580. Below 540px wide that reduces to wrapWidth × 580/540 — a constant
-   ratio, which is exactly what aspect-ratio expresses — and at/above 540px the
-   scale clamps at 1 and the height stops at a flat 580px, which is the cap.
+   So the causality runs the other way round from the ScrollShowcase panel: there
+   the scene reports its height and the panel follows, whereas here this box is the
+   input and every scene sizes itself from it. 540 / 580 is the shape the mockups
+   are composed for, and the max-height below is the ceiling on how large that shape
+   may grow.
+
+   (The SceneAlerts / SceneDashboard / SceneGPS / SceneVideo files in this folder are
+   NOT what renders here — nothing imports them. The live scenes are SceneTaskManager,
+   SceneExpense, SceneInspection and SceneFleet, defined inside index.jsx.)
 
    The fixed ladder this replaces (220 / 270 / 320px) matched the scenes at about
    1024px and nowhere else: at 1400px the scenes render 449px tall inside a 320px
@@ -1076,6 +1251,81 @@ h6 {
      compress. `fs-right` was a fixed 460px basis, which could not stay in step. */
   .fs-left  { flex: 0 0 52%; min-width: 0; width: auto; }
   .fs-right { flex: 0 0 38%; min-width: 0; width: auto; }
+  /* Ceiling on how tall the mockup panel may get. Every scene sizes itself FROM this
+     box — three of the four are position:absolute inset:0 and fill it outright, and
+     the fourth (SceneTaskManager) fits its canvas inside it — so this value, not
+     anything in the JS, is what decides how large the mockups render.
+
+     Raised from 580px because that cap was reached at roughly 540px of panel width
+     and then held the mockup at 580px tall no matter how much room the row had,
+     which is why the mockups stopped growing while the copy column beside them kept
+     going. The aspect-ratio above still governs everything below ~810px of panel
+     width, so the panel's shape is unchanged — this only stops it stretching without
+     limit on an ultra-wide display.
+
+     Inside this media query because below 1024px the panel is the container's full
+     width, where the aspect-ratio height runs well past 580 and lifting the ceiling
+     would make the section taller on every tablet.
+
+     The size limit is expressed as a max-WIDTH, with max-height only as its twin
+     (810 × 580/540 = 870). That distinction is load-bearing. Every scene pins its
+     overlays — the phone, the hover popups — in percentages of THIS box, and those
+     percentages only land on the right part of the artwork while the box keeps its
+     540/580 ratio. A max-height alone would be reached first on a wide display and
+     would then flatten the box below that ratio, sliding every overlay off the row
+     of the mockup it is supposed to be pointing at. Capping the width instead lets
+     aspect-ratio go on deriving the height, so the shape is identical at every
+     size and only the scale stops. */
+  .fs-scene-wrap {
+    max-width: 810px;
+    margin-left: auto;
+    margin-right: auto;
+    max-height: 870px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   SHOWCASE ROWS — COLUMN SPLIT ON LARGE DISPLAYS
+   Widening the row alone did nothing visible here, and the reason is the split
+   rather than the container. 52% + 38% = 90%, and the 96px gutter comes out of
+   the remaining 10%, so a row that grew by 100px handed the mockup only 38 of
+   them. The mockup column stayed under the 580px canvas it draws into, which
+   means the scene was still rendering at 0.92x — the section kept looking
+   exactly as it did before while every other section visibly grew.
+
+   48 / 45 spends the row on the two things that are actually in it. The copy
+   column still grows in absolute terms at every width (48% of a much wider row
+   beats 52% of 1400px), and the mockup column finally clears its own canvas so
+   the scene can scale up instead of sitting in dead space.
+
+   1600px is where this starts, and the number is not arbitrary: it is the first
+   width at which 48% of the row is no narrower than the 52% it replaces, so the
+   copy column never loses ground at any viewport. Below it, everything stays on
+   the 52 / 38 rule above, untouched.
+
+   Both sections must carry the same numbers — see the note on .fs-container.
+   ══════════════════════════════════════════════════════ */
+@media (min-width: 1600px) {
+  .ss-text-panel, .fs-left  { flex: 0 0 48%; }
+  .ss-anim-panel, .fs-right { flex: 0 0 45%; }
+
+  /* Top-align the FeatureSlider's two columns rather than centring them.
+     `center` centres the copy against the scene BOX, and that box is much taller
+     than the artwork inside it: the mockups are landscape (1.67–2.19) sitting in a
+     0.93 portrait box, so each one fits to width and occupies only the top ~54% of
+     its card — the rest is white card on a white section, invisible but very much
+     there. Centring against it therefore pushed the copy roughly 170px below a
+     mockup that was already hard against the top of the row, which is exactly the
+     "image sits higher than the text" mismatch.
+
+     Top-aligning lands the copy's eyebrow on the mockup's browser bar, and since
+     the two blocks are within ~50px of each other in height at these widths they
+     then read as one row. It cannot change the section's height — the scene box was
+     already the taller flex item and still sets the row — it only moves the copy up
+     into line. Below 1600px the columns stay centred: the box is smaller there, the
+     offset is a few dozen pixels rather than a few hundred, and that layout is
+     working. */
+  .fs-container { align-items: flex-start; }
 }
 
 /* ══════════════════════════════════════════════════════

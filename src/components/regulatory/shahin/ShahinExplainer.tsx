@@ -9,7 +9,7 @@ export default function ShahinExplainer() {
       `}</style>
 
       <section style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#fff' }}>
-        <div className="shn-exp-grid" style={{ maxWidth: '1180px', margin: '0 auto' }}>
+        <div className="shn-exp-grid" style={{ maxWidth: 'var(--w-1180)', margin: '0 auto' }}>
 
           <div data-reveal="left">
             <div style={{

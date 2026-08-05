@@ -80,7 +80,7 @@ export default function ContactSocial() {
           background: #fff;
           padding: clamp(20px,3vw,40px) 28px clamp(52px,7vw,88px);
         }
-        .cts-inner { max-width: 1180px; margin: 0 auto; }
+        .cts-inner { max-width: var(--w-1180); margin: 0 auto; }
 
         .cts-head { text-align: center; max-width: 620px; margin: 0 auto clamp(26px,3.4vw,40px); }
         .cts-eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: clamp(12px,1.05vw,13.5px); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1360ee; }

@@ -1,7 +1,7 @@
 export default function SecurepathPremiumConclusion() {
   return (
     <section style={{ padding: '0 28px clamp(56px,7vw,80px)', background: '#fff' }}>
-      <div data-reveal style={{ maxWidth: '1180px', margin: '0 auto' }}>
+      <div data-reveal style={{ maxWidth: 'var(--w-1180)', margin: '0 auto' }}>
         <h2 style={{ margin: '0 0 16px', fontSize: 'clamp(20px,2.4vw,26px)', fontWeight: 800, letterSpacing: '-.02em', color: '#1360ee' }}>
           Conclusion
         </h2>

@@ -14,7 +14,7 @@ export default function NewsroomHero() {
         .nrh-crumbs-bar { border-bottom: 1px solid #eef1f7; }
         .nrh-crumbs {
           display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-          max-width: 1280px; margin: 0 auto; padding: 16px 28px;
+          max-width: var(--w-1280); margin: 0 auto; padding: 16px 28px;
           font-size: 14px; color: #6e6e73;
         }
         .nrh-crumbs a { color: #1d1d1f; font-weight: 600; text-decoration: none; transition: color .18s ease; }
@@ -37,7 +37,7 @@ export default function NewsroomHero() {
         .nrh-photo-body {
           position: relative; z-index: 2; height: 100%;
           display: flex; align-items: flex-end;
-          max-width: 1280px; margin: 0 auto; padding: 0 28px clamp(26px,4vw,46px);
+          max-width: var(--w-1280); margin: 0 auto; padding: 0 28px clamp(26px,4vw,46px);
         }
         .nrh-content { max-width: min(760px, 90vw); }
 

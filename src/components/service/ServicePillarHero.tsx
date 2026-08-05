@@ -24,7 +24,7 @@ export default function ServicePillarHero({
         .spx-tabs {
           position: relative; z-index: 1;
           display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
-          max-width: 960px; margin: 0 auto clamp(32px,5vw,52px);
+          max-width: var(--w-960); margin: 0 auto clamp(32px,5vw,52px);
         }
         .spx-tab {
           display: inline-flex; align-items: center; gap: 8px;

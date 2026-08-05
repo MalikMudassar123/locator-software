@@ -68,7 +68,7 @@ export default function WhoWeAreNumbers() {
         /* Dark slab inside the white page — the same surface language as the
            industry panels, so the two sections read as one system. */
         .wwn-slab {
-          max-width: 1180px; margin: 0 auto;
+          max-width: var(--w-1180); margin: 0 auto;
           background: #0d1426;
           border-radius: clamp(20px,2.4vw,30px);
           padding: clamp(36px,4.6vw,68px) clamp(24px,3.4vw,56px);

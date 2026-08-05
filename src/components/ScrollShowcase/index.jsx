@@ -141,23 +141,26 @@ const textSections = [
 
 const SceneComponents = [Scene1Icons, Scene4Pricing];
 
+// Sizes here are the --sc-* step scale from globals.css rather than flat pixels:
+// each resolves to exactly the number it replaces up to ~1550px and grows past it,
+// so the card scales with the column instead of staying 14px wide-screen text.
 function FeatureCard({ icon, title, desc }) {
   return (
     <div style={{
       background: '#ffffff',
       border: '1px solid #e8edf3',
       borderRadius: 18,
-      padding: '16px 18px',
+      padding: 'var(--sc-16) var(--sc-18)',
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 13,
+      gap: 'var(--sc-13)',
       minHeight: 0,
     }}>
       <div style={{
         flexShrink: 0,
-        width: 42,
-        height: 42,
+        width: 'var(--sc-42)',
+        height: 'var(--sc-42)',
         borderRadius: 12,
         background: '#f1f5f9',
         display: 'flex',
@@ -166,9 +169,9 @@ function FeatureCard({ icon, title, desc }) {
         opacity: 0.82,
       }}>{icon}</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0, overflow: 'hidden' }}>
-        <span style={{ fontSize: 14, fontWeight: 700, color: '#696b6b', lineHeight: 1.3 }}>{title}</span>
+        <span style={{ fontSize: 'var(--sc-14)', fontWeight: 700, color: '#696b6b', lineHeight: 1.3 }}>{title}</span>
         <p style={{
-          fontSize: 12.5,
+          fontSize: 'var(--sc-12-5)',
           color: '#8090bc',
           lineHeight: 1.5,
           margin: 0,
@@ -252,42 +255,47 @@ export default function ScrollShowcase() {
         const textPanel = (
           <div className="ss-text-panel">
             <span style={{
-              fontSize: 13,
+              fontSize: 'var(--sc-13)',
               fontWeight: 700,
               color: '#0a89dd',
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
-              marginBottom: 18,
+              marginBottom: 'var(--sc-18)',
               display: 'block',
             }}>
               {s.eyebrow}
             </span>
+            {/* Only the clamp's CEILING becomes a token — the 24px floor and the 3vw
+                preferred size are untouched, so this is the same type ramp it always
+                was and simply stops climbing later on a large display. */}
             <h2 style={{
-              fontSize: 'clamp(24px, 3vw, 36px)',
+              fontSize: 'clamp(24px, 3vw, var(--sc-36))',
               fontWeight: 800,
               lineHeight: 1.15,
               color: '#484b4c',
-              margin: '0 0 16px',
+              margin: '0 0 var(--sc-16)',
               maxWidth: '100%',
             }}>
               {s.headline}
             </h2>
             <p style={{
-              fontSize: 'clamp(13px, 1.2vw, 15px)',
+              fontSize: 'clamp(13px, 1.2vw, var(--sc-15))',
               lineHeight: 1.65,
               color: '#8090bc',
-              margin: '0 0 28px',
-              maxWidth: 560,
+              margin: '0 0 var(--sc-28)',
+              /* Reading measure, so it scales with the type rather than staying at a
+                 flat 560px that would hold ~46 characters at 15px and ~33 at 21px. */
+              maxWidth: 'max(560px, min(35vw, 760px))',
             }}>
               {s.body}
             </p>
 
             {s.subHeadline && (
               <>
-                <h3 style={{ fontSize: 'clamp(15px, 1.4vw, 18px)', fontWeight: 700, color: '#696b6b', margin: '0 0 10px', maxWidth: '100%' }}>
+                <h3 style={{ fontSize: 'clamp(15px, 1.4vw, var(--sc-18))', fontWeight: 700, color: '#696b6b', margin: '0 0 10px', maxWidth: '100%' }}>
                   {s.subHeadline}
                 </h3>
-                <p style={{ fontSize: 'clamp(12px, 1.1vw, 14px)', lineHeight: 1.6, color: '#8090bc', margin: '0 0 24px', maxWidth: 560 }}>
+                <p style={{ fontSize: 'clamp(12px, 1.1vw, var(--sc-14))', lineHeight: 1.6, color: '#8090bc', margin: '0 0 var(--sc-24)', maxWidth: 'max(560px, min(35vw, 760px))' }}>
                   {s.subBody}
                 </p>
               </>
@@ -299,7 +307,7 @@ export default function ScrollShowcase() {
             {s.features && (
               <div className="ss-feature-grid" style={{
                 display: 'grid',
-                gap: 13,
+                gap: 'var(--sc-13)',
               }}>
                 {s.features.map((f) => (
                   <FeatureCard key={f.title} icon={f.icon} title={f.title} desc={f.desc} />

@@ -51,7 +51,7 @@ export default function SoftwareCTA() {
       `}</style>
 
       <section style={{ padding: 'clamp(40px,5vw,56px) 28px clamp(56px,7vw,80px)' }}>
-        <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'var(--w-1120)', margin: '0 auto' }}>
           <div className="cta-wrap">
 
             {/* Decorative rings */}

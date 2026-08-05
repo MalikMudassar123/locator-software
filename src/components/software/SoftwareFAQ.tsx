@@ -214,7 +214,7 @@ export default function SoftwareFAQ() {
       `}</style>
 
       <section id="faq" style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#fff' }}>
-        <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'var(--w-1120)', margin: '0 auto' }}>
 
           {/* ── Header ── */}
           <div data-reveal style={{ textAlign: 'center', marginBottom: '48px' }}>

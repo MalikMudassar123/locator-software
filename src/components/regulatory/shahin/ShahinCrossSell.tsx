@@ -14,7 +14,7 @@ const POINTS = [
 export default function ShahinCrossSell() {
   return (
     <section style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#f7f9fc' }}>
-      <div style={{ maxWidth: '900px', margin: '0 auto' }} data-reveal>
+      <div style={{ maxWidth: 'var(--w-900)', margin: '0 auto' }} data-reveal>
 
         <h2 style={{ margin: '0 0 18px', fontSize: 'clamp(22px,2.8vw,30px)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-.02em', color: '#1360ee' }}>
           <Link href="/securepath-premium" style={{ color: 'inherit', textDecoration: 'none' }}>

@@ -254,7 +254,12 @@ export default function IoTFeaturesSection({
         .iot__grid-cards {
           position: relative;
           z-index: 2;
-          max-width: 1280px;
+          /* Was a flat 1280px. See the --w-* token block in globals.css: identical
+             below ~1600px, tracks the viewport above it. The header above keeps its
+             own 1100px cap on purpose — that one is a reading measure for a centred
+             heading, not a container, and a wider monitor does not make a long line
+             of prose easier to read. */
+          max-width: var(--w-mid);
           margin: 0 auto;
           display: grid;
           grid-template-columns: repeat(3, 1fr);

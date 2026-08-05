@@ -109,7 +109,7 @@ export default function NewsroomBoard() {
         /* overflow-x: clip (not hidden) — it contains stray horizontal overflow
            without creating a scroll container, so the sticky rail still works. */
         .nrb { padding: clamp(28px,4vw,44px) 28px clamp(56px,7vw,88px); background: #f7f9fc; scroll-margin-top: 80px; overflow-x: clip; }
-        .nrb-inner { max-width: 1240px; margin: 0 auto; }
+        .nrb-inner { max-width: var(--w-1240); margin: 0 auto; }
 
         /* ── Tab bar ── */
         .nrb-tabs {

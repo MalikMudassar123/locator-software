@@ -20,7 +20,7 @@ export default function NewsroomHighlights() {
     <>
       <style href="nr-newsroomhighlights" precedence="medium">{`
         .nrx { padding: clamp(44px,6vw,72px) 28px; background: #fff; border-top: 1px solid #eef2f8; }
-        .nrx-inner { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: clamp(20px,3vw,36px); }
+        .nrx-inner { max-width: var(--w-1240); margin: 0 auto; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: clamp(20px,3vw,36px); }
         @media (max-width: 1000px) { .nrx-inner { grid-template-columns: 1fr; gap: 36px; } }
 
         .nrx-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #0b1220; }

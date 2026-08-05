@@ -108,7 +108,7 @@ export default function SecurepathPremiumFAQ() {
             }),
           }}
         />
-        <div style={{ maxWidth: '1080px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'var(--w-1080)', margin: '0 auto' }}>
 
           <div data-reveal style={{ marginBottom: '32px' }}>
             <h2 style={{ margin: 0, fontSize: 'clamp(22px,2.8vw,30px)', fontWeight: 800, lineHeight: 1.15, letterSpacing: '-.02em', color: '#1d1d1f' }}>

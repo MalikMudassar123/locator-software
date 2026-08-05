@@ -9,7 +9,7 @@ export default function IndustriesGrid() {
     <section className="ig-sec">
       <style>{`
         .ig-sec { padding: clamp(48px,6vw,80px) 28px; background: #fff; }
-        .ig-inner { max-width: 1280px; margin: 0 auto; }
+        .ig-inner { max-width: var(--w-1280); margin: 0 auto; }
 
         .ig-head { max-width: 640px; margin: 0 0 clamp(28px,3.6vw,44px); }
         .ig-eyebrow {

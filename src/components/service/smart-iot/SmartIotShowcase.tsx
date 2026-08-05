@@ -40,7 +40,7 @@ export default function SmartIotShowcase() {
         /* scroll-margin keeps the anchored block clear of the sticky navbar. */
         .sis-block { padding: clamp(48px,6vw,80px) 28px; scroll-margin-top: 90px; }
         .sis-block:nth-child(even) { background: #f7f9fc; }
-        .sis-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(32px,5vw,64px); align-items: center; max-width: 1180px; margin: 0 auto; }
+        .sis-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(32px,5vw,64px); align-items: center; max-width: var(--w-1180); margin: 0 auto; }
         @media (max-width: 900px) { .sis-grid { grid-template-columns: 1fr; gap: 32px; } }
         .sis-block.flip .sis-text { order: 2; }
         .sis-block.flip .sis-viz { order: 1; }

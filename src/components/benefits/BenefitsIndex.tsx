@@ -58,7 +58,7 @@ export default function BenefitsIndex() {
     <>
       <style>{`
         .bgx { background: #fff; padding: clamp(64px,8vw,112px) 28px; }
-        .bgx-inner { max-width: 1120px; margin: 0 auto; }
+        .bgx-inner { max-width: var(--w-1120); margin: 0 auto; }
 
         .bgx-head { max-width: 720px; margin-bottom: clamp(40px,5vw,64px); }
         .bgx-eyebrow {

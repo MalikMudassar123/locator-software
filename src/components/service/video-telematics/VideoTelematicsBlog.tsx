@@ -72,7 +72,7 @@ export default function VideoTelematicsBlog() {
       `}</style>
 
       <section id="blogs" style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#f5f6fa' }}>
-        <div style={{ maxWidth: '1180px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'var(--w-1180)', margin: '0 auto' }}>
 
           <div data-reveal style={{ textAlign: 'center', marginBottom: '44px' }}>
             <span style={{

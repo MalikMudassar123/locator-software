@@ -10,7 +10,7 @@ export default function AsateelExplainer() {
       `}</style>
 
       <section style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#fff' }}>
-        <div className="asa-exp-grid" style={{ maxWidth: '1180px', margin: '0 auto' }}>
+        <div className="asa-exp-grid" style={{ maxWidth: 'var(--w-1180)', margin: '0 auto' }}>
 
           <div data-reveal="left">
             <Image

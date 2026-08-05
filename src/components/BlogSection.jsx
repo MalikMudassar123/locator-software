@@ -149,7 +149,10 @@ export default function BlogSection() {
         .bs__wrap {
           position: relative;
           z-index: 1;
-          max-width: 1100px;
+          /* Was a flat 1100px — see the --w-* token block in globals.css. Only the
+             two-up card row widens; .bs__head keeps its 620px measure so the
+             centred heading and blurb stay readable over a wider row. */
+          max-width: var(--w-narrow);
           margin: 0 auto;
           display: flex;
           flex-direction: column;

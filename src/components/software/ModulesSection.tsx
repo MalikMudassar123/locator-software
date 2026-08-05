@@ -59,7 +59,7 @@ export default function ModulesSection() {
 
         /* ── Desktop: text + showcase side by side, showcase dominant ── */
         .pm-grid {
-          max-width: 1440px; margin: 0 auto;
+          max-width: var(--w-1440); margin: 0 auto;
           display: grid;
           grid-template-columns: minmax(270px, 0.68fr) minmax(0, 1.64fr);
           gap: clamp(28px, 3.4vw, 56px);

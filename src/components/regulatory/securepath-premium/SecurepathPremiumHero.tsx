@@ -18,7 +18,7 @@ export default function SecurepathPremiumHero() {
         }
         .spp-back:hover { color: #1360ee; gap: 9px; }
 
-        .spp-topbar { display: flex; justify-content: flex-end; padding: 0 4px 8px; max-width: 1200px; margin: 0 auto; }
+        .spp-topbar { display: flex; justify-content: flex-end; padding: 0 4px 8px; max-width: var(--w-1200); margin: 0 auto; }
         .spp-phone-top {
           display: inline-flex; align-items: center; gap: 8px;
           color: #1360ee; font-size: 16px; font-weight: 800;
@@ -28,7 +28,7 @@ export default function SecurepathPremiumHero() {
         .spp-grid {
           position: relative; z-index: 1;
           display: grid; grid-template-columns: 1.15fr 1fr; gap: clamp(24px,4vw,48px);
-          align-items: center; max-width: 1280px; margin: 0 auto;
+          align-items: center; max-width: var(--w-1280); margin: 0 auto;
         }
         @media (max-width: 940px) {
           .spp-grid { grid-template-columns: 1fr; }

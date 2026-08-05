@@ -63,7 +63,7 @@ export default function VideoTelematicsShowcase() {
       `}</style>
 
       <section style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#f5f7fa' }}>
-        <div className="vts-grid" style={{ maxWidth: '1180px', margin: '0 auto' }}>
+        <div className="vts-grid" style={{ maxWidth: 'var(--w-1180)', margin: '0 auto' }}>
 
           <div data-reveal="left">
             <span style={{ fontSize: '13px', fontWeight: 700, color: '#1360ee', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: '18px', display: 'block' }}>

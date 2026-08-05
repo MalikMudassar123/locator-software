@@ -32,7 +32,7 @@ export default function VisionRoadmap() {
           letter-spacing: -.03em; color: #fff;
         }
 
-        .vr-timeline { position: relative; max-width: 940px; margin: clamp(48px,6vw,72px) auto 0; }
+        .vr-timeline { position: relative; max-width: var(--w-940); margin: clamp(48px,6vw,72px) auto 0; }
         .vr-line { position: absolute; top: 22px; left: 6%; right: 6%; height: 2px; background: linear-gradient(90deg, #1360ee, #7c3aed, #13923f); border-radius: 2px; z-index: 0; }
         .vr-track { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3,1fr); gap: clamp(20px,3vw,32px); }
         @media (max-width: 720px) { .vr-line { display: none; } .vr-track { grid-template-columns: 1fr; } }
@@ -43,7 +43,7 @@ export default function VisionRoadmap() {
       `}</style>
 
       <section style={{ padding: 'clamp(56px,7vw,88px) 28px', background: '#fff' }}>
-        <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'var(--w-1120)', margin: '0 auto' }}>
           <div className="vr-stat-wrap" data-reveal="zoom">
             <div className="vr-ring" style={{ width: 420, height: 420, left: -140, top: -140 }} />
             <div className="vr-ring" style={{ width: 320, height: 320, right: -100, bottom: -120, animationDelay: '-6s' }} />

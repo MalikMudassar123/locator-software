@@ -10,7 +10,7 @@ export default function ContactDemoCTA() {
         .ctdemo { background: #fff; padding: clamp(8px,1.5vw,20px) 28px clamp(52px,7vw,86px); }
         .ctdemo-card {
           position: relative; overflow: hidden;
-          max-width: 1180px; margin: 0 auto; border-radius: 30px;
+          max-width: var(--w-1180); margin: 0 auto; border-radius: 30px;
           background: radial-gradient(125% 120% at 88% -20%, #2f6bff 0%, #1360ee 40%, #0a3ba8 100%);
           box-shadow: 0 50px 90px -46px rgba(19,96,238,.75);
           display: grid; grid-template-columns: 1.02fr .98fr; align-items: center;

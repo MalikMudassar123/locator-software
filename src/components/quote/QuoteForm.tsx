@@ -152,7 +152,7 @@ export default function QuoteForm() {
       <style>{`
         .qf-section { padding: clamp(20px,3vw,44px) 28px clamp(56px,7vw,88px); background: #fff; }
         .qf-shell {
-          max-width: 1180px; margin: 0 auto;
+          max-width: var(--w-1180); margin: 0 auto;
           display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(20px,2.4vw,32px);
           align-items: stretch;
         }

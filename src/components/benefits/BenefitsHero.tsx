@@ -28,7 +28,7 @@ export default function BenefitsHero() {
 
         .bgt-hero-inner {
           position: relative; z-index: 1;
-          max-width: 940px; margin: 0 auto;
+          max-width: var(--w-940); margin: 0 auto;
           padding-top: clamp(28px,5vw,56px);
         }
 

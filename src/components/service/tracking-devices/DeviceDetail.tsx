@@ -12,7 +12,7 @@ export default function DeviceDetail({ device }: { device: Device }) {
     <>
       <style>{`
         .dd-wrap { background: #fff; padding: clamp(16px,2vw,28px) 28px clamp(56px,7vw,88px); }
-        .dd-inner { max-width: 1180px; margin: 0 auto; }
+        .dd-inner { max-width: var(--w-1180); margin: 0 auto; }
 
         .dd-crumbs { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #6e6e73; margin: 8px 0 clamp(28px,4vw,44px); }
         .dd-crumbs a { color: #6e6e73; text-decoration: none; font-weight: 600; transition: color .18s ease; }

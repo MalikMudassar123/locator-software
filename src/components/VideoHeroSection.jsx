@@ -305,7 +305,11 @@ export default function VideoHeroSection({
           position: relative;
           z-index: 5;
           width: 100%;
-          max-width: 1100px;
+          /* Was a flat 1100px — see the --w-* token block in globals.css. Every
+             decorative block below is positioned against THIS box, so the video
+             card's own cap grows with it (--w-video) rather than staying at 800px
+             and letting the blocks drift off the edges of the video they overlap. */
+          max-width: var(--w-narrow);
           margin: 0 auto;
           padding: 0 clamp(16px, 4vw, 48px);
         }
@@ -441,7 +445,9 @@ export default function VideoHeroSection({
           position: relative;
           z-index: 10;
           width: 100%;
-          max-width: min(90%, 800px);
+          /* The 90% is what keeps the blocks peeking out on either side and is
+             unchanged; only the pixel cap now scales — see --w-video. */
+          max-width: min(90%, var(--w-video));
           margin: 0 auto;
         }
 

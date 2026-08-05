@@ -224,7 +224,10 @@ export default function TestimonialCarousel({
         .tc__wrap {
           position: relative;
           width: 100%;
-          max-width: 1280px;
+          /* Was a flat 1280px — see the --w-* token block in globals.css. The card
+             count per page stays JS-driven (3 / 2 / 1) so pagination is untouched;
+             the three cards simply get their share of a wider row. */
+          max-width: var(--w-mid);
           margin: 0 auto;
           padding: 0 clamp(48px, 6vw, 80px);
           display: flex;

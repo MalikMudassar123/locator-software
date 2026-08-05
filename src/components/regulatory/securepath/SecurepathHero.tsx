@@ -15,7 +15,7 @@ export default function SecurepathHero() {
         }
         .sph-hero-wave { position: absolute; left: 0; right: 0; bottom: -1px; line-height: 0; }
 
-        .sph-topbar { display: flex; justify-content: flex-end; padding: 0 4px 8px; max-width: 1280px; margin: 0 auto; }
+        .sph-topbar { display: flex; justify-content: flex-end; padding: 0 4px 8px; max-width: var(--w-1280); margin: 0 auto; }
         .sph-phone-top {
           display: inline-flex; align-items: center; gap: 8px;
           color: #fff; font-size: 16px; font-weight: 800;
@@ -25,7 +25,7 @@ export default function SecurepathHero() {
         .sph-grid {
           position: relative; z-index: 1;
           display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(24px,4vw,48px);
-          align-items: center; max-width: 1280px; margin: 0 auto;
+          align-items: center; max-width: var(--w-1280); margin: 0 auto;
         }
         @media (max-width: 940px) {
           .sph-grid { grid-template-columns: 1fr; }

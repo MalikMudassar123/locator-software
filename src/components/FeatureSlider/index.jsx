@@ -4,7 +4,17 @@ import Image from 'next/image';
 import gsap from 'gsap';
 import { WINDOW_DOT_COLORS } from '@/components/ScrollShowcase/BrowserChrome';
 
-// Hook: returns a CSS scale factor so the scene canvas fits its container
+// Hook: returns a CSS scale factor so the scene canvas fits its container.
+//
+// Only SceneTaskManager uses this — it is the one scene built from a fixed-pixel
+// canvas. The other three (Expense / Inspection / Fleet) are `position:absolute;
+// inset:0` and therefore fill whatever box they are given.
+//
+// That difference is what made the four slides look like different sizes on a large
+// display: the other three grew with the panel while this one stopped dead at its
+// 560x420 canvas and sat marooned in the middle of an empty panel. The culprit was
+// the leading `1` below — a "never upscale" rule that only ever binds once the panel
+// is wider than the canvas, which is exactly what a large screen does.
 function useCanvasScale(canvasW, canvasH) {
   const containerRef = useRef(null);
   const [scale, setScale] = useState(1);
@@ -15,7 +25,18 @@ function useCanvasScale(canvasW, canvasH) {
       const w = el.offsetWidth;
       const h = el.offsetHeight;
       if (!w || !h) return;
-      setScale(Math.min(1, w / canvasW, h / canvasH));
+      // Fit-to-box, matching what inset:0 does for the other three. It cannot
+      // overflow: w / canvasW and h / canvasH are precisely the factors at which the
+      // canvas meets each edge, so the smaller of the two always fits inside both.
+      //
+      // The cap is kept below 1024px, where the layout is stacked and the panel is
+      // the container's full width — upscaling there would blow the scene up on
+      // tablets. Between 1024px and ~1600px the two branches agree anyway: the panel
+      // is under 560px wide there, so w / canvasW is below 1 and the cap was never
+      // the binding term.
+      const fit = Math.min(w / canvasW, h / canvasH);
+      const fillsPanel = window.matchMedia('(min-width: 1024px)').matches;
+      setScale(fillsPanel ? fit : Math.min(1, fit));
     };
     update();
     const ro = new ResizeObserver(update);
@@ -1183,14 +1204,18 @@ export default function FeatureSlider() {
 
         {/* ── LEFT panel ── */}
         <div className="fs-left" style={{ paddingRight:'clamp(0px, 2vw, 32px)', position:'relative', zIndex:1 }}>
-          <div style={{ fontSize:13, fontWeight:700, color:'#0a89dd', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:24 }}>
+          {/* Sizes are the --sc-* step scale from globals.css, shared with the
+              ScrollShowcase rows directly above so the two sections' copy columns
+              stay the same size as each other. Each resolves to exactly the flat
+              pixel value it replaces up to ~1550px. */}
+          <div style={{ fontSize:'var(--sc-13)', fontWeight:700, color:'#0a89dd', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:'var(--sc-24)' }}>
             {slide.eyebrow}
           </div>
-          <h2 style={{ fontSize:'clamp(24px, 3vw, 36px)', fontWeight:800, lineHeight:1.2, color:'#484b4c', margin:'0 0 16px', maxWidth:'100%', width:'100%' }}>
+          <h2 style={{ fontSize:'clamp(24px, 3vw, var(--sc-36))', fontWeight:800, lineHeight:1.2, color:'#484b4c', margin:'0 0 var(--sc-16)', maxWidth:'100%', width:'100%' }}>
             Run Your Road Team Smarter<br/>
             <span style={{ fontWeight:700 }}>Empowering field teams,</span>
           </h2>
-          <p style={{ fontSize:'clamp(14px, 1.3vw, 16px)', color:'#8090bc', lineHeight:1.7, margin:'0 0 28px', maxWidth:'100%' }}>
+          <p style={{ fontSize:'clamp(14px, 1.3vw, var(--sc-16))', color:'#8090bc', lineHeight:1.7, margin:'0 0 var(--sc-28)', maxWidth:'100%' }}>
             Manage, track, and optimize your field workforce in real time<span style={{ color:'#9ca3af' }}> fleets</span>
           </p>
 
@@ -1198,25 +1223,25 @@ export default function FeatureSlider() {
           <div style={{
             borderRadius:8,
             background:'linear-gradient(145deg, rgba(219,227,255,0.55) 0%, rgba(237,242,255,0.42) 50%, rgba(229,236,255,0.38) 100%)',
-            padding:'22px 28px 20px',
+            padding:'var(--sc-22) var(--sc-28) var(--sc-20)',
           }}>
             <div style={{ display:'flex', alignItems:'flex-start', gap:8 }}>
               <button onClick={prev}
-                style={{ background:'none', border:'none', cursor:'pointer', padding:'4px 16px 0 0', fontSize:28, color:'#9ca3af', lineHeight:1, flexShrink:0, transition:'color 0.2s' }}
+                style={{ background:'none', border:'none', cursor:'pointer', padding:'4px 16px 0 0', fontSize:'var(--sc-28)', color:'#9ca3af', lineHeight:1, flexShrink:0, transition:'color 0.2s' }}
                 onMouseEnter={e=>e.currentTarget.style.color='#6b7280'}
                 onMouseLeave={e=>e.currentTarget.style.color='#9ca3af'}>‹</button>
 
               <div ref={cardRef} style={{ flex:1, minWidth:0 }}>
-                <div style={{ fontSize:18, fontWeight:700, color:'#696b6b', marginBottom:14, lineHeight:1.35 }}>
+                <div style={{ fontSize:'var(--sc-18)', fontWeight:700, color:'#696b6b', marginBottom:'var(--sc-14)', lineHeight:1.35 }}>
                   {slide.cardTitle}
                 </div>
-                <p style={{ fontSize:14.5, color:'#8090bc', lineHeight:1.78, margin:0 }}>
+                <p style={{ fontSize:'var(--sc-14-5)', color:'#8090bc', lineHeight:1.78, margin:0 }}>
                   {slide.cardDesc}
                 </p>
               </div>
 
               <button onClick={next}
-                style={{ background:'none', border:'none', cursor:'pointer', padding:'4px 0 0 16px', fontSize:28, color:'#9ca3af', lineHeight:1, flexShrink:0, transition:'color 0.2s' }}
+                style={{ background:'none', border:'none', cursor:'pointer', padding:'4px 0 0 16px', fontSize:'var(--sc-28)', color:'#9ca3af', lineHeight:1, flexShrink:0, transition:'color 0.2s' }}
                 onMouseEnter={e=>e.currentTarget.style.color='#6b7280'}
                 onMouseLeave={e=>e.currentTarget.style.color='#9ca3af'}>›</button>
             </div>

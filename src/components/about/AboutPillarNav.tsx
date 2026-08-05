@@ -26,7 +26,7 @@ export default function AboutPillarNav({ current }: { current: string }) {
       `}</style>
 
       <section style={{ padding: '0 28px clamp(56px,7vw,88px)', background: '#f7f9fc' }}>
-        <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'var(--w-1120)', margin: '0 auto' }}>
           <p data-reveal style={{ margin: '0 0 20px', fontSize: '12px', fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: '#9a9aa2' }}>
             Explore more about Locator
           </p>

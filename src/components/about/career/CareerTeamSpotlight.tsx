@@ -29,7 +29,7 @@ export default function CareerTeamSpotlight() {
     <section className="cts-section">
       <style>{`
         .cts-section { padding: clamp(56px,7vw,88px) 28px; background: #f4f6fa; }
-        .cts-inner { max-width: 1120px; margin: 0 auto; }
+        .cts-inner { max-width: var(--w-1120); margin: 0 auto; }
         .cts-h2 { margin: 0 0 clamp(28px,4vw,40px); text-align: center; font-size: clamp(22px,2.8vw,32px); font-weight: 800; letter-spacing: -.01em; color: #1360ee; text-transform: uppercase; }
 
         .cts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px,2vw,22px); }

@@ -92,7 +92,7 @@ export default function ContactForm() {
       <style href="ct-contactform" precedence="medium">{`
         .ctf { background: #fff; padding: clamp(44px,6vw,80px) 28px clamp(52px,7vw,88px); }
         .ctf-shell {
-          max-width: 1180px; margin: 0 auto;
+          max-width: var(--w-1180); margin: 0 auto;
           display: grid; grid-template-columns: 1.08fr .92fr; gap: clamp(18px,2.4vw,30px);
           align-items: stretch;
         }

@@ -68,7 +68,7 @@ export default function AboutValues() {
   return (
     <>
       <style>{`
-        .val-wrap { display: grid; grid-template-columns: 0.82fr 1.18fr; gap: clamp(32px,5vw,80px); align-items: start; max-width: 1160px; margin: 0 auto; }
+        .val-wrap { display: grid; grid-template-columns: 0.82fr 1.18fr; gap: clamp(32px,5vw,80px); align-items: start; max-width: var(--w-1160); margin: 0 auto; }
         @media (max-width: 880px) { .val-wrap { grid-template-columns: 1fr; gap: 36px; } }
 
         .val-aside { position: sticky; top: 110px; }

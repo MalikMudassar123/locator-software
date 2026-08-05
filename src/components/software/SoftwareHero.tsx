@@ -162,7 +162,7 @@ export default function SoftwareHero() {
           gap: clamp(10px, 1.6vh, 24px);
           padding: clamp(10px, 2vh, 30px) 24px clamp(16px, 3vh, 40px);
         }
-        .sw-copy { text-align: center; max-width: 1120px; width: 100%; }
+        .sw-copy { text-align: center; max-width: var(--w-1120); width: 100%; }
         @media (prefers-reduced-motion: no-preference) {
           .sw-copy { animation: heroRise .9s cubic-bezier(.22,.61,.36,1) .05s both; }
         }
@@ -181,7 +181,7 @@ export default function SoftwareHero() {
         /* ── Stage holds both cross-fading layers ── */
         .sw-stage {
           position: relative; flex: 1 1 auto; min-height: 0;
-          width: 100%; max-width: 1240px; margin: 0 auto;
+          width: 100%; max-width: var(--w-1240); margin: 0 auto;
         }
         .sw-glow {
           position: absolute; left: 50%; bottom: 6%; width: min(74%, 840px); height: 60%;

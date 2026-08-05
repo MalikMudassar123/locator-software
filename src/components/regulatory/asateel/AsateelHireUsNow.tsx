@@ -1,7 +1,7 @@
 export default function AsateelHireUsNow() {
   return (
     <section style={{ padding: '0 28px clamp(40px,5vw,56px)', background: '#fff' }}>
-      <div data-reveal style={{ maxWidth: '900px', margin: '0 auto' }}>
+      <div data-reveal style={{ maxWidth: 'var(--w-900)', margin: '0 auto' }}>
         <h2 style={{ margin: '0 0 16px', fontSize: 'clamp(20px,2.4vw,26px)', fontWeight: 800, letterSpacing: '-.02em', color: '#1d1d1f' }}>
           Hire Us Now
         </h2>

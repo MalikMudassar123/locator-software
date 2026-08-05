@@ -131,7 +131,7 @@ export default function DemoBooking() {
     <section className="db-sec">
       <style>{`
         .db-sec { padding: clamp(16px,2.4vw,32px) 28px clamp(40px,5vw,64px); background: #fff; }
-        .db-shell { max-width: 1180px; margin: 0 auto; }
+        .db-shell { max-width: var(--w-1180); margin: 0 auto; }
         .db-grid { display: grid; grid-template-columns: .82fr 1.18fr; gap: clamp(18px,2.2vw,28px); align-items: stretch; }
         @media (max-width: 1040px) { .db-grid { grid-template-columns: 1fr; } }
 
@@ -238,7 +238,7 @@ export default function DemoBooking() {
         .db-slot.active { background: #1360ee; border-color: #1360ee; color: #fff; box-shadow: 0 10px 20px -8px rgba(19,96,238,.55); }
 
         .db-trust {
-          max-width: 1180px; margin: clamp(18px,2.2vw,26px) auto 0;
+          max-width: var(--w-1180); margin: clamp(18px,2.2vw,26px) auto 0;
           border: 1px solid #e7ebf3; border-radius: 18px; background: #fff;
           display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; padding: clamp(16px,2vw,22px) clamp(14px,2vw,24px);
         }

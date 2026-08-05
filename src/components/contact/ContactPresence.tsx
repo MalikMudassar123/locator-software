@@ -124,7 +124,7 @@ export default function ContactPresence() {
           background: linear-gradient(180deg, #ffffff 0%, #f6f9fe 42%, #ffffff 100%);
           padding: clamp(48px,6.5vw,86px) 0 clamp(52px,7vw,90px);
         }
-        .ctp-inner { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+        .ctp-inner { max-width: var(--w-1180); margin: 0 auto; padding: 0 28px; }
 
         .ctp-head { margin-bottom: clamp(26px,3.4vw,40px); }
         /* Eyebrow / title / sub share one scale across every contact section —

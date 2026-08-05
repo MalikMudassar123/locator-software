@@ -40,7 +40,7 @@ export default function ServiceWhyChoose() {
   return (
     <>
       <style>{`
-        .swc-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(36px,5vw,72px); align-items: center; max-width: 1200px; margin: 0 auto; }
+        .swc-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(36px,5vw,72px); align-items: center; max-width: var(--w-1200); margin: 0 auto; }
         @media (max-width: 940px) { .swc-grid { grid-template-columns: 1fr; gap: 40px; } .swc-grid > div:last-child { order: -1; } }
 
         .swc-row { display: flex; gap: 16px; align-items: flex-start; }

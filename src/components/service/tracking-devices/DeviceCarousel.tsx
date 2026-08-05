@@ -110,7 +110,7 @@ export default function DeviceCarousel() {
         /* Tinted stage — white cards need a non-white ground or they dissolve into it. */
         .dv-wrap { position: relative; padding: clamp(44px,5.5vw,80px) 0 clamp(40px,5vw,64px); background: #f4f7fc; overflow: hidden; }
 
-        .dv-head { max-width: 1240px; margin: 0 auto clamp(24px,3vw,40px); padding: 0 28px; text-align: center; }
+        .dv-head { max-width: var(--w-1240); margin: 0 auto clamp(24px,3vw,40px); padding: 0 28px; text-align: center; }
         .dv-eyebrow {
           display: block;
           font-size: clamp(22px,2.8vw,32px); font-weight: 800; letter-spacing: .04em;
@@ -284,7 +284,7 @@ export default function DeviceCarousel() {
         .dv-rail {
           display: flex; justify-content: center; align-items: center; gap: 10px;
           margin: clamp(28px,3.5vw,44px) auto 0; padding: 0 28px;
-          flex-wrap: wrap; max-width: 900px;
+          flex-wrap: wrap; max-width: var(--w-900);
         }
         .dv-thumb {
           width: 56px; height: 56px; padding: 7px;

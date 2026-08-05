@@ -156,7 +156,7 @@ export default function VideoTelematicsFAQ() {
             }),
           }}
         />
-        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'var(--w-900)', margin: '0 auto' }}>
 
           <div data-reveal style={{ textAlign: 'center', marginBottom: '40px' }}>
             <span style={{

@@ -88,7 +88,7 @@ export default function ContactChannels() {
           background: linear-gradient(180deg, #ffffff 0%, #f7f9fe 60%, #ffffff 100%);
           padding: clamp(48px,6.5vw,84px) 28px clamp(52px,7vw,88px);
         }
-        .ctc-inner { max-width: 1180px; margin: 0 auto; }
+        .ctc-inner { max-width: var(--w-1180); margin: 0 auto; }
 
         .ctc-head { max-width: 620px; margin-bottom: clamp(28px,3.6vw,44px); }
         .ctc-eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: clamp(12px,1.05vw,13.5px); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1360ee; }

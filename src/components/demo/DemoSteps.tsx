@@ -112,7 +112,7 @@ export default function DemoSteps() {
       <style>{`
         .ds-sec { padding: clamp(8px,1.5vw,20px) 28px clamp(20px,3vw,32px); background: #fff; }
         .ds-card {
-          max-width: 1180px; margin: 0 auto;
+          max-width: var(--w-1180); margin: 0 auto;
           border: 1px solid #eaeef6; border-radius: 22px; background: #fff;
           box-shadow: 0 20px 46px -32px rgba(20,40,90,.18);
           padding: clamp(26px,3vw,40px) clamp(22px,2.6vw,38px);

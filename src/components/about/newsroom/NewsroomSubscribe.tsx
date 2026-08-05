@@ -13,7 +13,7 @@ export default function NewsroomSubscribe() {
       <style href="nr-newsroomsubscribe" precedence="medium">{`
         .nrs { padding: clamp(40px,5vw,64px) 28px clamp(56px,7vw,80px); background: #f7f9fc; }
         .nrs-card {
-          max-width: 1240px; margin: 0 auto;
+          max-width: var(--w-1240); margin: 0 auto;
           display: grid; grid-template-columns: 56px minmax(0,1fr) minmax(0,420px); gap: clamp(16px,2.4vw,28px);
           align-items: center;
           background: #fff; border: 1px solid #e7ecf6; border-radius: 18px;

@@ -188,8 +188,8 @@ export default function Navbar() {
       <nav
         className="absolute top-0 left-0 right-0 z-10 h-16 md:h-20"
         style={{
-          paddingLeft: 'clamp(20px, 4vw, 50px)',
-          paddingRight: 'clamp(20px, 4vw, 50px)',
+          paddingLeft: 'clamp(20px, 4vw, var(--nav-pad))',
+          paddingRight: 'clamp(20px, 4vw, var(--nav-pad))',
           background: isPanelOpen ? '#ffffff' : 'transparent',
           boxShadow: isPanelOpen ? '0 1px 0 rgba(15,23,42,0.08)' : 'none',
           transition: 'background .3s ease, box-shadow .3s ease',
@@ -205,7 +205,7 @@ export default function Navbar() {
             href="/"
             className="flex items-center"
             onMouseEnter={() => setActiveMenu(null)}
-            style={{ position: 'relative', width: '120px', height: '40px', flexShrink: 0 }}
+            style={{ position: 'relative', width: 'calc(var(--nav-logo-h) * 3)', height: 'var(--nav-logo-h)', flexShrink: 0 }}
           >
             <span className="sr-only">Locator</span>
             <Image
@@ -226,7 +226,7 @@ export default function Navbar() {
           </Link>
 
           {/* Nav Links — desktop only */}
-          <ul className="hidden lg:flex items-center gap-6 list-none m-0 p-0">
+          <ul className="hn-navlinks hidden lg:flex items-center gap-6 list-none m-0 p-0">
             {navLinks.map(l => {
               const isActive = l.href === '/' ? pathname === '/' : pathname.startsWith(l.href)
               const dd = NAV_DROPDOWNS[l.href]
@@ -318,7 +318,7 @@ export default function Navbar() {
               alt="UAE"
               width={32}
               height={32}
-              className="rounded-full hidden sm:block"
+              className="hn-flag rounded-full hidden sm:block"
               style={{ border: isPanelOpen ? '2px solid #e2e7f0' : '2px solid rgba(255,255,255,0.3)' }}
             />
 
@@ -352,8 +352,8 @@ export default function Navbar() {
                   color: '#0a89dd',
                   border: 'none',
                   borderRadius: '10.5px',
-                  padding: '10px 26px',
-                  fontSize: '13px',
+                  padding: 'var(--nav-cta-py) var(--nav-cta-px)',
+                  fontSize: 'var(--nav-cta-fs)',
                   fontWeight: 650,
                   fontFamily: 'inherit',
                   cursor: 'pointer',

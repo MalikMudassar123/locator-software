@@ -87,7 +87,7 @@ export default function ContactOffices() {
         .cto-roads { position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: .55; }
         .cto-roads svg { width: 100%; height: 100%; }
 
-        .cto-inner { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; }
+        .cto-inner { position: relative; z-index: 1; max-width: var(--w-1180); margin: 0 auto; }
 
         /* ── Header ── */
         .cto-head { text-align: center; margin-bottom: clamp(34px,4.6vw,58px); }

@@ -24,7 +24,7 @@ export default function CareerHero() {
         }
 
         .ch-body { position: relative; z-index: 2; flex: 1; display: flex; align-items: center; padding: clamp(28px,5vw,60px) 28px clamp(48px,6vw,72px); }
-        .ch-inner { max-width: 1180px; width: 100%; margin: 0 auto; }
+        .ch-inner { max-width: var(--w-1180); width: 100%; margin: 0 auto; }
         /* Wide enough that the headline wraps on its own words instead of
            being squeezed into a narrow column. */
         .ch-content { max-width: min(900px, 92vw); }

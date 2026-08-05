@@ -8,7 +8,7 @@ export default function NewsroomTicker() {
     <>
       <style href="nr-newsroomticker" precedence="medium">{`
         .nrt { position: relative; border-top: 1px solid #e9eef7; border-bottom: 1px solid #e9eef7; background: #fff; }
-        .nrt-inner { display: flex; align-items: center; max-width: 1240px; margin: 0 auto; padding: 0 28px; }
+        .nrt-inner { display: flex; align-items: center; max-width: var(--w-1240); margin: 0 auto; padding: 0 28px; }
 
         .nrt-live {
           display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0;

@@ -67,7 +67,7 @@ export default function WhoWeAreTechnology() {
   return (
     <>
       <style>{`
-        .wwt-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(32px,5vw,64px); align-items: center; max-width: 1160px; margin: 0 auto; }
+        .wwt-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(32px,5vw,64px); align-items: center; max-width: var(--w-1160); margin: 0 auto; }
         @media (max-width: 900px) { .wwt-grid { grid-template-columns: 1fr; gap: 36px; } }
         .wwt-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         @media (max-width: 520px) { .wwt-cards { grid-template-columns: 1fr; } }

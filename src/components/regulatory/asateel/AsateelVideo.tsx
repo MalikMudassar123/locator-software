@@ -9,7 +9,7 @@ export default function AsateelVideo() {
 
   return (
     <section style={{ padding: '0 28px clamp(56px,7vw,80px)', background: '#fff' }}>
-      <div data-reveal style={{ maxWidth: '900px', margin: '0 auto' }}>
+      <div data-reveal style={{ maxWidth: 'var(--w-900)', margin: '0 auto' }}>
         <div style={{
           position: 'relative', borderRadius: '16px', overflow: 'hidden',
           aspectRatio: '16 / 9', background: '#0f1117',

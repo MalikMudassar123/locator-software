@@ -12,7 +12,7 @@ export default function IndustriesHero() {
         .ih-crumbs-bar { border-bottom: 1px solid #eef1f7; }
         .ih-crumbs {
           display: flex; align-items: center; gap: 8px;
-          max-width: 1280px; margin: 0 auto; padding: 16px 28px;
+          max-width: var(--w-1280); margin: 0 auto; padding: 16px 28px;
           font-size: 14px; color: #6e6e73;
         }
         .ih-crumbs a { color: #1d1d1f; font-weight: 600; text-decoration: none; transition: color .18s ease; }
@@ -35,7 +35,7 @@ export default function IndustriesHero() {
         .ih-photo-body {
           position: relative; z-index: 2; height: 100%;
           display: flex; align-items: flex-end;
-          max-width: 1280px; margin: 0 auto; padding: 0 28px clamp(28px,4.5vw,52px);
+          max-width: var(--w-1280); margin: 0 auto; padding: 0 28px clamp(28px,4.5vw,52px);
         }
         .ih-content { max-width: min(760px, 90vw); }
 

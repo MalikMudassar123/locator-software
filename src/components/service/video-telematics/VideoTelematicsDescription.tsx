@@ -1,7 +1,7 @@
 export default function VideoTelematicsDescription() {
   return (
     <section style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#fff' }}>
-      <div data-reveal style={{ maxWidth: '920px', margin: '0 auto' }}>
+      <div data-reveal style={{ maxWidth: 'var(--w-920)', margin: '0 auto' }}>
         <div style={{
           width: 44, height: 44, borderRadius: 12,
           display: 'grid', placeItems: 'center', marginBottom: '20px',

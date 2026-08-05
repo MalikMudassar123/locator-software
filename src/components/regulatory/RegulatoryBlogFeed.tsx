@@ -55,7 +55,7 @@ export default function RegulatoryBlogFeed() {
       `}</style>
 
       <section style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#fff' }}>
-        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'var(--w-1000)', margin: '0 auto' }}>
 
           <div data-reveal style={{ textAlign: 'center', marginBottom: '44px' }}>
             <div style={{

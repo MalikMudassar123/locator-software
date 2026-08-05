@@ -16,7 +16,7 @@ export default function CareerValues() {
     <section className="cv-section">
       <style>{`
         .cv-section { padding: clamp(56px,7vw,88px) 28px; background: #fff; }
-        .cv-inner { max-width: 900px; margin: 0 auto; text-align: center; }
+        .cv-inner { max-width: var(--w-900); margin: 0 auto; text-align: center; }
         .cv-h2 {
           margin: 0 0 clamp(32px,4vw,44px);
           font-size: clamp(19px,2.6vw,30px); font-weight: 800; letter-spacing: -.01em;

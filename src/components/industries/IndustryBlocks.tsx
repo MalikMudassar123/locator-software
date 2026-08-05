@@ -40,7 +40,7 @@ export default function IndustryBlocks({ industry }: { industry: Industry }) {
         .ixb-sec { padding: clamp(40px,5vw,76px) 28px; border-top: 1px solid #f0f0f3; }
 
         .ixb-grid {
-          max-width: 1280px; margin: 0 auto;
+          max-width: var(--w-1280); margin: 0 auto;
           display: grid; grid-template-columns: minmax(280px,1fr) minmax(280px,1fr);
           gap: clamp(28px,3.4vw,56px); align-items: center;
         }

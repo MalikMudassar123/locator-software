@@ -43,7 +43,7 @@ export default function CareerJobsList() {
     <section id="open-positions" className="cjl-section">
       <style>{`
         .cjl-section { padding: clamp(56px,7vw,88px) 28px; background: #fff; scroll-margin-top: 90px; }
-        .cjl-inner { max-width: 900px; margin: 0 auto; }
+        .cjl-inner { max-width: var(--w-900); margin: 0 auto; }
 
         .cjl-h2 {
           margin: 0 0 clamp(28px,4vw,44px); text-align: center;

@@ -10,7 +10,7 @@ export default function DemoHero() {
           background: radial-gradient(120% 90% at 50% -10%, #eef3ff 0%, #ffffff 60%);
           padding: clamp(16px,2vw,28px) 28px clamp(24px,3vw,36px);
         }
-        .dh-inner { max-width: 1180px; margin: 0 auto; text-align: center; padding-top: clamp(8px,1.4vw,16px); }
+        .dh-inner { max-width: var(--w-1180); margin: 0 auto; text-align: center; padding-top: clamp(8px,1.4vw,16px); }
 
         .dh-title { margin: 0; font-size: clamp(30px,4.4vw,52px); font-weight: 800; line-height: 1.08; letter-spacing: -.03em; color: #1d1d1f; }
         .dh-title b { color: #1360ee; font-weight: 800; }

@@ -545,7 +545,7 @@ export default function BenefitsSection() {
             was leaving a broad empty margin either side while squeezing the list
             and the video it exists to show. Text sections keep the narrower column;
             a paragraph does not want a 1440px measure. */}
-        <div style={{ maxWidth: '1440px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'var(--w-1440)', margin: '0 auto' }}>
 
           {/* ── Header — centered ── */}
           <div data-reveal style={{ marginBottom: '36px', textAlign: 'center' }}>

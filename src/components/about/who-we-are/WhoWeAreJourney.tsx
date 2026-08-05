@@ -2,7 +2,7 @@ export default function WhoWeAreJourney() {
   return (
     <>
       <style>{`
-        .wwj-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(32px,5vw,72px); align-items: start; max-width: 1120px; margin: 0 auto; }
+        .wwj-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(32px,5vw,72px); align-items: start; max-width: var(--w-1120); margin: 0 auto; }
         @media (max-width: 860px) { .wwj-grid { grid-template-columns: 1fr; gap: 24px; } }
       `}</style>
 

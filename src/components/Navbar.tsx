@@ -77,6 +77,12 @@ export default function Navbar() {
     if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null }
   }
   const activeDD = renderMenu ? NAV_DROPDOWNS[renderMenu] : null
+  // Navbar flips to a white bar with the blue wordmark whenever the mega-menu
+  // shutter or the mobile drawer is showing — matches the white panel beneath it
+  // instead of leaving a blue bar floating above a white one.
+  const isPanelOpen = open || !!activeMenu
+  const navTextColor = isPanelOpen ? '#1d1d1f' : '#ffffff'
+  const navUnderline = isPanelOpen ? '#1360ee' : 'rgba(255,255,255,0.85)'
 
   useEffect(() => {
     if (open) {
@@ -181,19 +187,41 @@ export default function Navbar() {
 
       <nav
         className="absolute top-0 left-0 right-0 z-10 h-16 md:h-20"
-        style={{ paddingLeft: 'clamp(20px, 4vw, 50px)', paddingRight: 'clamp(20px, 4vw, 50px)' }}
+        style={{
+          paddingLeft: 'clamp(20px, 4vw, 50px)',
+          paddingRight: 'clamp(20px, 4vw, 50px)',
+          background: isPanelOpen ? '#ffffff' : 'transparent',
+          boxShadow: isPanelOpen ? '0 1px 0 rgba(15,23,42,0.08)' : 'none',
+          transition: 'background .3s ease, box-shadow .3s ease',
+        }}
         onMouseLeave={scheduleClose}
       >
         <div className="h-full flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center" onMouseEnter={() => setActiveMenu(null)}>
+          {/* Logo — cross-fades to the blue wordmark (same file the footer uses) once the bar
+              goes white. Fixed-size box + two stacked images so the swap never changes the
+              logo's rendered width — a src swap between differently-proportioned files would
+              otherwise nudge the nav links sideways every time the bar toggles. */}
+          <Link
+            href="/"
+            className="flex items-center"
+            onMouseEnter={() => setActiveMenu(null)}
+            style={{ position: 'relative', width: '120px', height: '40px', flexShrink: 0 }}
+          >
+            <span className="sr-only">Locator</span>
             <Image
               src="/logo.png"
-              alt="Locator"
-              width={120}
-              height={40}
-              style={{ width: 'auto', height: '40px' }}
+              alt=""
+              fill
+              sizes="120px"
+              style={{ objectFit: 'contain', objectPosition: 'left center', opacity: isPanelOpen ? 0 : 1, transition: 'opacity .3s ease' }}
               priority
+            />
+            <Image
+              src="/logo-blue.png"
+              alt=""
+              fill
+              sizes="120px"
+              style={{ objectFit: 'contain', objectPosition: 'left center', opacity: isPanelOpen ? 1 : 0, transition: 'opacity .3s ease' }}
             />
           </Link>
 
@@ -212,11 +240,12 @@ export default function Navbar() {
                       aria-expanded={isCurrent}
                       onMouseEnter={() => openMega(l.href)}
                       onClick={() => setActiveMenu(null)}
-                      className="text-white text-sm transition-all whitespace-nowrap"
+                      className="text-sm transition-all whitespace-nowrap"
                       style={{
+                        color: navTextColor,
                         fontWeight: isActive ? 800 : 600,
                         opacity: isActive || isCurrent ? 1 : 0.82,
-                        borderBottom: isActive ? '2px solid rgba(255,255,255,0.85)' : '2px solid transparent',
+                        borderBottom: isActive ? `2px solid ${navUnderline}` : '2px solid transparent',
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '4px',
@@ -235,11 +264,12 @@ export default function Navbar() {
                       aria-expanded={isCurrent}
                       onMouseEnter={() => openMega(l.href)}
                       onClick={() => (isCurrent ? setActiveMenu(null) : openMega(l.href))}
-                      className="text-white text-sm transition-all whitespace-nowrap"
+                      className="text-sm transition-all whitespace-nowrap"
                       style={{
+                        color: navTextColor,
                         fontWeight: isActive ? 800 : 600,
                         opacity: isActive || isCurrent ? 1 : 0.82,
-                        borderBottom: isActive ? '2px solid rgba(255,255,255,0.85)' : '2px solid transparent',
+                        borderBottom: isActive ? `2px solid ${navUnderline}` : '2px solid transparent',
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '4px',
@@ -264,11 +294,12 @@ export default function Navbar() {
                     <Link
                       href={l.href}
                       onMouseEnter={() => setActiveMenu(null)}
-                      className="text-white text-sm transition-all whitespace-nowrap"
+                      className="text-sm transition-all whitespace-nowrap"
                       style={{
+                        color: navTextColor,
                         fontWeight: isActive ? 800 : 600,
                         opacity: isActive ? 1 : 0.82,
-                        borderBottom: isActive ? '2px solid rgba(255,255,255,0.85)' : '2px solid transparent',
+                        borderBottom: isActive ? `2px solid ${navUnderline}` : '2px solid transparent',
                         paddingBottom: '2px',
                       }}
                     >
@@ -287,27 +318,47 @@ export default function Navbar() {
               alt="UAE"
               width={32}
               height={32}
-              className="rounded-full border-2 border-white/30 hidden sm:block"
+              className="rounded-full hidden sm:block"
+              style={{ border: isPanelOpen ? '2px solid #e2e7f0' : '2px solid rgba(255,255,255,0.3)' }}
             />
 
-            {/* Get a Quote — desktop */}
-            <div className="hidden sm:inline-flex items-center justify-center">
+            {/* Get a Quote — desktop. One blended streak of light sweeps around the pill's
+                border. See .nav-cta-ring in globals.css for why this is a masked conic
+                gradient rather than dashed SVG strokes. */}
+            <div
+              className="hidden sm:inline-flex items-center justify-center nav-cta-wrap"
+              style={{
+                // The streak has to read against two very different backdrops: the blue hero
+                // (nav transparent) and the white bar (panel open). One fixed palette is
+                // invisible on one of them, so the three colours flip with the bar. The
+                // hero set is lifted straight from the hero gradient itself — cyan #08b2e0
+                // and the sunrise glow #fbeabc — so the streak looks native to the page.
+                '--cta-c1': isPanelOpen ? '#0a84e3' : '#7fe6ff',
+                '--cta-c2': isPanelOpen ? '#eaa62a' : '#ffd98a',
+                '--cta-c3': isPanelOpen ? '#1360ee' : '#ffffff',
+                '--cta-glow': isPanelOpen ? 'rgba(19,96,238,0.7)' : 'rgba(190,235,255,0.95)',
+                '--cta-track': isPanelOpen ? 'rgba(19,96,238,0.22)' : 'rgba(255,255,255,0.38)',
+              } as React.CSSProperties}
+            >
+              <span className="nav-cta-ring" aria-hidden="true" />
               <button
                 className="nav-cta-pulse"
                 style={{
-                  background: '#ffffff',
+                  // Barely-there vertical gradient rather than flat #fff — it catches the
+                  // eye as a lit surface instead of a paper cut-out. No transform here:
+                  // the wrap owns the hover lift, and a static offset on the button would
+                  // push it off-centre inside the ring and make the band uneven.
+                  background: 'linear-gradient(180deg, #ffffff 0%, #f4f8fd 100%)',
                   color: '#0a89dd',
                   border: 'none',
-                  borderRadius: '12px',
-                  padding: '14px 26px',
+                  borderRadius: '10.5px',
+                  padding: '10px 26px',
                   fontSize: '13px',
-                  fontWeight: 600,
+                  fontWeight: 650,
                   fontFamily: 'inherit',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
-                  letterSpacing: '0.01em',
-                  transition: 'transform 0.45s cubic-bezier(0.65, 0, 0.35, 1)',
-                  transform: 'translateY(-1.5px)',
+                  letterSpacing: '0.015em',
                   display: 'inline-flex',
                   alignItems: 'center',
                   justifyContent: 'center',

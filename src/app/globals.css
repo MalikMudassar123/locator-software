@@ -1957,21 +1957,33 @@ h6 {
   }
 }
 
-/* Navbar CTA heartbeat pulse + inner shine */
-@keyframes navCtaPulse {
-  0%   { box-shadow: 0 0 0 0 rgba(255,255,255,0.7), 0 2px 12px rgba(255,255,255,0.35); }
-  60%  { box-shadow: 0 0 0 10px rgba(255,255,255,0),  0 2px 12px rgba(255,255,255,0.35); }
-  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0),     0 2px 12px rgba(255,255,255,0.35); }
-}
+/* Navbar CTA face — the button itself. The sweeping ring below is the one piece of
+   perpetual motion here on purpose: this shine used to run on a 2.8s infinite loop
+   at the same time, and two competing loops on one small control read as busy
+   rather than expensive. The shine is now a single pass on hover — a reward for
+   the interaction instead of background noise. */
 @keyframes navCtaShine {
   0%   { transform: translateX(-160%) skewX(-20deg); }
-  40%  { transform: translateX(260%)  skewX(-20deg); }
   100% { transform: translateX(260%)  skewX(-20deg); }
 }
 .nav-cta-pulse {
   position: relative;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(255,255,255,0.55), 0 2px 8px rgba(26,110,154,0.18);
+  /* Inset top highlight + a tight contact shadow under a wider ambient one: the
+     stack that makes a flat white rectangle read as a physical, lit surface. */
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.95),
+    inset 0 -1px 0 rgba(16,42,86,0.05),
+    0 1px 2px rgba(12,38,80,0.10),
+    0 6px 16px -6px rgba(12,38,80,0.30);
+  transition: box-shadow 0.5s cubic-bezier(0.22,0.61,0.36,1);
+}
+.nav-cta-wrap:hover .nav-cta-pulse {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 -1px 0 rgba(16,42,86,0.06),
+    0 2px 4px rgba(12,38,80,0.12),
+    0 14px 30px -10px rgba(12,38,80,0.42);
 }
 .nav-cta-pulse::before {
   content: '';
@@ -1984,12 +1996,91 @@ h6 {
     120deg,
     transparent 0%,
     rgba(255,255,255,0) 15%,
-    rgba(255,255,255,0.65) 50%,
+    rgba(255,255,255,0.75) 50%,
     rgba(255,255,255,0) 85%,
     transparent 100%
   );
-  animation: navCtaShine 2.8s ease-in-out infinite;
+  transform: translateX(-160%) skewX(-20deg);
   pointer-events: none;
+}
+.nav-cta-wrap:hover .nav-cta-pulse::before {
+  animation: navCtaShine 0.9s cubic-bezier(0.4,0,0.2,1) 1;
+}
+
+/* Navbar CTA — one blended streak of light sweeps around the pill's border.
+   Built as a conic gradient masked down to just the border band, rather than the
+   three dashed SVG strokes this replaced: separate strokes can only ever be
+   separate colours butted together, which read as distinct chunks (a white half
+   and a gold half) instead of one blended streak. A conic gradient interpolates
+   continuously, so blue melts into gold into white with no seam. Most of the
+   sweep is transparent, leaving a single lit arc — a full-spectrum ring instead
+   lights opposite sides at once and reads as two beams on a wide pill.
+   `--cta-angle` also has a plain fallback declaration below so that browsers
+   without @property still paint a static ring rather than dropping the gradient
+   as invalid. */
+@property --cta-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+.nav-cta-wrap {
+  position: relative;
+  border-radius: 13px;
+  padding: 2.5px;
+  isolation: isolate;
+  background: var(--cta-track);
+  transition: transform 0.5s cubic-bezier(0.22,0.61,0.36,1);
+}
+.nav-cta-wrap:hover {
+  transform: translateY(-2px);
+}
+.nav-cta-ring {
+  --cta-angle: 0deg;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  /* Deliberately thin. A thick band looks like a plastic bezel; a fine filament
+     doing the drawing while the bloom does the carrying is what reads as jewellery. */
+  padding: 2.5px;
+  pointer-events: none;
+  z-index: 0;
+  /* Long, gradual ramps in and out of the lit arc — the abrupt transparent→colour
+     stops of a narrow arc give the streak a visible hard leading edge. */
+  background: conic-gradient(
+    from var(--cta-angle),
+    transparent 0deg,
+    var(--cta-c1) 42deg,
+    var(--cta-c2) 76deg,
+    var(--cta-c3) 100deg,
+    var(--cta-c2) 124deg,
+    var(--cta-c1) 158deg,
+    transparent 200deg,
+    transparent 360deg
+  );
+  /* Punch the middle out so only the padding band paints: two full-size layers,
+     one clipped to the content box, composited so they cancel where they overlap. */
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  /* Layered bloom: a tight core halo plus a wide soft one, so the streak reads as
+     emitting light rather than as a flat coloured edge. */
+  filter: drop-shadow(0 0 3px var(--cta-glow)) drop-shadow(0 0 12px var(--cta-glow));
+  animation: navCtaRingSweep 5s linear infinite;
+  transition: filter 0.5s cubic-bezier(0.22,0.61,0.36,1);
+}
+.nav-cta-wrap:hover .nav-cta-ring {
+  filter: drop-shadow(0 0 4px var(--cta-glow)) drop-shadow(0 0 20px var(--cta-glow));
+}
+@keyframes navCtaRingSweep {
+  to { --cta-angle: 360deg; }
+}
+.nav-cta-wrap > button {
+  position: relative;
+  z-index: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-cta-ring { animation: none; }
 }
 
 /* ══════════════════════════════════════════════════════

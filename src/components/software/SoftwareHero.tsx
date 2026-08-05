@@ -258,7 +258,9 @@ export default function SoftwareHero() {
           position: relative; aspect-ratio: 1092 / 1000; flex: 0 0 auto;
           border-radius: 12px; overflow: hidden; background: #fff;
           border: 1px solid #e7ebf3;
-          box-shadow: 0 36px 70px -34px rgba(20,40,90,.42), 0 2px 8px rgba(20,40,90,.08);
+          /* No drop shadow: the cards overlap in a fan, so a large downward shadow from
+             each one stacked into a single grey smudge pooling beneath the whole group.
+             The hairline border alone separates the cards. */
           will-change: opacity, transform;
         }
         .sw-wb img { object-fit: cover; }

@@ -54,6 +54,8 @@ export default function Navbar() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null) // open shutter mega-menu
   const [renderMenu, setRenderMenu] = useState<string | null>(null) // kept during close anim
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const megaInnerRef = useRef<HTMLDivElement>(null)
+  const [megaH, setMegaH] = useState(0)
   const pathname = usePathname()
   const router = useRouter()
   // Roll height for the hover text swap. In em (not px) so the two label copies
@@ -67,6 +69,27 @@ export default function Navbar() {
 
   useEffect(() => { if (activeMenu) setRenderMenu(activeMenu) }, [activeMenu])
   useEffect(() => { setActiveMenu(null); setOpen(false) }, [pathname])
+
+  // Measured height of the shutter's contents, published to CSS as --mega-h.
+  //
+  // The panel used to open by transitioning grid-template-rows 0fr → 1fr. That
+  // technique animates an intrinsic size, so the browser re-resolves layout every
+  // frame — and it has no defined value to interpolate *between* when the content
+  // swaps, which is why moving from one menu to another snapped instead of easing.
+  // A measured pixel height fixes both: the transition has real endpoints, so
+  // switching menus glides from the old height to the new one.
+  //
+  // ResizeObserver rather than a one-shot measure — it catches the grid dropping
+  // from four columns to three at a breakpoint, and fonts loading in late, both of
+  // which change the height after the initial read.
+  useEffect(() => {
+    const el = megaInnerRef.current
+    if (!el) return
+    const ro = new ResizeObserver(() => setMegaH(el.offsetHeight))
+    ro.observe(el)
+    setMegaH(el.offsetHeight)
+    return () => ro.disconnect()
+  }, [renderMenu, mounted])
 
   const openMega = (href: string) => {
     if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null }
@@ -128,22 +151,70 @@ export default function Navbar() {
           position: fixed; top: 80px; left: 0; right: 0; z-index: 1001;
           background: #ffffff;
           border-bottom: 1px solid #ececf1;
-          box-shadow: 0 40px 60px -34px rgba(15,23,42,.32);
-          display: grid; grid-template-rows: 0fr;
+          /* Measured px height (see --mega-h) rather than grid-template-rows 0fr→1fr.
+             The fr trick animates an intrinsic size — no defined endpoints — so it
+             cannot interpolate when the content swaps, and it re-resolves layout
+             every frame. */
+          /* Clipping happens on .hn-mega-clip, one level down, not here — the shadow
+             strip below is a child, and a parent with overflow:hidden would cut the
+             very shadow it is meant to cast. */
+          height: 0;
           opacity: 0; pointer-events: none;
-          transition: grid-template-rows .52s cubic-bezier(.16,1,.3,1),
-                      opacity .34s ease;
-          will-change: grid-template-rows;
+          /* Closing. Declared on the base rule, so it is the direction that plays
+             when .open is removed: the panel is gone in .2s while the height eases
+             out slightly slower, which reads as it being pulled up rather than
+             deflating. Content leaves first — see .hn-mega-inner. */
+          transition: height .32s cubic-bezier(.36,0,.28,1), opacity .19s ease;
+          /* Own compositor layer. Without it the height change repaints the panel
+             into whatever layer the hero occupies, and every frame drags the page
+             behind it through paint as well. */
+          transform: translateZ(0);
+          backface-visibility: hidden;
+          will-change: height;
         }
-        .hn-mega.open { grid-template-rows: 1fr; opacity: 1; pointer-events: auto; }
-        .hn-mega-clip { overflow: hidden; min-height: 0; }
+        /* The drop shadow lives on a pseudo-element pinned to the bottom edge rather
+           than on .hn-mega itself. A 60px-blur shadow on a box whose height changes
+           every frame has to be re-rasterised every frame, and on a full-width panel
+           that is the single most expensive thing in the whole animation. Here it is
+           a fixed-size strip that the panel simply carries down with it. */
+        .hn-mega::after {
+          content: ''; position: absolute; left: 0; right: 0; bottom: 0;
+          height: 60px; pointer-events: none;
+          box-shadow: 0 40px 60px -34px rgba(15,23,42,.32);
+        }
+        .hn-mega.open {
+          height: var(--mega-h, 0px); opacity: 1; pointer-events: auto;
+          /* Opening. Longer, and on a decelerating curve so it arrives softly.
+             Asymmetry is what makes a drawer feel weighted — the same curve both
+             ways always feels mechanical. */
+          /* easeOutQuint-ish: ~70% of the distance is covered in the first third, then
+             a long tail. That front-loading is what makes a drawer feel responsive to
+             the hover while still settling gently instead of stopping dead. */
+          transition: height .52s cubic-bezier(.19,1,.22,1), opacity .16s ease;
+        }
+        .hn-mega-clip { height: 100%; overflow: hidden; min-height: 0; }
         .hn-mega-inner {
           max-width: 1200px; margin: 0 auto;
           padding: clamp(26px,3vw,40px) clamp(20px,4vw,48px) clamp(32px,3.4vw,46px);
-          opacity: 0; transform: translateY(-10px);
-          transition: opacity .4s ease .04s, transform .55s cubic-bezier(.16,1,.3,1) .04s;
+          /* Seals this subtree off from the parent's height animation. Without it the
+             browser has to consider re-laying-out every card, icon and line of text
+             on each frame of the open; with it the panel's height is proven not to
+             affect anything inside, so the frames cost a clip and nothing more. This
+             is the difference between smooth and butter on a slow machine. */
+          contain: layout style;
+          /* Closed state doubles as the close transition: fast fade, no delay, so the
+             text is gone before the panel has collapsed far enough to crop it. */
+          opacity: 0; transform: translateY(-8px);
+          transition: opacity .16s ease, transform .2s ease;
+          will-change: transform, opacity;
         }
-        .hn-mega.open .hn-mega-inner { opacity: 1; transform: none; }
+        .hn-mega.open .hn-mega-inner {
+          opacity: 1; transform: none;
+          /* Shorter than the panel's .52s and started immediately, so the content
+             finishes settling before the panel does. Content that lands last always
+             looks like it is catching up with the drawer. */
+          transition: opacity .3s ease .02s, transform .44s cubic-bezier(.19,1,.22,1) .02s;
+        }
         .hn-mega-head { margin-bottom: 22px; }
         .hn-mega-label { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1360ee; }
         .hn-mega-blurb { margin: 6px 0 0; font-size: 14px; color: #6e6e73; max-width: 560px; line-height: 1.5; }
@@ -171,19 +242,22 @@ export default function Navbar() {
         .hn-mega-go { margin-left: auto; color: #cfd3dc; flex-shrink: 0; opacity: 0; transform: translateX(-4px); transition: transform .2s ease, color .2s ease, opacity .2s ease; }
         .hn-mega-card:hover .hn-mega-go { color: #1360ee; transform: translateX(0); opacity: 1; }
 
-        @keyframes hnCardIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-        .hn-mega.open .hn-mega-card { animation: hnCardIn .5s cubic-bezier(.16,1,.3,1) both; }
-        .hn-mega.open .hn-mega-card:nth-child(1) { animation-delay: .06s; }
-        .hn-mega.open .hn-mega-card:nth-child(2) { animation-delay: .10s; }
-        .hn-mega.open .hn-mega-card:nth-child(3) { animation-delay: .14s; }
-        .hn-mega.open .hn-mega-card:nth-child(4) { animation-delay: .18s; }
-        .hn-mega.open .hn-mega-card:nth-child(5) { animation-delay: .22s; }
-        .hn-mega.open .hn-mega-card:nth-child(6) { animation-delay: .26s; }
-        .hn-mega.open .hn-mega-card:nth-child(7) { animation-delay: .30s; }
-        .hn-mega.open .hn-mega-card:nth-child(8) { animation-delay: .34s; }
+        /* Stagger tightened from 40ms to 26ms steps. The last of eight cards used to
+           finish at ~0.84s — long after the panel itself had settled, which is what
+           made the open read as laggy even though the drawer was quick. */
+        @keyframes hnCardIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+        .hn-mega.open .hn-mega-card { animation: hnCardIn .42s cubic-bezier(.16,1,.3,1) both; }
+        .hn-mega.open .hn-mega-card:nth-child(1) { animation-delay: .05s; }
+        .hn-mega.open .hn-mega-card:nth-child(2) { animation-delay: .076s; }
+        .hn-mega.open .hn-mega-card:nth-child(3) { animation-delay: .102s; }
+        .hn-mega.open .hn-mega-card:nth-child(4) { animation-delay: .128s; }
+        .hn-mega.open .hn-mega-card:nth-child(5) { animation-delay: .154s; }
+        .hn-mega.open .hn-mega-card:nth-child(6) { animation-delay: .18s; }
+        .hn-mega.open .hn-mega-card:nth-child(7) { animation-delay: .206s; }
+        .hn-mega.open .hn-mega-card:nth-child(8) { animation-delay: .232s; }
         @media (prefers-reduced-motion: reduce) {
-          .hn-mega { transition: opacity .2s ease; }
-          .hn-mega-inner { transition: opacity .2s ease; transform: none; }
+          .hn-mega, .hn-mega.open { transition: opacity .2s ease; }
+          .hn-mega-inner, .hn-mega.open .hn-mega-inner { transition: opacity .2s ease; transform: none; }
           .hn-mega.open .hn-mega-card { animation: none; }
         }
       `}</style>
@@ -495,10 +569,11 @@ export default function Navbar() {
             aria-label={activeDD?.label}
             onMouseEnter={cancelClose}
             onMouseLeave={scheduleClose}
+            style={{ '--mega-h': `${megaH}px` } as React.CSSProperties}
           >
             <div className="hn-mega-clip">
               {activeDD && (
-                <div className="hn-mega-inner">
+                <div className="hn-mega-inner" ref={megaInnerRef}>
                   <div className="hn-mega-head">
                     <span className="hn-mega-label">{activeDD.label}</span>
                     <p className="hn-mega-blurb">{activeDD.blurb}</p>

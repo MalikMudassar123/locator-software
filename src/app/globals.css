@@ -2359,13 +2359,18 @@ h6 {
     0 2px 4px rgba(12,38,80,0.12),
     0 18px 36px -10px rgba(12,38,80,0.48);
 }
+/* DISABLED — the white shine that swept across the button face every few seconds.
+   Commented out rather than deleted so it can be brought back; the border streak,
+   halo, ripple and breathe animations are all untouched. Un-comment both rules
+   below to restore it (the navCtaShineIdle / navCtaShine keyframes are kept). */
+/*
 .nav-cta-pulse::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
-  /* Wider and hotter than a hairline gleam — at nav size a thin streak crossing a
-     white face is simply not perceptible. */
+  --- Wider and hotter than a hairline gleam — at nav size a thin streak crossing a
+      white face is simply not perceptible. ---
   width: 52%;
   height: 100%;
   background: linear-gradient(
@@ -2385,6 +2390,7 @@ h6 {
 .nav-cta-wrap:hover .nav-cta-pulse::before {
   animation: navCtaShine 0.75s cubic-bezier(0.4,0,0.2,1) 1;
 }
+*/
 
 /* Navbar CTA — one blended streak of light sweeps around the pill's border.
    Built as a conic gradient masked down to just the border band, rather than the
@@ -2407,6 +2413,11 @@ h6 {
   initial-value: 180deg;
   inherits: false;
 }
+@property --cta-angle3 {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
 .nav-cta-wrap {
   position: relative;
   /* Pill, to match the software navbar's CTA. The ring, ripple and button all
@@ -2422,11 +2433,11 @@ h6 {
   transform: translateY(-2px) scale(1.025);
   animation-play-state: paused;
 }
-/* Beacon ripple — a copy of the pill's outline that expands outward and fades.
-   The halo below only changes brightness in place; this is the piece that puts
-   actual outward travel on the button, which is what catches the eye from across
-   the page. It sits on the wrap's ::before so it scales independently of the
-   wrap's own breathe/hover transform. */
+/* DISABLED — beacon ripple: a copy of the pill's outline in --cta-glow that
+   expanded outward and faded every 3.2s. This is the white ring that read as a
+   blink around the button. Commented out rather than deleted; un-comment to
+   restore (the navCtaRipple keyframes below are kept). */
+/*
 .nav-cta-wrap::before {
   content: '';
   position: absolute;
@@ -2437,10 +2448,52 @@ h6 {
   pointer-events: none;
   animation: navCtaRipple 3.2s cubic-bezier(0.2,0.6,0.35,1) infinite;
 }
+*/
 @keyframes navCtaRipple {
   0%   { transform: scale(1);    opacity: 0.65; }
   70%  { transform: scale(1.3);  opacity: 0; }
   100% { transform: scale(1.3);  opacity: 0; }
+}
+/* Perimeter sheen — the Chrome "AI Mode" chip effect: one short, bright highlight
+   gliding continuously around the border. It travels rather than blinks, which is
+   why it catches the eye without the on/off pulse the ripple had. Kept narrow
+   (~30deg lit) and fast so it reads as a specular glint sliding along the edge,
+   layered under the wider colour streaks on .nav-cta-ring. Same content-box mask
+   trick as the ring — see the note there — so only the 3.5px band paints. */
+.nav-cta-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 3.5px;
+  pointer-events: none;
+  z-index: 0;
+  /* Comet profile, not a symmetric arc. The sweep rotates clockwise, so the
+     highest-degree stop is the leading edge: a long gradual ramp up (the tail)
+     ending in a short bright plateau cut off sharply (the head). Symmetric arcs
+     have no direction — this one visibly travels, which is the whole effect. */
+  background: conic-gradient(
+    from var(--cta-angle3),
+    transparent 0deg,
+    transparent 8deg,
+    var(--cta-sheen) 46deg,
+    var(--cta-sheen) 54deg,
+    transparent 57deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  filter: drop-shadow(0 0 3px var(--cta-sheen)) drop-shadow(0 0 10px var(--cta-sheen));
+  animation: navCtaSheen 2.4s linear infinite;
+}
+.nav-cta-wrap:hover::before {
+  animation-duration: 1.4s;
+  filter: drop-shadow(0 0 4px var(--cta-sheen)) drop-shadow(0 0 16px var(--cta-sheen));
+}
+@keyframes navCtaSheen {
+  to { --cta-angle3: 360deg; }
 }
 /* Soft halo bleeding past the pill. The ring's own drop-shadows are clipped tight
    to the filament; this is the wide, slow pulse that makes the control glow as an
@@ -2499,11 +2552,15 @@ h6 {
   mask-composite: exclude;
   /* Layered bloom: a tight core halo plus a wide soft one, so the streak reads as
      emitting light rather than as a flat coloured edge. */
+  /* Deliberately dimmer and slower than the white comet above it. This layer is
+     now the ambient colour wash that tints the band; the comet is the accent that
+     draws the eye. Two lights at equal brightness just read as clutter. */
   filter:
     drop-shadow(0 0 2px var(--cta-glow))
-    drop-shadow(0 0 7px var(--cta-glow))
-    drop-shadow(0 0 15px var(--cta-glow));
-  animation: navCtaRingSweep 2.8s linear infinite;
+    drop-shadow(0 0 6px var(--cta-glow))
+    drop-shadow(0 0 12px var(--cta-glow));
+  opacity: 0.75;
+  animation: navCtaRingSweep 3.8s linear infinite;
   transition: filter 0.5s cubic-bezier(0.22,0.61,0.36,1);
 }
 /* Second, counter-rotating streak. One streak on a wide pill leaves long stretches
@@ -2511,7 +2568,11 @@ h6 {
    lap, and the crossing is the moment that actually reads as sparkle. It lives
    inside .nav-cta-ring so the parent's band mask and bloom filter apply to it too —
    --cta-angle2 is its own registered property because --cta-angle is declared
-   `inherits: false` and so never reaches here. */
+   `inherits: false` and so never reaches here.
+   DISABLED — with the white comet on .nav-cta-wrap::before doing the eye-catching
+   work, a third travelling light left the border lit almost everywhere at once,
+   which reads as noise rather than jewellery. Un-comment to bring it back. */
+/*
 .nav-cta-ring::before {
   content: '';
   position: absolute;
@@ -2528,12 +2589,14 @@ h6 {
   );
   animation: navCtaRingSweepBack 4.2s linear infinite;
 }
+*/
 .nav-cta-wrap:hover .nav-cta-ring {
   filter:
     drop-shadow(0 0 3px var(--cta-glow))
     drop-shadow(0 0 11px var(--cta-glow))
     drop-shadow(0 0 24px var(--cta-glow));
-  animation-duration: 1.7s;
+  opacity: 1;
+  animation-duration: 2.4s;
 }
 .nav-cta-wrap:hover .nav-cta-ring::before {
   animation-duration: 2.6s;

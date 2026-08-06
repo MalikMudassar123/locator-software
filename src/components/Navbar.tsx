@@ -340,7 +340,13 @@ export default function Navbar() {
                 '--cta-c2': isPanelOpen ? '#ffb01f' : '#ffc84f',
                 '--cta-c3': isPanelOpen ? '#1360ee' : '#ffffff',
                 '--cta-glow': isPanelOpen ? 'rgba(19,120,255,0.78)' : 'rgba(202,240,255,0.95)',
-                '--cta-track': isPanelOpen ? 'rgba(19,96,238,0.24)' : 'rgba(255,255,255,0.45)',
+                // The gliding perimeter glint. Pure white on the blue hero; over the
+                // white bar a white glint is invisible, so it flips to the brand blue.
+                '--cta-sheen': isPanelOpen ? '#1360ee' : '#ffffff',
+                // Unlit base of the border band. Kept low: at 0.45 the whole ring
+                // already read as white, so the travelling glint had nothing to
+                // stand out against. Dim track + bright comet = visible motion.
+                '--cta-track': isPanelOpen ? 'rgba(19,96,238,0.16)' : 'rgba(255,255,255,0.22)',
               } as React.CSSProperties}
             >
               <span className="nav-cta-ring" aria-hidden="true" />

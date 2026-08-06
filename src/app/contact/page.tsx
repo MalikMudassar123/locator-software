@@ -4,7 +4,6 @@ import ContactHero from '@/components/contact/ContactHero'
 import ContactOffices from '@/components/contact/ContactOffices'
 import ContactChannels from '@/components/contact/ContactChannels'
 import ContactSocial from '@/components/contact/ContactSocial'
-import ContactDemoCTA from '@/components/contact/ContactDemoCTA'
 import ContactForm from '@/components/contact/ContactForm'
 import ContactPresence from '@/components/contact/ContactPresence'
 import Footer from '@/components/layouts/Footer'
@@ -33,7 +32,6 @@ export default function ContactPage() {
       <ContactPresence />
       <ContactChannels />
       <ContactSocial />
-      <ContactDemoCTA />
       <Footer />
     </main>
   )

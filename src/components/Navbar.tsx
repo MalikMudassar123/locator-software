@@ -325,28 +325,36 @@ export default function Navbar() {
               style={{ border: isPanelOpen ? '2px solid #e2e7f0' : '2px solid rgba(255,255,255,0.3)' }}
             />
 
-            {/* Get a Quote — desktop. One blended streak of light sweeps around the pill's
-                border. See .nav-cta-ring in globals.css for why this is a masked conic
-                gradient rather than dashed SVG strokes. */}
+            {/* Get a Quote — desktop. A four-colour "snake" of light travels around the
+                pill's border, the same mechanic as Google's AI Mode chip: a conic
+                gradient rotated via a registered @property angle, masked down to the
+                border band, with a blurred copy underneath for the aura. See
+                .nav-cta-ring / .nav-cta-wrap::before in globals.css. */}
             <div
               className="hidden sm:inline-flex items-center justify-center nav-cta-wrap"
               style={{
-                // The streak has to read against two very different backdrops: the blue hero
-                // (nav transparent) and the white bar (panel open). One fixed palette is
-                // invisible on one of them, so the three colours flip with the bar. The
-                // hero set is lifted straight from the hero gradient itself — cyan #08b2e0
-                // and the sunrise glow #fbeabc — so the streak looks native to the page.
-                '--cta-c1': isPanelOpen ? '#00a6f5' : '#5fe0ff',
-                '--cta-c2': isPanelOpen ? '#ffb01f' : '#ffc84f',
-                '--cta-c3': isPanelOpen ? '#1360ee' : '#ffffff',
-                '--cta-glow': isPanelOpen ? 'rgba(19,120,255,0.78)' : 'rgba(202,240,255,0.95)',
-                // The gliding perimeter glint. Pure white on the blue hero; over the
-                // white bar a white glint is invisible, so it flips to the brand blue.
-                '--cta-sheen': isPanelOpen ? '#1360ee' : '#ffffff',
-                // Unlit base of the border band. Kept low: at 0.45 the whole ring
-                // already read as white, so the travelling glint had nothing to
-                // stand out against. Dim track + bright comet = visible motion.
-                '--cta-track': isPanelOpen ? 'rgba(19,96,238,0.16)' : 'rgba(255,255,255,0.22)',
+                // Four stops, blue → red → yellow → green, running through the snake in
+                // that order. Both sets are fully saturated. Pale tints were the obvious
+                // choice for the blue hero and the wrong one: a light colour on a light
+                // blue backdrop has neither hue nor value contrast, so the whole ring
+                // washed out. The only stop that genuinely needs changing on the hero is
+                // the blue one — blue on blue is invisible — so it swaps to cyan.
+                '--cta-c1': isPanelOpen ? '#2f7bff' : '#25d0ff',
+                '--cta-c2': isPanelOpen ? '#ff3b2f' : '#ff4230',
+                '--cta-c3': isPanelOpen ? '#ffc400' : '#ffd016',
+                '--cta-c4': isPanelOpen ? '#12c25e' : '#12e065',
+                // Specular hot-spots sitting between each pair of colours. This is
+                // the difference between a flat rainbow and a shiny one: a polished
+                // surface throws back white where the light hits square on, and the
+                // colours only show either side of that blow-out.
+                '--cta-shine': isPanelOpen ? 'rgba(255,255,255,0.85)' : '#ffffff',
+                // Bloom colour. Pale cyan at near-full alpha over the hero hazed the
+                // saturated stops back out, which is half of why the ring looked faint.
+                '--cta-glow': isPanelOpen ? 'rgba(19,120,255,0.78)' : 'rgba(120,205,255,0.55)',
+                // Unlit base of the band — what the snake travels over. Dark on the hero:
+                // a white track there is the same value as the backdrop and the button
+                // face, so the lit arc had nothing to separate itself from.
+                '--cta-track': isPanelOpen ? 'rgba(19,96,238,0.16)' : 'rgba(6,32,74,0.34)',
               } as React.CSSProperties}
             >
               <span className="nav-cta-ring" aria-hidden="true" />

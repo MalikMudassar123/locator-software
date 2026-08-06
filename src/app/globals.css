@@ -2413,17 +2413,14 @@ h6 {
   initial-value: 180deg;
   inherits: false;
 }
-@property --cta-angle3 {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
-}
 .nav-cta-wrap {
   position: relative;
   /* Pill, to match the software navbar's CTA. The ring, ripple and button all
      inherit from here, so the streak sweeps the rounded edge cleanly. */
   border-radius: 999px;
-  padding: 3.5px;
+  /* Ring width — .nav-cta-ring sits inset:0 with the same padding and its middle
+     masked out, so the visible filament is exactly this wide. */
+  padding: 3px;
   isolation: isolate;
   background: var(--cta-track);
   transition: transform 0.5s cubic-bezier(0.22,0.61,0.36,1);
@@ -2454,50 +2451,55 @@ h6 {
   70%  { transform: scale(1.3);  opacity: 0; }
   100% { transform: scale(1.3);  opacity: 0; }
 }
-/* Perimeter sheen — the Chrome "AI Mode" chip effect: one short, bright highlight
-   gliding continuously around the border. It travels rather than blinks, which is
-   why it catches the eye without the on/off pulse the ripple had. Kept narrow
-   (~30deg lit) and fast so it reads as a specular glint sliding along the edge,
-   layered under the wider colour streaks on .nav-cta-ring. Same content-box mask
-   trick as the ring — see the note there — so only the 3.5px band paints. */
+/* The aura. Same four-colour snake as the ring below, but full-disc (no band mask)
+   and heavily blurred, sitting behind the opaque button face — so only the soft
+   coloured fringe around the pill shows. This is the half of the AI Mode effect
+   that reads as "glow" rather than "outline"; the crisp filament alone looks like
+   a coloured border, the blurred copy underneath is what makes it feel lit.
+   z-index -1 keeps it above the wrap's own track background but under the button. */
 .nav-cta-wrap::before {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: -1px;
   border-radius: inherit;
-  padding: 3.5px;
   pointer-events: none;
-  z-index: 0;
-  /* Comet profile, not a symmetric arc. The sweep rotates clockwise, so the
-     highest-degree stop is the leading edge: a long gradual ramp up (the tail)
-     ending in a short bright plateau cut off sharply (the head). Symmetric arcs
-     have no direction — this one visibly travels, which is the whole effect. */
+  z-index: -1;
+  /* Same registered property name as the ring. --cta-angle is `inherits: false`,
+     so each element carries its own copy — same keyframes and duration on both
+     means the blur stays locked under the filament instead of drifting. */
+  --cta-angle: 0deg;
   background: conic-gradient(
-    from var(--cta-angle3),
+    from var(--cta-angle),
     transparent 0deg,
-    transparent 8deg,
-    var(--cta-sheen) 46deg,
-    var(--cta-sheen) 54deg,
-    transparent 57deg,
+    var(--cta-c1) 26deg,
+    var(--cta-c2) 76deg,
+    var(--cta-c3) 126deg,
+    var(--cta-c4) 176deg,
+    transparent 210deg,
     transparent 360deg
   );
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  filter: drop-shadow(0 0 3px var(--cta-sheen)) drop-shadow(0 0 10px var(--cta-sheen));
-  animation: navCtaSheen 2.4s linear infinite;
+  /* No white stops in this copy — the aura carries the colour, the filament carries
+     the shine. Saturating it keeps the glow chromatic instead of washing to a pale
+     halo once the blur averages neighbouring hues together. */
+  filter: saturate(1.4) blur(6px);
+  /* Containment for the blur. The reference does this with overflow:hidden on the
+     parent form, which is not available here — the wrap's only other child is the
+     button, and clipping the wrap would swallow the button's own elevation shadow
+     too. clip-path on the aura itself gets the same containment without that cost:
+     clipping is applied after filtering, so it cuts the blurred result, not the
+     source. Matches the wrap's radius so the aura stays inside the pill. */
+  clip-path: inset(0 round 999px);
+  opacity: 0.85;
+  will-change: background;
+  animation: navCtaSnake 3.6s linear infinite;
 }
-.nav-cta-wrap:hover::before {
-  animation-duration: 1.4s;
-  filter: drop-shadow(0 0 4px var(--cta-sheen)) drop-shadow(0 0 16px var(--cta-sheen));
-}
-@keyframes navCtaSheen {
-  to { --cta-angle3: 360deg; }
-}
-/* Soft halo bleeding past the pill. The ring's own drop-shadows are clipped tight
-   to the filament; this is the wide, slow pulse that makes the control glow as an
-   object and separates it from the blue hero behind it. */
+.nav-cta-wrap:hover::before { animation-duration: 2.2s; filter: saturate(1.5) blur(8px); opacity: 1; }
+/* DISABLED — wide flat-white halo pulsing past the pill on its own 3.2s beat.
+   The sharp-plus-blurred pair (.nav-cta-ring + .nav-cta-wrap::before) is the whole
+   depth model now; a third single-colour glow layered over a four-colour snake
+   only desaturates it, and its independent pulse fought the snake's own fade.
+   Un-comment to restore. */
+/*
 .nav-cta-wrap::after {
   content: '';
   position: absolute;
@@ -2514,9 +2516,11 @@ h6 {
   opacity: 0.85;
   animation-play-state: paused;
 }
+*/
+/* Kept for the disabled halo above. */
 @keyframes navCtaHalo {
-  0%, 100% { opacity: 0.36; }
-  50%      { opacity: 0.78; }
+  0%, 100% { opacity: 0.20; }
+  50%      { opacity: 0.40; }
 }
 .nav-cta-ring {
   --cta-angle: 0deg;
@@ -2526,22 +2530,24 @@ h6 {
   /* A fine filament doing the drawing while the bloom does the carrying is what
      reads as jewellery — but below ~3px the streak disappears entirely against a
      bright hero, so this is the floor rather than the ideal. */
-  padding: 3.5px;
+  padding: 3px;
   pointer-events: none;
   z-index: 0;
-  /* Long, gradual ramps in and out of the lit arc — the abrupt transparent→colour
-     stops of a narrow arc give the streak a visible hard leading edge. The arc is
-     wide (≈240deg of the circle) so at least one side of the pill is always lit;
-     a short arc on a wide pill spends most of its cycle behind the corners. */
+  /* The snake: four colours running through a lit arc that covers a bit over half
+     the circumference, the rest transparent. Occupying only part of the circle is
+     what makes it read as one travelling body rather than a static rainbow ring —
+     a full-spectrum ring lights every side at once and stops looking like motion. */
   background: conic-gradient(
     from var(--cta-angle),
     transparent 0deg,
-    var(--cta-c1) 34deg,
-    var(--cta-c2) 76deg,
-    var(--cta-c3) 110deg,
-    var(--cta-c2) 148deg,
-    var(--cta-c1) 196deg,
-    transparent 240deg,
+    var(--cta-c1) 24deg,
+    var(--cta-shine) 50deg,
+    var(--cta-c2) 74deg,
+    var(--cta-shine) 100deg,
+    var(--cta-c3) 124deg,
+    var(--cta-shine) 150deg,
+    var(--cta-c4) 174deg,
+    transparent 210deg,
     transparent 360deg
   );
   /* Punch the middle out so only the padding band paints: two full-size layers,
@@ -2552,15 +2558,17 @@ h6 {
   mask-composite: exclude;
   /* Layered bloom: a tight core halo plus a wide soft one, so the streak reads as
      emitting light rather than as a flat coloured edge. */
-  /* Deliberately dimmer and slower than the white comet above it. This layer is
-     now the ambient colour wash that tints the band; the comet is the accent that
-     draws the eye. Two lights at equal brightness just read as clutter. */
+  /* saturate + brightness are what make it read as polished rather than painted:
+     the specular white stops above blow out to true white and the colours either
+     side of them go gem-bright, so the band looks like light on a curved metal
+     surface. Then a tight bloom only — the wide soft glow is the aura layer's job,
+     and stacking a third heavy drop-shadow here just muddies the four colours. */
   filter:
+    saturate(1.45) brightness(1.12)
     drop-shadow(0 0 2px var(--cta-glow))
-    drop-shadow(0 0 6px var(--cta-glow))
-    drop-shadow(0 0 12px var(--cta-glow));
-  opacity: 0.75;
-  animation: navCtaRingSweep 3.8s linear infinite;
+    drop-shadow(0 0 6px var(--cta-glow));
+  will-change: background;
+  animation: navCtaSnake 3.6s linear infinite;
   transition: filter 0.5s cubic-bezier(0.22,0.61,0.36,1);
 }
 /* Second, counter-rotating streak. One streak on a wide pill leaves long stretches
@@ -2592,14 +2600,23 @@ h6 {
 */
 .nav-cta-wrap:hover .nav-cta-ring {
   filter:
+    saturate(1.6) brightness(1.2)
     drop-shadow(0 0 3px var(--cta-glow))
-    drop-shadow(0 0 11px var(--cta-glow))
-    drop-shadow(0 0 24px var(--cta-glow));
-  opacity: 1;
-  animation-duration: 2.4s;
+    drop-shadow(0 0 11px var(--cta-glow));
+  animation-duration: 2.2s;
 }
 .nav-cta-wrap:hover .nav-cta-ring::before {
   animation-duration: 2.6s;
+}
+/* Fast-in, slow through the middle, fast-out — and it fades at both ends so each
+   lap is a discrete pass of light rather than an endlessly spinning ring. The
+   angle stops are evenly spaced against time; the pacing comes from the per-stop
+   timing functions, which is also what hides the seam where 360deg meets 0deg. */
+@keyframes navCtaSnake {
+  0%   { --cta-angle: 0deg;   opacity: 0; animation-timing-function: cubic-bezier(0.16, 0.84, 0.44, 1); }
+  10%  { --cta-angle: 30deg;  opacity: 1; animation-timing-function: linear; }
+  90%  { --cta-angle: 330deg; opacity: 1; animation-timing-function: cubic-bezier(0.56, 0, 0.84, 0.16); }
+  100% { --cta-angle: 360deg; opacity: 0; }
 }
 @keyframes navCtaRingSweep {
   to { --cta-angle: 360deg; }

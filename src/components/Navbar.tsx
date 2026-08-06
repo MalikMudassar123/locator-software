@@ -56,7 +56,10 @@ export default function Navbar() {
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pathname = usePathname()
   const router = useRouter()
-  const CTA_LINE_HEIGHT = 22
+  // Roll height for the hover text swap. In em (not px) so the two label copies
+  // track the button's fluid font-size and the pill keeps the same height as the
+  // software navbar's CTA, whose line box is the font's normal ~1.2.
+  const CTA_LINE_HEIGHT = '1.2em'
 
   useEffect(() => {
     setMounted(true)
@@ -351,10 +354,11 @@ export default function Navbar() {
                   background: 'linear-gradient(180deg, #ffffff 0%, #f4f8fd 100%)',
                   color: '#0a89dd',
                   border: 'none',
-                  borderRadius: '10.5px',
-                  padding: 'var(--nav-cta-py) var(--nav-cta-px)',
-                  fontSize: 'var(--nav-cta-fs)',
-                  fontWeight: 650,
+                  // Size + shape matched to the software navbar's .swn-cta pill.
+                  borderRadius: '999px',
+                  padding: 'var(--nav-cta-py) max(22px, min(0.66vw + 11.7px, 29px))',
+                  fontSize: 'var(--nav-link)',
+                  fontWeight: 700,
                   fontFamily: 'inherit',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
@@ -372,7 +376,7 @@ export default function Navbar() {
                   aria-hidden="true"
                   style={{
                     display: 'block',
-                    height: `${CTA_LINE_HEIGHT}px`,
+                    height: CTA_LINE_HEIGHT,
                     overflow: 'hidden',
                     position: 'relative',
                   }}
@@ -381,14 +385,14 @@ export default function Navbar() {
                     style={{
                       display: 'block',
                       transition: 'transform 0.55s cubic-bezier(0.65, 0, 0.35, 1)',
-                      transform: ctaHover ? `translateY(-${CTA_LINE_HEIGHT}px)` : 'translateY(0)',
+                      transform: ctaHover ? `translateY(-${CTA_LINE_HEIGHT})` : 'translateY(0)',
                       willChange: 'transform',
                     }}
                   >
-                    <span style={{ display: 'block', height: `${CTA_LINE_HEIGHT}px`, lineHeight: `${CTA_LINE_HEIGHT}px` }}>
+                    <span style={{ display: 'block', height: CTA_LINE_HEIGHT, lineHeight: CTA_LINE_HEIGHT }}>
                       Get a Quote
                     </span>
-                    <span style={{ display: 'block', height: `${CTA_LINE_HEIGHT}px`, lineHeight: `${CTA_LINE_HEIGHT}px` }}>
+                    <span style={{ display: 'block', height: CTA_LINE_HEIGHT, lineHeight: CTA_LINE_HEIGHT }}>
                       Get a Quote
                     </span>
                   </span>

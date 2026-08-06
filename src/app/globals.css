@@ -2409,7 +2409,9 @@ h6 {
 }
 .nav-cta-wrap {
   position: relative;
-  border-radius: 14px;
+  /* Pill, to match the software navbar's CTA. The ring, ripple and button all
+     inherit from here, so the streak sweeps the rounded edge cleanly. */
+  border-radius: 999px;
   padding: 3.5px;
   isolation: isolate;
   background: var(--cta-track);
@@ -2447,7 +2449,7 @@ h6 {
   content: '';
   position: absolute;
   inset: -9px;
-  border-radius: 23px;
+  border-radius: 999px;
   z-index: -1;
   background: radial-gradient(58% 118% at 50% 50%, var(--cta-glow) 0%, transparent 72%);
   filter: blur(9px);

@@ -325,36 +325,70 @@ export default function Navbar() {
               style={{ border: isPanelOpen ? '2px solid #e2e7f0' : '2px solid rgba(255,255,255,0.3)' }}
             />
 
-            {/* Get a Quote — desktop. A four-colour "snake" of light travels around the
-                pill's border, the same mechanic as Google's AI Mode chip: a conic
-                gradient rotated via a registered @property angle, masked down to the
-                border band, with a blurred copy underneath for the aura. See
-                .nav-cta-ring / .nav-cta-wrap::before in globals.css. */}
+            {/* Get a Quote — desktop. A single blade of light travels around the pill's
+                rim: a conic gradient rotated via a registered @property angle, masked
+                down to the border band, with a blurred copy underneath for the halo.
+                See .nav-cta-ring / .nav-cta-wrap::before in globals.css. */}
+            {/* Pointer layer. Owns the tilt, the magnetic pull and the position of the
+                cursor light; the wrap inside owns the looping breathe. They have to be
+                separate elements because a CSS animation on `transform` wins over any
+                declared transform, so tilt and breathe on one element cannot coexist.
+                Vars are written straight onto the node rather than through state — this
+                fires on every mousemove, and a re-render per frame would be absurd. */}
             <div
-              className="hidden sm:inline-flex items-center justify-center nav-cta-wrap"
+              className="hidden sm:inline-flex nav-cta-tilt"
+              onMouseMove={(e) => {
+                const el = e.currentTarget
+                const r = el.getBoundingClientRect()
+                const x = (e.clientX - r.left) / r.width
+                const y = (e.clientY - r.top) / r.height
+                el.style.setProperty('--mx', `${x * 100}%`)
+                el.style.setProperty('--my', `${y * 100}%`)
+                // Rotate away from the cursor on the vertical axis, toward it on the
+                // horizontal — the combination reads as a solid object being looked at
+                // from an angle rather than a card flopping about.
+                el.style.setProperty('--ty', `${(x - 0.5) * 15}deg`)
+                el.style.setProperty('--tx', `${(0.5 - y) * 11}deg`)
+                el.style.setProperty('--pull-x', `${(x - 0.5) * 7}px`)
+                el.style.setProperty('--pull-y', `${(y - 0.5) * 5}px`)
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget
+                el.style.setProperty('--tx', '0deg')
+                el.style.setProperty('--ty', '0deg')
+                el.style.setProperty('--pull-x', '0px')
+                el.style.setProperty('--pull-y', '0px')
+                el.style.setProperty('--mx', '50%')
+                el.style.setProperty('--my', '50%')
+              }}
+            >
+            <div
+              className="inline-flex items-center justify-center nav-cta-wrap"
               style={{
-                // Four stops, blue → red → yellow → green, running through the snake in
-                // that order. Both sets are fully saturated. Pale tints were the obvious
-                // choice for the blue hero and the wrong one: a light colour on a light
-                // blue backdrop has neither hue nor value contrast, so the whole ring
-                // washed out. The only stop that genuinely needs changing on the hero is
-                // the blue one — blue on blue is invisible — so it swaps to cyan.
-                '--cta-c1': isPanelOpen ? '#2f7bff' : '#25d0ff',
-                '--cta-c2': isPanelOpen ? '#ff3b2f' : '#ff4230',
-                '--cta-c3': isPanelOpen ? '#ffc400' : '#ffd016',
-                '--cta-c4': isPanelOpen ? '#12c25e' : '#12e065',
-                // Specular hot-spots sitting between each pair of colours. This is
-                // the difference between a flat rainbow and a shiny one: a polished
-                // surface throws back white where the light hits square on, and the
-                // colours only show either side of that blow-out.
-                '--cta-shine': isPanelOpen ? 'rgba(255,255,255,0.85)' : '#ffffff',
-                // Bloom colour. Pale cyan at near-full alpha over the hero hazed the
-                // saturated stops back out, which is half of why the ring looked faint.
-                '--cta-glow': isPanelOpen ? 'rgba(19,120,255,0.78)' : 'rgba(120,205,255,0.55)',
-                // Unlit base of the band — what the snake travels over. Dark on the hero:
-                // a white track there is the same value as the backdrop and the button
-                // face, so the lit arc had nothing to separate itself from.
-                '--cta-track': isPanelOpen ? 'rgba(19,96,238,0.16)' : 'rgba(6,32,74,0.34)',
+                // One tone, not a spectrum. Multi-hue gradients are the thing that dates
+                // a control fastest; a single blade of light travelling a fine rim is the
+                // current premium read, and it costs the brand nothing because the only
+                // colour on the hero is the light itself. --cta-light is the head of the
+                // blade, --cta-dim the tail it fades out through.
+                //
+                // Over the blue hero the light is pure white — maximum value contrast
+                // against the backdrop without introducing a second hue. Over the white
+                // bar white would be invisible, so it becomes the brand blue.
+                '--cta-light': isPanelOpen ? '#1360ee' : '#ffffff',
+                '--cta-dim': isPanelOpen ? 'rgba(19,96,238,0.28)' : 'rgba(255,255,255,0.32)',
+                // Bloom around the filament, same hue as the light so the glow reads as
+                // the light spilling rather than as a separate coloured shadow.
+                '--cta-glow': isPanelOpen ? 'rgba(19,120,255,0.7)' : 'rgba(255,255,255,0.92)',
+                // The unlit rim. Glass, not metal: a low-alpha tone of the backdrop's own
+                // colour, so between passes the pill reads as a quiet frosted edge instead
+                // of an outline drawn round it. All the drama comes from the light moving
+                // over it, which is what keeps the resting state calm and the motion loud.
+                '--cta-track': isPanelOpen ? 'rgba(15,23,42,0.10)' : 'rgba(255,255,255,0.30)',
+                // Glass shaping on that rim — a lit top edge and a containing hairline.
+                // Cheap to add and it is what stops the resting state looking like a
+                // plain translucent band between passes of the light.
+                '--cta-edge': isPanelOpen ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.75)',
+                '--cta-hairline': isPanelOpen ? 'rgba(15,23,42,0.10)' : 'rgba(255,255,255,0.22)',
               } as React.CSSProperties}
             >
               <span className="nav-cta-ring" aria-hidden="true" />
@@ -415,6 +449,24 @@ export default function Navbar() {
                   Get a Quote
                 </span>
               </button>
+
+              {/* Sparks. Two four-point glints that pop on the flare beat, the second
+                  offset so they fire in sequence rather than together — a single
+                  synchronised pair reads as decoration, a staggered one reads as an
+                  event happening. Drawn as SVG rather than CSS shapes because a true
+                  concave star needs curves, and a gradient-built one always reads as
+                  a plus sign. */}
+              <span className="nav-cta-spark nav-cta-spark--a" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0c.6 6.6 4.8 10.8 12 12-7.2 1.2-11.4 5.4-12 12-.6-6.6-4.8-10.8-12-12C7.2 10.8 11.4 6.6 12 0Z" />
+                </svg>
+              </span>
+              <span className="nav-cta-spark nav-cta-spark--b" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0c.6 6.6 4.8 10.8 12 12-7.2 1.2-11.4 5.4-12 12-.6-6.6-4.8-10.8-12-12C7.2 10.8 11.4 6.6 12 0Z" />
+                </svg>
+              </span>
+            </div>
             </div>
 
             {/* Hamburger — visible below lg */}

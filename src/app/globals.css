@@ -2334,11 +2334,13 @@ h6 {
   28%  { transform: translateX(260%)  skewX(-20deg); opacity: 0; }
   100% { transform: translateX(260%)  skewX(-20deg); opacity: 0; }
 }
-/* The face breathes on the same 3.2s beat as the halo and the ripple. Scale only,
-   never margin or padding, so nothing around it in the nav reflows. */
+/* The pill breathes on the same 2.4s beat as the blade and the flare — one pulse
+   with several expressions reads as far more deliberate than three effects each
+   doing their own thing. Peaks just as the flare fires. Scale only, never margin
+   or padding, so nothing around it in the nav reflows. */
 @keyframes navCtaBreathe {
   0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.028); }
+  62%      { transform: scale(1.05); }
 }
 .nav-cta-pulse {
   position: relative;
@@ -2352,6 +2354,55 @@ h6 {
     0 6px 16px -6px rgba(12,38,80,0.30);
   transition: box-shadow 0.5s cubic-bezier(0.22,0.61,0.36,1);
 }
+/* Face sheen, hover only. A gloss wiping across the white surface as the cursor
+   lands — the payoff that makes the control feel like a physical object rather
+   than a lit outline. Idle it is invisible and unanimated: an automatic sweep on
+   a loop is what read as a blink before, so this only fires on intent. */
+.nav-cta-pulse::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(
+    118deg,
+    transparent 0%,
+    rgba(255,255,255,0) 14%,
+    rgba(222,242,255,0.9) 40%,
+    rgba(255,255,255,1) 50%,
+    rgba(222,242,255,0.9) 60%,
+    rgba(255,255,255,0) 86%,
+    transparent 100%
+  );
+  transform: translateX(-160%) skewX(-20deg);
+  opacity: 0;
+  pointer-events: none;
+}
+.nav-cta-wrap:hover .nav-cta-pulse::before {
+  opacity: 1;
+  animation: navCtaShine 0.72s cubic-bezier(0.4,0,0.2,1) 1;
+}
+/* Cursor light on the face. --mx/--my are set on .nav-cta-tilt and inherit all the
+   way down to this pseudo-element, which is the whole reason custom properties are
+   worth using here rather than positioning a real element per frame. Tinted with
+   the label's own blue so the white face looks lit through glass rather than
+   greyed. */
+.nav-cta-pulse::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle 90px at var(--mx) var(--my),
+    rgba(19,96,238,0.22) 0%,
+    rgba(19,96,238,0.10) 38%,
+    transparent 68%
+  );
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+.nav-cta-tilt:hover .nav-cta-pulse::after { opacity: 1; }
 .nav-cta-wrap:hover .nav-cta-pulse {
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,1),
@@ -2413,22 +2464,65 @@ h6 {
   initial-value: 180deg;
   inherits: false;
 }
+/* Pointer layer — tilt, magnetic pull, and the origin of the cursor light. The
+   defaults here matter: every var the JS writes is declared with a resting value so
+   the control is correct before the pointer has ever touched it, and so the return
+   animates instead of snapping. perspective() is a transform function on this same
+   element rather than a `perspective` property on an ancestor, because the ancestor
+   is a flex row of unrelated nav items that must not become a 3D context. */
+.nav-cta-tilt {
+  --mx: 50%;
+  --my: 50%;
+  --tx: 0deg;
+  --ty: 0deg;
+  --pull-x: 0px;
+  --pull-y: 0px;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  transform:
+    perspective(640px)
+    rotateX(var(--tx))
+    rotateY(var(--ty))
+    translate3d(var(--pull-x), var(--pull-y), 0);
+  /* Slow enough to feel weighted, fast enough not to lag the cursor. */
+  transition: transform 0.4s cubic-bezier(0.22,0.61,0.36,1), scale 0.15s ease;
+}
+/* `scale` as its own property, not a transform function — the transform above is
+   rebuilt on every mousemove, so a scale baked into it would be clobbered. */
+.nav-cta-tilt:active { scale: 0.96; }
+
 .nav-cta-wrap {
   position: relative;
   /* Pill, to match the software navbar's CTA. The ring, ripple and button all
      inherit from here, so the streak sweeps the rounded edge cleanly. */
   border-radius: 999px;
   /* Ring width — .nav-cta-ring sits inset:0 with the same padding and its middle
-     masked out, so the visible filament is exactly this wide. */
-  padding: 3px;
+     masked out, so the visible filament is exactly this wide. Fine rather than
+     fat: a hairline rim is the modern read, and pure white at full strength has
+     the contrast to survive at this width where four muted hues did not. */
+  padding: 2.5px;
   isolation: isolate;
   background: var(--cta-track);
-  transition: transform 0.5s cubic-bezier(0.22,0.61,0.36,1);
-  animation: navCtaBreathe 3.2s ease-in-out infinite;
+  /* Glass depth on the unlit rim: a lit top edge, a shaded bottom one, and a
+     hairline containing the whole thing. Without these the rim is a flat band of
+     translucency and the control only looks designed while the blade is passing;
+     with them it holds up in the dark half of the cycle too. */
+  box-shadow:
+    inset 0 1px 0 var(--cta-edge),
+    inset 0 -1px 0 rgba(10,30,70,0.12),
+    0 0 0 1px var(--cta-hairline);
+  transition: transform 0.5s cubic-bezier(0.22,0.61,0.36,1), box-shadow 0.5s cubic-bezier(0.22,0.61,0.36,1);
+  animation: navCtaBreathe 2.4s cubic-bezier(0.2,0.7,0.3,1) infinite;
 }
 .nav-cta-wrap:hover {
   transform: translateY(-2px) scale(1.025);
   animation-play-state: paused;
+  /* Rim brightens and the hairline thickens into a visible ring on approach. */
+  box-shadow:
+    inset 0 1px 0 var(--cta-edge),
+    inset 0 -1px 0 rgba(10,30,70,0.12),
+    0 0 0 1.5px var(--cta-glow);
 }
 /* DISABLED — beacon ripple: a copy of the pill's outline in --cta-glow that
    expanded outward and faded every 3.2s. This is the white ring that read as a
@@ -2451,16 +2545,17 @@ h6 {
   70%  { transform: scale(1.3);  opacity: 0; }
   100% { transform: scale(1.3);  opacity: 0; }
 }
-/* The aura. Same four-colour snake as the ring below, but full-disc (no band mask)
-   and heavily blurred, sitting behind the opaque button face — so only the soft
-   coloured fringe around the pill shows. This is the half of the AI Mode effect
-   that reads as "glow" rather than "outline"; the crisp filament alone looks like
-   a coloured border, the blurred copy underneath is what makes it feel lit.
-   z-index -1 keeps it above the wrap's own track background but under the button. */
+/* The aura — the same single blade of light as the filament below, but full-disc
+   (no band mask) and heavily blurred, sitting behind the opaque button face so only
+   the soft fringe around the pill shows. The crisp filament alone looks like a drawn
+   border; the blurred copy under it is what makes the pill read as genuinely lit.
+   Deliberately not clipped: the outward bleed is the halo, and on a flat backdrop
+   that halo is the strongest attention cue available.
+   z-index -1 keeps it above the wrap's own rim background but under the button. */
 .nav-cta-wrap::before {
   content: '';
   position: absolute;
-  inset: -1px;
+  inset: -5px;
   border-radius: inherit;
   pointer-events: none;
   z-index: -1;
@@ -2471,29 +2566,69 @@ h6 {
   background: conic-gradient(
     from var(--cta-angle),
     transparent 0deg,
-    var(--cta-c1) 26deg,
-    var(--cta-c2) 76deg,
-    var(--cta-c3) 126deg,
-    var(--cta-c4) 176deg,
-    transparent 210deg,
+    var(--cta-dim) 70deg,
+    var(--cta-light) 104deg,
+    var(--cta-light) 112deg,
+    transparent 120deg,
     transparent 360deg
   );
-  /* No white stops in this copy — the aura carries the colour, the filament carries
-     the shine. Saturating it keeps the glow chromatic instead of washing to a pale
-     halo once the blur averages neighbouring hues together. */
-  filter: saturate(1.4) blur(6px);
-  /* Containment for the blur. The reference does this with overflow:hidden on the
-     parent form, which is not available here — the wrap's only other child is the
-     button, and clipping the wrap would swallow the button's own elevation shadow
-     too. clip-path on the aura itself gets the same containment without that cost:
-     clipping is applied after filtering, so it cuts the blurred result, not the
-     source. Matches the wrap's radius so the aura stays inside the pill. */
-  clip-path: inset(0 round 999px);
-  opacity: 0.85;
-  will-change: background;
-  animation: navCtaSnake 3.6s linear infinite;
+  filter: blur(14px);
+  will-change: background, transform;
+  animation: navCtaSnakeAura 2.4s linear infinite;
 }
-.nav-cta-wrap:hover::before { animation-duration: 2.2s; filter: saturate(1.5) blur(8px); opacity: 1; }
+/* The halo runs the blade's own sweep, plus a scale punch on the flare beat. Glow
+   that only brightens stays the same size and the eye adapts to it; glow that
+   physically expands is movement, and movement is what peripheral vision is built
+   to catch. Transform on the pseudo-element, so it is independent of the wrap's
+   own breathe rather than fighting it. */
+@keyframes navCtaSnakeAura {
+  0%   { --cta-angle: 0deg;   opacity: 0;    transform: scale(1); animation-timing-function: cubic-bezier(0.16, 0.84, 0.44, 1); }
+  10%  { --cta-angle: 30deg;  opacity: 0.85; animation-timing-function: linear; }
+  52%  { transform: scale(1); }
+  62%  { opacity: 1;    transform: scale(1.18); }
+  78%  { opacity: 0.85; transform: scale(1); }
+  90%  { --cta-angle: 330deg; opacity: 0.85; animation-timing-function: cubic-bezier(0.56, 0, 0.84, 0.16); }
+  100% { --cta-angle: 360deg; opacity: 0;    transform: scale(1); }
+}
+.nav-cta-wrap:hover::before { animation-duration: 1.55s; filter: blur(17px); }
+
+/* Second blade. Thinner, dimmer and on a longer, deliberately non-harmonic cycle
+   (3.7s against the primary's 2.4s) so the two drift in and out of phase instead
+   of locking into a pattern — the moment they cross is the bit that reads as
+   sparkle, and it lands at a different place on the rim every lap. It lives on the
+   wrap rather than inside .nav-cta-ring because the ring's own opacity fade would
+   otherwise multiply through and blink both blades out together. */
+.nav-cta-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2.5px;
+  pointer-events: none;
+  --cta-angle2: 180deg;
+  background: conic-gradient(
+    from var(--cta-angle2),
+    transparent 0deg,
+    var(--cta-dim) 34deg,
+    var(--cta-light) 58deg,
+    transparent 65deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  filter: drop-shadow(0 0 4px var(--cta-glow));
+  will-change: background;
+  animation: navCtaSnakeB 3.7s linear infinite;
+}
+.nav-cta-wrap:hover::after { animation-duration: 2.1s; }
+@keyframes navCtaSnakeB {
+  0%   { --cta-angle2: 180deg; opacity: 0; animation-timing-function: cubic-bezier(0.16, 0.84, 0.44, 1); }
+  12%  { --cta-angle2: 218deg; opacity: 0.62; animation-timing-function: linear; }
+  88%  { --cta-angle2: 502deg; opacity: 0.62; animation-timing-function: cubic-bezier(0.56, 0, 0.84, 0.16); }
+  100% { --cta-angle2: 540deg; opacity: 0; }
+}
 /* DISABLED — wide flat-white halo pulsing past the pill on its own 3.2s beat.
    The sharp-plus-blurred pair (.nav-cta-ring + .nav-cta-wrap::before) is the whole
    depth model now; a third single-colour glow layered over a four-colour snake
@@ -2528,26 +2663,24 @@ h6 {
   inset: 0;
   border-radius: inherit;
   /* A fine filament doing the drawing while the bloom does the carrying is what
-     reads as jewellery — but below ~3px the streak disappears entirely against a
-     bright hero, so this is the floor rather than the ideal. */
-  padding: 3px;
+     reads as jewellery. Must match the wrap's padding exactly, or the rim shows
+     through as a sliver beside the lit band. */
+  padding: 2.5px;
   pointer-events: none;
   z-index: 0;
-  /* The snake: four colours running through a lit arc that covers a bit over half
-     the circumference, the rest transparent. Occupying only part of the circle is
-     what makes it read as one travelling body rather than a static rainbow ring —
-     a full-spectrum ring lights every side at once and stops looking like motion. */
+  /* One blade of light, not a spectrum. A long dim tail ramping into a short bright
+     plateau that is cut off hard — the sweep rotates clockwise, so the highest-degree
+     stop is the leading edge, which puts the hard edge at the front and the fade
+     behind it. That asymmetry is what makes it read as something travelling. It
+     covers ~1/3 of the circumference; more than that and both ends are lit at once,
+     which stops looking like motion and starts looking like a border. */
   background: conic-gradient(
     from var(--cta-angle),
     transparent 0deg,
-    var(--cta-c1) 24deg,
-    var(--cta-shine) 50deg,
-    var(--cta-c2) 74deg,
-    var(--cta-shine) 100deg,
-    var(--cta-c3) 124deg,
-    var(--cta-shine) 150deg,
-    var(--cta-c4) 174deg,
-    transparent 210deg,
+    var(--cta-dim) 70deg,
+    var(--cta-light) 104deg,
+    var(--cta-light) 112deg,
+    transparent 120deg,
     transparent 360deg
   );
   /* Punch the middle out so only the padding band paints: two full-size layers,
@@ -2558,55 +2691,50 @@ h6 {
   mask-composite: exclude;
   /* Layered bloom: a tight core halo plus a wide soft one, so the streak reads as
      emitting light rather than as a flat coloured edge. */
-  /* saturate + brightness are what make it read as polished rather than painted:
-     the specular white stops above blow out to true white and the colours either
-     side of them go gem-bright, so the band looks like light on a curved metal
-     surface. Then a tight bloom only — the wide soft glow is the aura layer's job,
-     and stacking a third heavy drop-shadow here just muddies the four colours. */
+  /* Tight bloom only — the wide soft glow is the aura layer's job. No saturate or
+     brightness now that the light is a single tone: those existed to stop four
+     competing hues going muddy, and on one colour they only clip it. */
   filter:
-    saturate(1.45) brightness(1.12)
-    drop-shadow(0 0 2px var(--cta-glow))
-    drop-shadow(0 0 6px var(--cta-glow));
+    drop-shadow(0 0 3px var(--cta-glow))
+    drop-shadow(0 0 10px var(--cta-glow))
+    drop-shadow(0 0 20px var(--cta-glow));
   will-change: background;
-  animation: navCtaSnake 3.6s linear infinite;
+  animation: navCtaSnake 2.4s linear infinite;
   transition: filter 0.5s cubic-bezier(0.22,0.61,0.36,1);
 }
-/* Second, counter-rotating streak. One streak on a wide pill leaves long stretches
-   of dead border; a second arc running the other way means the two cross twice per
-   lap, and the crossing is the moment that actually reads as sparkle. It lives
-   inside .nav-cta-ring so the parent's band mask and bloom filter apply to it too —
-   --cta-angle2 is its own registered property because --cta-angle is declared
-   `inherits: false` and so never reaches here.
-   DISABLED — with the white comet on .nav-cta-wrap::before doing the eye-catching
-   work, a third travelling light left the border lit almost everywhere at once,
-   which reads as noise rather than jewellery. Un-comment to bring it back. */
-/*
+/* The flare. Once per lap the entire rim ignites for a beat, then falls away. This
+   is the piece that makes the control assert itself rather than politely shimmer:
+   a travelling highlight is only ever lit on one side, so peripheral vision can
+   miss it, while a whole-rim ignition registers even when nobody is looking at it.
+   It lives inside .nav-cta-ring on purpose — the parent's band mask crops it to the
+   rim and the parent's bloom filter throws it outward, and the parent's own opacity
+   fade gates it, so the flare can never fire during the dead moment between laps. */
 .nav-cta-ring::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: conic-gradient(
-    from var(--cta-angle2),
-    transparent 0deg,
-    var(--cta-c3) 30deg,
-    var(--cta-c1) 72deg,
-    var(--cta-c3) 114deg,
-    transparent 150deg,
-    transparent 360deg
-  );
-  animation: navCtaRingSweepBack 4.2s linear infinite;
+  background: var(--cta-light);
+  opacity: 0;
+  animation: navCtaFlare 2.4s cubic-bezier(0.2,0.7,0.3,1) infinite;
 }
-*/
+@keyframes navCtaFlare {
+  0%, 52% { opacity: 0; }
+  /* Sharp attack, slow decay — the shape of an actual flash. Ramping up as slowly
+     as it falls off just looks like a fade. */
+  62%     { opacity: 0.9; }
+  100%    { opacity: 0; }
+}
 .nav-cta-wrap:hover .nav-cta-ring {
   filter:
-    saturate(1.6) brightness(1.2)
-    drop-shadow(0 0 3px var(--cta-glow))
-    drop-shadow(0 0 11px var(--cta-glow));
-  animation-duration: 2.2s;
+    drop-shadow(0 0 4px var(--cta-glow))
+    drop-shadow(0 0 14px var(--cta-glow))
+    drop-shadow(0 0 28px var(--cta-glow));
+  animation-duration: 1.55s;
 }
+.nav-cta-wrap:hover .nav-cta-ring::before { animation-duration: 1.55s; }
 .nav-cta-wrap:hover .nav-cta-ring::before {
-  animation-duration: 2.6s;
+  animation-duration: 2.1s;
 }
 /* Fast-in, slow through the middle, fast-out — and it fades at both ends so each
    lap is a discrete pass of light rather than an endlessly spinning ring. The
@@ -2628,15 +2756,49 @@ h6 {
   position: relative;
   z-index: 1;
 }
+
+/* Sparks. Sat above the button (z-index 2) and outside the rim, so they read as
+   light thrown off the pill rather than as an icon printed on it. Scale-and-spin
+   in, then shrink away — a glint that fades at constant size looks like a lamp
+   dimming; one that contracts looks like it flashed. */
+.nav-cta-spark {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  color: var(--cta-light);
+  opacity: 0;
+  filter: drop-shadow(0 0 5px var(--cta-glow));
+  animation: navCtaSpark 2.4s cubic-bezier(0.2,0.7,0.3,1) infinite;
+}
+.nav-cta-spark svg { display: block; width: 100%; height: 100%; }
+.nav-cta-spark--a { top: -7px; right: 13%; width: 13px; height: 13px; }
+/* Half a beat behind, smaller, on the opposite corner. */
+.nav-cta-spark--b { bottom: -6px; left: 17%; width: 9px; height: 9px; animation-delay: 0.34s; }
+.nav-cta-tilt:hover .nav-cta-spark { animation-duration: 1.55s; }
+@keyframes navCtaSpark {
+  0%, 46%  { opacity: 0; transform: scale(0) rotate(-60deg); }
+  62%      { opacity: 1; transform: scale(1) rotate(0deg); }
+  84%, 100% { opacity: 0; transform: scale(0.45) rotate(35deg); }
+}
 @media (prefers-reduced-motion: reduce) {
   .nav-cta-ring,
   .nav-cta-ring::before,
   .nav-cta-wrap,
   .nav-cta-wrap::before,
   .nav-cta-wrap::after,
-  .nav-cta-pulse::before { animation: none; }
   .nav-cta-pulse::before,
-  .nav-cta-wrap::before { opacity: 0; }
+  .nav-cta-spark,
+  .nav-cta-ring::before { animation: none; }
+  /* The tilt is pointer-driven rather than looping, but a control that pitches in
+     3D is exactly the kind of motion this query exists to stop. */
+  .nav-cta-tilt { transform: none; transition: none; }
+  .nav-cta-spark { display: none; }
+  /* Both blades and the halo would otherwise freeze mid-lap as a lit arc stuck to
+     one side of the pill. The glass rim alone is the reduced-motion resting state. */
+  .nav-cta-pulse::before,
+  .nav-cta-wrap::before,
+  .nav-cta-wrap::after,
+  .nav-cta-ring { opacity: 0; }
 }
 
 /* ══════════════════════════════════════════════════════

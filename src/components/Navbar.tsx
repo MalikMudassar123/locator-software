@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -12,6 +12,10 @@ import { SOFTWARE_MODULES } from '@/components/software/modules-data'
 import { INDUSTRY_NAV_ITEMS } from '@/components/industries/industries-nav'
 
 const QUOTE_HREF = '/get-a-quote'
+
+// useLayoutEffect warns when it runs during server rendering, where there is no
+// layout to read. Same hook on the client, a no-op-safe useEffect on the server.
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -67,7 +71,6 @@ export default function Navbar() {
     setMounted(true)
   }, [])
 
-  useEffect(() => { if (activeMenu) setRenderMenu(activeMenu) }, [activeMenu])
   useEffect(() => { setActiveMenu(null); setOpen(false) }, [pathname])
 
   // Measured height of the shutter's contents, published to CSS as --mega-h.
@@ -82,7 +85,11 @@ export default function Navbar() {
   // ResizeObserver rather than a one-shot measure — it catches the grid dropping
   // from four columns to three at a breakpoint, and fonts loading in late, both of
   // which change the height after the initial read.
-  useEffect(() => {
+  //
+  // useLayoutEffect, not useEffect: this has to measure and commit the new height
+  // before the browser paints. With useEffect the panel gets painted once at the
+  // stale height first, which is a visible hitch on the opening frame.
+  useIsomorphicLayoutEffect(() => {
     const el = megaInnerRef.current
     if (!el) return
     const ro = new ResizeObserver(() => setMegaH(el.offsetHeight))
@@ -93,6 +100,17 @@ export default function Navbar() {
 
   const openMega = (href: string) => {
     if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null }
+    // Both in the same handler, so React batches them into ONE render and the
+    // content mounts in the same commit that adds .open.
+    //
+    // This is what was making the bar turn white a visible beat before the drawer
+    // moved. renderMenu used to be set by an effect watching activeMenu, so the
+    // first render after hover had .open applied but no content mounted — nothing
+    // to measure, so --mega-h was still 0 and the panel opened to nothing. Only
+    // after the effect ran, and the measure effect after that, did the height
+    // become real. Three round-trips of render → paint → effect before the drawer
+    // could start, while the navbar's own colour transition had begun immediately.
+    setRenderMenu(href)
     setActiveMenu(href)
   }
   const scheduleClose = () => {
@@ -123,6 +141,24 @@ export default function Navbar() {
       <style>{`
         .hn-chev { transition: transform .3s cubic-bezier(.22,.61,.36,1); flex-shrink: 0; }
 
+        /* ── The bar flip ───────────────────────────────────────────────────────
+           Everything that changes when the shutter opens — background, shadow,
+           logo, link colour, the flag's ring — runs on this one duration and curve
+           so the bar reads as a single object changing state.
+           It was glitchy because the pieces disagreed: the links carried Tailwind's
+           transition-all, which is 150ms, while the background and logo were on
+           300ms. The text finished flipping while the bar behind it was still half
+           blue. transition-all was also animating properties that should never
+           animate here, font-weight among them.
+           240ms is the whole budget now: fast enough to feel immediate, long enough
+           that nothing snaps. */
+        .hn-link {
+          transition: color .24s cubic-bezier(.4,0,.2,1),
+                      opacity .24s cubic-bezier(.4,0,.2,1),
+                      border-color .24s cubic-bezier(.4,0,.2,1);
+        }
+        .hn-flag { transition: border-color .24s cubic-bezier(.4,0,.2,1); }
+
         /* ── Mobile drawer sizing ─────────────────────────────────────────────
            100vh on mobile is the viewport WITH the URL bar retracted, so on first
            paint the drawer is taller than what is actually visible and the bottom
@@ -143,9 +179,12 @@ export default function Navbar() {
           position: fixed; inset: 80px 0 0 0; z-index: 1000;
           background: rgba(6,20,60,0.22);
           opacity: 0; pointer-events: none;
-          transition: opacity .32s ease;
+          /* Leaves faster than it arrives, and faster than the panel — a dim that
+             lingers after the drawer has gone is the thing that makes a close feel
+             sticky. */
+          transition: opacity .18s ease;
         }
-        .hn-backdrop.open { opacity: 1; pointer-events: auto; }
+        .hn-backdrop.open { opacity: 1; pointer-events: auto; transition: opacity .3s ease; }
 
         .hn-mega {
           position: fixed; top: 80px; left: 0; right: 0; z-index: 1001;
@@ -269,7 +308,13 @@ export default function Navbar() {
           paddingRight: 'clamp(20px, 4vw, var(--nav-pad))',
           background: isPanelOpen ? '#ffffff' : 'transparent',
           boxShadow: isPanelOpen ? '0 1px 0 rgba(15,23,42,0.08)' : 'none',
-          transition: 'background .3s ease, box-shadow .3s ease',
+          // Opening: no delay, the bar changes with the drawer. Closing: hold the
+          // white for 110ms first. The panel takes ~320ms to retract, and without
+          // the hold the bar snaps back to transparent while a white panel is still
+          // visible underneath it — a blue bar floating on white for a few frames.
+          transition: isPanelOpen
+            ? 'background .24s cubic-bezier(.4,0,.2,1), box-shadow .24s cubic-bezier(.4,0,.2,1)'
+            : 'background .24s cubic-bezier(.4,0,.2,1) .11s, box-shadow .24s cubic-bezier(.4,0,.2,1) .11s',
         }}
         onMouseLeave={scheduleClose}
       >
@@ -290,7 +335,7 @@ export default function Navbar() {
               alt=""
               fill
               sizes="120px"
-              style={{ objectFit: 'contain', objectPosition: 'left center', opacity: isPanelOpen ? 0 : 1, transition: 'opacity .3s ease' }}
+              style={{ objectFit: 'contain', objectPosition: 'left center', opacity: isPanelOpen ? 0 : 1, transition: 'opacity .24s cubic-bezier(.4,0,.2,1)' }}
               priority
             />
             <Image
@@ -298,7 +343,7 @@ export default function Navbar() {
               alt=""
               fill
               sizes="120px"
-              style={{ objectFit: 'contain', objectPosition: 'left center', opacity: isPanelOpen ? 1 : 0, transition: 'opacity .3s ease' }}
+              style={{ objectFit: 'contain', objectPosition: 'left center', opacity: isPanelOpen ? 1 : 0, transition: 'opacity .24s cubic-bezier(.4,0,.2,1)' }}
             />
           </Link>
 
@@ -317,7 +362,7 @@ export default function Navbar() {
                       aria-expanded={isCurrent}
                       onMouseEnter={() => openMega(l.href)}
                       onClick={() => setActiveMenu(null)}
-                      className="text-sm transition-all whitespace-nowrap"
+                      className="hn-link text-sm whitespace-nowrap"
                       style={{
                         color: navTextColor,
                         fontWeight: isActive ? 800 : 600,
@@ -341,7 +386,7 @@ export default function Navbar() {
                       aria-expanded={isCurrent}
                       onMouseEnter={() => openMega(l.href)}
                       onClick={() => (isCurrent ? setActiveMenu(null) : openMega(l.href))}
-                      className="text-sm transition-all whitespace-nowrap"
+                      className="hn-link text-sm whitespace-nowrap"
                       style={{
                         color: navTextColor,
                         fontWeight: isActive ? 800 : 600,
@@ -371,7 +416,7 @@ export default function Navbar() {
                     <Link
                       href={l.href}
                       onMouseEnter={() => setActiveMenu(null)}
-                      className="text-sm transition-all whitespace-nowrap"
+                      className="hn-link text-sm whitespace-nowrap"
                       style={{
                         color: navTextColor,
                         fontWeight: isActive ? 800 : 600,
@@ -448,21 +493,36 @@ export default function Navbar() {
                 // Over the blue hero the light is pure white — maximum value contrast
                 // against the backdrop without introducing a second hue. Over the white
                 // bar white would be invisible, so it becomes the brand blue.
-                '--cta-light': isPanelOpen ? '#1360ee' : '#ffffff',
-                '--cta-dim': isPanelOpen ? 'rgba(19,96,238,0.28)' : 'rgba(255,255,255,0.32)',
+                // Light on a dark backdrop reads as luminous at almost any strength;
+                // the same effect on white has no darkness to glow into, so every value
+                // below is softer on the light bar. A full-strength blue blade there
+                // stops looking lit and starts looking like a thick drawn outline.
+                '--cta-light': isPanelOpen ? '#3b82f6' : '#ffffff',
+                '--cta-dim': isPanelOpen ? 'rgba(59,130,246,0.20)' : 'rgba(255,255,255,0.32)',
                 // Bloom around the filament, same hue as the light so the glow reads as
                 // the light spilling rather than as a separate coloured shadow.
-                '--cta-glow': isPanelOpen ? 'rgba(19,120,255,0.7)' : 'rgba(255,255,255,0.92)',
+                '--cta-glow': isPanelOpen ? 'rgba(59,130,246,0.34)' : 'rgba(255,255,255,0.92)',
+                // Halo colours, split from the filament's. Blurring a saturated blue over
+                // white leaves a grey-blue smudge the size of the blur radius; these keep
+                // the halo as a hint while the filament stays crisp. Undefined on the
+                // hero, where the CSS falls back to the values above.
+                ...(isPanelOpen ? {
+                  '--cta-aura-light': 'rgba(59,130,246,0.40)',
+                  '--cta-aura-dim': 'rgba(59,130,246,0.10)',
+                  '--cta-flare-peak': '0.5',
+                } : {}),
                 // The unlit rim. Glass, not metal: a low-alpha tone of the backdrop's own
                 // colour, so between passes the pill reads as a quiet frosted edge instead
                 // of an outline drawn round it. All the drama comes from the light moving
                 // over it, which is what keeps the resting state calm and the motion loud.
-                '--cta-track': isPanelOpen ? 'rgba(15,23,42,0.10)' : 'rgba(255,255,255,0.30)',
+                // Blue-tinted rather than slate on the light bar — a neutral grey rim next
+                // to a blue label just looks dirty.
+                '--cta-track': isPanelOpen ? 'rgba(59,130,246,0.13)' : 'rgba(255,255,255,0.30)',
                 // Glass shaping on that rim — a lit top edge and a containing hairline.
                 // Cheap to add and it is what stops the resting state looking like a
                 // plain translucent band between passes of the light.
-                '--cta-edge': isPanelOpen ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.75)',
-                '--cta-hairline': isPanelOpen ? 'rgba(15,23,42,0.10)' : 'rgba(255,255,255,0.22)',
+                '--cta-edge': isPanelOpen ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.75)',
+                '--cta-hairline': isPanelOpen ? 'rgba(59,130,246,0.20)' : 'rgba(255,255,255,0.22)',
               } as React.CSSProperties}
             >
               <span className="nav-cta-ring" aria-hidden="true" />

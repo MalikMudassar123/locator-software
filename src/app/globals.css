@@ -2464,6 +2464,21 @@ h6 {
   initial-value: 180deg;
   inherits: false;
 }
+/* Registering the palette as <color> is what makes it *animatable*. An unregistered
+   custom property has no type, so the browser can only swap it — which is why the
+   button's whole palette used to pop the instant the bar flipped while the bar
+   itself faded over it. Registered, these interpolate, and the transition on
+   .nav-cta-wrap below carries them across on the bar's own 240ms.
+   --cta-aura-light/--cta-aura-dim/--cta-flare-peak are deliberately NOT registered:
+   they are only set on the light bar and read through var() fallbacks on the hero,
+   and a registered property always has its initial value, so the fallback would
+   never apply. */
+@property --cta-light    { syntax: '<color>'; initial-value: #ffffff;                 inherits: true; }
+@property --cta-dim      { syntax: '<color>'; initial-value: rgba(255,255,255,0.32);  inherits: true; }
+@property --cta-glow     { syntax: '<color>'; initial-value: rgba(255,255,255,0.92);  inherits: true; }
+@property --cta-track    { syntax: '<color>'; initial-value: rgba(255,255,255,0.30);  inherits: true; }
+@property --cta-edge     { syntax: '<color>'; initial-value: rgba(255,255,255,0.75);  inherits: true; }
+@property --cta-hairline { syntax: '<color>'; initial-value: rgba(255,255,255,0.22);  inherits: true; }
 /* Pointer layer — tilt, magnetic pull, and the origin of the cursor light. The
    defaults here matter: every var the JS writes is declared with a resting value so
    the control is correct before the pointer has ever touched it, and so the return
@@ -2512,7 +2527,18 @@ h6 {
     inset 0 1px 0 var(--cta-edge),
     inset 0 -1px 0 rgba(10,30,70,0.12),
     0 0 0 1px var(--cta-hairline);
-  transition: transform 0.5s cubic-bezier(0.22,0.61,0.36,1), box-shadow 0.5s cubic-bezier(0.22,0.61,0.36,1);
+  /* The palette vars ride the bar's own 240ms so the button changes state with the
+     navbar rather than after it. transform/box-shadow keep their slower hover
+     timing — those are pointer feedback, not part of the bar flip. */
+  transition:
+    transform 0.5s cubic-bezier(0.22,0.61,0.36,1),
+    box-shadow 0.5s cubic-bezier(0.22,0.61,0.36,1),
+    --cta-light 0.24s cubic-bezier(0.4,0,0.2,1),
+    --cta-dim 0.24s cubic-bezier(0.4,0,0.2,1),
+    --cta-glow 0.24s cubic-bezier(0.4,0,0.2,1),
+    --cta-track 0.24s cubic-bezier(0.4,0,0.2,1),
+    --cta-edge 0.24s cubic-bezier(0.4,0,0.2,1),
+    --cta-hairline 0.24s cubic-bezier(0.4,0,0.2,1);
   animation: navCtaBreathe 2.4s cubic-bezier(0.2,0.7,0.3,1) infinite;
 }
 .nav-cta-wrap:hover {
@@ -2563,12 +2589,16 @@ h6 {
      so each element carries its own copy — same keyframes and duration on both
      means the blur stays locked under the filament instead of drifting. */
   --cta-angle: 0deg;
+  /* Falls back to the filament's own colours, but can be overridden independently.
+     A blurred copy of a saturated tone spreads a smudge the size of the blur radius,
+     which is invisible against a dark backdrop and very obvious against a light one —
+     so the light bar dials these down without touching the crisp filament. */
   background: conic-gradient(
     from var(--cta-angle),
     transparent 0deg,
-    var(--cta-dim) 70deg,
-    var(--cta-light) 104deg,
-    var(--cta-light) 112deg,
+    var(--cta-aura-dim, var(--cta-dim)) 70deg,
+    var(--cta-aura-light, var(--cta-light)) 104deg,
+    var(--cta-aura-light, var(--cta-light)) 112deg,
     transparent 120deg,
     transparent 360deg
   );
@@ -2722,7 +2752,10 @@ h6 {
   0%, 52% { opacity: 0; }
   /* Sharp attack, slow decay — the shape of an actual flash. Ramping up as slowly
      as it falls off just looks like a fade. */
-  62%     { opacity: 0.9; }
+  /* Peak is a variable: a full-rim ignition in white on blue is a highlight, the
+     same thing in saturated blue on white is a hard ring. Resolved per element, so
+     the light bar can soften it without a second set of keyframes. */
+  62%     { opacity: var(--cta-flare-peak, 0.9); }
   100%    { opacity: 0; }
 }
 .nav-cta-wrap:hover .nav-cta-ring {

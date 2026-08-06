@@ -10,6 +10,7 @@ import { ABOUT_PAGES } from '@/components/about/data'
 import { SERVICE_PAGES } from '@/components/service/data'
 import { SOFTWARE_MODULES } from '@/components/software/modules-data'
 import { INDUSTRY_NAV_ITEMS } from '@/components/industries/industries-nav'
+import WavingHands from '@/components/common/WavingHands'
 
 const QUOTE_HREF = '/get-a-quote'
 
@@ -525,6 +526,13 @@ export default function Navbar() {
                 '--cta-hairline': isPanelOpen ? 'rgba(59,130,246,0.20)' : 'rgba(255,255,255,0.22)',
               } as React.CSSProperties}
             >
+              {/* Two hands reaching out from behind the pill and waving. Mounted
+                  before the ring so the lit filament sweeps over them, and inside
+                  the wrap so they inherit the breathe and the hover lift — hands
+                  that move with the button is what stops them looking pasted on.
+                  Decorative and pointer-events:none throughout: the button's own
+                  hit area and label are untouched. See .cta-hand in globals.css. */}
+              <WavingHands />
               <span className="nav-cta-ring" aria-hidden="true" />
               <button
                 className="nav-cta-pulse"
@@ -554,6 +562,13 @@ export default function Navbar() {
                 onMouseLeave={() => setCtaHover(false)}
                 onClick={() => router.push(QUOTE_HREF)}
               >
+                {/* Idle sheen. A real element rather than a third pseudo — the
+                    button's ::before is the hover wipe and its ::after is the
+                    cursor light, both already spoken for. Sits on z-index -1 so
+                    it passes under the label, and the button's own overflow:hidden
+                    is what keeps it inside the pill's radius. Purely decorative;
+                    see .nav-cta-shine in globals.css. */}
+                <span className="nav-cta-shine" aria-hidden="true" />
                 <span
                   aria-hidden="true"
                   style={{

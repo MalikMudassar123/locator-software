@@ -2403,6 +2403,63 @@ h6 {
   transition: opacity 0.28s ease;
 }
 .nav-cta-tilt:hover .nav-cta-pulse::after { opacity: 1; }
+
+/* Idle sheen — a reflection drifting across the face every few seconds.
+   The face is already white, so this cannot work by brightening: there is no
+   headroom left on a white surface, which is why the previous white-on-white
+   sweep read as a blink rather than as light. It works by COLOUR instead —
+   a soft wash of the hero's own cyan and blue crossing the face, as if the pill
+   were picking up the gradient behind it, with one thin white gleam through the
+   middle for the specular hit. Every tint below is under 0.14 alpha; the gleam
+   is the only thing near opaque, and it is a few percent of the band's width.
+   Diagonal (100deg gradient, -18deg skew) rather than straight down: a vertical
+   band crossing a pill reads as a wiper, an angled one reads as a reflection. */
+.nav-cta-shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* Wide enough that the ramps are gradual at nav size — a narrow band has to be
+     bright to be seen at all, which is the opposite of what this is for. */
+  width: 46%;
+  height: 100%;
+  pointer-events: none;
+  /* Under the label. The button sets z-index 1 on itself, so it is a stacking
+     context and this resolves against its own background rather than punching
+     through to the navbar. */
+  z-index: -1;
+  opacity: 0;
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(8, 178, 224, 0.10) 22%,
+    rgba(19, 96, 238, 0.13) 42%,
+    rgba(255, 255, 255, 0.85) 51%,
+    rgba(10, 132, 227, 0.12) 60%,
+    rgba(151, 222, 241, 0.10) 80%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  /* Two animations on one period rather than one with more keyframes: the fade
+     needs hold points partway through, and putting those on a shared timeline
+     would chop the sweep into three separately-eased segments and make a smooth
+     glide stutter. Split across two properties, each interpolates once, cleanly. */
+  animation:
+    navCtaSheenSweep var(--cta-sheen-dur) cubic-bezier(0.45, 0, 0.25, 1) infinite,
+    navCtaSheenFade var(--cta-sheen-dur) ease-in-out infinite;
+}
+/* 5.5s: the sweep occupies the last 42% of it, so ~2.3s of travel against ~3.2s
+   of stillness. Slow travel is most of what separates "premium reflection" from
+   "loading shimmer" — the instinct is to make it quick, and quick reads cheap. */
+.nav-cta-shine { --cta-sheen-dur: 5.5s; }
+@keyframes navCtaSheenSweep {
+  0%, 58% { transform: translateX(-170%) skewX(-18deg); }
+  100%    { transform: translateX(430%) skewX(-18deg); }
+}
+@keyframes navCtaSheenFade {
+  0%, 58% { opacity: 0; }
+  67%     { opacity: 1; }
+  85%     { opacity: 1; }
+  100%    { opacity: 0; }
+}
 .nav-cta-wrap:hover .nav-cta-pulse {
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,1),
@@ -2820,8 +2877,10 @@ h6 {
   .nav-cta-wrap::before,
   .nav-cta-wrap::after,
   .nav-cta-pulse::before,
+  .nav-cta-shine,
   .nav-cta-spark,
   .nav-cta-ring::before { animation: none; }
+  /* Base opacity is 0, so killing the animation is enough to leave no trace. */
   /* The tilt is pointer-driven rather than looping, but a control that pitches in
      3D is exactly the kind of motion this query exists to stop. */
   .nav-cta-tilt { transform: none; transition: none; }
@@ -2832,6 +2891,200 @@ h6 {
   .nav-cta-wrap::before,
   .nav-cta-wrap::after,
   .nav-cta-ring { opacity: 0; }
+}
+
+/* ══════════════════════════════════════════════════════
+   WAVING HANDS — reusable CTA ornament
+   Markup: <WavingHands /> (src/components/common/WavingHands.tsx),
+   dropped inside any position:relative + isolation:isolate CTA.
+   ══════════════════════════════════════════════════════ */
+
+/* Placement is described by four numbers rather than a pile of magic offsets,
+   which is what lets the same rule serve a CTA of any size:
+     --cta-hand-h      overall hand height; everything else derives from it
+     --cta-hand-inset  how far in from the pill's edge the WRIST sits
+     --cta-hand-drop   how far above the pill's centre line the wrist sits
+     --cta-hand-lean   the static outward tilt
+   The wrist — 50%/84% of the box, where the cuff meets the palm — is the anchor
+   for all of it: it is the rotation origin, and the point `inset` and `drop`
+   measure to. Together they park it on the pill's top corner, tucked far enough
+   inside the rounded cap that the sleeve is hidden by the opaque face, while the
+   palm and fingers rise clear of the silhouette into open space above. The hand
+   then reads as gripping the corner from behind — which also keeps it out of two
+   places it must never go: the label, and the flag sitting 12px to the left.
+   Both offsets scale with the hand, so the whole arrangement holds its
+   proportions across the clamp instead of drifting at one end. */
+.cta-hand {
+  /* The whole arrangement below is solving one constraint: the navbar leaves
+     only ~18px of clear space above the pill (64px bar until md, 80px after,
+     against a ~43px pill). A hand standing straight up needs about 27px of that
+     to show its palm, so it ends up with everything but the fingertips buried
+     behind the face — which is what reads as a row of prongs rather than a hand,
+     and what hides the thumb entirely.
+     The fix is the 45° lean: it splits the hand's reach between vertical and
+     horizontal, so it needs only ~19px of headroom and spends the rest going
+     outward into open space. Everything else here is sized around that. */
+  /* Both ends of the clamp are budgeted against the bar, not picked for looks:
+     at the inward end of the wave the hand stands closest to upright and reaches
+     highest, and 40px is the largest that still leaves the fingertips inside the
+     80px bar there. 32px is the same sum against the 64px bar. */
+  --cta-hand-h: clamp(32px, 3vw, 40px);
+  --cta-hand-w: calc(var(--cta-hand-h) * 48 / 64);
+  /* Shallow — the wrist sits barely inside the pill's cap. Enough to swallow the
+     cuff, little enough that the thumb, which hangs low on the hand, still clears
+     the cap's curve instead of disappearing behind it. */
+  --cta-hand-inset: calc(var(--cta-hand-h) * 0.24);
+  /* Wrist a few px under the pill's top edge. The single most sensitive number
+     here: only the cuff and the very base of the palm may hide behind the face.
+     Sink it further and the palm goes behind the pill too. */
+  --cta-hand-drop: calc(var(--cta-hand-h) * -0.40);
+  /* Diagonal, not upright — see the note above. It is also what turns the thumb
+     out toward open space, which is the difference between a hand and a fork. */
+  --cta-hand-lean: 45deg;
+  /* Which way "out" is. Flipped on the right hand so one set of keyframes
+     drives both and the pair waves symmetrically. */
+  --wave-dir: 1;
+  --cta-hand-wave-dur: 2.6s;
+  --cta-hand-bob-dur: 3.7s;
+  /* Fingers flex on their own period, deliberately non-harmonic with the wrist's
+     — the offset between the two is what stops the hand swinging as one rigid
+     paddle, which is most of what makes this kind of animation look cheap. */
+  --cta-hand-flex-dur: 1.9s;
+  /* The fills are the hero's own white-to-pale-blue blend and live in the SVG as
+     gradients (they have to — a gradient cannot come from a custom property).
+     Only the outline is themeable from here. It is the hero's mid blue rather
+     than a dark line: heavy enough to hold the silhouette against both the blue
+     hero and the white panel bar, light enough that the hand still reads as part
+     of the same wash rather than as a sticker laid over it. Literal fallback, so
+     an unresolved property can never drop through to SVG's default black. */
+  --cta-hand-line: #0d73e3;
+
+  position: absolute;
+  /* Level with .nav-cta-ring rather than below everything on a negative layer:
+     at z-index 0 the hands paint above the wrap's rim background and above its
+     blurred aura (which is on -1), while the button face (z-index 1) still
+     covers the wrist. Ordering against the ring is then pure DOM order, which is
+     why <WavingHands /> is mounted before it — the lit filament sweeps over the
+     hand instead of under it. */
+  z-index: 0;
+  width: var(--cta-hand-w);
+  height: var(--cta-hand-h);
+  top: calc(50% + var(--cta-hand-drop) - var(--cta-hand-h) * 0.84);
+  transform-origin: 50% 84%;
+  pointer-events: none;
+  /* Lifts the pale hand off the hero without darkening it. Tinted to the hero's
+     own deep blue rather than neutral grey — a grey shadow under a blue-white
+     gradient is the one thing that would make it read as pasted on. */
+  filter: drop-shadow(0 2px 5px rgba(11, 58, 140, 0.3));
+  will-change: transform;
+  /* Two loops on two independent properties. `rotate` and `translate` are
+     separate animatable properties from `transform`, so the static lean below
+     survives underneath both without needing a wrapper element to carry it —
+     and all three still compose into one composited matrix, so this costs no
+     layout and no paint. */
+  animation:
+    ctaHandWave var(--cta-hand-wave-dur) cubic-bezier(0.42, 0, 0.58, 1) infinite,
+    ctaHandBob var(--cta-hand-bob-dur) ease-in-out infinite;
+}
+.cta-hand svg { display: block; width: 100%; height: 100%; overflow: visible; }
+/* Fingers flexing about the knuckle line. transform-box: view-box so the origin
+   is expressed in the same 48×64 coordinates as the artwork — the default
+   (border-box on a nested <g>) would put it somewhere meaningless. Two degrees
+   is the whole range: it should never be legible as its own animation, only as
+   the hand not being made of wood. */
+.cta-hand__fingers {
+  transform-box: view-box;
+  transform-origin: 26px 38px;
+  animation: ctaHandFlex var(--cta-hand-flex-dur) cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+/* Pass 1 of the outline trick: the shapes stroked AND filled in the line colour,
+   so they union into one solid silhouette a stroke-width larger than the hand.
+   The gradient pass in the markup then covers the interior, leaving that overhang
+   as the rim. Two passes rather than `paint-order: stroke fill`, which is
+   per-element and so still lays each shape's stroke over its neighbour's fill.
+   Only the stroke colour is themeable — the fills are gradients, which cannot
+   come from a custom property, so they live in the SVG's own <defs>. */
+.cta-hand__outline {
+  fill: var(--cta-hand-line, #0d73e3);
+  stroke: var(--cta-hand-line, #0d73e3);
+  /* Fine, and load-bearing: the finger gaps are 3.4 units, so this is the widest
+     stroke that still leaves ~1.6 units of gap after the outline pass grows each
+     finger by half a stroke on both sides. Go heavier and the four fingers fuse
+     into one paddle. It also has to stay heavy enough to keep the pale gradient
+     from dissolving into the white panel bar — 1.8 is the whole window. */
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+/* The cuff has nothing to seam against, so one stroked shape is enough. */
+.cta-hand__cuff {
+  stroke: var(--cta-hand-line, #0d73e3);
+  stroke-width: 1.8;
+}
+
+.cta-hand--left {
+  left: calc(var(--cta-hand-inset) - var(--cta-hand-w) * 0.5);
+  transform: rotate(calc(-1 * var(--cta-hand-lean)));
+}
+/* Mismatched periods rather than a delay: a delay only offsets a lockstep pair,
+   whereas non-harmonic periods make the two hands drift in and out of phase
+   forever — they are never quite in the same relationship twice, which is what
+   stops the pair reading as one mechanism. Three periods, all mutually
+   non-harmonic, so the drift never resolves. */
+.cta-hand--right {
+  --wave-dir: -1;
+  --cta-hand-wave-dur: 2.9s;
+  --cta-hand-bob-dur: 4.3s;
+  --cta-hand-flex-dur: 2.3s;
+  right: calc(var(--cta-hand-inset) - var(--cta-hand-w) * 0.5);
+  transform: rotate(var(--cta-hand-lean));
+}
+/* Mirrored on the <svg>, not the container — the container's own transform is
+   already spoken for by the lean, and a scaleX there would also invert the
+   direction of the animated rotate. */
+.cta-hand--right svg { transform: scaleX(-1); }
+
+/* Two firm waves that damp into a sway, rather than a sine loop at constant
+   amplitude. A wave that never stops waving is a metronome; one that swings
+   hard, tails off and settles into a small drift is a person — and the tail is
+   what keeps the button alive between beats without ever getting loud.
+   Ease-in-out on every segment gives each reversal a pendulum's deceleration,
+   which is what keeps it off the "robotic" side. Last keyframe matches the
+   first, so the loop has no seam. */
+@keyframes ctaHandWave {
+  0%   { rotate: calc(var(--wave-dir) * -2deg); }
+  8%   { rotate: calc(var(--wave-dir) * -13deg); }
+  20%  { rotate: calc(var(--wave-dir) * 10deg); }
+  32%  { rotate: calc(var(--wave-dir) * -12deg); }
+  44%  { rotate: calc(var(--wave-dir) * 8deg); }
+  56%  { rotate: calc(var(--wave-dir) * -8deg); }
+  68%  { rotate: calc(var(--wave-dir) * 4deg); }
+  84%  { rotate: calc(var(--wave-dir) * -4.5deg); }
+  100% { rotate: calc(var(--wave-dir) * -2deg); }
+}
+/* ~2.6px of total travel on its own period, so the rise and fall never lands on
+   the same beat as the wave. Any more and it stops being breath and starts
+   being a bounce. */
+@keyframes ctaHandBob {
+  0%, 100% { translate: 0 1.3px; }
+  50%      { translate: 0 -1.3px; }
+}
+
+/* The fingers, spreading and closing a couple of degrees about the knuckle line
+   on a period that shares no factor with the wrist's. That mismatch is the whole
+   point: the tips lead the wrist on some swings and trail it on others, which is
+   what a real hand does and what a single rigid rotation never will. Two degrees
+   is the entire range — it should never be legible as its own animation, only as
+   the hand not being made of wood. */
+@keyframes ctaHandFlex {
+  0%, 100% { rotate: -2deg; }
+  50%      { rotate: 2deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Kept, not hidden: a still pair of hands resting on the pill's corners is a
+     fine piece of decoration, and it is the motion this query objects to. */
+  .cta-hand,
+  .cta-hand__fingers { animation: none; }
 }
 
 /* ══════════════════════════════════════════════════════

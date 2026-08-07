@@ -115,7 +115,7 @@ export default function Footer() {
             column of dead space next to the map. */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'clamp(190px,19%,250px) 1fr 1.1fr 0.8fr clamp(300px,28%,380px)',
+          gridTemplateColumns: 'clamp(190px,19%,250px) 0.82fr 2.05fr 0.82fr clamp(300px,28%,380px)',
           gap: 'clamp(20px,2.5vw,36px)',
           alignItems: 'start',
         }}
@@ -165,7 +165,7 @@ export default function Footer() {
           <FooterCol title="Company" links={companyLinks} />
 
           {/* ── Services ── */}
-          <FooterCol title="Services" links={serviceLinks} />
+          <FooterCol title="Services" links={serviceLinks} split />
 
           {/* ── Support ── */}
           <FooterCol title="Support" links={supportLinks} />
@@ -282,6 +282,14 @@ export default function Footer() {
 
       {/* Interaction & responsive styles */}
       <style>{`
+        /* Services flows into two balanced sub-columns. Only while the footer is
+           actually five-across — below 1100px the columns restack and each cell
+           is far too narrow to hold two lists of these labels. */
+        .footer-col-split { columns: 2; column-gap: clamp(14px,1.8vw,28px); }
+        @media (max-width: 1100px) {
+          .footer-col-split { columns: 1; }
+        }
+
         @media (max-width: 1100px) {
           .footer-main-grid {
             grid-template-columns: 1fr 1fr 1fr !important;
@@ -515,13 +523,31 @@ function ColHeading({ children }: { children: React.ReactNode }) {
   )
 }
 
-function FooterCol({ title, links }: { title: string; links: { href: string; label: string }[] }) {
+/**
+ * `split` flows the list into two balanced sub-columns via CSS multi-column.
+ * Services carries 13 links against Company's 5 and Support's 2, so as a single
+ * stack it ran roughly three times the height of its neighbours and dragged the
+ * whole footer down with it. Multi-column is the right tool here rather than
+ * slicing the array in two: the browser balances the halves itself, so adding or
+ * removing a service never leaves one side stranded.
+ *
+ * `break-inside: avoid` keeps a link from being torn across the column boundary,
+ * and the gap moves to margin-bottom because multi-column ignores flex gap.
+ */
+function FooterCol({ title, links, split = false }: { title: string; links: { href: string; label: string }[]; split?: boolean }) {
   return (
     <div>
       <ColHeading>{title}</ColHeading>
-      <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <ul
+        className={split ? 'footer-col-split' : undefined}
+        style={
+          split
+            ? { listStyle: 'none', margin: 0, padding: 0 }
+            : { listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '10px' }
+        }
+      >
         {links.map(l => (
-          <li key={l.href}>
+          <li key={l.href} style={split ? { breakInside: 'avoid', marginBottom: '10px' } : undefined}>
             <Link href={l.href} className="footer-link">
               <span className="footer-link-dot" />
               <span className="footer-link-text">{l.label}</span>

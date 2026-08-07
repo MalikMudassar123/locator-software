@@ -13,11 +13,15 @@ const companyLinks = [
 ]
 
 const serviceLinks = [
+  { href: '/service/car-tracker', label: 'Car Tracker' },
+  { href: '/service/car-gps-tracker', label: 'Car GPS Tracker' },
   { href: '/service/fleet-telematics', label: 'Fleet Telematics' },
   { href: '/service/video-telematics', label: 'Video Telematics' },
   { href: '/service/smart-iot', label: 'Smart IoT & Asset Intelligence' },
   { href: '/service/task-manager', label: 'Task Manager' },
   { href: '/service/tracking-devices', label: 'Tracking Devices & Accessories' },
+  { href: '/service/gps-tracker', label: 'GPS Tracker' },
+  { href: '/service/gps-tracking-system', label: 'GPS Tracking System' },
   { href: '/securepath', label: 'Securepath' },
   { href: '/asateel-certified-obu', label: 'Asateel Certified OBU' },
 ]

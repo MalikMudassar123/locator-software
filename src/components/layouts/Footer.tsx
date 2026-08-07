@@ -13,6 +13,8 @@ const companyLinks = [
 ]
 
 const serviceLinks = [
+  { href: '/service/vehicle-tracking-system', label: 'Vehicle Tracking System' },
+  { href: '/service/car-tracking-system', label: 'Car Tracking System' },
   { href: '/service/fleet-telematics', label: 'Fleet Telematics' },
   { href: '/service/video-telematics', label: 'Video Telematics' },
   { href: '/service/smart-iot', label: 'Smart IoT & Asset Intelligence' },

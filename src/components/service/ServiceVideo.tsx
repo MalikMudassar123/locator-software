@@ -4,7 +4,23 @@ import { useState } from 'react'
 
 const YOUTUBE_ID = 'hwqB52vVUig' // "LOCATOR - Effective Vehicle Tracking System." — LOCATOR Media
 
-export default function ServiceVideo() {
+/**
+ * The same film runs on every service page; only the framing copy differs. The
+ * three strings are therefore props with the fleet-telematics wording as the
+ * default, so existing call sites keep working untouched and a new page supplies
+ * only what it actually wants to change.
+ */
+type ServiceVideoProps = {
+  eyebrow?: string
+  title?: string
+  lead?: string
+}
+
+export default function ServiceVideo({
+  eyebrow = 'See it in action',
+  title = 'Watch LOCATOR fleet telematics at work',
+  lead = 'A quick look at how real-time tracking, reporting, and alerts keep UAE fleets running smarter.',
+}: ServiceVideoProps = {}) {
   const [playing, setPlaying] = useState(false)
 
   return (
@@ -13,13 +29,13 @@ export default function ServiceVideo() {
         <div data-reveal style={{ textAlign: 'center', maxWidth: '620px', margin: '0 auto clamp(32px,4vw,44px)' }}>
           <span style={{ fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
             <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
-            See it in action
+            {eyebrow}
           </span>
           <h2 style={{ margin: 0, fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
-            Watch LOCATOR fleet telematics at work
+            {title}
           </h2>
           <p style={{ margin: '16px auto 0', fontSize: 'max(clamp(14px,1.35vw,16px), min(1.111vw, 23.2px))', color: '#6e6e73', lineHeight: 1.6 }}>
-            A quick look at how real-time tracking, reporting, and alerts keep UAE fleets running smarter.
+            {lead}
           </p>
         </div>
 

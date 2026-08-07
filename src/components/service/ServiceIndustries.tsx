@@ -194,7 +194,7 @@ function FleetMapCard({ count }: { count: number }) {
         {(['#ff5f57', '#febc2e', '#28c840'] as const).map(c => (
           <span key={c} style={{ width: '9px', height: '9px', borderRadius: '50%', background: c, display: 'inline-block' }} />
         ))}
-        <span style={{ fontSize: '11px', color: '#6e6e73', marginLeft: '8px', fontWeight: 600 }}>
+        <span style={{ fontSize: 'var(--f-11)', color: '#6e6e73', marginLeft: '8px', fontWeight: 600 }}>
           Live Fleet Map &mdash; {count} vehicles tracked
         </span>
       </div>
@@ -241,14 +241,14 @@ function FleetMapCard({ count }: { count: number }) {
           background: '#fff', borderRadius: '11px',
           padding: '9px 13px',
           boxShadow: '0 4px 22px rgba(0,0,0,.14)',
-          fontSize: '10.5px', minWidth: '140px',
+          fontSize: 'var(--f-10-5)', minWidth: '140px',
           transform: 'translateX(6%)', zIndex: 10,
           borderLeft: `3px solid ${BLUE}`,
         }}>
           <div style={{ fontWeight: 700, color: '#1d1d1f', marginBottom: '3px' }}>VAN-204</div>
           <div style={{ color: '#6e6e73', marginBottom: '2px' }}>62 km/h · Moving</div>
           <div style={{ color: '#6e6e73', marginBottom: '5px' }}>Jebel Ali, Dubai</div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#1fbf5b', fontWeight: 700, fontSize: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#1fbf5b', fontWeight: 700, fontSize: 'var(--f-10)' }}>
             <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#1fbf5b', display: 'inline-block' }} />
             Live · GPS Active
           </div>
@@ -268,8 +268,8 @@ function FleetMapCard({ count }: { count: number }) {
           { l: 'Uptime',  v: '99.9%',        c: BLUE      },
         ].map((s, i) => (
           <div key={i} style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '15px', fontWeight: 800, color: s.c }}>{s.v}</div>
-            <div style={{ fontSize: '9.5px', color: '#6e6e73', fontWeight: 600, marginTop: '2px' }}>{s.l}</div>
+            <div style={{ fontSize: 'var(--f-15)', fontWeight: 800, color: s.c }}>{s.v}</div>
+            <div style={{ fontSize: 'var(--f-9-5)', color: '#6e6e73', fontWeight: 600, marginTop: '2px' }}>{s.l}</div>
           </div>
         ))}
       </div>
@@ -390,7 +390,7 @@ export default function ServiceIndustries() {
           bottom: clamp(18px, 3vh, 30px);
           display: inline-flex; align-items: center; gap: 8px;
           padding: 9px 16px; border-radius: 999px;
-          font-family: inherit; font-size: 12.5px; font-weight: 700;
+          font-family: inherit; font-size: var(--f-12-5); font-weight: 700;
           color: #52525e; cursor: pointer;
           background: rgba(255,255,255,.82);
           border: 1px solid rgba(15,23,42,.1);
@@ -434,7 +434,7 @@ export default function ServiceIndustries() {
         .ind-stagger > *:nth-child(6) { animation-delay: .27s; }
 
         .ind-vehicle-tag {
-          font-size: 12.5px; font-weight: 600; color: #3a3a3c;
+          font-size: var(--f-12-5); font-weight: 600; color: #3a3a3c;
           background: rgba(255,255,255,.8);
           border: 1px solid rgba(0,0,0,.1);
           padding: 6px 14px; border-radius: 999px;
@@ -499,7 +499,7 @@ export default function ServiceIndustries() {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <span style={{
-                fontSize: '10.5px', fontWeight: 700, letterSpacing: '.1em',
+                fontSize: 'var(--f-10-5)', fontWeight: 700, letterSpacing: '.1em',
                 color: BLUE, textTransform: 'uppercase',
               }}>
                 Industries
@@ -517,11 +517,11 @@ export default function ServiceIndustries() {
             </div>
 
             <div style={{
-              fontSize: '13px', fontWeight: 700,
+              fontSize: 'var(--f-13)', fontWeight: 700,
               color: '#a1a1a6', letterSpacing: '.04em',
               fontVariantNumeric: 'tabular-nums',
             }}>
-              <span style={{ color: BLUE, fontSize: '15px' }}>{ind.num}</span>
+              <span style={{ color: BLUE, fontSize: 'var(--f-15)' }}>{ind.num}</span>
               <span style={{ margin: '0 4px' }}>/</span>
               {String(N).padStart(2, '0')}
             </div>
@@ -564,7 +564,7 @@ export default function ServiceIndustries() {
               >
                 <div style={{
                   display: 'inline-flex', alignItems: 'center', gap: '10px',
-                  fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em',
+                  fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em',
                   color: BLUE, textTransform: 'uppercase', marginBottom: '16px',
                 }}>
                   <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: BLUE, borderRadius: '2px' }} /></span>
@@ -573,7 +573,7 @@ export default function ServiceIndustries() {
 
                 <h2 style={{
                   margin: '0 0 18px',
-                  fontSize: 'clamp(21px,2.5vw,28px)',
+                  fontSize: 'max(clamp(21px,2.5vw,28px), min(1.944vw, 40.6px))',
                   fontWeight: 800, lineHeight: 1.18,
                   letterSpacing: '-.015em', color: '#1d1d1f',
                 }}>
@@ -586,7 +586,7 @@ export default function ServiceIndustries() {
 
                 <p style={{
                   margin: '0 0 26px',
-                  fontSize: 'clamp(13.5px,1.3vw,15.5px)',
+                  fontSize: 'max(clamp(13.5px,1.3vw,15.5px), min(1.076vw, 22.47px))',
                   lineHeight: 1.72, color: '#52525e', maxWidth: '48ch',
                 }}>
                   {ind.desc}
@@ -595,7 +595,7 @@ export default function ServiceIndustries() {
                 <div>
                   <p style={{
                     margin: '0 0 10px',
-                    fontSize: '10px', fontWeight: 700,
+                    fontSize: 'var(--f-10)', fontWeight: 700,
                     letterSpacing: '.09em', color: '#1d1d1f', textTransform: 'uppercase',
                   }}>
                     Tracked assets

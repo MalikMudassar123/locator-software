@@ -28,16 +28,16 @@ export default function SmartIotFAQ() {
         .sifq-item { background: #fff; border: 1px solid #e8e8eb; border-left: 2.5px solid transparent; border-radius: 12px; overflow: hidden; transition: border-color .2s ${EASE}, box-shadow .2s ${EASE}, background .2s ${EASE}; }
         .sifq-item.on { border-color: #cdd9ff; border-left-color: #1360ee; background: #fafbff; box-shadow: 0 2px 20px rgba(19,96,238,.08); }
         .sifq-trig { width: 100%; background: none; border: none; display: flex; align-items: flex-start; gap: 14px; padding: 17px 18px; cursor: pointer; font-family: inherit; text-align: left; }
-        .sifq-num { font-size: 10px; font-weight: 700; font-family: ui-monospace, 'Cascadia Code', monospace; color: #c4c4d0; padding-top: 3px; flex-shrink: 0; width: 18px; letter-spacing: .02em; transition: color .18s ${EASE}; }
+        .sifq-num { font-size: var(--f-10); font-weight: 700; font-family: ui-monospace, 'Cascadia Code', monospace; color: #c4c4d0; padding-top: 3px; flex-shrink: 0; width: 18px; letter-spacing: .02em; transition: color .18s ${EASE}; }
         .sifq-item.on .sifq-num { color: #1360ee; }
-        .sifq-qtext { flex: 1; font-size: 14px; font-weight: 700; line-height: 1.45; letter-spacing: -.01em; color: #1d1d1f; transition: color .18s ${EASE}; }
+        .sifq-qtext { flex: 1; font-size: var(--f-14); font-weight: 700; line-height: 1.45; letter-spacing: -.01em; color: #1d1d1f; transition: color .18s ${EASE}; }
         .sifq-item.on .sifq-qtext { color: #1360ee; }
         .sifq-icon { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; background: #f2f2f5; color: #a0a0b0; margin-top: 1px; transition: background .22s ${EASE}, color .22s ${EASE}, transform .48s cubic-bezier(.34,1.3,.64,1); }
         .sifq-item.on .sifq-icon { background: #dde7ff; color: #1360ee; transform: rotate(180deg); }
         .sifq-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .44s ${EASE}; }
         .sifq-item.on .sifq-body { grid-template-rows: 1fr; }
         .sifq-inner { overflow: hidden; min-height: 0; }
-        .sifq-ans { margin: 0; padding: 0 18px 20px 50px; font-size: 13.5px; line-height: 1.72; color: #6e6e73; opacity: 0; transform: translateY(-7px); transition: opacity .22s 0s, transform .28s 0s ${EASE}; }
+        .sifq-ans { margin: 0; padding: 0 18px 20px 50px; font-size: var(--f-13-5); line-height: 1.72; color: #6e6e73; opacity: 0; transform: translateY(-7px); transition: opacity .22s 0s, transform .28s 0s ${EASE}; }
         .sifq-item.on .sifq-ans { opacity: 1; transform: translateY(0); transition: opacity .32s .1s, transform .38s .08s ${EASE}; }
       `}</style>
 
@@ -46,13 +46,13 @@ export default function SmartIotFAQ() {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: FAQS.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }) }}
         />
-        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'var(--w-900)', margin: '0 auto' }}>
           <div data-reveal style={{ textAlign: 'center', marginBottom: '40px' }}>
-            <span style={{ fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase' as const, display: 'block', marginBottom: '16px' }}>
+            <span style={{ fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase' as const, display: 'block', marginBottom: '16px' }}>
               <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
               FAQ
             </span>
-            <h2 style={{ margin: 0, fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+            <h2 style={{ margin: 0, fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               Frequently Asked Questions
             </h2>
           </div>
@@ -78,7 +78,7 @@ export default function SmartIotFAQ() {
             ))}
           </div>
 
-          <p data-reveal style={{ margin: '24px 0 0', textAlign: 'center', fontSize: '13px', color: '#a1a1a6', lineHeight: 1.55 }}>
+          <p data-reveal style={{ margin: '24px 0 0', textAlign: 'center', fontSize: 'var(--f-13)', color: '#a1a1a6', lineHeight: 1.55 }}>
             Can&apos;t find what you&apos;re looking for?{' '}
             <Link href="/contact" style={{ color: '#1360ee', fontWeight: 700, textDecoration: 'none' }}>Contact our team</Link>
             {' '}— we&apos;re happy to help.

@@ -62,20 +62,20 @@ export default function JobDetail({ job }: { job: Job }) {
         .jd-section { padding: clamp(28px,4vw,44px) 28px clamp(64px,7vw,96px); background: #fff; }
         .jd-inner { max-width: 760px; margin: 0 auto; }
 
-        .jd-back { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: #6e6e73; text-decoration: none; margin-bottom: clamp(24px,3vw,36px); transition: color .18s ease, gap .18s ease; }
+        .jd-back { display: inline-flex; align-items: center; gap: 7px; font-size: var(--f-13); font-weight: 600; color: #6e6e73; text-decoration: none; margin-bottom: clamp(24px,3vw,36px); transition: color .18s ease, gap .18s ease; }
         .jd-back:hover { color: #1360ee; gap: 10px; }
 
         .jd-head { text-align: center; padding-bottom: clamp(24px,3vw,32px); border-bottom: 1px solid #eef1f7; }
         .jd-logo { position: relative; width: 230px; height: 62px; margin: 0 auto 22px; }
-        .jd-title { margin: 0 0 12px; font-size: clamp(22px,2.8vw,30px); font-weight: 800; letter-spacing: -.02em; color: #1d1d1f; }
-        .jd-meta { margin: 0 0 6px; font-size: 13.5px; font-weight: 700; color: #52525e; }
+        .jd-title { margin: 0 0 12px; font-size: max(clamp(22px,2.8vw,30px), min(2.083vw, 43.5px)); font-weight: 800; letter-spacing: -.02em; color: #1d1d1f; }
+        .jd-meta { margin: 0 0 6px; font-size: var(--f-13-5); font-weight: 700; color: #52525e; }
         .jd-meta span { color: #c3cbd9; margin: 0 8px; }
-        .jd-loc { margin: 0; font-size: 13.5px; color: #8b93a3; }
+        .jd-loc { margin: 0; font-size: var(--f-13-5); color: #8b93a3; }
 
         .jd-tabs { display: flex; justify-content: center; gap: clamp(24px,3vw,36px); margin-top: clamp(24px,3vw,32px); }
         .jd-tab {
           padding: 10px 2px 14px; background: none; border: none; cursor: pointer;
-          font-family: inherit; font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+          font-family: inherit; font-size: var(--f-13); font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
           color: #9aa2b1; border-bottom: 2px solid transparent; transition: color .2s ${EASE}, border-color .2s ${EASE};
         }
         .jd-tab[aria-selected="true"] { color: #1360ee; border-color: #1360ee; }
@@ -85,26 +85,26 @@ export default function JobDetail({ job }: { job: Job }) {
 
         /* ── Overview ── */
         .jd-ov-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
-        .jd-ov-h3 { margin: 0; font-size: clamp(17px,1.8vw,20px); font-weight: 800; color: #1d1d1f; }
+        .jd-ov-h3 { margin: 0; font-size: max(clamp(17px,1.8vw,20px), min(1.389vw, 29px)); font-weight: 800; color: #1d1d1f; }
         .jd-share {
           flex-shrink: 0; display: inline-flex; align-items: center; gap: 7px;
-          font-family: inherit; font-size: 12.5px; font-weight: 700; color: #1360ee;
+          font-family: inherit; font-size: var(--f-12-5); font-weight: 700; color: #1360ee;
           background: none; border: 1px solid #dbe4fb; border-radius: 999px; padding: 7px 14px; cursor: pointer;
           transition: background .18s ${EASE}, border-color .18s ${EASE};
         }
         .jd-share:hover { background: #eef3ff; border-color: #1360ee; }
 
-        .jd-intro { margin: 0 0 clamp(28px,3.4vw,36px); font-size: 15px; line-height: 1.8; color: #3a3a44; }
+        .jd-intro { margin: 0 0 clamp(28px,3.4vw,36px); font-size: var(--f-15); line-height: 1.8; color: #3a3a44; }
 
-        .jd-list-h { margin: 0 0 14px; font-size: 15px; font-weight: 800; color: #1d1d1f; }
+        .jd-list-h { margin: 0 0 14px; font-size: var(--f-15); font-weight: 800; color: #1d1d1f; }
         .jd-list { list-style: none; margin: 0 0 clamp(28px,3.4vw,36px); padding: 0; }
-        .jd-list li { position: relative; padding-left: 22px; margin-bottom: 12px; font-size: 14.5px; line-height: 1.65; color: #3a3a44; }
+        .jd-list li { position: relative; padding-left: 22px; margin-bottom: 12px; font-size: var(--f-14-5); line-height: 1.65; color: #3a3a44; }
         .jd-list li::before { content: ''; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: #1360ee; }
 
         .jd-apply-cta {
           display: inline-flex; align-items: center; gap: 10px;
           padding: 15px 28px; border-radius: 12px; border: none; cursor: pointer;
-          font-family: inherit; font-size: 14.5px; font-weight: 700; color: #fff;
+          font-family: inherit; font-size: var(--f-14-5); font-weight: 700; color: #fff;
           background: #1360ee; box-shadow: 0 12px 26px -10px rgba(19,96,238,.55);
           transition: .18s ${EASE};
         }
@@ -116,11 +116,11 @@ export default function JobDetail({ job }: { job: Job }) {
           padding: clamp(16px,2vw,20px); border-radius: 14px; border: 1.5px solid #1d1d1f;
           margin-bottom: clamp(28px,3.4vw,36px);
         }
-        .jd-autofill-h { margin: 0 0 4px; font-size: 12.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #1d1d1f; }
-        .jd-autofill-p { margin: 0; font-size: 12.5px; line-height: 1.5; color: #8b93a3; max-width: 40ch; }
+        .jd-autofill-h { margin: 0 0 4px; font-size: var(--f-12-5); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #1d1d1f; }
+        .jd-autofill-p { margin: 0; font-size: var(--f-12-5); line-height: 1.5; color: #8b93a3; max-width: 40ch; }
         .jd-autofill-btn {
           flex-shrink: 0; display: inline-flex; align-items: center; gap: 8px;
-          font-family: inherit; font-size: 13px; font-weight: 700; color: #fff;
+          font-family: inherit; font-size: var(--f-13); font-weight: 700; color: #fff;
           background: #0a0f1e; border: none; border-radius: 10px; padding: 12px 18px; cursor: pointer;
           transition: background .18s ${EASE};
         }
@@ -128,16 +128,16 @@ export default function JobDetail({ job }: { job: Job }) {
 
         .jd-section-row { display: flex; align-items: center; justify-content: space-between; margin: 28px 0 16px; }
         .jd-section-row:first-of-type { margin-top: 0; }
-        .jd-section-h { margin: 0; font-size: 15px; font-weight: 800; color: #1d1d1f; }
+        .jd-section-h { margin: 0; font-size: var(--f-15); font-weight: 800; color: #1d1d1f; }
         .jd-section-clear {
           display: inline-flex; align-items: center; gap: 5px;
-          font-family: inherit; font-size: 12px; font-weight: 700; color: #9aa2b1;
+          font-family: inherit; font-size: var(--f-12); font-weight: 700; color: #9aa2b1;
           background: none; border: none; cursor: pointer; transition: color .18s ${EASE};
         }
         .jd-section-clear:hover { color: #e5484d; }
         .jd-section-add {
           display: inline-flex; align-items: center; gap: 6px;
-          font-family: inherit; font-size: 12.5px; font-weight: 700; color: #1360ee;
+          font-family: inherit; font-size: var(--f-12-5); font-weight: 700; color: #1360ee;
           background: #fff; border: 1.5px solid #1360ee; border-radius: 999px; padding: 7px 14px; cursor: pointer;
           transition: background .18s ${EASE};
         }
@@ -149,11 +149,11 @@ export default function JobDetail({ job }: { job: Job }) {
         @media (max-width: 520px) { .jd-form-grid { grid-template-columns: 1fr; } }
         .jd-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
         .jd-field.full { grid-column: 1 / -1; }
-        .jd-label { font-size: 12px; font-weight: 700; color: #52525e; }
+        .jd-label { font-size: var(--f-12); font-weight: 700; color: #52525e; }
         .jd-label b { color: #e5484d; }
-        .jd-hint { margin: 0; font-size: 11.5px; line-height: 1.5; color: #9aa2b1; }
+        .jd-hint { margin: 0; font-size: var(--f-11-5); line-height: 1.5; color: #9aa2b1; }
         .jd-input, .jd-textarea {
-          font-family: inherit; font-size: 14px; color: #1d1d1f; width: 100%;
+          font-family: inherit; font-size: var(--f-14); color: #1d1d1f; width: 100%;
           padding: 13px 15px; border-radius: 11px;
           border: 1.5px solid #e4e8f0; background: #fbfcfe;
           transition: border-color .18s ${EASE}, box-shadow .18s ${EASE}, background .18s ${EASE};
@@ -164,7 +164,7 @@ export default function JobDetail({ job }: { job: Job }) {
 
         .jd-phone-row { display: flex; gap: 8px; }
         .jd-phone-code {
-          flex-shrink: 0; width: 92px; font-family: inherit; font-size: 14px; color: #1d1d1f;
+          flex-shrink: 0; width: 92px; font-family: inherit; font-size: var(--f-14); color: #1d1d1f;
           padding: 13px 10px; border-radius: 11px; border: 1.5px solid #e4e8f0; background: #fbfcfe;
           cursor: pointer; transition: border-color .18s ${EASE};
         }
@@ -187,7 +187,7 @@ export default function JobDetail({ job }: { job: Job }) {
         }
         .jd-dropzone:hover { border-color: #1360ee; background: #f4f8ff; }
         .jd-dropzone svg { color: #1360ee; }
-        .jd-dropzone span { font-size: 13px; color: #6e6e73; }
+        .jd-dropzone span { font-size: var(--f-13); color: #6e6e73; }
         .jd-dropzone b { color: #1360ee; }
         .jd-dropzone input { display: none; }
 
@@ -197,7 +197,7 @@ export default function JobDetail({ job }: { job: Job }) {
         .jd-yn-row input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
         .jd-yn-btn {
           display: inline-block; padding: 11px 26px; border-radius: 10px; border: 1.5px solid #e4e8f0; background: #fff;
-          font-size: 13.5px; font-weight: 700; color: #52525e; cursor: pointer;
+          font-size: var(--f-13-5); font-weight: 700; color: #52525e; cursor: pointer;
           transition: .18s ${EASE};
         }
         .jd-yn-btn:hover { border-color: #1360ee; color: #1360ee; }
@@ -208,7 +208,7 @@ export default function JobDetail({ job }: { job: Job }) {
           margin-top: 8px; width: 100%;
           display: inline-flex; align-items: center; justify-content: center; gap: 10px;
           padding: 16px 24px; border-radius: 12px; border: none; cursor: pointer;
-          font-family: inherit; font-size: 15px; font-weight: 700; color: #fff;
+          font-family: inherit; font-size: var(--f-15); font-weight: 700; color: #fff;
           background: #1360ee; box-shadow: 0 12px 26px -10px rgba(19,96,238,.6);
           transition: .18s ${EASE};
         }
@@ -216,8 +216,8 @@ export default function JobDetail({ job }: { job: Job }) {
 
         .jd-success { text-align: center; padding: clamp(40px,6vw,64px) 8px; }
         .jd-check { width: 64px; height: 64px; margin: 0 auto 22px; border-radius: 50%; background: rgba(19,146,63,.1); color: #13923f; display: grid; place-items: center; }
-        .jd-success h2 { margin: 0 0 8px; font-size: clamp(20px,2.4vw,26px); font-weight: 800; color: #1d1d1f; }
-        .jd-success p { margin: 0 auto 24px; max-width: 44ch; font-size: 14.5px; line-height: 1.65; color: #6e6e73; }
+        .jd-success h2 { margin: 0 0 8px; font-size: max(clamp(20px,2.4vw,26px), min(1.806vw, 37.7px)); font-weight: 800; color: #1d1d1f; }
+        .jd-success p { margin: 0 auto 24px; max-width: 44ch; font-size: var(--f-14-5); line-height: 1.65; color: #6e6e73; }
       `}</style>
 
       <div className="jd-inner">

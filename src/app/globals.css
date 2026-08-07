@@ -105,6 +105,225 @@
    that block made dark-OS users render a dark background (a visual bug / flash
    on refresh). The .dark class block above is retained for opt-in dark mode. */
 
+/* ══════════════════════════════════════════════════════
+   LARGE-DISPLAY CONTAINER WIDTHS
+   Every content container on the home page used to stop at a hard pixel cap
+   (1400 / 1280 / 1100), so from ~1500px up the page stopped growing and the
+   extra viewport turned into empty gutters — a 2560px monitor showed a 1400px
+   page with 580px of dead space on each side.
+
+   Each token is `max(BASE, min(K vw, CAP))`, which is deliberately three
+   things at once:
+
+     · max(BASE, …)   the value can never come out BELOW the pixel cap it
+                      replaces, so no layout at or under standard desktop can
+                      shift by even a pixel. Every one of these crosses over
+                      above 1570px — verified at 1440px, where 86/80/70vw are
+                      1238/1152/1008px and the BASE therefore still wins.
+     · min(…, CAP)    growth stops before line lengths become unreadable;
+                      past ~2300px the page is centred with even margins again,
+                      which is the correct look for ultra-wide, not a bug.
+     · K vw           between those two the container tracks the viewport
+                      continuously — no breakpoint jumps.
+
+   Pick the token by what the container HOLDS, not by its old number:
+     --w-wide    two-column showcase rows (copy + mockup)
+     --w-mid     three-up card grids
+     --w-narrow  centred media / two-up card grids
+
+   Text-measure caps (a subheading's 620–700px, the showcase paragraphs' 560px)
+   are NOT these tokens and must stay put — they exist to keep a line of prose
+   readable, and that limit does not change because the monitor got wider.
+   ══════════════════════════════════════════════════════ */
+:root {
+  /* Widest of the three: these rows carry two columns side by side, so they can
+     use more of the screen than a centred grid before anything reads as stretched. */
+  --w-wide: max(1400px, min(94vw, 2200px));
+  --w-mid: max(1280px, min(80vw, 1840px));
+  --w-narrow: max(1100px, min(70vw, 1520px));
+
+  /* ══ PAGE SCALE — role tokens ═════════════════════════════════════════════
+     Seven sections had each grown their own ad-hoc ramp, so type that sits at the
+     SAME level of the hierarchy resolved to different sizes: at 1440 the section
+     headings were 36 / 36 / 56 / 48 / 42 / 42, and above 1560 only two of them
+     moved at all while the other five sat frozen at a cap reached below 1440.
+     That is what reads as "inconsistent" and "not premium" on a large monitor —
+     not any one section being wrong, but no two agreeing.
+
+     These tokens are named for the ROLE, not the pixel value, because the role is
+     what has to match across sections. Pick by what the text IS:
+
+       --t-display  full-width centred section heading
+       --t-h2       heading of a two-column row
+       --t-h3       sub-heading / card heading
+       --t-lead     the paragraph under a section heading
+       --t-card-t   card title
+       --t-body     default copy
+       --t-micro    meta, labels, dense card copy
+       --t-eyebrow  uppercase kicker
+
+     Every ramp is a plain clamp on vw so the whole page scales as ONE system, and
+     the ceilings all land between 2000 and 2140px — past that the page is fixed
+     and only its margins grow, which is what keeps ultra-wide from looking blown
+     up. Spacing uses the same idea so vertical rhythm tracks type. */
+  --t-display: clamp(28px, 3.05vw, 62px);
+  --t-h2: clamp(24px, 2.5vw, 50px);
+  --t-h3: clamp(15px, 1.25vw, 26px);
+  --t-lead: clamp(14px, 1.15vw, 24px);
+  --t-card-t: clamp(14px, 1.02vw, 20px);
+  --t-body: clamp(13px, 0.98vw, 20px);
+  --t-micro: clamp(12px, 0.85vw, 17px);
+  --t-eyebrow: clamp(13px, 0.9vw, 18px);
+
+  --s-section-y: clamp(56px, 7vw, 150px);
+  --s-section-x: clamp(20px, 4vw, 96px);
+  --s-stack: clamp(32px, 3.2vw, 68px);
+  --s-grid-gap: clamp(18px, 2.1vw, 40px);
+  --s-card-y: clamp(24px, 2.4vw, 46px);
+  --s-card-x: clamp(22px, 2.1vw, 42px);
+  --s-cardsm-y: clamp(16px, 1.35vw, 28px);
+  --s-cardsm-x: clamp(18px, 1.5vw, 32px);
+
+  /* Icons and controls. These were the last frozen layer: a 38px card icon and a
+     52px avatar stayed put while the card around them grew, which is what makes a
+     large screen feel like it is showing a small design blown up. Same clamp
+     language as the type above so they track it. */
+  --i-tile: clamp(38px, 2.9vw, 58px);
+  --i-avatar: clamp(44px, 3.6vw, 72px);
+  --i-control: clamp(40px, 3vw, 60px);
+  --i-play: clamp(56px, 5vw, 104px);
+
+  /* ── Site-wide type ramp ────────────────────────────────────────────────
+     Outside the home page all 942 font sizes were hard pixels: identical at
+     1440 and at 2560, so every page rendered a small design blown up on a
+     large monitor. Each token is max(BASE, min(BASE/14.4 vw, BASE x 1.45)),
+     which is exactly BASE at every viewport up to 1440 and then grows on the
+     same ramp as the home page — 1.33x at 1920, 1.45x from ~2090 on.
+     Sizes are preserved rather than re-tiered: the relative hierarchy each
+     page was designed with is kept intact, it just stops being frozen. */
+  --f-9: max(9px, min(0.625vw, 13.05px));
+  --f-9-5: max(9.5px, min(0.660vw, 13.78px));
+  --f-10: max(10px, min(0.694vw, 14.5px));
+  --f-10-5: max(10.5px, min(0.729vw, 15.22px));
+  --f-11: max(11px, min(0.764vw, 15.95px));
+  --f-11-5: max(11.5px, min(0.799vw, 16.68px));
+  --f-12: max(12px, min(0.833vw, 17.4px));
+  --f-12-5: max(12.5px, min(0.868vw, 18.12px));
+  --f-12-8: max(12.8px, min(0.889vw, 18.56px));
+  --f-13: max(13px, min(0.903vw, 18.85px));
+  --f-13-5: max(13.5px, min(0.938vw, 19.57px));
+  --f-14: max(14px, min(0.972vw, 20.3px));
+  --f-14-5: max(14.5px, min(1.007vw, 21.02px));
+  --f-15: max(15px, min(1.042vw, 21.75px));
+  --f-15-5: max(15.5px, min(1.076vw, 22.47px));
+  --f-16: max(16px, min(1.111vw, 23.2px));
+  --f-16-5: max(16.5px, min(1.146vw, 23.93px));
+  --f-17: max(17px, min(1.181vw, 24.65px));
+  --f-18: max(18px, min(1.250vw, 26.1px));
+  --f-19: max(19px, min(1.319vw, 27.55px));
+  --f-20: max(20px, min(1.389vw, 29px));
+  --f-22: max(22px, min(1.528vw, 31.9px));
+  --f-24: max(24px, min(1.667vw, 34.8px));
+  --f-26: max(26px, min(1.806vw, 37.7px));
+
+
+
+
+  /* ── Site-wide container widths ──────────────────────────────────────────────
+     The same idea as the three named tokens above, but keyed by the flat pixel
+     value each one replaces, because the rest of the app expresses its containers
+     as bare numbers rather than roles. --w-1180 is what used to be `1180px`.
+
+     Every one is `max(BASE, min(K vw, BASE x 1.45))` with K = BASE / 15.6, which
+     puts the crossover at exactly 1560px for all of them. So every page keeps its
+     current layout to the pixel up to 1536, then grows in step — the relative
+     hierarchy between a 900px block and a 1280px one is preserved, because both
+     scale by the same factor.
+
+     Only containers are on this scale. Reading measures (anything under ~900px:
+     a 620px blurb, a 700px subheading) are deliberately left as flat pixels — a
+     wider monitor does not make a long line of prose easier to read. */
+  --w-900: max(900px, min(57.69vw, 1305px));
+  --w-920: max(920px, min(58.97vw, 1334px));
+  --w-940: max(940px, min(60.26vw, 1363px));
+  --w-960: max(960px, min(61.54vw, 1392px));
+  --w-1000: max(1000px, min(64.1vw, 1450px));
+  --w-1080: max(1080px, min(69.23vw, 1566px));
+  --w-1120: max(1120px, min(71.79vw, 1624px));
+  --w-1160: max(1160px, min(74.36vw, 1682px));
+  --w-1180: max(1180px, min(75.64vw, 1711px));
+  --w-1200: max(1200px, min(76.92vw, 1740px));
+  --w-1240: max(1240px, min(79.49vw, 1798px));
+  --w-1280: max(1280px, min(82.05vw, 1856px));
+  --w-1440: max(1440px, min(92.31vw, 2088px));
+
+
+  /* ── Showcase copy scale ────────────────────────────────────────────────────
+     The type and cards inside the two showcase copy columns were all hard pixel
+     values, so widening the column left 12.5px card text and a 36px headline
+     sitting in a 740px column on a 2560px monitor. The column grew; nothing in it
+     did.
+
+     Each token is named for the value it replaces — --sc-14 is what used to be a
+     flat 14px — and is `max(BASE, min(K vw, J vh, CEILING))`:
+
+       · max(BASE, …)  can never resolve below the pixel value it replaces, so no
+                       size anywhere can shrink. Every crossover lands between
+                       1553px and 1566px, so 1280 / 1366 / 1440 / 1536 are exact.
+       · K vw          growth tracks viewport width, K = BASE / 15.6.
+       · J vh          growth ALSO tracks viewport height, J = BASE / 7.4. This is
+                       load-bearing, not symmetry: the ScrollShowcase rows are
+                       pinned at exactly 100vh, so type that grew on width alone
+                       would overflow the pinned frame in a wide, short window.
+                       With this term such a window simply stays at BASE.
+       · CEILING       roughly +36%, reached around 2200px.
+
+     Both showcase sections share these — they sit next to each other and any
+     divergence in type size reads as one of them being wrong. */
+  --sc-12-5: var(--t-micro);
+  --sc-13: var(--t-eyebrow);
+  --sc-14: var(--t-card-t);
+  --sc-14-5: var(--t-body);
+  --sc-15: var(--t-lead);
+  --sc-16: var(--s-cardsm-y);
+  --sc-18: var(--s-cardsm-x);
+  --sc-20: max(20px, min(1.28vw, 2.70vh, 27px));
+  --sc-22: max(22px, min(1.41vw, 2.97vh, 30px));
+  --sc-24: max(24px, min(1.54vw, 3.24vh, 33px));
+  --sc-28: max(28px, min(1.79vw, 3.78vh, 38px));
+  --sc-36: max(36px, min(2.31vw, 4.86vh, 50px));
+  --sc-42: max(42px, min(2.69vw, 5.68vh, 56px));
+
+  /* ── Header scale ───────────────────────────────────────────────────────────
+     The bar is edge-to-edge already, but everything standing in it was a flat pixel
+     size that stopped growing around 1560px — a 120px logo and 14px links marooned
+     in a 2560px-wide bar.
+
+     Ramps are affine (`K vw + C`) and tuned to pass through the old value at
+     ~1560px, so 1440 and 1536 are exact; the max() floor means none of them can
+     resolve below what they replace.
+
+     The bar's own HEIGHT is deliberately not here. It stays h-16 / md:h-20, because
+     --hero-nav-h below is its twin and the hero's headline band is measured from it
+     — the skyline's width budget is derived from that same number. Growing the bar
+     would silently re-open geometry that is currently balanced, for a bar that is
+     already well proportioned to its contents at these sizes. */
+  --nav-pad: max(50px, min(3.2vw, 88px));
+  --nav-logo-h: max(40px, min(1.2vw + 21px, 52px));
+  --nav-link: max(14px, min(0.3vw + 9.3px, 17px));
+  --nav-gap: max(24px, min(1vw + 8.4px, 34px));
+  --nav-flag: max(32px, min(0.8vw + 19.5px, 40px));
+  --nav-cta-py: max(10px, min(0.3vw + 5.3px, 13px));
+  --nav-cta-px: max(26px, min(0.8vw + 13.5px, 34px));
+  --nav-cta-fs: max(13px, min(0.25vw + 9.1px, 15.5px));
+
+  /* The video card inside the --w-narrow stage. Kept in step with it so the
+     card keeps occupying ~78% of the stage at every width, instead of the stage
+     growing away from a fixed 800px card and stranding the decorative blocks
+     that are positioned against the stage's edges. */
+  --w-video: max(800px, min(50vw, 1120px));
+}
+
 /* Base Styles */
 * {
   box-sizing: border-box;
@@ -166,8 +385,13 @@ main {
   --hero-nav-h: 4rem;
 
   /* Skyline is /building image.png at 590×334 (ratio 0.5661), width-driven and
-     bottom-aligned, so its rendered height is simply width × ratio. */
-  --hero-skyline-h: calc(clamp(280px, 70vw, 590px) * 0.5661);
+     bottom-aligned, so its rendered height is simply width × ratio.
+
+     TWIN of .hero-building-wrap's maxWidth in HeroSection.tsx — the expression must
+     match it exactly or this band stops describing where the skyline actually is.
+     See the note there for why the width is bounded by viewport HEIGHT: the band
+     below is what pays for it. */
+  --hero-skyline-h: calc(max(590px, min(52vw, 119vh - 512px, 1100px)) * 0.5661);
 
   /* Floor on the band. On short viewports the navbar and the skyline together
      leave almost nothing between them; without this the headline gets pushed up
@@ -179,6 +403,44 @@ main {
 @media (min-width: 768px) {
   .hero-section-wrapper { --hero-nav-h: 5rem; }
 }
+
+/* ══════════════════════════════════════════════════════
+   HEADER — large-display sizing
+   These rules are deliberately UNLAYERED. Tailwind v4 puts its utilities in
+   @layer utilities, and any unlayered rule beats a layered one outright, so
+   these win over `gap-6` and `text-sm` on the same elements without needing
+   !important or a specificity fight.
+   ══════════════════════════════════════════════════════ */
+.hn-navlinks {
+  gap: var(--nav-gap);
+}
+.hn-navlinks > li > a,
+.hn-navlinks > li > button {
+  font-size: var(--nav-link);
+}
+/* The flag is an <Image> with width/height ATTRIBUTES, which CSS overrides. */
+.hn-flag {
+  width: var(--nav-flag);
+  height: var(--nav-flag);
+}
+
+
+/* ══════════════════════════════════════════════════════
+   FEATURE SLIDER — phone overlay
+   The phone was a flat 155x285 <Image>: the only thing in these scenes that never
+   scaled. The popup beside it is sized in percent, so on a wide display the popup
+   grew to 3x the phone's width instead of 1.7x and the two stopped reading as one
+   composition — which is what looks "disturbed" on a large monitor while a small
+   desktop still looks right.
+
+   max() is the guard: 35% only wins once it exceeds 155px, which is above ~1300px
+   of panel, so every width where the phone looks correct today is untouched and it
+   only grows from there. Below 1024px the panel is the container's FULL width, so
+   35% of it would be enormous — the percentage is deliberately not applied there.
+   ══════════════════════════════════════════════════════ */
+.fs-phone { width: 155px; }
+@media (min-width: 1024px) { .fs-phone { width: max(155px, 35%); } }
+.fs-phone img { width: 100%; height: auto; display: block; }
 
 /* Font Utility Classes */
 .font-poppins {
@@ -865,7 +1127,9 @@ h6 {
    SCROLL SHOWCASE — responsive sticky/stacked layout
    ══════════════════════════════════════════════════════ */
 .ss-row {
-  max-width: 1400px;
+  /* Was a flat 1400px — see --w-wide in the token block above. Identical below
+     ~1630px, tracks the viewport past it. */
+  max-width: var(--w-wide);
   margin: 0 auto;
   padding: 0 24px;
   display: flex;
@@ -998,6 +1262,16 @@ h6 {
   user-select: text !important;
   -webkit-touch-callout: default !important;
 }
+/* Feature-card icon glyphs. These are authored as width="22" height="22" attributes
+   on each inline <svg>, which no amount of scaling the 42px tile around them would
+   change — the tile grew on a large display and the glyph stayed 22px, floating in
+   it. A CSS width/height beats the presentation attributes, and every icon carries
+   viewBox="0 0 24 24", so they redraw at the new size rather than being stretched. */
+.ss-feature-grid svg {
+  width: var(--sc-22);
+  height: var(--sc-22);
+}
+
 /* Only the decorative SVG icons remain non-selectable so they don't intercept the caret */
 .ss-text-panel svg,
 .ss-text-panel svg *,
@@ -1023,7 +1297,9 @@ h6 {
    on top of each other, so any difference in these three reads as the page shifting
    sideways between them. Change them together or not at all. */
 .fs-container {
-  max-width: 1400px;
+  /* The same token .ss-row uses — that is what "change them together or not at
+     all" means now that the measure scales. */
+  max-width: var(--w-wide);
   margin: 0 auto;
   padding: 0 24px;
   display: flex;
@@ -1044,11 +1320,15 @@ h6 {
    scenes are stacked `position:absolute; inset:0` so they can crossfade, and
    absolute children contribute nothing to their parent's height.
 
-   It still has to be the height the scenes actually render at, which is
-   H × min(1, wrapWidth / W). Every scene here is W=540; the tallest (SceneGPS)
-   is H=580. Below 540px wide that reduces to wrapWidth × 580/540 — a constant
-   ratio, which is exactly what aspect-ratio expresses — and at/above 540px the
-   scale clamps at 1 and the height stops at a flat 580px, which is the cap.
+   So the causality runs the other way round from the ScrollShowcase panel: there
+   the scene reports its height and the panel follows, whereas here this box is the
+   input and every scene sizes itself from it. 540 / 580 is the shape the mockups
+   are composed for, and the max-height below is the ceiling on how large that shape
+   may grow.
+
+   (The SceneAlerts / SceneDashboard / SceneGPS / SceneVideo files in this folder are
+   NOT what renders here — nothing imports them. The live scenes are SceneTaskManager,
+   SceneExpense, SceneInspection and SceneFleet, defined inside index.jsx.)
 
    The fixed ladder this replaces (220 / 270 / 320px) matched the scenes at about
    1024px and nowhere else: at 1400px the scenes render 449px tall inside a 320px
@@ -1076,6 +1356,86 @@ h6 {
      compress. `fs-right` was a fixed 460px basis, which could not stay in step. */
   .fs-left  { flex: 0 0 52%; min-width: 0; width: auto; }
   .fs-right { flex: 0 0 38%; min-width: 0; width: auto; }
+  /* Ceiling on how tall the mockup panel may get. Every scene sizes itself FROM this
+     box — three of the four are position:absolute inset:0 and fill it outright, and
+     the fourth (SceneTaskManager) fits its canvas inside it — so this value, not
+     anything in the JS, is what decides how large the mockups render.
+
+     Raised from 580px because that cap was reached at roughly 540px of panel width
+     and then held the mockup at 580px tall no matter how much room the row had,
+     which is why the mockups stopped growing while the copy column beside them kept
+     going. The aspect-ratio above still governs everything below ~810px of panel
+     width, so the panel's shape is unchanged — this only stops it stretching without
+     limit on an ultra-wide display.
+
+     Inside this media query because below 1024px the panel is the container's full
+     width, where the aspect-ratio height runs well past 580 and lifting the ceiling
+     would make the section taller on every tablet.
+
+     The size limit is expressed as a max-WIDTH, with max-height only as its twin
+     (810 × 580/540 = 870). That distinction is load-bearing. Every scene pins its
+     overlays — the phone, the hover popups — in percentages of THIS box, and those
+     percentages only land on the right part of the artwork while the box keeps its
+     540/580 ratio. A max-height alone would be reached first on a wide display and
+     would then flatten the box below that ratio, sliding every overlay off the row
+     of the mockup it is supposed to be pointing at. Capping the width instead lets
+     aspect-ratio go on deriving the height, so the shape is identical at every
+     size and only the scale stops. */
+  .fs-scene-wrap {
+    max-width: 810px;
+    margin-left: auto;
+    margin-right: auto;
+    max-height: 870px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   SHOWCASE ROWS — COLUMN SPLIT ON LARGE DISPLAYS
+   Widening the row alone did nothing visible here, and the reason is the split
+   rather than the container. 52% + 38% = 90%, and the 96px gutter comes out of
+   the remaining 10%, so a row that grew by 100px handed the mockup only 38 of
+   them. The mockup column stayed under the 580px canvas it draws into, which
+   means the scene was still rendering at 0.92x — the section kept looking
+   exactly as it did before while every other section visibly grew.
+
+   48 / 45 spends the row on the two things that are actually in it. The copy
+   column still grows in absolute terms at every width (48% of a much wider row
+   beats 52% of 1400px), and the mockup column finally clears its own canvas so
+   the scene can scale up instead of sitting in dead space.
+
+   1600px is where this starts, and the number is not arbitrary: it is the first
+   width at which 48% of the row is no narrower than the 52% it replaces, so the
+   copy column never loses ground at any viewport. Below it, everything stays on
+   the 52 / 38 rule above, untouched.
+
+   Both sections must carry the same numbers — see the note on .fs-container.
+   ══════════════════════════════════════════════════════ */
+@media (min-width: 1600px) {
+  .ss-text-panel, .fs-left  { flex: 0 0 48%; }
+  .ss-anim-panel, .fs-right { flex: 0 0 45%; }
+
+  /* Top-align the FeatureSlider's two columns rather than centring them.
+     `center` centres the copy against the scene BOX, and that box is much taller
+     than the artwork inside it: the mockups are landscape (1.67–2.19) sitting in a
+     0.93 portrait box, so each one fits to width and occupies only the top ~54% of
+     its card — the rest is white card on a white section, invisible but very much
+     there. Centring against it therefore pushed the copy roughly 170px below a
+     mockup that was already hard against the top of the row, which is exactly the
+     "image sits higher than the text" mismatch.
+
+     Top-aligning lands the copy's eyebrow on the mockup's browser bar, and since
+     the two blocks are within ~50px of each other in height at these widths they
+     then read as one row. It cannot change the section's height — the scene box was
+     already the taller flex item and still sets the row — it only moves the copy up
+     into line. Below 1600px the columns stay centred: the box is smaller there, the
+     offset is a few dozen pixels rather than a few hundred, and that layout is
+     working. */
+  /* Centred, so the copy sits against the middle of the mockup column rather than
+     hanging off its top edge. This is only stable because the card's description now
+     reserves three lines whatever the slide says — with a variable card height,
+     centring re-positions the whole column on every slide change and the copy visibly
+     jumps as the carousel pages. */
+  .fs-container { align-items: center; }
 }
 
 /* ══════════════════════════════════════════════════════
@@ -1957,39 +2317,774 @@ h6 {
   }
 }
 
-/* Navbar CTA heartbeat pulse + inner shine */
-@keyframes navCtaPulse {
-  0%   { box-shadow: 0 0 0 0 rgba(255,255,255,0.7), 0 2px 12px rgba(255,255,255,0.35); }
-  60%  { box-shadow: 0 0 0 10px rgba(255,255,255,0),  0 2px 12px rgba(255,255,255,0.35); }
-  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0),     0 2px 12px rgba(255,255,255,0.35); }
-}
+/* Navbar CTA face — the button itself. The glass streak runs on its own idle loop
+   as well as on hover. It is deliberately a *glint*, not a constant wipe: the
+   sweep occupies only the first fifth of the cycle and the rest of the loop is
+   dead time at zero opacity, so the eye catches a periodic flash of light rather
+   than a band that never stops travelling. On hover the same streak fires once,
+   faster and brighter, as a direct response to the pointer. */
 @keyframes navCtaShine {
   0%   { transform: translateX(-160%) skewX(-20deg); }
-  40%  { transform: translateX(260%)  skewX(-20deg); }
   100% { transform: translateX(260%)  skewX(-20deg); }
+}
+@keyframes navCtaShineIdle {
+  0%   { transform: translateX(-160%) skewX(-20deg); opacity: 0; }
+  2%   { opacity: 1; }
+  26%  { transform: translateX(260%)  skewX(-20deg); opacity: 1; }
+  28%  { transform: translateX(260%)  skewX(-20deg); opacity: 0; }
+  100% { transform: translateX(260%)  skewX(-20deg); opacity: 0; }
+}
+/* The pill breathes on the same 2.4s beat as the blade and the flare — one pulse
+   with several expressions reads as far more deliberate than three effects each
+   doing their own thing. Peaks just as the flare fires. Scale only, never margin
+   or padding, so nothing around it in the nav reflows. */
+@keyframes navCtaBreathe {
+  0%, 100% { transform: scale(1); }
+  62%      { transform: scale(1.05); }
 }
 .nav-cta-pulse {
   position: relative;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(255,255,255,0.55), 0 2px 8px rgba(26,110,154,0.18);
+  /* Inset top highlight + a tight contact shadow under a wider ambient one: the
+     stack that makes a flat white rectangle read as a physical, lit surface. */
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.95),
+    inset 0 -1px 0 rgba(16,42,86,0.05),
+    0 1px 2px rgba(12,38,80,0.10),
+    0 6px 16px -6px rgba(12,38,80,0.30);
+  transition: box-shadow 0.5s cubic-bezier(0.22,0.61,0.36,1);
 }
+/* Face sheen, hover only. A gloss wiping across the white surface as the cursor
+   lands — the payoff that makes the control feel like a physical object rather
+   than a lit outline. Idle it is invisible and unanimated: an automatic sweep on
+   a loop is what read as a blink before, so this only fires on intent. */
 .nav-cta-pulse::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
-  width: 45%;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(
+    118deg,
+    transparent 0%,
+    rgba(255,255,255,0) 14%,
+    rgba(222,242,255,0.9) 40%,
+    rgba(255,255,255,1) 50%,
+    rgba(222,242,255,0.9) 60%,
+    rgba(255,255,255,0) 86%,
+    transparent 100%
+  );
+  transform: translateX(-160%) skewX(-20deg);
+  opacity: 0;
+  pointer-events: none;
+}
+.nav-cta-wrap:hover .nav-cta-pulse::before {
+  opacity: 1;
+  animation: navCtaShine 0.72s cubic-bezier(0.4,0,0.2,1) 1;
+}
+/* Cursor light on the face. --mx/--my are set on .nav-cta-tilt and inherit all the
+   way down to this pseudo-element, which is the whole reason custom properties are
+   worth using here rather than positioning a real element per frame. Tinted with
+   the label's own blue so the white face looks lit through glass rather than
+   greyed. */
+.nav-cta-pulse::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle 90px at var(--mx) var(--my),
+    rgba(19,96,238,0.22) 0%,
+    rgba(19,96,238,0.10) 38%,
+    transparent 68%
+  );
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+.nav-cta-tilt:hover .nav-cta-pulse::after { opacity: 1; }
+
+/* Idle sheen — a reflection drifting across the face every few seconds.
+   The face is already white, so this cannot work by brightening: there is no
+   headroom left on a white surface, which is why the previous white-on-white
+   sweep read as a blink rather than as light. It works by COLOUR instead —
+   a soft wash of the hero's own cyan and blue crossing the face, as if the pill
+   were picking up the gradient behind it, with one thin white gleam through the
+   middle for the specular hit. Every tint below is under 0.14 alpha; the gleam
+   is the only thing near opaque, and it is a few percent of the band's width.
+   Diagonal (100deg gradient, -18deg skew) rather than straight down: a vertical
+   band crossing a pill reads as a wiper, an angled one reads as a reflection. */
+.nav-cta-shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* Wide enough that the ramps are gradual at nav size — a narrow band has to be
+     bright to be seen at all, which is the opposite of what this is for. */
+  width: 46%;
+  height: 100%;
+  pointer-events: none;
+  /* Under the label. The button sets z-index 1 on itself, so it is a stacking
+     context and this resolves against its own background rather than punching
+     through to the navbar. */
+  z-index: -1;
+  opacity: 0;
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(8, 178, 224, 0.10) 22%,
+    rgba(19, 96, 238, 0.13) 42%,
+    rgba(255, 255, 255, 0.85) 51%,
+    rgba(10, 132, 227, 0.12) 60%,
+    rgba(151, 222, 241, 0.10) 80%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  /* Two animations on one period rather than one with more keyframes: the fade
+     needs hold points partway through, and putting those on a shared timeline
+     would chop the sweep into three separately-eased segments and make a smooth
+     glide stutter. Split across two properties, each interpolates once, cleanly. */
+  animation:
+    navCtaSheenSweep var(--cta-sheen-dur) cubic-bezier(0.45, 0, 0.25, 1) infinite,
+    navCtaSheenFade var(--cta-sheen-dur) ease-in-out infinite;
+}
+/* 5.5s: the sweep occupies the last 42% of it, so ~2.3s of travel against ~3.2s
+   of stillness. Slow travel is most of what separates "premium reflection" from
+   "loading shimmer" — the instinct is to make it quick, and quick reads cheap. */
+.nav-cta-shine { --cta-sheen-dur: 5.5s; }
+@keyframes navCtaSheenSweep {
+  0%, 58% { transform: translateX(-170%) skewX(-18deg); }
+  100%    { transform: translateX(430%) skewX(-18deg); }
+}
+@keyframes navCtaSheenFade {
+  0%, 58% { opacity: 0; }
+  67%     { opacity: 1; }
+  85%     { opacity: 1; }
+  100%    { opacity: 0; }
+}
+.nav-cta-wrap:hover .nav-cta-pulse {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 -1px 0 rgba(16,42,86,0.06),
+    0 2px 4px rgba(12,38,80,0.12),
+    0 18px 36px -10px rgba(12,38,80,0.48);
+}
+/* DISABLED — the white shine that swept across the button face every few seconds.
+   Commented out rather than deleted so it can be brought back; the border streak,
+   halo, ripple and breathe animations are all untouched. Un-comment both rules
+   below to restore it (the navCtaShineIdle / navCtaShine keyframes are kept). */
+/*
+.nav-cta-pulse::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  --- Wider and hotter than a hairline gleam — at nav size a thin streak crossing a
+      white face is simply not perceptible. ---
+  width: 52%;
   height: 100%;
   background: linear-gradient(
     120deg,
     transparent 0%,
-    rgba(255,255,255,0) 15%,
-    rgba(255,255,255,0.65) 50%,
-    rgba(255,255,255,0) 85%,
+    rgba(255,255,255,0) 12%,
+    rgba(214,240,255,0.85) 38%,
+    rgba(255,255,255,1) 50%,
+    rgba(214,240,255,0.85) 62%,
+    rgba(255,255,255,0) 88%,
     transparent 100%
   );
-  animation: navCtaShine 2.8s ease-in-out infinite;
+  transform: translateX(-160%) skewX(-20deg);
   pointer-events: none;
+  animation: navCtaShineIdle 3.2s cubic-bezier(0.4,0,0.2,1) infinite;
+}
+.nav-cta-wrap:hover .nav-cta-pulse::before {
+  animation: navCtaShine 0.75s cubic-bezier(0.4,0,0.2,1) 1;
+}
+*/
+
+/* Navbar CTA — one blended streak of light sweeps around the pill's border.
+   Built as a conic gradient masked down to just the border band, rather than the
+   three dashed SVG strokes this replaced: separate strokes can only ever be
+   separate colours butted together, which read as distinct chunks (a white half
+   and a gold half) instead of one blended streak. A conic gradient interpolates
+   continuously, so blue melts into gold into white with no seam. Most of the
+   sweep is transparent, leaving a single lit arc — a full-spectrum ring instead
+   lights opposite sides at once and reads as two beams on a wide pill.
+   `--cta-angle` also has a plain fallback declaration below so that browsers
+   without @property still paint a static ring rather than dropping the gradient
+   as invalid. */
+@property --cta-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+@property --cta-angle2 {
+  syntax: '<angle>';
+  initial-value: 180deg;
+  inherits: false;
+}
+/* Registering the palette as <color> is what makes it *animatable*. An unregistered
+   custom property has no type, so the browser can only swap it — which is why the
+   button's whole palette used to pop the instant the bar flipped while the bar
+   itself faded over it. Registered, these interpolate, and the transition on
+   .nav-cta-wrap below carries them across on the bar's own 240ms.
+   --cta-aura-light/--cta-aura-dim/--cta-flare-peak are deliberately NOT registered:
+   they are only set on the light bar and read through var() fallbacks on the hero,
+   and a registered property always has its initial value, so the fallback would
+   never apply. */
+@property --cta-light    { syntax: '<color>'; initial-value: #ffffff;                 inherits: true; }
+@property --cta-dim      { syntax: '<color>'; initial-value: rgba(255,255,255,0.32);  inherits: true; }
+@property --cta-glow     { syntax: '<color>'; initial-value: rgba(255,255,255,0.92);  inherits: true; }
+@property --cta-track    { syntax: '<color>'; initial-value: rgba(255,255,255,0.30);  inherits: true; }
+@property --cta-edge     { syntax: '<color>'; initial-value: rgba(255,255,255,0.75);  inherits: true; }
+@property --cta-hairline { syntax: '<color>'; initial-value: rgba(255,255,255,0.22);  inherits: true; }
+/* Pointer layer — tilt, magnetic pull, and the origin of the cursor light. The
+   defaults here matter: every var the JS writes is declared with a resting value so
+   the control is correct before the pointer has ever touched it, and so the return
+   animates instead of snapping. perspective() is a transform function on this same
+   element rather than a `perspective` property on an ancestor, because the ancestor
+   is a flex row of unrelated nav items that must not become a 3D context. */
+.nav-cta-tilt {
+  --mx: 50%;
+  --my: 50%;
+  --tx: 0deg;
+  --ty: 0deg;
+  --pull-x: 0px;
+  --pull-y: 0px;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  transform:
+    perspective(640px)
+    rotateX(var(--tx))
+    rotateY(var(--ty))
+    translate3d(var(--pull-x), var(--pull-y), 0);
+  /* Slow enough to feel weighted, fast enough not to lag the cursor. */
+  transition: transform 0.4s cubic-bezier(0.22,0.61,0.36,1), scale 0.15s ease;
+}
+/* `scale` as its own property, not a transform function — the transform above is
+   rebuilt on every mousemove, so a scale baked into it would be clobbered. */
+.nav-cta-tilt:active { scale: 0.96; }
+
+.nav-cta-wrap {
+  position: relative;
+  /* Pill, to match the software navbar's CTA. The ring, ripple and button all
+     inherit from here, so the streak sweeps the rounded edge cleanly. */
+  border-radius: 999px;
+  /* Ring width — .nav-cta-ring sits inset:0 with the same padding and its middle
+     masked out, so the visible filament is exactly this wide. Fine rather than
+     fat: a hairline rim is the modern read, and pure white at full strength has
+     the contrast to survive at this width where four muted hues did not. */
+  padding: 2.5px;
+  isolation: isolate;
+  background: var(--cta-track);
+  /* Glass depth on the unlit rim: a lit top edge, a shaded bottom one, and a
+     hairline containing the whole thing. Without these the rim is a flat band of
+     translucency and the control only looks designed while the blade is passing;
+     with them it holds up in the dark half of the cycle too. */
+  box-shadow:
+    inset 0 1px 0 var(--cta-edge),
+    inset 0 -1px 0 rgba(10,30,70,0.12),
+    0 0 0 1px var(--cta-hairline);
+  /* The palette vars ride the bar's own 240ms so the button changes state with the
+     navbar rather than after it. transform/box-shadow keep their slower hover
+     timing — those are pointer feedback, not part of the bar flip. */
+  transition:
+    transform 0.5s cubic-bezier(0.22,0.61,0.36,1),
+    box-shadow 0.5s cubic-bezier(0.22,0.61,0.36,1),
+    --cta-light 0.24s cubic-bezier(0.4,0,0.2,1),
+    --cta-dim 0.24s cubic-bezier(0.4,0,0.2,1),
+    --cta-glow 0.24s cubic-bezier(0.4,0,0.2,1),
+    --cta-track 0.24s cubic-bezier(0.4,0,0.2,1),
+    --cta-edge 0.24s cubic-bezier(0.4,0,0.2,1),
+    --cta-hairline 0.24s cubic-bezier(0.4,0,0.2,1);
+  animation: navCtaBreathe 2.4s cubic-bezier(0.2,0.7,0.3,1) infinite;
+}
+.nav-cta-wrap:hover {
+  transform: translateY(-2px) scale(1.025);
+  animation-play-state: paused;
+  /* Rim brightens and the hairline thickens into a visible ring on approach. */
+  box-shadow:
+    inset 0 1px 0 var(--cta-edge),
+    inset 0 -1px 0 rgba(10,30,70,0.12),
+    0 0 0 1.5px var(--cta-glow);
+}
+/* DISABLED — beacon ripple: a copy of the pill's outline in --cta-glow that
+   expanded outward and faded every 3.2s. This is the white ring that read as a
+   blink around the button. Commented out rather than deleted; un-comment to
+   restore (the navCtaRipple keyframes below are kept). */
+/*
+.nav-cta-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: -1;
+  border: 1.5px solid var(--cta-glow);
+  pointer-events: none;
+  animation: navCtaRipple 3.2s cubic-bezier(0.2,0.6,0.35,1) infinite;
+}
+*/
+@keyframes navCtaRipple {
+  0%   { transform: scale(1);    opacity: 0.65; }
+  70%  { transform: scale(1.3);  opacity: 0; }
+  100% { transform: scale(1.3);  opacity: 0; }
+}
+/* The aura — the same single blade of light as the filament below, but full-disc
+   (no band mask) and heavily blurred, sitting behind the opaque button face so only
+   the soft fringe around the pill shows. The crisp filament alone looks like a drawn
+   border; the blurred copy under it is what makes the pill read as genuinely lit.
+   Deliberately not clipped: the outward bleed is the halo, and on a flat backdrop
+   that halo is the strongest attention cue available.
+   z-index -1 keeps it above the wrap's own rim background but under the button. */
+.nav-cta-wrap::before {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  /* Same registered property name as the ring. --cta-angle is `inherits: false`,
+     so each element carries its own copy — same keyframes and duration on both
+     means the blur stays locked under the filament instead of drifting. */
+  --cta-angle: 0deg;
+  /* Falls back to the filament's own colours, but can be overridden independently.
+     A blurred copy of a saturated tone spreads a smudge the size of the blur radius,
+     which is invisible against a dark backdrop and very obvious against a light one —
+     so the light bar dials these down without touching the crisp filament. */
+  background: conic-gradient(
+    from var(--cta-angle),
+    transparent 0deg,
+    var(--cta-aura-dim, var(--cta-dim)) 70deg,
+    var(--cta-aura-light, var(--cta-light)) 104deg,
+    var(--cta-aura-light, var(--cta-light)) 112deg,
+    transparent 120deg,
+    transparent 360deg
+  );
+  filter: blur(14px);
+  will-change: background, transform;
+  animation: navCtaSnakeAura 2.4s linear infinite;
+}
+/* The halo runs the blade's own sweep, plus a scale punch on the flare beat. Glow
+   that only brightens stays the same size and the eye adapts to it; glow that
+   physically expands is movement, and movement is what peripheral vision is built
+   to catch. Transform on the pseudo-element, so it is independent of the wrap's
+   own breathe rather than fighting it. */
+@keyframes navCtaSnakeAura {
+  0%   { --cta-angle: 0deg;   opacity: 0;    transform: scale(1); animation-timing-function: cubic-bezier(0.16, 0.84, 0.44, 1); }
+  10%  { --cta-angle: 30deg;  opacity: 0.85; animation-timing-function: linear; }
+  52%  { transform: scale(1); }
+  62%  { opacity: 1;    transform: scale(1.18); }
+  78%  { opacity: 0.85; transform: scale(1); }
+  90%  { --cta-angle: 330deg; opacity: 0.85; animation-timing-function: cubic-bezier(0.56, 0, 0.84, 0.16); }
+  100% { --cta-angle: 360deg; opacity: 0;    transform: scale(1); }
+}
+.nav-cta-wrap:hover::before { animation-duration: 1.55s; filter: blur(17px); }
+
+/* Second blade. Thinner, dimmer and on a longer, deliberately non-harmonic cycle
+   (3.7s against the primary's 2.4s) so the two drift in and out of phase instead
+   of locking into a pattern — the moment they cross is the bit that reads as
+   sparkle, and it lands at a different place on the rim every lap. It lives on the
+   wrap rather than inside .nav-cta-ring because the ring's own opacity fade would
+   otherwise multiply through and blink both blades out together. */
+.nav-cta-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2.5px;
+  pointer-events: none;
+  --cta-angle2: 180deg;
+  background: conic-gradient(
+    from var(--cta-angle2),
+    transparent 0deg,
+    var(--cta-dim) 34deg,
+    var(--cta-light) 58deg,
+    transparent 65deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  filter: drop-shadow(0 0 4px var(--cta-glow));
+  will-change: background;
+  animation: navCtaSnakeB 3.7s linear infinite;
+}
+.nav-cta-wrap:hover::after { animation-duration: 2.1s; }
+@keyframes navCtaSnakeB {
+  0%   { --cta-angle2: 180deg; opacity: 0; animation-timing-function: cubic-bezier(0.16, 0.84, 0.44, 1); }
+  12%  { --cta-angle2: 218deg; opacity: 0.62; animation-timing-function: linear; }
+  88%  { --cta-angle2: 502deg; opacity: 0.62; animation-timing-function: cubic-bezier(0.56, 0, 0.84, 0.16); }
+  100% { --cta-angle2: 540deg; opacity: 0; }
+}
+/* DISABLED — wide flat-white halo pulsing past the pill on its own 3.2s beat.
+   The sharp-plus-blurred pair (.nav-cta-ring + .nav-cta-wrap::before) is the whole
+   depth model now; a third single-colour glow layered over a four-colour snake
+   only desaturates it, and its independent pulse fought the snake's own fade.
+   Un-comment to restore. */
+/*
+.nav-cta-wrap::after {
+  content: '';
+  position: absolute;
+  inset: -9px;
+  border-radius: 999px;
+  z-index: -1;
+  background: radial-gradient(58% 118% at 50% 50%, var(--cta-glow) 0%, transparent 72%);
+  filter: blur(9px);
+  opacity: 0.5;
+  pointer-events: none;
+  animation: navCtaHalo 3.2s ease-in-out infinite;
+}
+.nav-cta-wrap:hover::after {
+  opacity: 0.85;
+  animation-play-state: paused;
+}
+*/
+/* Kept for the disabled halo above. */
+@keyframes navCtaHalo {
+  0%, 100% { opacity: 0.20; }
+  50%      { opacity: 0.40; }
+}
+.nav-cta-ring {
+  --cta-angle: 0deg;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  /* A fine filament doing the drawing while the bloom does the carrying is what
+     reads as jewellery. Must match the wrap's padding exactly, or the rim shows
+     through as a sliver beside the lit band. */
+  padding: 2.5px;
+  pointer-events: none;
+  z-index: 0;
+  /* One blade of light, not a spectrum. A long dim tail ramping into a short bright
+     plateau that is cut off hard — the sweep rotates clockwise, so the highest-degree
+     stop is the leading edge, which puts the hard edge at the front and the fade
+     behind it. That asymmetry is what makes it read as something travelling. It
+     covers ~1/3 of the circumference; more than that and both ends are lit at once,
+     which stops looking like motion and starts looking like a border. */
+  background: conic-gradient(
+    from var(--cta-angle),
+    transparent 0deg,
+    var(--cta-dim) 70deg,
+    var(--cta-light) 104deg,
+    var(--cta-light) 112deg,
+    transparent 120deg,
+    transparent 360deg
+  );
+  /* Punch the middle out so only the padding band paints: two full-size layers,
+     one clipped to the content box, composited so they cancel where they overlap. */
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  /* Layered bloom: a tight core halo plus a wide soft one, so the streak reads as
+     emitting light rather than as a flat coloured edge. */
+  /* Tight bloom only — the wide soft glow is the aura layer's job. No saturate or
+     brightness now that the light is a single tone: those existed to stop four
+     competing hues going muddy, and on one colour they only clip it. */
+  filter:
+    drop-shadow(0 0 3px var(--cta-glow))
+    drop-shadow(0 0 10px var(--cta-glow))
+    drop-shadow(0 0 20px var(--cta-glow));
+  will-change: background;
+  animation: navCtaSnake 2.4s linear infinite;
+  transition: filter 0.5s cubic-bezier(0.22,0.61,0.36,1);
+}
+/* The flare. Once per lap the entire rim ignites for a beat, then falls away. This
+   is the piece that makes the control assert itself rather than politely shimmer:
+   a travelling highlight is only ever lit on one side, so peripheral vision can
+   miss it, while a whole-rim ignition registers even when nobody is looking at it.
+   It lives inside .nav-cta-ring on purpose — the parent's band mask crops it to the
+   rim and the parent's bloom filter throws it outward, and the parent's own opacity
+   fade gates it, so the flare can never fire during the dead moment between laps. */
+.nav-cta-ring::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--cta-light);
+  opacity: 0;
+  animation: navCtaFlare 2.4s cubic-bezier(0.2,0.7,0.3,1) infinite;
+}
+@keyframes navCtaFlare {
+  0%, 52% { opacity: 0; }
+  /* Sharp attack, slow decay — the shape of an actual flash. Ramping up as slowly
+     as it falls off just looks like a fade. */
+  /* Peak is a variable: a full-rim ignition in white on blue is a highlight, the
+     same thing in saturated blue on white is a hard ring. Resolved per element, so
+     the light bar can soften it without a second set of keyframes. */
+  62%     { opacity: var(--cta-flare-peak, 0.9); }
+  100%    { opacity: 0; }
+}
+.nav-cta-wrap:hover .nav-cta-ring {
+  filter:
+    drop-shadow(0 0 4px var(--cta-glow))
+    drop-shadow(0 0 14px var(--cta-glow))
+    drop-shadow(0 0 28px var(--cta-glow));
+  animation-duration: 1.55s;
+}
+.nav-cta-wrap:hover .nav-cta-ring::before { animation-duration: 1.55s; }
+.nav-cta-wrap:hover .nav-cta-ring::before {
+  animation-duration: 2.1s;
+}
+/* Fast-in, slow through the middle, fast-out — and it fades at both ends so each
+   lap is a discrete pass of light rather than an endlessly spinning ring. The
+   angle stops are evenly spaced against time; the pacing comes from the per-stop
+   timing functions, which is also what hides the seam where 360deg meets 0deg. */
+@keyframes navCtaSnake {
+  0%   { --cta-angle: 0deg;   opacity: 0; animation-timing-function: cubic-bezier(0.16, 0.84, 0.44, 1); }
+  10%  { --cta-angle: 30deg;  opacity: 1; animation-timing-function: linear; }
+  90%  { --cta-angle: 330deg; opacity: 1; animation-timing-function: cubic-bezier(0.56, 0, 0.84, 0.16); }
+  100% { --cta-angle: 360deg; opacity: 0; }
+}
+@keyframes navCtaRingSweep {
+  to { --cta-angle: 360deg; }
+}
+@keyframes navCtaRingSweepBack {
+  to { --cta-angle2: -180deg; }
+}
+.nav-cta-wrap > button {
+  position: relative;
+  z-index: 1;
+}
+
+/* Sparks. Sat above the button (z-index 2) and outside the rim, so they read as
+   light thrown off the pill rather than as an icon printed on it. Scale-and-spin
+   in, then shrink away — a glint that fades at constant size looks like a lamp
+   dimming; one that contracts looks like it flashed. */
+.nav-cta-spark {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  color: var(--cta-light);
+  opacity: 0;
+  filter: drop-shadow(0 0 5px var(--cta-glow));
+  animation: navCtaSpark 2.4s cubic-bezier(0.2,0.7,0.3,1) infinite;
+}
+.nav-cta-spark svg { display: block; width: 100%; height: 100%; }
+.nav-cta-spark--a { top: -7px; right: 13%; width: 13px; height: 13px; }
+/* Half a beat behind, smaller, on the opposite corner. */
+.nav-cta-spark--b { bottom: -6px; left: 17%; width: 9px; height: 9px; animation-delay: 0.34s; }
+.nav-cta-tilt:hover .nav-cta-spark { animation-duration: 1.55s; }
+@keyframes navCtaSpark {
+  0%, 46%  { opacity: 0; transform: scale(0) rotate(-60deg); }
+  62%      { opacity: 1; transform: scale(1) rotate(0deg); }
+  84%, 100% { opacity: 0; transform: scale(0.45) rotate(35deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-cta-ring,
+  .nav-cta-ring::before,
+  .nav-cta-wrap,
+  .nav-cta-wrap::before,
+  .nav-cta-wrap::after,
+  .nav-cta-pulse::before,
+  .nav-cta-shine,
+  .nav-cta-spark,
+  .nav-cta-ring::before { animation: none; }
+  /* Base opacity is 0, so killing the animation is enough to leave no trace. */
+  /* The tilt is pointer-driven rather than looping, but a control that pitches in
+     3D is exactly the kind of motion this query exists to stop. */
+  .nav-cta-tilt { transform: none; transition: none; }
+  .nav-cta-spark { display: none; }
+  /* Both blades and the halo would otherwise freeze mid-lap as a lit arc stuck to
+     one side of the pill. The glass rim alone is the reduced-motion resting state. */
+  .nav-cta-pulse::before,
+  .nav-cta-wrap::before,
+  .nav-cta-wrap::after,
+  .nav-cta-ring { opacity: 0; }
+}
+
+/* ══════════════════════════════════════════════════════
+   WAVING HANDS — reusable CTA ornament
+   Markup: <WavingHands /> (src/components/common/WavingHands.tsx),
+   dropped inside any position:relative + isolation:isolate CTA.
+   ══════════════════════════════════════════════════════ */
+
+/* Placement is described by four numbers rather than a pile of magic offsets,
+   which is what lets the same rule serve a CTA of any size:
+     --cta-hand-h      overall hand height; everything else derives from it
+     --cta-hand-inset  how far in from the pill's edge the WRIST sits
+     --cta-hand-drop   how far above the pill's centre line the wrist sits
+     --cta-hand-lean   the static outward tilt
+   The wrist — 50%/84% of the box, where the cuff meets the palm — is the anchor
+   for all of it: it is the rotation origin, and the point `inset` and `drop`
+   measure to. Together they park it on the pill's top corner, tucked far enough
+   inside the rounded cap that the sleeve is hidden by the opaque face, while the
+   palm and fingers rise clear of the silhouette into open space above. The hand
+   then reads as gripping the corner from behind — which also keeps it out of two
+   places it must never go: the label, and the flag sitting 12px to the left.
+   Both offsets scale with the hand, so the whole arrangement holds its
+   proportions across the clamp instead of drifting at one end. */
+.cta-hand {
+  /* The whole arrangement below is solving one constraint: the navbar leaves
+     only ~18px of clear space above the pill (64px bar until md, 80px after,
+     against a ~43px pill). A hand standing straight up needs about 27px of that
+     to show its palm, so it ends up with everything but the fingertips buried
+     behind the face — which is what reads as a row of prongs rather than a hand,
+     and what hides the thumb entirely.
+     The fix is the 45° lean: it splits the hand's reach between vertical and
+     horizontal, so it needs only ~19px of headroom and spends the rest going
+     outward into open space. Everything else here is sized around that. */
+  /* Both ends of the clamp are budgeted against the bar, not picked for looks:
+     at the inward end of the wave the hand stands closest to upright and reaches
+     highest, and 40px is the largest that still leaves the fingertips inside the
+     80px bar there. 32px is the same sum against the 64px bar. */
+  --cta-hand-h: clamp(32px, 3vw, 40px);
+  --cta-hand-w: calc(var(--cta-hand-h) * 48 / 64);
+  /* Shallow — the wrist sits barely inside the pill's cap. Enough to swallow the
+     cuff, little enough that the thumb, which hangs low on the hand, still clears
+     the cap's curve instead of disappearing behind it. */
+  --cta-hand-inset: calc(var(--cta-hand-h) * 0.24);
+  /* Wrist a few px under the pill's top edge. The single most sensitive number
+     here: only the cuff and the very base of the palm may hide behind the face.
+     Sink it further and the palm goes behind the pill too. */
+  --cta-hand-drop: calc(var(--cta-hand-h) * -0.40);
+  /* Diagonal, not upright — see the note above. It is also what turns the thumb
+     out toward open space, which is the difference between a hand and a fork. */
+  --cta-hand-lean: 45deg;
+  /* Which way "out" is. Flipped on the right hand so one set of keyframes
+     drives both and the pair waves symmetrically. */
+  --wave-dir: 1;
+  --cta-hand-wave-dur: 2.6s;
+  --cta-hand-bob-dur: 3.7s;
+  /* Fingers flex on their own period, deliberately non-harmonic with the wrist's
+     — the offset between the two is what stops the hand swinging as one rigid
+     paddle, which is most of what makes this kind of animation look cheap. */
+  --cta-hand-flex-dur: 1.9s;
+  /* The fills are the hero's own white-to-pale-blue blend and live in the SVG as
+     gradients (they have to — a gradient cannot come from a custom property).
+     Only the outline is themeable from here. It is the hero's mid blue rather
+     than a dark line: heavy enough to hold the silhouette against both the blue
+     hero and the white panel bar, light enough that the hand still reads as part
+     of the same wash rather than as a sticker laid over it. Literal fallback, so
+     an unresolved property can never drop through to SVG's default black. */
+  --cta-hand-line: #0d73e3;
+
+  position: absolute;
+  /* Level with .nav-cta-ring rather than below everything on a negative layer:
+     at z-index 0 the hands paint above the wrap's rim background and above its
+     blurred aura (which is on -1), while the button face (z-index 1) still
+     covers the wrist. Ordering against the ring is then pure DOM order, which is
+     why <WavingHands /> is mounted before it — the lit filament sweeps over the
+     hand instead of under it. */
+  z-index: 0;
+  width: var(--cta-hand-w);
+  height: var(--cta-hand-h);
+  top: calc(50% + var(--cta-hand-drop) - var(--cta-hand-h) * 0.84);
+  transform-origin: 50% 84%;
+  pointer-events: none;
+  /* Lifts the pale hand off the hero without darkening it. Tinted to the hero's
+     own deep blue rather than neutral grey — a grey shadow under a blue-white
+     gradient is the one thing that would make it read as pasted on. */
+  filter: drop-shadow(0 2px 5px rgba(11, 58, 140, 0.3));
+  will-change: transform;
+  /* Two loops on two independent properties. `rotate` and `translate` are
+     separate animatable properties from `transform`, so the static lean below
+     survives underneath both without needing a wrapper element to carry it —
+     and all three still compose into one composited matrix, so this costs no
+     layout and no paint. */
+  animation:
+    ctaHandWave var(--cta-hand-wave-dur) cubic-bezier(0.42, 0, 0.58, 1) infinite,
+    ctaHandBob var(--cta-hand-bob-dur) ease-in-out infinite;
+}
+.cta-hand svg { display: block; width: 100%; height: 100%; overflow: visible; }
+/* Fingers flexing about the knuckle line. transform-box: view-box so the origin
+   is expressed in the same 48×64 coordinates as the artwork — the default
+   (border-box on a nested <g>) would put it somewhere meaningless. Two degrees
+   is the whole range: it should never be legible as its own animation, only as
+   the hand not being made of wood. */
+.cta-hand__fingers {
+  transform-box: view-box;
+  transform-origin: 26px 38px;
+  animation: ctaHandFlex var(--cta-hand-flex-dur) cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+/* Pass 1 of the outline trick: the shapes stroked AND filled in the line colour,
+   so they union into one solid silhouette a stroke-width larger than the hand.
+   The gradient pass in the markup then covers the interior, leaving that overhang
+   as the rim. Two passes rather than `paint-order: stroke fill`, which is
+   per-element and so still lays each shape's stroke over its neighbour's fill.
+   Only the stroke colour is themeable — the fills are gradients, which cannot
+   come from a custom property, so they live in the SVG's own <defs>. */
+.cta-hand__outline {
+  fill: var(--cta-hand-line, #0d73e3);
+  stroke: var(--cta-hand-line, #0d73e3);
+  /* Fine, and load-bearing: the finger gaps are 3.4 units, so this is the widest
+     stroke that still leaves ~1.6 units of gap after the outline pass grows each
+     finger by half a stroke on both sides. Go heavier and the four fingers fuse
+     into one paddle. It also has to stay heavy enough to keep the pale gradient
+     from dissolving into the white panel bar — 1.8 is the whole window. */
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+/* The cuff has nothing to seam against, so one stroked shape is enough. */
+.cta-hand__cuff {
+  stroke: var(--cta-hand-line, #0d73e3);
+  stroke-width: 1.8;
+}
+
+.cta-hand--left {
+  left: calc(var(--cta-hand-inset) - var(--cta-hand-w) * 0.5);
+  transform: rotate(calc(-1 * var(--cta-hand-lean)));
+}
+/* Mismatched periods rather than a delay: a delay only offsets a lockstep pair,
+   whereas non-harmonic periods make the two hands drift in and out of phase
+   forever — they are never quite in the same relationship twice, which is what
+   stops the pair reading as one mechanism. Three periods, all mutually
+   non-harmonic, so the drift never resolves. */
+.cta-hand--right {
+  --wave-dir: -1;
+  --cta-hand-wave-dur: 2.9s;
+  --cta-hand-bob-dur: 4.3s;
+  --cta-hand-flex-dur: 2.3s;
+  right: calc(var(--cta-hand-inset) - var(--cta-hand-w) * 0.5);
+  transform: rotate(var(--cta-hand-lean));
+}
+/* Mirrored on the <svg>, not the container — the container's own transform is
+   already spoken for by the lean, and a scaleX there would also invert the
+   direction of the animated rotate. */
+.cta-hand--right svg { transform: scaleX(-1); }
+
+/* Two firm waves that damp into a sway, rather than a sine loop at constant
+   amplitude. A wave that never stops waving is a metronome; one that swings
+   hard, tails off and settles into a small drift is a person — and the tail is
+   what keeps the button alive between beats without ever getting loud.
+   Ease-in-out on every segment gives each reversal a pendulum's deceleration,
+   which is what keeps it off the "robotic" side. Last keyframe matches the
+   first, so the loop has no seam. */
+@keyframes ctaHandWave {
+  0%   { rotate: calc(var(--wave-dir) * -2deg); }
+  8%   { rotate: calc(var(--wave-dir) * -13deg); }
+  20%  { rotate: calc(var(--wave-dir) * 10deg); }
+  32%  { rotate: calc(var(--wave-dir) * -12deg); }
+  44%  { rotate: calc(var(--wave-dir) * 8deg); }
+  56%  { rotate: calc(var(--wave-dir) * -8deg); }
+  68%  { rotate: calc(var(--wave-dir) * 4deg); }
+  84%  { rotate: calc(var(--wave-dir) * -4.5deg); }
+  100% { rotate: calc(var(--wave-dir) * -2deg); }
+}
+/* ~2.6px of total travel on its own period, so the rise and fall never lands on
+   the same beat as the wave. Any more and it stops being breath and starts
+   being a bounce. */
+@keyframes ctaHandBob {
+  0%, 100% { translate: 0 1.3px; }
+  50%      { translate: 0 -1.3px; }
+}
+
+/* The fingers, spreading and closing a couple of degrees about the knuckle line
+   on a period that shares no factor with the wrist's. That mismatch is the whole
+   point: the tips lead the wrist on some swings and trail it on others, which is
+   what a real hand does and what a single rigid rotation never will. Two degrees
+   is the entire range — it should never be legible as its own animation, only as
+   the hand not being made of wood. */
+@keyframes ctaHandFlex {
+  0%, 100% { rotate: -2deg; }
+  50%      { rotate: 2deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Kept, not hidden: a still pair of hands resting on the pill's corners is a
+     fine piece of decoration, and it is the motion this query objects to. */
+  .cta-hand,
+  .cta-hand__fingers { animation: none; }
 }
 
 /* ══════════════════════════════════════════════════════
@@ -2274,3 +3369,4 @@ h6 {
   .skip-btn:hover .skip-btn__chevron { transform: rotate(0deg); }
   .skip-btn--up:hover .skip-btn__chevron { transform: rotate(180deg); }
 }
+

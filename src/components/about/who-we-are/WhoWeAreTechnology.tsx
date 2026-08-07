@@ -67,7 +67,7 @@ export default function WhoWeAreTechnology() {
   return (
     <>
       <style>{`
-        .wwt-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(32px,5vw,64px); align-items: center; max-width: 1160px; margin: 0 auto; }
+        .wwt-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(32px,5vw,64px); align-items: center; max-width: var(--w-1160); margin: 0 auto; }
         @media (max-width: 900px) { .wwt-grid { grid-template-columns: 1fr; gap: 36px; } }
         .wwt-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         @media (max-width: 520px) { .wwt-cards { grid-template-columns: 1fr; } }
@@ -83,18 +83,18 @@ export default function WhoWeAreTechnology() {
       <section style={{ padding: 'clamp(56px,7vw,92px) 28px', background: '#f7f9fc' }}>
         <div className="wwt-grid">
           <div data-reveal="left">
-            <span style={{ display: 'block', fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', marginBottom: '16px' }}>
+            <span style={{ display: 'block', fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', marginBottom: '16px' }}>
               <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
               Technology & Innovation
             </span>
-            <h2 style={{ margin: '0 0 18px', fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+            <h2 style={{ margin: '0 0 18px', fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               Innovation drives everything we do
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <p style={{ margin: 0, fontSize: 'clamp(14px,1.3vw,16px)', lineHeight: 1.8, color: '#52525e' }}>
+              <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.3vw,16px), min(1.111vw, 23.2px))', lineHeight: 1.8, color: '#52525e' }}>
                 LOCATOR combines AI-powered analytics, IoT connectivity, intelligent GPS hardware, cloud computing, and real-time operational intelligence to create a connected ecosystem for modern businesses.
               </p>
-              <p style={{ margin: 0, fontSize: 'clamp(14px,1.3vw,16px)', lineHeight: 1.8, color: '#52525e' }}>
+              <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.3vw,16px), min(1.111vw, 23.2px))', lineHeight: 1.8, color: '#52525e' }}>
                 Our platform transforms millions of daily data points into meaningful insights — enabling organizations to improve fleet efficiency, reduce downtime, strengthen security, automate workflows, and make smarter decisions through a single, integrated platform.
               </p>
             </div>
@@ -104,8 +104,8 @@ export default function WhoWeAreTechnology() {
             {PILLARS.map(p => (
               <div key={p.title} className="wwt-card">
                 <div className="wwt-icon" style={{ background: `${p.accent}14`, color: p.accent }}>{p.icon}</div>
-                <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 800, color: '#1d1d1f', letterSpacing: '-.01em' }}>{p.title}</h3>
-                <p style={{ margin: 0, fontSize: '13px', lineHeight: 1.6, color: '#6e6e73' }}>{p.desc}</p>
+                <h3 style={{ margin: 0, fontSize: 'var(--f-15)', fontWeight: 800, color: '#1d1d1f', letterSpacing: '-.01em' }}>{p.title}</h3>
+                <p style={{ margin: 0, fontSize: 'var(--f-13)', lineHeight: 1.6, color: '#6e6e73' }}>{p.desc}</p>
               </div>
             ))}
           </div>

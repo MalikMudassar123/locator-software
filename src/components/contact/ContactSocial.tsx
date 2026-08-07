@@ -80,13 +80,13 @@ export default function ContactSocial() {
           background: #fff;
           padding: clamp(20px,3vw,40px) 28px clamp(52px,7vw,88px);
         }
-        .cts-inner { max-width: 1180px; margin: 0 auto; }
+        .cts-inner { max-width: var(--w-1180); margin: 0 auto; }
 
         .cts-head { text-align: center; max-width: 620px; margin: 0 auto clamp(26px,3.4vw,40px); }
-        .cts-eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: clamp(12px,1.05vw,13.5px); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1360ee; }
+        .cts-eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: max(clamp(12px,1.05vw,13.5px), min(0.938vw, 19.57px)); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1360ee; }
         .cts-eyebrow i { display: block; width: 28px; height: 2.5px; background: #1360ee; border-radius: 2px; }
-        .cts-title { margin: 10px 0 0; font-size: clamp(25px,2.7vw,33px); font-weight: 800; letter-spacing: -.028em; line-height: 1.16; color: #1d1d1f; }
-        .cts-sub { margin: 12px 0 0; font-size: clamp(14px,1.2vw,15.5px); line-height: 1.7; color: #6e6e73; }
+        .cts-title { margin: 10px 0 0; font-size: max(clamp(25px,2.7vw,33px), min(2.292vw, 47.85px)); font-weight: 800; letter-spacing: -.028em; line-height: 1.16; color: #1d1d1f; }
+        .cts-sub { margin: 12px 0 0; font-size: max(clamp(14px,1.2vw,15.5px), min(1.076vw, 22.47px)); line-height: 1.7; color: #6e6e73; }
 
         .cts-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: clamp(12px,1.5vw,18px); }
         @media (max-width: 940px) { .cts-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
@@ -133,15 +133,15 @@ export default function ContactSocial() {
 
         .cts-text { min-width: 0; flex: 1; }
         .cts-row { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
-        .cts-name { margin: 0; font-size: 16px; font-weight: 800; letter-spacing: -.02em; color: #1d1d1f; }
-        .cts-handle { font-size: 12.5px; font-weight: 600; color: color-mix(in srgb, var(--brand) 85%, #000); }
-        .cts-blurb { margin: 5px 0 0; font-size: 12.5px; line-height: 1.55; color: #8e97a8; }
+        .cts-name { margin: 0; font-size: var(--f-16); font-weight: 800; letter-spacing: -.02em; color: #1d1d1f; }
+        .cts-handle { font-size: var(--f-12-5); font-weight: 600; color: color-mix(in srgb, var(--brand) 85%, #000); }
+        .cts-blurb { margin: 5px 0 0; font-size: var(--f-12-5); line-height: 1.55; color: #8e97a8; }
 
         /* CTA pill — outlined at rest, solid brand on hover. */
         .cts-cta {
           flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px;
           padding: 9px 15px; border-radius: 999px;
-          font-size: 12px; font-weight: 800; letter-spacing: .02em;
+          font-size: var(--f-12); font-weight: 800; letter-spacing: .02em;
           color: var(--brand); border: 1.5px solid color-mix(in srgb, var(--brand) 32%, transparent);
           background: color-mix(in srgb, var(--brand) 7%, #fff);
           transition: background .24s ${EASE}, color .24s ${EASE}, border-color .24s ${EASE}, transform .24s ${EASE};

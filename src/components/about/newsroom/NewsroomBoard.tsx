@@ -109,7 +109,7 @@ export default function NewsroomBoard() {
         /* overflow-x: clip (not hidden) — it contains stray horizontal overflow
            without creating a scroll container, so the sticky rail still works. */
         .nrb { padding: clamp(28px,4vw,44px) 28px clamp(56px,7vw,88px); background: #f7f9fc; scroll-margin-top: 80px; overflow-x: clip; }
-        .nrb-inner { max-width: 1240px; margin: 0 auto; }
+        .nrb-inner { max-width: var(--w-1240); margin: 0 auto; }
 
         /* ── Tab bar ── */
         .nrb-tabs {
@@ -122,7 +122,7 @@ export default function NewsroomBoard() {
         .nrb-tab {
           flex-shrink: 0; border: 0; cursor: pointer; font-family: inherit;
           padding: 10px 16px; border-radius: 10px; background: transparent;
-          font-size: 13px; font-weight: 650; color: #5b6474; white-space: nowrap;
+          font-size: var(--f-13); font-weight: 650; color: #5b6474; white-space: nowrap;
           transition: background .18s ${EASE}, color .18s ${EASE};
         }
         .nrb-tab:hover { background: #f2f6fd; color: #16233a; }
@@ -157,7 +157,7 @@ export default function NewsroomBoard() {
 
         .nrb-chip {
           position: absolute; left: 12px; top: 12px; z-index: 2;
-          font-size: 9.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+          font-size: var(--f-9-5); font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
           color: #fff; padding: 5px 9px; border-radius: 6px;
         }
         .nrb-card-play {
@@ -169,17 +169,17 @@ export default function NewsroomBoard() {
         .nrb-card:hover .nrb-card-play { transform: scale(1.08); }
         .nrb-card-dur {
           position: absolute; right: 10px; bottom: 10px; z-index: 2;
-          font-size: 10.5px; font-weight: 700; color: #fff;
+          font-size: var(--f-10-5); font-weight: 700; color: #fff;
           background: rgba(0,0,0,.72); padding: 3px 7px; border-radius: 5px;
         }
 
         .nrb-card-body { padding: 16px 16px 18px; display: flex; flex-direction: column; flex: 1; }
         .nrb-card--lg .nrb-card-body { padding: 22px clamp(20px,2.4vw,28px) 26px; }
-        .nrb-card-date { font-size: 11.5px; color: #97a1b3; margin-bottom: 8px; }
-        .nrb-card-title { margin: 0 0 8px; font-size: 15px; font-weight: 780; line-height: 1.32; letter-spacing: -.015em; color: #0b1220; }
-        .nrb-card--lg .nrb-card-title { font-size: clamp(20px,2.4vw,30px); line-height: 1.18; letter-spacing: -.025em; }
-        .nrb-card-excerpt { margin: 0 0 14px; font-size: 12.8px; line-height: 1.6; color: #6b7484; flex: 1; }
-        .nrb-card--lg .nrb-card-excerpt { font-size: clamp(13.5px,1.2vw,15px); line-height: 1.7; max-width: 62ch; }
+        .nrb-card-date { font-size: var(--f-11-5); color: #97a1b3; margin-bottom: 8px; }
+        .nrb-card-title { margin: 0 0 8px; font-size: var(--f-15); font-weight: 780; line-height: 1.32; letter-spacing: -.015em; color: #0b1220; }
+        .nrb-card--lg .nrb-card-title { font-size: max(clamp(20px,2.4vw,30px), min(2.083vw, 43.5px)); line-height: 1.18; letter-spacing: -.025em; }
+        .nrb-card-excerpt { margin: 0 0 14px; font-size: var(--f-12-8); line-height: 1.6; color: #6b7484; flex: 1; }
+        .nrb-card--lg .nrb-card-excerpt { font-size: max(clamp(13.5px,1.2vw,15px), min(1.042vw, 21.75px)); line-height: 1.7; max-width: 62ch; }
         /* Social posts run long and vary wildly in length. Scoped rules give
            every social card the same tidy body: a 2-line headline and a 3-line
            excerpt, both reserved (min-height) so cards line up and short posts
@@ -196,7 +196,7 @@ export default function NewsroomBoard() {
           min-height: calc(1.6em * 3);
         }
         .nrb-card--social .nrb-card-more { margin-top: auto; }
-        .nrb-card-more { font-size: 12.5px; font-weight: 700; color: #1360ee; }
+        .nrb-card-more { font-size: var(--f-12-5); font-weight: 700; color: #1360ee; }
         .nrb-card:hover .nrb-card-more { text-decoration: underline; }
 
         /* ── Featured (dark treatment, text over the photo) ── */
@@ -215,13 +215,13 @@ export default function NewsroomBoard() {
         }
         .nrb-hero-content { position: relative; z-index: 2; padding: clamp(22px,3.2vw,40px); max-width: 640px; }
         .nrb-hero-chip {
-          display: inline-block; font-size: 9.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+          display: inline-block; font-size: var(--f-9-5); font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
           color: #fff; background: #1360ee; padding: 5px 10px; border-radius: 6px; margin-bottom: 16px;
         }
-        .nrb-hero-date { display: block; font-size: 11.5px; color: rgba(255,255,255,.6); margin-bottom: 10px; }
-        .nrb-hero-title { margin: 0 0 12px; font-size: clamp(22px,3vw,38px); font-weight: 800; line-height: 1.14; letter-spacing: -.028em; color: #fff; }
-        .nrb-hero-excerpt { margin: 0 0 20px; font-size: clamp(13px,1.2vw,15px); line-height: 1.7; color: rgba(255,255,255,.74); max-width: 52ch; }
-        .nrb-hero-more { font-size: 13px; font-weight: 700; color: #7fb0ff; }
+        .nrb-hero-date { display: block; font-size: var(--f-11-5); color: rgba(255,255,255,.6); margin-bottom: 10px; }
+        .nrb-hero-title { margin: 0 0 12px; font-size: max(clamp(22px,3vw,38px), min(2.639vw, 55.1px)); font-weight: 800; line-height: 1.14; letter-spacing: -.028em; color: #fff; }
+        .nrb-hero-excerpt { margin: 0 0 20px; font-size: max(clamp(13px,1.2vw,15px), min(1.042vw, 21.75px)); line-height: 1.7; color: rgba(255,255,255,.74); max-width: 52ch; }
+        .nrb-hero-more { font-size: var(--f-13); font-weight: 700; color: #7fb0ff; }
         .nrb-hero-card:hover .nrb-hero-more { text-decoration: underline; }
 
         /* ── Grids ── */
@@ -240,8 +240,8 @@ export default function NewsroomBoard() {
 
         .nrb-panel { background: #fff; border: 1px solid #e7ecf6; border-radius: 16px; padding: 18px 18px 20px; }
         .nrb-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
-        .nrb-panel-head h3 { margin: 0; font-size: 15px; font-weight: 800; letter-spacing: -.015em; color: #0b1220; }
-        .nrb-panel-head a { font-size: 12px; font-weight: 700; color: #1360ee; text-decoration: none; }
+        .nrb-panel-head h3 { margin: 0; font-size: var(--f-15); font-weight: 800; letter-spacing: -.015em; color: #0b1220; }
+        .nrb-panel-head a { font-size: var(--f-12); font-weight: 700; color: #1360ee; text-decoration: none; }
         .nrb-panel-head a:hover { text-decoration: underline; }
 
         .nrb-tl { display: flex; flex-direction: column; }
@@ -255,17 +255,17 @@ export default function NewsroomBoard() {
         .nrb-tl-row:hover { background: #f6f9fe; }
         .nrb-tl-ver { display: flex; flex-direction: column; gap: 4px; }
         .nrb-tl-ver b {
-          display: inline-block; font-size: 11px; font-weight: 800; color: #1360ee;
+          display: inline-block; font-size: var(--f-11); font-weight: 800; color: #1360ee;
           background: rgba(19,96,238,.1); padding: 4px 8px; border-radius: 6px; width: fit-content;
         }
-        .nrb-tl-ver span { font-size: 10.5px; color: #a7b0c0; }
+        .nrb-tl-ver span { font-size: var(--f-10-5); color: #a7b0c0; }
         .nrb-tl-latest {
           font-size: 8.5px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase;
           color: #22a06b; background: rgba(34,160,107,.12); padding: 3px 6px; border-radius: 5px; width: fit-content;
         }
-        .nrb-tl-title { margin: 0 0 3px; font-size: 13.5px; font-weight: 750; color: #0b1220; letter-spacing: -.01em; }
-        .nrb-tl-body { margin: 0; font-size: 12px; color: #7a8394; line-height: 1.5; }
-        .nrb-tl-link { font-size: 12px; font-weight: 700; color: #1360ee; white-space: nowrap; }
+        .nrb-tl-title { margin: 0 0 3px; font-size: var(--f-13-5); font-weight: 750; color: #0b1220; letter-spacing: -.01em; }
+        .nrb-tl-body { margin: 0; font-size: var(--f-12); color: #7a8394; line-height: 1.5; }
+        .nrb-tl-link { font-size: var(--f-12); font-weight: 700; color: #1360ee; white-space: nowrap; }
 
         .nrb-ev { display: flex; flex-direction: column; gap: 10px; }
         .nrb-ev-row {
@@ -278,12 +278,12 @@ export default function NewsroomBoard() {
           display: grid; place-items: center; padding: 7px 0; border-radius: 9px;
           background: #0b1220; color: #fff; line-height: 1;
         }
-        .nrb-ev-date b { font-size: 16px; font-weight: 800; }
-        .nrb-ev-date span { font-size: 9px; font-weight: 700; letter-spacing: .09em; margin-top: 3px; color: rgba(255,255,255,.65); }
-        .nrb-ev-title { margin: 0 0 3px; font-size: 13px; font-weight: 750; color: #0b1220; letter-spacing: -.01em; }
-        .nrb-ev-meta { margin: 0; font-size: 11.5px; color: #8b93a3; }
+        .nrb-ev-date b { font-size: var(--f-16); font-weight: 800; }
+        .nrb-ev-date span { font-size: var(--f-9); font-weight: 700; letter-spacing: .09em; margin-top: 3px; color: rgba(255,255,255,.65); }
+        .nrb-ev-title { margin: 0 0 3px; font-size: var(--f-13); font-weight: 750; color: #0b1220; letter-spacing: -.01em; }
+        .nrb-ev-meta { margin: 0; font-size: var(--f-11-5); color: #8b93a3; }
         .nrb-ev-cta {
-          font-size: 11.5px; font-weight: 700; color: #1360ee; text-decoration: none;
+          font-size: var(--f-11-5); font-weight: 700; color: #1360ee; text-decoration: none;
           border: 1.5px solid #cfdcf5; padding: 7px 13px; border-radius: 8px; white-space: nowrap;
           transition: background .18s ${EASE}, border-color .18s ${EASE}, color .18s ${EASE};
         }
@@ -295,7 +295,7 @@ export default function NewsroomBoard() {
         @media (max-width: 1080px) { .nrb-feed { max-width: 100%; } }
         .nrb-feed-note {
           display: flex; align-items: center; gap: 8px; margin: 0 0 2px;
-          font-size: 12.5px; color: #8b93a3;
+          font-size: var(--f-12-5); color: #8b93a3;
         }
         .nrb-feed-note i { width: 7px; height: 7px; border-radius: 50%; background: #22a06b; }
 
@@ -314,19 +314,19 @@ export default function NewsroomBoard() {
         }
         .nrb-media-row:hover { transform: translateY(-2px); border-color: #d5e0f5; box-shadow: 0 14px 32px -18px rgba(11,18,32,.35); }
         .nrb-media-pub {
-          display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+          display: inline-block; font-size: var(--f-11); font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
           color: #475569; border: 1px solid #e2e8f2; padding: 6px 11px; border-radius: 7px; margin-bottom: 13px;
         }
-        .nrb-media-title { margin: 0 0 8px; font-size: 15px; font-weight: 750; line-height: 1.4; letter-spacing: -.015em; color: #0b1220; }
-        .nrb-media-date { font-size: 11.5px; color: #97a1b3; }
+        .nrb-media-title { margin: 0 0 8px; font-size: var(--f-15); font-weight: 750; line-height: 1.4; letter-spacing: -.015em; color: #0b1220; }
+        .nrb-media-date { font-size: var(--f-11-5); color: #97a1b3; }
 
         .nrb-empty {
-          padding: 56px 20px; text-align: center; color: #8b93a3; font-size: 14px;
+          padding: 56px 20px; text-align: center; color: #8b93a3; font-size: var(--f-14);
           background: #fff; border: 1px dashed #dbe3f0; border-radius: 16px;
         }
 
         .nrb-section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-        .nrb-section-head h2 { margin: 0; font-size: clamp(17px,1.9vw,22px); font-weight: 800; letter-spacing: -.02em; color: #0b1220; }
+        .nrb-section-head h2 { margin: 0; font-size: max(clamp(17px,1.9vw,22px), min(1.528vw, 31.9px)); font-weight: 800; letter-spacing: -.02em; color: #0b1220; }
       `}</style>
 
       <div className="nrb-inner">
@@ -377,7 +377,7 @@ export default function NewsroomBoard() {
                   <div className="nrb-panel">
                     <div className="nrb-panel-head">
                       <h3>Latest Product Updates</h3>
-                      <button type="button" style={{ all: 'unset', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: '#1360ee' }} onClick={() => setTab('product')}>
+                      <button type="button" style={{ all: 'unset', cursor: 'pointer', fontSize: 'var(--f-12)', fontWeight: 700, color: '#1360ee' }} onClick={() => setTab('product')}>
                         View All →
                       </button>
                     </div>
@@ -402,7 +402,7 @@ export default function NewsroomBoard() {
                   <div className="nrb-panel">
                     <div className="nrb-panel-head">
                       <h3>Upcoming Events</h3>
-                      <button type="button" style={{ all: 'unset', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: '#1360ee' }} onClick={() => setTab('events')}>
+                      <button type="button" style={{ all: 'unset', cursor: 'pointer', fontSize: 'var(--f-12)', fontWeight: 700, color: '#1360ee' }} onClick={() => setTab('events')}>
                         View All →
                       </button>
                     </div>

@@ -1412,14 +1412,14 @@ export default function AnimatedGlobeHero({
           z-index: 2;
         }
         .stat-card__value {
-          font-size: clamp(17px, 1.9vw, 26px);
+          font-size: max(clamp(17px, 1.9vw, 26px), min(1.806vw, 37.7px));
           font-weight: 600;
           line-height: 1.1;
           letter-spacing: -0.02em;
           text-shadow: 0 2px 12px rgba(0, 40, 90, 0.25);
         }
         .stat-card__label {
-          font-size: clamp(9px, 0.78vw, 11.5px);
+          font-size: max(clamp(9px, 0.78vw, 11.5px), min(0.780vw, 16.29px));
           font-weight: 400;
           opacity: 0.92;
           margin-top: 4px;
@@ -1464,8 +1464,8 @@ export default function AnimatedGlobeHero({
         @media (max-width: 768px) {
           .globe-hero { aspect-ratio: 4 / 3; }
           .stat-card { min-width: 100px; padding: 7px 10px; border-radius: 10px; }
-          .stat-card__value { font-size: 15px; }
-          .stat-card__label { font-size: 9.5px; }
+          .stat-card__value { font-size: var(--f-15); }
+          .stat-card__label { font-size: var(--f-9-5); }
           .stat-card--top.stat-card--left     { top: 8%;  left: 3%; }
           .stat-card--bottom.stat-card--left  { top: 76%; left: 3%; }
           .stat-card--top.stat-card--right    { top: 8%;  right: 3%; }
@@ -1474,7 +1474,7 @@ export default function AnimatedGlobeHero({
         @media (max-width: 480px) {
           .globe-hero { aspect-ratio: 3 / 4; }
           .stat-card { min-width: 88px; padding: 6px 9px; }
-          .stat-card__value { font-size: 13px; }
+          .stat-card__value { font-size: var(--f-13); }
           .stat-card__label { font-size: 8.5px; }
           .stat-card--top.stat-card--left     { top: 5%; }
           .stat-card--bottom.stat-card--left  { top: 80%; }

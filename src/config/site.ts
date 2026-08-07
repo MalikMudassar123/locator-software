@@ -16,6 +16,9 @@ export const siteConfig = {
   locale: "en_AE",
   phone: "+971508746688",
   phoneDisplay: "050 874 66 88",
+  // Digits only, no '+' — that is the format wa.me expects. Same line as `phone`;
+  // kept separate so the two can diverge without hunting through components.
+  whatsapp: "971508746688",
   keywords: [
     "fleet management UAE",
     "GPS tracking Dubai",

@@ -12,19 +12,19 @@ export default function SmartIotHero() {
 
         .si-back {
           display: inline-flex; align-items: center; gap: 6px;
-          color: #6e6e73; font-size: 13px; font-weight: 600;
+          color: #6e6e73; font-size: var(--f-13); font-weight: 600;
           text-decoration: none; margin-bottom: 18px;
           transition: color .18s ease, gap .18s ease;
         }
         .si-back:hover { color: #1360ee; gap: 9px; }
 
-        .si-topbar { display: flex; justify-content: flex-end; padding: 0 4px 8px; max-width: 1200px; margin: 0 auto; }
-        .si-phone-top { display: inline-flex; align-items: center; gap: 8px; color: #1360ee; font-size: 16px; font-weight: 800; text-decoration: none; }
+        .si-topbar { display: flex; justify-content: flex-end; padding: 0 4px 8px; max-width: var(--w-1200); margin: 0 auto; }
+        .si-phone-top { display: inline-flex; align-items: center; gap: 8px; color: #1360ee; font-size: var(--f-16); font-weight: 800; text-decoration: none; }
 
         .si-grid {
           position: relative; z-index: 1;
           display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(24px,4vw,48px);
-          align-items: center; max-width: 1280px; margin: 0 auto;
+          align-items: center; max-width: var(--w-1280); margin: 0 auto;
         }
         @media (max-width: 940px) {
           .si-grid { grid-template-columns: 1fr; }
@@ -47,7 +47,7 @@ export default function SmartIotHero() {
         .si-btn-primary .si-btn-icon { background: rgba(255,255,255,.22); color: #fff; }
         .si-btn-secondary .si-btn-icon { background: rgba(19,96,238,.1); color: #1360ee; }
         .si-btn-icon svg { width: 15px; height: 15px; }
-        .si-btn-text { font-size: clamp(13.5px,1.15vw,15px); line-height: 1.35; text-align: left; }
+        .si-btn-text { font-size: max(clamp(13.5px,1.15vw,15px), min(1.042vw, 21.75px)); line-height: 1.35; text-align: left; }
         @media (max-width: 640px) {
           .si-hero-cta-row { flex-direction: column; }
           .si-btn { flex: none; width: 100%; }
@@ -75,16 +75,16 @@ export default function SmartIotHero() {
               Service
             </Link>
 
-            <span style={{ fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase' as const, display: 'block', marginBottom: '16px' }}>
+            <span style={{ fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase' as const, display: 'block', marginBottom: '16px' }}>
               <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
               Smart IoT &amp; Asset Intelligence
             </span>
 
-            <h1 style={{ margin: 0, fontSize: 'clamp(21px,2.5vw,28px)', fontWeight: 800, lineHeight: 1.14, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+            <h1 style={{ margin: 0, fontSize: 'max(clamp(21px,2.5vw,28px), min(1.944vw, 40.6px))', fontWeight: 800, lineHeight: 1.14, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               Smart IoT &amp; GPS Asset Tracking Solutions UAE
             </h1>
 
-            <p style={{ margin: '18px 0 0', maxWidth: '520px', fontSize: 'clamp(14px,1.3vw,16px)', lineHeight: 1.65, color: '#52525e' }}>
+            <p style={{ margin: '18px 0 0', maxWidth: '520px', fontSize: 'max(clamp(14px,1.3vw,16px), min(1.111vw, 23.2px))', lineHeight: 1.65, color: '#52525e' }}>
               Real-time visibility for road teams, machines, and business assets.
             </p>
 

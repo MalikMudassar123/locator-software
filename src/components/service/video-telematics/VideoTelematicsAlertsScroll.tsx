@@ -195,7 +195,7 @@ export default function VideoTelematicsAlertsScroll() {
           bottom: clamp(18px, 3vh, 30px);
           display: inline-flex; align-items: center; gap: 8px;
           padding: 9px 16px; border-radius: 999px;
-          font-family: inherit; font-size: 12.5px; font-weight: 700;
+          font-family: inherit; font-size: var(--f-12-5); font-weight: 700;
           color: #52525e; cursor: pointer;
           background: rgba(255,255,255,.82);
           border: 1px solid rgba(15,23,42,.1);
@@ -237,7 +237,7 @@ export default function VideoTelematicsAlertsScroll() {
         }
         .vta-section-h {
           margin: 0 auto; max-width: 40ch;
-          font-size: clamp(17px,2.1vw,28px); font-weight: 800;
+          font-size: max(clamp(17px,2.1vw,28px), min(1.944vw, 40.6px)); font-weight: 800;
           letter-spacing: -.025em; color: #1d1d1f; line-height: 1.25;
           text-wrap: balance;
         }
@@ -252,7 +252,7 @@ export default function VideoTelematicsAlertsScroll() {
 
         .vta-eyebrow {
           display: inline-flex; align-items: center; gap: 8px;
-          font-size: 10.5px; font-weight: 700; letter-spacing: .13em;
+          font-size: var(--f-10-5); font-weight: 700; letter-spacing: .13em;
           text-transform: uppercase; color: #8b93a3; margin-bottom: clamp(14px,1.8vw,20px);
         }
         .vta-eyebrow-dot {
@@ -271,7 +271,7 @@ export default function VideoTelematicsAlertsScroll() {
         }
         .vta-title {
           margin: 0; padding-top: clamp(2px,.6vw,8px);
-          font-size: clamp(32px,4.4vw,58px);
+          font-size: max(clamp(32px,4.4vw,58px), min(4.028vw, 84.1px));
           font-weight: 800; line-height: 1.02;
           letter-spacing: -.035em; color: #1d1d1f;
         }
@@ -289,7 +289,7 @@ export default function VideoTelematicsAlertsScroll() {
           padding: 7px 12px; border-radius: 8px;
           background: rgba(13,20,38,.82);
           -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-          color: #fff; font-size: 11px; font-weight: 700; letter-spacing: .04em;
+          color: #fff; font-size: var(--f-11); font-weight: 700; letter-spacing: .04em;
           white-space: nowrap;
         }
         .vta-hud-live {
@@ -297,7 +297,7 @@ export default function VideoTelematicsAlertsScroll() {
           animation: vtaPulse 1.6s ${EASE} infinite;
         }
         @keyframes vtaPulse { 0%,100% { opacity: 1 } 50% { opacity: .25 } }
-        @media (max-width: 900px) { .vta-hud-tag { font-size: 10px; padding: 6px 10px; } }
+        @media (max-width: 900px) { .vta-hud-tag { font-size: var(--f-10); padding: 6px 10px; } }
 
         /* ── Live index rail ── every behaviour listed, active one lit.
            Type and a moving indicator do the work; no chips, no fills. */
@@ -325,12 +325,12 @@ export default function VideoTelematicsAlertsScroll() {
         .vta-rail-item[aria-current="true"] { color: #1d1d1f; transform: translateX(3px); }
         .vta-rail-item[aria-current="true"]::before { height: 70%; }
         .vta-rail-num {
-          font-size: 10.5px; font-weight: 700; letter-spacing: .04em;
+          font-size: var(--f-10-5); font-weight: 700; letter-spacing: .04em;
           font-variant-numeric: tabular-nums; color: inherit; opacity: .55;
         }
         .vta-rail-item[aria-current="true"] .vta-rail-num { color: ${BLUE}; opacity: 1; }
         .vta-rail-name {
-          font-size: clamp(12.5px,1.15vw,14px); font-weight: 600;
+          font-size: max(clamp(12.5px,1.15vw,14px), min(0.972vw, 20.3px)); font-weight: 600;
           line-height: 1.35; color: inherit;
         }
         .vta-rail-item[aria-current="true"] .vta-rail-name { font-weight: 800; }
@@ -384,8 +384,8 @@ export default function VideoTelematicsAlertsScroll() {
                   }} />
                 ))}
               </div>
-              <div style={{ fontSize: '13px', fontWeight: 700, color: '#a1a1a6', letterSpacing: '.04em', fontVariantNumeric: 'tabular-nums' }}>
-                <span style={{ color: BLUE, fontSize: '15px' }}>{alert.num}</span>
+              <div style={{ fontSize: 'var(--f-13)', fontWeight: 700, color: '#a1a1a6', letterSpacing: '.04em', fontVariantNumeric: 'tabular-nums' }}>
+                <span style={{ color: BLUE, fontSize: 'var(--f-15)' }}>{alert.num}</span>
                 <span style={{ margin: '0 4px' }}>/</span>
                 {String(N).padStart(2, '0')}
               </div>

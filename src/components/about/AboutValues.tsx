@@ -68,7 +68,7 @@ export default function AboutValues() {
   return (
     <>
       <style>{`
-        .val-wrap { display: grid; grid-template-columns: 0.82fr 1.18fr; gap: clamp(32px,5vw,80px); align-items: start; max-width: 1160px; margin: 0 auto; }
+        .val-wrap { display: grid; grid-template-columns: 0.82fr 1.18fr; gap: clamp(32px,5vw,80px); align-items: start; max-width: var(--w-1160); margin: 0 auto; }
         @media (max-width: 880px) { .val-wrap { grid-template-columns: 1fr; gap: 36px; } }
 
         .val-aside { position: sticky; top: 110px; }
@@ -95,7 +95,7 @@ export default function AboutValues() {
 
         .val-num {
           font-family: ui-monospace, 'Cascadia Code', monospace;
-          font-size: 13px; font-weight: 700; letter-spacing: .04em;
+          font-size: var(--f-13); font-weight: 700; letter-spacing: .04em;
           color: #b8c0d0; padding-top: 12px; transition: color .26s ${EASE};
         }
         .val-row:hover .val-num { color: var(--val-accent); }
@@ -111,11 +111,11 @@ export default function AboutValues() {
       <section id="values" style={{ padding: 'clamp(56px,7vw,96px) 28px', background: '#fff' }}>
         <div className="val-wrap">
           <aside className="val-aside" data-reveal="left">
-            <span style={{ display: 'block', fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', marginBottom: '16px' }}>
+            <span style={{ display: 'block', fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', marginBottom: '16px' }}>
               <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
               What we stand for
             </span>
-            <p style={{ margin: 0, maxWidth: '360px', fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 700, lineHeight: 1.4, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+            <p style={{ margin: 0, maxWidth: '360px', fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 700, lineHeight: 1.4, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               Six principles behind every product we ship and every relationship we build.
             </p>
             <div style={{ marginTop: '22px', height: '4px', width: '72px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#7c3aed)' }} />
@@ -135,10 +135,10 @@ export default function AboutValues() {
                   {v.icon}
                 </span>
                 <div>
-                  <h3 style={{ margin: '0 0 7px', fontSize: 'clamp(16px,1.7vw,20px)', fontWeight: 800, letterSpacing: '-.018em', color: '#1d1d1f' }}>
+                  <h3 style={{ margin: '0 0 7px', fontSize: 'max(clamp(16px,1.7vw,20px), min(1.389vw, 29px))', fontWeight: 800, letterSpacing: '-.018em', color: '#1d1d1f' }}>
                     {v.title}
                   </h3>
-                  <p style={{ margin: 0, fontSize: 'clamp(13.5px,1.2vw,15px)', lineHeight: 1.7, color: '#6e6e73' }}>
+                  <p style={{ margin: 0, fontSize: 'max(clamp(13.5px,1.2vw,15px), min(1.042vw, 21.75px))', lineHeight: 1.7, color: '#6e6e73' }}>
                     {v.desc}
                   </p>
                 </div>

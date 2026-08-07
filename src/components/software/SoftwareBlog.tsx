@@ -66,13 +66,13 @@ export default function SoftwareBlog() {
       `}</style>
 
       <section id="blogs" style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#f5f6fa' }}>
-        <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'var(--w-1120)', margin: '0 auto' }}>
 
           {/* Header */}
           <div data-reveal style={{ textAlign: 'center', marginBottom: '44px' }}>
             <span style={{
               display: 'block',
-              fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em',
+              fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em',
               color: '#1360ee', textTransform: 'uppercase' as const,
               marginBottom: '16px',
             }}>
@@ -82,16 +82,16 @@ export default function SoftwareBlog() {
               Fleet Intelligence
             </span>
 
-            <h2 style={{ margin: '0 0 14px', fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.25, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+            <h2 style={{ margin: '0 0 14px', fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, lineHeight: 1.25, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               Insights from the{' '}
               <span style={{ color: '#1360ee' }}>road</span>
             </h2>
 
-            <p style={{ margin: '0 auto 22px', maxWidth: '440px', fontSize: 'clamp(13.5px,1.25vw,15px)', lineHeight: 1.65, color: '#6e6e73' }}>
+            <p style={{ margin: '0 auto 22px', maxWidth: '440px', fontSize: 'max(clamp(13.5px,1.25vw,15px), min(1.042vw, 21.75px))', lineHeight: 1.65, color: '#6e6e73' }}>
               Practical guides on fleet safety, cost control, and operations for UAE businesses.
             </p>
 
-            <Link href="/blog" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '13px', fontWeight: 700, color: '#1360ee', textDecoration: 'none', padding: '9px 20px', borderRadius: '999px', background: '#eef3ff', border: '1px solid rgba(19,96,238,.18)', whiteSpace: 'nowrap' as const }}>
+            <Link href="/blog" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: 'var(--f-13)', fontWeight: 700, color: '#1360ee', textDecoration: 'none', padding: '9px 20px', borderRadius: '999px', background: '#eef3ff', border: '1px solid rgba(19,96,238,.18)', whiteSpace: 'nowrap' as const }}>
               All articles →
             </Link>
           </div>
@@ -109,7 +109,7 @@ export default function SoftwareBlog() {
                   {/* Category pill over image */}
                   <span style={{
                     position: 'absolute', top: '14px', left: '14px',
-                    fontSize: '10px', fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase' as const,
+                    fontSize: 'var(--f-10)', fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase' as const,
                     padding: '4px 10px', borderRadius: '999px',
                     background: 'rgba(255,255,255,.18)', color: '#fff',
                     backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
@@ -120,7 +120,7 @@ export default function SoftwareBlog() {
                   {/* Read time */}
                   <span style={{
                     position: 'absolute', top: '14px', right: '14px',
-                    fontSize: '10px', fontWeight: 600, color: 'rgba(255,255,255,.85)',
+                    fontSize: 'var(--f-10)', fontWeight: 600, color: 'rgba(255,255,255,.85)',
                     background: 'rgba(0,0,0,.28)', backdropFilter: 'blur(6px)',
                     padding: '4px 10px', borderRadius: '999px',
                   }}>
@@ -133,7 +133,7 @@ export default function SoftwareBlog() {
                   {/* Color-coded category chip */}
                   <span style={{
                     alignSelf: 'flex-start',
-                    fontSize: '10.5px', fontWeight: 700, letterSpacing: '.04em', textTransform: 'uppercase' as const,
+                    fontSize: 'var(--f-10-5)', fontWeight: 700, letterSpacing: '.04em', textTransform: 'uppercase' as const,
                     padding: '3px 10px', borderRadius: '999px',
                     background: post.catBg, color: post.catColor,
                     marginBottom: '12px',
@@ -141,21 +141,21 @@ export default function SoftwareBlog() {
                     {post.category}
                   </span>
 
-                  <h3 style={{ margin: '0 0 10px', fontSize: '16px', fontWeight: 800, letterSpacing: '-.02em', lineHeight: 1.3, color: '#1d1d1f' }}>
+                  <h3 style={{ margin: '0 0 10px', fontSize: 'var(--f-16)', fontWeight: 800, letterSpacing: '-.02em', lineHeight: 1.3, color: '#1d1d1f' }}>
                     {post.title}
                   </h3>
 
-                  <p style={{ margin: 0, fontSize: '13.5px', lineHeight: 1.6, color: '#6e6e73', flex: 1 }}>
+                  <p style={{ margin: 0, fontSize: 'var(--f-13-5)', lineHeight: 1.6, color: '#6e6e73', flex: 1 }}>
                     {post.excerpt}
                   </p>
 
                   {/* Meta row */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '18px', paddingTop: '16px', borderTop: '1px solid #f0f0f3' }}>
-                    <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: post.authorBg, display: 'grid', placeItems: 'center', fontSize: '10px', fontWeight: 800, color: '#fff', flexShrink: 0 }}>
+                    <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: post.authorBg, display: 'grid', placeItems: 'center', fontSize: 'var(--f-10)', fontWeight: 800, color: '#fff', flexShrink: 0 }}>
                       {post.author}
                     </span>
-                    <span style={{ fontSize: '11.5px', color: '#a1a1a6', fontWeight: 500 }}>{post.date}</span>
-                    <span className="bc-cta" style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '12.5px', fontWeight: 700, color: post.catColor }}>
+                    <span style={{ fontSize: 'var(--f-11-5)', color: '#a1a1a6', fontWeight: 500 }}>{post.date}</span>
+                    <span className="bc-cta" style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: 'var(--f-12-5)', fontWeight: 700, color: post.catColor }}>
                       Read <span>→</span>
                     </span>
                   </div>

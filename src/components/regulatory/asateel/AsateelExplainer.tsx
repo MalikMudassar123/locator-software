@@ -10,7 +10,7 @@ export default function AsateelExplainer() {
       `}</style>
 
       <section style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#fff' }}>
-        <div className="asa-exp-grid" style={{ maxWidth: '1180px', margin: '0 auto' }}>
+        <div className="asa-exp-grid" style={{ maxWidth: 'var(--w-1180)', margin: '0 auto' }}>
 
           <div data-reveal="left">
             <Image
@@ -34,17 +34,17 @@ export default function AsateelExplainer() {
                 <circle cx="14" cy="18" r="5" fill="currentColor" opacity=".4" />
               </svg>
             </div>
-            <h2 style={{ margin: '0 0 18px', fontSize: 'clamp(22px,2.8vw,30px)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-.02em', color: '#1360ee' }}>
+            <h2 style={{ margin: '0 0 18px', fontSize: 'max(clamp(22px,2.8vw,30px), min(2.083vw, 43.5px))', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-.02em', color: '#1360ee' }}>
               ASATEEL Certification &amp; It&apos;s Importance
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+              <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
                 Asateel platform, the fleet management system, has been developed by Integrated Transport Center (ITC) to enhance the accountability, productivity and safety of all commercial transport activities in Abu Dhabi Emirate; such as freight, passenger bus and school bus transport. This involves the registration of all such services on the <strong style={{ color: '#1d1d1f' }}>ASATEEL</strong> platform in order to get Asateel Certificate and permits.
               </p>
-              <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+              <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
                 The <strong style={{ color: '#1d1d1f' }}>ASATEEL</strong> platform is a comprehensive tool to manage and monitor all commercial fleets and operators in Abu Dhabi. By tracking driver behavior and adherence to transport rules and regulations using the approved GPS Tracking Device, the platform aims to promote increased safety for passengers and clarify the responsibilities and duties of all entities involved in this sector.
               </p>
-              <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+              <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
                 The <strong style={{ color: '#1d1d1f' }}>ASATEEL</strong> certification is mandatory for any transport company operating within the Emirate of Abu Dhabi.
               </p>
             </div>

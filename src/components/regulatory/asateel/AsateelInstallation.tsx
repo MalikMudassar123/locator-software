@@ -10,7 +10,7 @@ export default function AsateelInstallation() {
       `}</style>
 
       <section style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#fff' }}>
-        <div className="asa-inst-grid" style={{ maxWidth: '1180px', margin: '0 auto' }}>
+        <div className="asa-inst-grid" style={{ maxWidth: 'var(--w-1180)', margin: '0 auto' }}>
 
           <div data-reveal="left">
             <Image
@@ -23,14 +23,14 @@ export default function AsateelInstallation() {
           </div>
 
           <div data-reveal="right">
-            <h2 style={{ margin: '0 0 18px', fontSize: 'clamp(22px,2.8vw,30px)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-.02em', color: '#1360ee' }}>
+            <h2 style={{ margin: '0 0 18px', fontSize: 'max(clamp(22px,2.8vw,30px), min(2.083vw, 43.5px))', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-.02em', color: '#1360ee' }}>
               Installation of ASATEEL Certified OBU (On-board Units)
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+              <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
                 Installation of GPS tracking devices in vehicles and linking them to the electronic system is mandatory, provided that the devices used are <strong style={{ color: '#1d1d1f' }}>ASATEEL certified OBU</strong>.
               </p>
-              <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+              <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
                 There are <strong style={{ color: '#1d1d1f' }}>ASATEEL</strong> certified OBU installation companies who will install, operate and maintain electronic system (GPS tracking devices) and issue a Certificate of Installation to be submitted in Asateel platform in order to get a permit.
               </p>
             </div>

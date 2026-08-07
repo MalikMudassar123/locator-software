@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useId } from "react";
 
 const DEFAULT_TESTIMONIALS = [
   {
@@ -177,7 +177,7 @@ export default function TestimonialCarousel({
           position: relative;
           width: 100%;
           background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
-          padding: clamp(48px, 7vw, 90px) 0 clamp(56px, 7vw, 96px);
+          padding: var(--s-section-y) 0;
           overflow: hidden;
           font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
@@ -207,7 +207,7 @@ export default function TestimonialCarousel({
         }
         .tc__heading {
           margin: 0 0 clamp(12px, 1.5vw, 18px);
-          font-size: clamp(26px, 3.4vw, 42px);
+          font-size: var(--t-display);
           font-weight: 700;
           color: var(--text-heading);
           letter-spacing: -0.01em;
@@ -216,7 +216,7 @@ export default function TestimonialCarousel({
         .tc__subheading {
           margin: 0 auto;
           max-width: 680px;
-          font-size: clamp(13px, 1.1vw, 15px);
+          font-size: var(--t-lead);
           color: var(--text-sub);
           line-height: 1.6;
           font-weight: 400;
@@ -224,7 +224,10 @@ export default function TestimonialCarousel({
         .tc__wrap {
           position: relative;
           width: 100%;
-          max-width: 1280px;
+          /* Was a flat 1280px — see the --w-* token block in globals.css. The card
+             count per page stays JS-driven (3 / 2 / 1) so pagination is untouched;
+             the three cards simply get their share of a wider row. */
+          max-width: var(--w-mid);
           margin: 0 auto;
           padding: 0 clamp(48px, 6vw, 80px);
           display: flex;
@@ -233,8 +236,8 @@ export default function TestimonialCarousel({
         }
         .tc__arrow {
           flex-shrink: 0;
-          width: 44px;
-          height: 44px;
+          width: var(--i-control);
+          height: var(--i-control);
           border: none;
           background: transparent;
           color: var(--arrow);
@@ -287,7 +290,7 @@ export default function TestimonialCarousel({
           flex: 0 0 100%;
           display: grid;
           grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
-          gap: clamp(16px, 2vw, 28px);
+          gap: var(--s-grid-gap);
           padding: 0 4px;
         }
         .tc__dots {
@@ -379,7 +382,7 @@ function TestimonialCard({ testimonial, delay = 0, isCurrentPage }) {
           position: relative;
           background: linear-gradient(155deg, #f6f4ee 0%, #efece4 100%);
           border-radius: 18px;
-          padding: clamp(28px, 3vw, 38px) clamp(24px, 2.6vw, 32px) clamp(28px, 3vw, 36px);
+          padding: var(--s-card-y) var(--s-card-x);
           text-align: center;
           min-height: clamp(380px, 32vw, 440px);
           display: flex;
@@ -425,7 +428,7 @@ function TestimonialCard({ testimonial, delay = 0, isCurrentPage }) {
           flex: 1;
           margin: 0 0 clamp(20px, 3vw, 32px);
           color: #9a9ca0;
-          font-size: clamp(13px, 1vw, 14px);
+          font-size: var(--t-body);
           line-height: 1.7;
           font-weight: 400;
           letter-spacing: 0.01em;
@@ -435,15 +438,15 @@ function TestimonialCard({ testimonial, delay = 0, isCurrentPage }) {
         .tcard__name {
           color: #6b6e74;
           font-weight: 700;
-          font-size: clamp(13px, 1.05vw, 15px);
+          font-size: var(--t-body);
           letter-spacing: 0.01em;
           margin-bottom: 14px;
           position: relative;
           z-index: 1;
         }
         .tcard__avatar {
-          width: clamp(44px, 4vw, 52px);
-          height: clamp(44px, 4vw, 52px);
+          width: var(--i-avatar);
+          height: var(--i-avatar);
           border-radius: 50%;
           overflow: hidden;
           position: relative;
@@ -543,7 +546,12 @@ function StarRating({ rating = 4.5 }) {
 }
 
 function Star({ type }) {
-  const gradId = `star-grad-${type}-${Math.random().toString(36).slice(2, 7)}`;
+  // useId, not Math.random(). The id only has to be unique per instance — several
+  // half-stars on one page must not share a <linearGradient> — but a random id is
+  // regenerated on the client and no longer matches the one the server rendered
+  // into the path's fill, which is a hydration mismatch on an SVG attribute.
+  // useId is stable across server and client by construction.
+  const gradId = `star-grad-${type}-${useId().replace(/[^a-zA-Z0-9-]/g, "")}`;
   return (
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>

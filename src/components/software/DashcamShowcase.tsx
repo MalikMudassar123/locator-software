@@ -107,7 +107,7 @@ export default function DashcamShowcase() {
           display: flex; align-items: center; justify-content: center;
           writing-mode: vertical-rl; transform: rotate(180deg);
           padding: 26px 0;
-          font-size: clamp(13px,1.25vw,16px); font-weight: 800;
+          font-size: max(clamp(13px,1.25vw,16px), min(1.111vw, 23.2px)); font-weight: 800;
           letter-spacing: .1em; text-transform: uppercase; color: #fff;
           white-space: nowrap; overflow: hidden;
           text-shadow: 0 2px 12px rgba(9,14,28,.85), 0 1px 3px rgba(9,14,28,.7);
@@ -130,12 +130,12 @@ export default function DashcamShowcase() {
         }
         .dc-body h3 {
           margin: 0 0 10px;
-          font-size: clamp(20px,2.2vw,29px); font-weight: 800;
+          font-size: max(clamp(20px,2.2vw,29px), min(2.014vw, 42.05px)); font-weight: 800;
           letter-spacing: -.02em; line-height: 1.12; color: #fff;
         }
         .dc-body p {
           margin: 0; max-width: 52ch;
-          font-size: clamp(13px,1.1vw,14.5px); line-height: 1.6;
+          font-size: max(clamp(13px,1.1vw,14.5px), min(1.007vw, 21.02px)); line-height: 1.6;
           color: rgba(255,255,255,.9);
         }
 
@@ -146,8 +146,8 @@ export default function DashcamShowcase() {
           margin-top: clamp(28px,3.4vw,40px);
         }
         .dc-stat { border-left: 2px solid #d7e1f4; padding-left: 14px; }
-        .dc-stat b { display: block; font-size: 19px; font-weight: 800; letter-spacing: -.02em; color: #1d1d1f; }
-        .dc-stat span { display: block; margin-top: 3px; font-size: 12px; font-weight: 600; color: #8e97a8; }
+        .dc-stat b { display: block; font-size: var(--f-19); font-weight: 800; letter-spacing: -.02em; color: #1d1d1f; }
+        .dc-stat span { display: block; margin-top: 3px; font-size: var(--f-12); font-weight: 600; color: #8e97a8; }
 
         /* Stack on narrow screens — spines don't work at phone widths. */
         @media (max-width: 860px) {
@@ -169,16 +169,16 @@ export default function DashcamShowcase() {
       `}</style>
 
       <section id="dashcam" style={{ padding: 'clamp(56px,7vw,88px) 28px', background: '#fff', scrollMarginTop: '84px' }}>
-        <div style={{ maxWidth: '1180px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'var(--w-1180)', margin: '0 auto' }}>
           <div data-reveal style={{ textAlign: 'center', maxWidth: '680px', margin: '0 auto clamp(36px,5vw,52px)' }}>
-            <span style={{ fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
+            <span style={{ fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
               <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
               AI Video Telematics
             </span>
-            <h2 style={{ margin: 0, fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+            <h2 style={{ margin: 0, fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               AI-Powered Dash Cameras &amp; MDVR
             </h2>
-            <p style={{ margin: '16px 0 0', fontSize: 'clamp(14px,1.2vw,15.5px)', lineHeight: 1.7, color: '#6e6e73' }}>
+            <p style={{ margin: '16px 0 0', fontSize: 'max(clamp(14px,1.2vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.7, color: '#6e6e73' }}>
               Real-time driver monitoring, cargo surveillance, and multi-camera recording for trucks,
               taxis, buses, delivery vehicles, and commercial fleets.
             </p>

@@ -30,7 +30,7 @@ function LiveMapCard() {
         {(['#ff5f57', '#febc2e', '#28c840'] as const).map(c => (
           <span key={c} style={{ width: '9px', height: '9px', borderRadius: '50%', background: c, display: 'inline-block' }} />
         ))}
-        <span style={{ fontSize: '11px', color: '#6e6e73', marginLeft: '8px', fontWeight: 600 }}>
+        <span style={{ fontSize: 'var(--f-11)', color: '#6e6e73', marginLeft: '8px', fontWeight: 600 }}>
           locator.ae — Live Fleet Map · 47 vehicles
         </span>
       </div>
@@ -52,12 +52,12 @@ function LiveMapCard() {
             }}>
               <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: v.c, flexShrink: 0 }} />
               <div>
-                <div style={{ fontSize: '11px', fontWeight: 700, color: '#1d1d1f' }}>{v.v}</div>
-                <div style={{ fontSize: '9.5px', color: '#6e6e73' }}>{v.s}</div>
+                <div style={{ fontSize: 'var(--f-11)', fontWeight: 700, color: '#1d1d1f' }}>{v.v}</div>
+                <div style={{ fontSize: 'var(--f-9-5)', color: '#6e6e73' }}>{v.s}</div>
               </div>
             </div>
           ))}
-          <div style={{ marginTop: 'auto', padding: '5px 8px', background: '#f5f5f7', borderRadius: '7px', fontSize: '10px', textAlign: 'center', color: '#6e6e73' }}>
+          <div style={{ marginTop: 'auto', padding: '5px 8px', background: '#f5f5f7', borderRadius: '7px', fontSize: 'var(--f-10)', textAlign: 'center', color: '#6e6e73' }}>
             +42 more
           </div>
         </div>
@@ -99,13 +99,13 @@ function LiveMapCard() {
           <div style={{
             position: 'absolute', left: '28%', top: '12%',
             background: '#fff', borderRadius: '10px', padding: '9px 12px',
-            boxShadow: '0 4px 18px rgba(0,0,0,.13)', fontSize: '10.5px',
+            boxShadow: '0 4px 18px rgba(0,0,0,.13)', fontSize: 'var(--f-10-5)',
             minWidth: '136px', transform: 'translateX(-10%)', zIndex: 10,
           }}>
             <div style={{ fontWeight: 700, color: '#1d1d1f', marginBottom: '3px' }}>VAN-204</div>
             <div style={{ color: '#6e6e73', marginBottom: '2px' }}>62 km/h · Moving</div>
             <div style={{ color: '#6e6e73', marginBottom: '5px' }}>Jebel Ali, Dubai</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#1fbf5b', fontWeight: 700, fontSize: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#1fbf5b', fontWeight: 700, fontSize: 'var(--f-10)' }}>
               <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#1fbf5b', display: 'inline-block' }} />
               Live · GPS Active
             </div>
@@ -126,8 +126,8 @@ function LiveMapCard() {
               { l: 'Offline', v: '1',  c: '#ff5f57' },
             ].map((s, i) => (
               <div key={i} style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '14px', fontWeight: 800, color: s.c }}>{s.v}</div>
-                <div style={{ fontSize: '9px', color: '#6e6e73', fontWeight: 600 }}>{s.l}</div>
+                <div style={{ fontSize: 'var(--f-14)', fontWeight: 800, color: s.c }}>{s.v}</div>
+                <div style={{ fontSize: 'var(--f-9)', color: '#6e6e73', fontWeight: 600 }}>{s.l}</div>
               </div>
             ))}
           </div>
@@ -161,7 +161,7 @@ function FleetDashCard() {
         {(['#ff5f57', '#febc2e', '#28c840'] as const).map(c => (
           <span key={c} style={{ width: '9px', height: '9px', borderRadius: '50%', background: c, display: 'inline-block' }} />
         ))}
-        <span style={{ fontSize: '11px', color: '#6e6e73', marginLeft: '8px', fontWeight: 600 }}>
+        <span style={{ fontSize: 'var(--f-11)', color: '#6e6e73', marginLeft: '8px', fontWeight: 600 }}>
           locator.ae — Fleet Service Dashboard
         </span>
       </div>
@@ -177,14 +177,14 @@ function FleetDashCard() {
               { l: 'Open Alerts',  v: '3',         sub: 'Needs attention',    c: '#c2740a' },
             ].map((s, i) => (
               <div key={i} style={{ background: '#f5f5f7', borderRadius: '10px', padding: '11px' }}>
-                <div style={{ fontSize: '9.5px', color: '#6e6e73', fontWeight: 600, marginBottom: '4px' }}>{s.l}</div>
-                <div style={{ fontSize: '14px', fontWeight: 800, color: s.c }}>{s.v}</div>
-                <div style={{ fontSize: '9px', color: '#a1a1a6', marginTop: '2px' }}>{s.sub}</div>
+                <div style={{ fontSize: 'var(--f-9-5)', color: '#6e6e73', fontWeight: 600, marginBottom: '4px' }}>{s.l}</div>
+                <div style={{ fontSize: 'var(--f-14)', fontWeight: 800, color: s.c }}>{s.v}</div>
+                <div style={{ fontSize: 'var(--f-9)', color: '#a1a1a6', marginTop: '2px' }}>{s.sub}</div>
               </div>
             ))}
           </div>
           <div style={{ flex: 1, background: '#f5f5f7', borderRadius: '10px', padding: '10px', display: 'flex', flexDirection: 'column', gap: '5px', minHeight: '50px' }}>
-            <div style={{ fontSize: '9.5px', fontWeight: 700, color: '#6e6e73' }}>Trips per day — this week</div>
+            <div style={{ fontSize: 'var(--f-9-5)', fontWeight: 700, color: '#6e6e73' }}>Trips per day — this week</div>
             <div style={{ display: 'flex', alignItems: 'flex-end', gap: '4px', flex: 1 }}>
               {bars.map((h, i) => (
                 <div key={i} style={{ flex: 1, borderRadius: '3px 3px 0 0', background: i === 6 ? '#1360ee' : '#dde3f0', height: `${h}%` }} />
@@ -200,7 +200,7 @@ function FleetDashCard() {
 
         {/* Right — service alerts */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '7px' }}>
-          <div style={{ fontSize: '10.5px', fontWeight: 700, color: '#1d1d1f', marginBottom: '2px' }}>Service Alerts</div>
+          <div style={{ fontSize: 'var(--f-10-5)', fontWeight: 700, color: '#1d1d1f', marginBottom: '2px' }}>Service Alerts</div>
           {[
             { icon: '⚠️', t: 'Oil change due',           v: 'TRK-118 · 320 km',     bg: '#fff3e3', c: '#c2740a' },
             { icon: '✅', t: 'VAN-204 entered HQ zone',  v: '09:12 AM today',        bg: '#edfff4', c: '#13923f' },
@@ -208,10 +208,10 @@ function FleetDashCard() {
             { icon: '📍', t: 'Geofence exit detected',   v: 'VAN-211 · Depot zone',  bg: '#fff0f2', c: '#c0384d' },
           ].map((a, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 10px', background: a.bg, borderRadius: '9px' }}>
-              <span style={{ fontSize: '14px' }}>{a.icon}</span>
+              <span style={{ fontSize: 'var(--f-14)' }}>{a.icon}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: '11px', fontWeight: 700, color: '#1d1d1f', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.t}</div>
-                <div style={{ fontSize: '9.5px', color: a.c }}>{a.v}</div>
+                <div style={{ fontSize: 'var(--f-11)', fontWeight: 700, color: '#1d1d1f', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.t}</div>
+                <div style={{ fontSize: 'var(--f-9-5)', color: a.c }}>{a.v}</div>
               </div>
             </div>
           ))}
@@ -287,12 +287,12 @@ export default function ServiceHero() {
           gap: clamp(10px, 1.6vh, 24px);
           padding: clamp(24px, 5vh, 56px) 24px clamp(40px, 8vh, 80px);
         }
-        .srv-copy { text-align: center; max-width: 1120px; width: 100%; }
+        .srv-copy { text-align: center; max-width: var(--w-1120); width: 100%; }
         @media (prefers-reduced-motion: no-preference) {
           .srv-copy { animation: srvHeroRise .9s cubic-bezier(.22,.61,.36,1) .05s both; }
         }
         .srv-btn {
-          font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
+          font-family: inherit; font-size: var(--f-14); font-weight: 700; cursor: pointer;
           padding: 12px 24px; border-radius: 999px; border: none;
           transition: .18s cubic-bezier(.22,.61,.36,1);
           display: inline-flex; align-items: center; gap: 7px;
@@ -305,7 +305,7 @@ export default function ServiceHero() {
 
         .srv-stage {
           position: relative; flex: 1 1 auto; min-height: 0;
-          width: 100%; max-width: 1240px; margin: 0 auto;
+          width: 100%; max-width: var(--w-1240); margin: 0 auto;
         }
         .srv-glow {
           position: absolute; left: 50%; bottom: 6%;
@@ -330,14 +330,14 @@ export default function ServiceHero() {
 
           <div className="srv-hero-body">
             <div className="srv-copy">
-              <p style={{ display: 'block', fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', color: '#1360ee', marginBottom: 'clamp(8px,1.4vh,14px)' }}>
+              <p style={{ display: 'block', fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', color: '#1360ee', marginBottom: 'clamp(8px,1.4vh,14px)' }}>
                 <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
                 Locator Fleet Services
               </p>
-              <h1 style={{ fontSize: 'clamp(21px,2.5vw,28px)', fontWeight: 800, lineHeight: 1.18, letterSpacing: '-.015em', color: '#1d1d1f', maxWidth: '30ch', margin: '0 auto' }}>
+              <h1 style={{ fontSize: 'max(clamp(21px,2.5vw,28px), min(1.944vw, 40.6px))', fontWeight: 800, lineHeight: 1.18, letterSpacing: '-.015em', color: '#1d1d1f', maxWidth: '30ch', margin: '0 auto' }}>
                 Improve Fleet Operations with GPS Tracking &amp; Telematics
               </h1>
-              <p style={{ maxWidth: '560px', margin: 'clamp(8px,1.4vh,14px) auto 0', fontSize: 'clamp(13px,1.35vw,16px)', lineHeight: 1.5, color: '#3a3a3c' }}>
+              <p style={{ maxWidth: '560px', margin: 'clamp(8px,1.4vh,14px) auto 0', fontSize: 'max(clamp(13px,1.35vw,16px), min(1.111vw, 23.2px))', lineHeight: 1.5, color: '#3a3a3c' }}>
                 Real-time GPS tracking to manage drivers, routes, and road operations with ease.
               </p>
               <div style={{ display: 'flex', gap: '14px', justifyContent: 'center', marginTop: 'clamp(14px,2.2vh,24px)', flexWrap: 'wrap' }}>
@@ -345,7 +345,7 @@ export default function ServiceHero() {
                 <button className="srv-btn srv-btn-ghost">Get a demo →</button>
               </div>
               <p style={{ marginTop: 'clamp(8px,1.4vh,14px)' }}>
-                <Link href="#benefits" style={{ color: '#1360ee', fontWeight: 700, fontSize: '15px', textDecoration: 'none' }}>
+                <Link href="#benefits" style={{ color: '#1360ee', fontWeight: 700, fontSize: 'var(--f-15)', textDecoration: 'none' }}>
                   See all features ›
                 </Link>
               </p>

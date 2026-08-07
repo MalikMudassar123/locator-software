@@ -131,26 +131,26 @@ export default function DemoBooking() {
     <section className="db-sec">
       <style>{`
         .db-sec { padding: clamp(16px,2.4vw,32px) 28px clamp(40px,5vw,64px); background: #fff; }
-        .db-shell { max-width: 1180px; margin: 0 auto; }
+        .db-shell { max-width: var(--w-1180); margin: 0 auto; }
         .db-grid { display: grid; grid-template-columns: .82fr 1.18fr; gap: clamp(18px,2.2vw,28px); align-items: stretch; }
         @media (max-width: 1040px) { .db-grid { grid-template-columns: 1fr; } }
 
         .db-card { background: #fff; border: 1px solid #e7ebf3; border-radius: 22px; box-shadow: 0 30px 60px -38px rgba(20,40,90,.22); }
 
         .db-form-card { padding: clamp(22px,2.6vw,36px); }
-        .db-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #1360ee; margin-bottom: 12px; }
+        .db-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: var(--f-11); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #1360ee; margin-bottom: 12px; }
         .db-eyebrow span { width: 22px; height: 2px; background: #1360ee; border-radius: 2px; }
-        .db-title { margin: 0 0 6px; font-size: clamp(20px,2.3vw,27px); font-weight: 800; letter-spacing: -.025em; color: #1d1d1f; }
-        .db-sub { margin: 0 0 22px; font-size: 14px; line-height: 1.6; color: #6e6e73; }
+        .db-title { margin: 0 0 6px; font-size: max(clamp(20px,2.3vw,27px), min(1.875vw, 39.15px)); font-weight: 800; letter-spacing: -.025em; color: #1d1d1f; }
+        .db-sub { margin: 0 0 22px; font-size: var(--f-14); line-height: 1.6; color: #6e6e73; }
 
         .db-fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         @media (max-width: 480px) { .db-fgrid { grid-template-columns: 1fr; } }
         .db-field { display: flex; flex-direction: column; gap: 6px; }
         .db-field.full { grid-column: 1 / -1; }
-        .db-label { font-size: 12px; font-weight: 700; color: #52525e; }
+        .db-label { font-size: var(--f-12); font-weight: 700; color: #52525e; }
         .db-label b { color: #e5484d; }
         .db-input, .db-textarea {
-          font-family: inherit; font-size: 14px; color: #1d1d1f; width: 100%;
+          font-family: inherit; font-size: var(--f-14); color: #1d1d1f; width: 100%;
           padding: 13px 15px; border-radius: 11px; border: 1.5px solid #e4e8f0; background: #fbfcfe;
           transition: border-color .18s ${EASE}, box-shadow .18s ${EASE}, background .18s ${EASE};
         }
@@ -158,52 +158,52 @@ export default function DemoBooking() {
         .db-input:focus, .db-textarea:focus { outline: none; border-color: #1360ee; background: #fff; box-shadow: 0 0 0 4px rgba(19,96,238,.12); }
         .db-textarea { resize: vertical; min-height: 92px; }
 
-        .db-pick-hint { margin: 16px 0 0; font-size: 12.5px; color: #8a92a3; display: flex; align-items: center; gap: 7px; }
+        .db-pick-hint { margin: 16px 0 0; font-size: var(--f-12-5); color: #8a92a3; display: flex; align-items: center; gap: 7px; }
         .db-pick-hint b { color: #1360ee; font-weight: 700; }
 
         .db-submit {
           margin-top: 16px; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
           padding: 16px 24px; border-radius: 12px; border: none; cursor: pointer;
-          font-family: inherit; font-size: 15px; font-weight: 700; color: #fff;
+          font-family: inherit; font-size: var(--f-15); font-weight: 700; color: #fff;
           background: #1360ee; box-shadow: 0 12px 26px -10px rgba(19,96,238,.6); transition: .18s ${EASE};
         }
         .db-submit:hover:not(:disabled) { background: #0d4fd4; transform: translateY(-1px); box-shadow: 0 16px 32px -10px rgba(19,96,238,.7); }
         .db-submit:disabled { background: #c3cede; cursor: not-allowed; box-shadow: none; }
         .db-submit svg { transition: transform .2s ${EASE}; }
         .db-submit:hover:not(:disabled) svg { transform: translateX(4px); }
-        .db-safe { display: flex; align-items: center; justify-content: center; gap: 7px; margin: 14px 0 0; font-size: 12px; color: #8a92a3; }
+        .db-safe { display: flex; align-items: center; justify-content: center; gap: 7px; margin: 14px 0 0; font-size: var(--f-12); color: #8a92a3; }
         .db-safe svg { color: #1360ee; }
 
         .db-success { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; min-height: 460px; }
         .db-check { width: 64px; height: 64px; border-radius: 50%; margin-bottom: 22px; background: rgba(19,146,63,.1); color: #13923f; display: grid; place-items: center; animation: dbPop .5s ${EASE} both; }
         @keyframes dbPop { 0% { transform: scale(.5); opacity: 0 } 60% { transform: scale(1.1) } 100% { transform: scale(1); opacity: 1 } }
-        .db-confirm { margin: 8px 0 20px; padding: 14px 16px; border-radius: 12px; background: #f2f7ff; border: 1px solid #dbe6ff; font-size: 13.5px; line-height: 1.6; color: #1d1d1f; }
+        .db-confirm { margin: 8px 0 20px; padding: 14px 16px; border-radius: 12px; background: #f2f7ff; border: 1px solid #dbe6ff; font-size: var(--f-13-5); line-height: 1.6; color: #1d1d1f; }
         .db-confirm b { color: #1360ee; }
 
         .db-sched-card { padding: clamp(20px,2.4vw,30px); display: flex; flex-direction: column; }
         .db-sched-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 18px; }
         .db-sched-ico { flex-shrink: 0; width: 40px; height: 40px; border-radius: 11px; background: #eaf1ff; color: #1360ee; display: grid; place-items: center; }
         .db-sched-ico svg { width: 20px; height: 20px; }
-        .db-sched-h { margin: 0; font-size: clamp(16px,1.8vw,20px); font-weight: 800; letter-spacing: -.02em; color: #1d1d1f; }
-        .db-sched-p { margin: 3px 0 0; font-size: 13px; color: #6e6e73; }
+        .db-sched-h { margin: 0; font-size: max(clamp(16px,1.8vw,20px), min(1.389vw, 29px)); font-weight: 800; letter-spacing: -.02em; color: #1d1d1f; }
+        .db-sched-p { margin: 3px 0 0; font-size: var(--f-13); color: #6e6e73; }
 
         .db-picker { border: 1px solid #eaedf4; border-radius: 16px; padding: clamp(16px,2vw,22px); background: linear-gradient(180deg, #ffffff, #fbfcff); display: grid; grid-template-columns: minmax(230px,280px) 1fr; gap: clamp(16px,2.2vw,28px); }
         @media (max-width: 720px) { .db-picker { grid-template-columns: 1fr; } }
-        .db-cal-skel { grid-column: 1 / -1; min-height: 260px; display: grid; place-items: center; color: #a0a6b4; font-size: 13px; }
+        .db-cal-skel { grid-column: 1 / -1; min-height: 260px; display: grid; place-items: center; color: #a0a6b4; font-size: var(--f-13); }
 
         .db-cal-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-        .db-cal-month { font-size: 15px; font-weight: 800; color: #1d1d1f; }
+        .db-cal-month { font-size: var(--f-15); font-weight: 800; color: #1d1d1f; }
         .db-cal-navs { display: flex; gap: 6px; }
         .db-nav { width: 30px; height: 30px; border-radius: 8px; border: 1px solid #e4e8f0; background: #fff; color: #52525e; display: grid; place-items: center; cursor: pointer; transition: .16s ${EASE}; }
         .db-nav:hover:not(:disabled) { border-color: #1360ee; color: #1360ee; }
         .db-nav:disabled { opacity: .38; cursor: not-allowed; }
 
         .db-dow { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; margin-bottom: 6px; }
-        .db-dow span { text-align: center; font-size: 11px; font-weight: 700; color: #a0a6b4; padding: 4px 0; }
+        .db-dow span { text-align: center; font-size: var(--f-11); font-weight: 700; color: #a0a6b4; padding: 4px 0; }
         .db-days { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
         .db-day {
           aspect-ratio: 1; border: none; background: transparent; border-radius: 999px; cursor: pointer;
-          font-family: inherit; font-size: 13px; font-weight: 600; color: #1d1d1f;
+          font-family: inherit; font-size: var(--f-13); font-weight: 600; color: #1d1d1f;
           display: grid; place-items: center; transition: background .15s ${EASE}, color .15s ${EASE}, transform .15s ${EASE};
         }
         .db-day.muted { color: #c4c9d4; cursor: default; }
@@ -211,11 +211,11 @@ export default function DemoBooking() {
         .db-day.avail { background: #eef4ff; color: #1360ee; }
         .db-day.avail:hover { background: #dbe7ff; transform: translateY(-1px); }
         .db-day.selected { background: #1360ee; color: #fff; box-shadow: 0 8px 18px -6px rgba(19,96,238,.6); }
-        .db-legend { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 12px; color: #8a92a3; }
+        .db-legend { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: var(--f-12); color: #8a92a3; }
         .db-legend i { width: 12px; height: 12px; border-radius: 50%; background: #eef4ff; box-shadow: inset 0 0 0 1px #cfe0ff; }
 
         .db-times { display: flex; flex-direction: column; min-width: 0; }
-        .db-tz { margin: 0 0 12px; font-size: 12px; color: #8a92a3; text-align: right; }
+        .db-tz { margin: 0 0 12px; font-size: var(--f-12); color: #8a92a3; text-align: right; }
         @media (max-width: 720px) { .db-tz { text-align: left; } }
         .db-daynav { position: relative; padding: 0 36px; margin-bottom: 12px; }
         .db-daynav .db-nav { position: absolute; top: 50%; transform: translateY(-50%); }
@@ -223,22 +223,22 @@ export default function DemoBooking() {
         .db-daynav .next { right: 0; }
         .db-dayheads { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .db-dayhead { text-align: center; }
-        .db-dayhead-wd { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #8a92a3; }
-        .db-dayhead-d { font-size: 20px; font-weight: 800; color: #1d1d1f; line-height: 1.2; }
+        .db-dayhead-wd { font-size: var(--f-11); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #8a92a3; }
+        .db-dayhead-d { font-size: var(--f-20); font-weight: 800; color: #1d1d1f; line-height: 1.2; }
 
         .db-slots-wrap { padding: 0 36px; max-height: 340px; overflow-y: auto; }
         .db-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .db-col { display: flex; flex-direction: column; gap: 8px; }
         .db-slot {
           padding: 11px 8px; border-radius: 999px; border: 1.5px solid #e4e8f0; background: #fff; cursor: pointer;
-          font-family: inherit; font-size: 13px; font-weight: 700; color: #1360ee; text-align: center;
+          font-family: inherit; font-size: var(--f-13); font-weight: 700; color: #1360ee; text-align: center;
           transition: .15s ${EASE};
         }
         .db-slot:hover { border-color: #9fbdf6; background: #f5f9ff; }
         .db-slot.active { background: #1360ee; border-color: #1360ee; color: #fff; box-shadow: 0 10px 20px -8px rgba(19,96,238,.55); }
 
         .db-trust {
-          max-width: 1180px; margin: clamp(18px,2.2vw,26px) auto 0;
+          max-width: var(--w-1180); margin: clamp(18px,2.2vw,26px) auto 0;
           border: 1px solid #e7ebf3; border-radius: 18px; background: #fff;
           display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; padding: clamp(16px,2vw,22px) clamp(14px,2vw,24px);
         }
@@ -247,8 +247,8 @@ export default function DemoBooking() {
         .db-trust-item { display: flex; align-items: center; gap: 12px; }
         .db-trust-ico { flex-shrink: 0; width: 38px; height: 38px; border-radius: 10px; background: #eaf1ff; color: #1360ee; display: grid; place-items: center; }
         .db-trust-ico svg { width: 19px; height: 19px; }
-        .db-trust-t { margin: 0; font-size: 13.5px; font-weight: 800; color: #1d1d1f; line-height: 1.2; }
-        .db-trust-s { margin: 2px 0 0; font-size: 12px; color: #6e6e73; }
+        .db-trust-t { margin: 0; font-size: var(--f-13-5); font-weight: 800; color: #1d1d1f; line-height: 1.2; }
+        .db-trust-s { margin: 2px 0 0; font-size: var(--f-12); color: #6e6e73; }
 
         @media (prefers-reduced-motion: reduce) { .db-check { animation: none; } }
       `}</style>

@@ -152,7 +152,7 @@ export default function QuoteForm() {
       <style>{`
         .qf-section { padding: clamp(20px,3vw,44px) 28px clamp(56px,7vw,88px); background: #fff; }
         .qf-shell {
-          max-width: 1180px; margin: 0 auto;
+          max-width: var(--w-1180); margin: 0 auto;
           display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(20px,2.4vw,32px);
           align-items: stretch;
         }
@@ -163,19 +163,19 @@ export default function QuoteForm() {
           background: #fff; border: 1px solid #e7ebf3; border-radius: 22px;
           padding: clamp(24px,3vw,40px); box-shadow: 0 30px 60px -34px rgba(20,40,90,.22);
         }
-        .qf-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #1360ee; margin-bottom: 12px; }
+        .qf-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: var(--f-11); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #1360ee; margin-bottom: 12px; }
         .qf-eyebrow span { width: 22px; height: 2px; background: #1360ee; border-radius: 2px; }
-        .qf-title { margin: 0 0 6px; font-size: clamp(21px,2.4vw,28px); font-weight: 800; letter-spacing: -.025em; color: #1d1d1f; }
-        .qf-sub { margin: 0 0 24px; font-size: 14px; line-height: 1.6; color: #6e6e73; }
+        .qf-title { margin: 0 0 6px; font-size: max(clamp(21px,2.4vw,28px), min(1.944vw, 40.6px)); font-weight: 800; letter-spacing: -.025em; color: #1d1d1f; }
+        .qf-sub { margin: 0 0 24px; font-size: var(--f-14); line-height: 1.6; color: #6e6e73; }
 
         .qf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         @media (max-width: 480px) { .qf-grid { grid-template-columns: 1fr; } }
         .qf-field { display: flex; flex-direction: column; gap: 6px; }
         .qf-field.full { grid-column: 1 / -1; }
-        .qf-label { font-size: 12px; font-weight: 700; color: #52525e; }
+        .qf-label { font-size: var(--f-12); font-weight: 700; color: #52525e; }
         .qf-label b { color: #e5484d; }
         .qf-input, .qf-textarea {
-          font-family: inherit; font-size: 14px; color: #1d1d1f; width: 100%;
+          font-family: inherit; font-size: var(--f-14); color: #1d1d1f; width: 100%;
           padding: 13px 15px; border-radius: 11px;
           border: 1.5px solid #e4e8f0; background: #fbfcfe;
           transition: border-color .18s ${EASE}, box-shadow .18s ${EASE}, background .18s ${EASE};
@@ -188,7 +188,7 @@ export default function QuoteForm() {
           margin-top: 22px; width: 100%;
           display: inline-flex; align-items: center; justify-content: center; gap: 10px;
           padding: 16px 24px; border-radius: 12px; border: none; cursor: pointer;
-          font-family: inherit; font-size: 15px; font-weight: 700; color: #fff;
+          font-family: inherit; font-size: var(--f-15); font-weight: 700; color: #fff;
           background: #1360ee; box-shadow: 0 12px 26px -10px rgba(19,96,238,.6); transition: .18s ${EASE};
         }
         .qf-submit:hover { background: #0d4fd4; transform: translateY(-1px); box-shadow: 0 16px 32px -10px rgba(19,96,238,.7); }
@@ -227,7 +227,7 @@ export default function QuoteForm() {
           50% { transform: translateY(-16px) scale(1.3); opacity: calc(var(--o) * .4) }
         }
 
-        .qf-steps-h { position: relative; z-index: 2; margin: 0 0 clamp(26px,3vw,36px); font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); }
+        .qf-steps-h { position: relative; z-index: 2; margin: 0 0 clamp(26px,3vw,36px); font-size: var(--f-12); font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); }
 
         .qf-timeline { position: relative; z-index: 1; }
 
@@ -305,13 +305,13 @@ export default function QuoteForm() {
         .qf-badge {
           position: absolute; top: -3px; right: -3px; z-index: 3;
           min-width: 24px; height: 24px; padding: 0 6px; border-radius: 999px;
-          background: #0a2a7a; color: #fff; font-size: 11px; font-weight: 800;
+          background: #0a2a7a; color: #fff; font-size: var(--f-11); font-weight: 800;
           display: grid; place-items: center; box-shadow: 0 5px 12px rgba(0,10,40,.5);
           border: 2px solid rgba(255,255,255,.9);
         }
 
-        .qf-step-title { margin: 6px 0 6px; font-size: clamp(16px,1.6vw,19px); font-weight: 800; letter-spacing: -.015em; color: #fff; }
-        .qf-step-desc { margin: 0; font-size: 13.5px; line-height: 1.6; color: rgba(255,255,255,.8); max-width: 34ch; }
+        .qf-step-title { margin: 6px 0 6px; font-size: max(clamp(16px,1.6vw,19px), min(1.319vw, 27.55px)); font-weight: 800; letter-spacing: -.015em; color: #fff; }
+        .qf-step-desc { margin: 0; font-size: var(--f-13-5); line-height: 1.6; color: rgba(255,255,255,.8); max-width: 34ch; }
 
         @media (prefers-reduced-motion: reduce) {
           .qf-halo, .qf-check, .qf-ring, .qf-conn-beam, .qf-amb { animation: none; }

@@ -10,7 +10,7 @@ export default function ContactDemoCTA() {
         .ctdemo { background: #fff; padding: clamp(8px,1.5vw,20px) 28px clamp(52px,7vw,86px); }
         .ctdemo-card {
           position: relative; overflow: hidden;
-          max-width: 1180px; margin: 0 auto; border-radius: 30px;
+          max-width: var(--w-1180); margin: 0 auto; border-radius: 30px;
           background: radial-gradient(125% 120% at 88% -20%, #2f6bff 0%, #1360ee 40%, #0a3ba8 100%);
           box-shadow: 0 50px 90px -46px rgba(19,96,238,.75);
           display: grid; grid-template-columns: 1.02fr .98fr; align-items: center;
@@ -31,23 +31,23 @@ export default function ContactDemoCTA() {
           padding: 7px 14px; border-radius: 999px;
           background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.24);
           -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-          font-size: clamp(12px,1.05vw,13.5px); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #dbe8ff;
+          font-size: max(clamp(12px,1.05vw,13.5px), min(0.938vw, 19.57px)); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #dbe8ff;
         }
         .ctdemo-eyebrow i { width: 6px; height: 6px; border-radius: 50%; background: #7ef7a6; box-shadow: 0 0 0 3px rgba(126,247,166,.25); }
 
         .ctdemo-title {
           margin: clamp(12px,1.5vw,18px) 0 0; max-width: 16ch;
-          font-size: clamp(27px,3.2vw,40px); font-weight: 800; letter-spacing: -.032em; line-height: 1.12; color: #fff;
+          font-size: max(clamp(27px,3.2vw,40px), min(2.778vw, 58px)); font-weight: 800; letter-spacing: -.032em; line-height: 1.12; color: #fff;
           text-shadow: 0 6px 30px rgba(0,10,50,.35);
         }
-        .ctdemo-sub { margin: clamp(12px,1.5vw,18px) 0 0; max-width: 44ch; font-size: clamp(14px,1.25vw,16.5px); line-height: 1.72; color: rgba(255,255,255,.82); }
+        .ctdemo-sub { margin: clamp(12px,1.5vw,18px) 0 0; max-width: 44ch; font-size: max(clamp(14px,1.25vw,16.5px), min(1.146vw, 23.93px)); line-height: 1.72; color: rgba(255,255,255,.82); }
 
         .ctdemo-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: clamp(24px,3vw,34px); }
         .ctdemo-btn {
           position: relative; overflow: hidden; isolation: isolate;
           display: inline-flex; align-items: center; gap: 10px;
           padding: 16px 26px; border-radius: 14px; text-decoration: none;
-          background: #fff; color: #0d3fb0; font-size: 14.5px; font-weight: 800; letter-spacing: -.01em;
+          background: #fff; color: #0d3fb0; font-size: var(--f-14-5); font-weight: 800; letter-spacing: -.01em;
           box-shadow: 0 18px 34px -14px rgba(3,20,70,.6);
           transition: transform .22s ${EASE}, box-shadow .22s ${EASE};
         }
@@ -65,12 +65,12 @@ export default function ContactDemoCTA() {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 15px 22px; border-radius: 14px; text-decoration: none;
           border: 1.5px solid rgba(255,255,255,.4); color: #fff;
-          font-size: 14px; font-weight: 700;
+          font-size: var(--f-14); font-weight: 700;
           transition: background .2s ${EASE}, border-color .2s ${EASE}, transform .2s ${EASE};
         }
         .ctdemo-ghost:hover { background: rgba(255,255,255,.14); border-color: #fff; transform: translateY(-3px); }
 
-        .ctdemo-note { display: flex; align-items: center; gap: 8px; margin: clamp(18px,2.2vw,24px) 0 0; font-size: 12.5px; color: rgba(255,255,255,.66); }
+        .ctdemo-note { display: flex; align-items: center; gap: 8px; margin: clamp(18px,2.2vw,24px) 0 0; font-size: var(--f-12-5); color: rgba(255,255,255,.66); }
         .ctdemo-note svg { flex-shrink: 0; }
 
         /* ── Artwork: platform screenshot in perspective, van in front ── */

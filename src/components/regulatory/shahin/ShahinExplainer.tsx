@@ -9,7 +9,7 @@ export default function ShahinExplainer() {
       `}</style>
 
       <section style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#fff' }}>
-        <div className="shn-exp-grid" style={{ maxWidth: '1180px', margin: '0 auto' }}>
+        <div className="shn-exp-grid" style={{ maxWidth: 'var(--w-1180)', margin: '0 auto' }}>
 
           <div data-reveal="left">
             <div style={{
@@ -25,16 +25,16 @@ export default function ShahinExplainer() {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+              <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
                 In Dubai, the <a href="#" style={{ color: '#1360ee', fontWeight: 600, textDecoration: 'none' }}>Security Industry Regulatory Agency (SIRA)</a> has implemented a mandatory regulation named as <strong style={{ color: '#1d1d1f' }}>SHAHIN</strong> where all trucks carrying cargo that are registered in Dubai and at any port (under the Dubai Port Authority, danata, ek, skycargo, etc.). Vehicles that fall under this category must have a registered GPS device installed with a certification.
               </p>
-              <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+              <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
                 The implementation of <a href="#" style={{ color: '#1360ee', fontWeight: 600, textDecoration: 'none' }}>SHAHIN</a> is an important step towards improving transportation security in Dubai. It allows authorities to effectively track and trace all trucks carrying cargo vehicles, helping to prevent theft, unauthorized use, and other unlawful activities.
               </p>
-              <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+              <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
                 Vehicles that fall under <a href="#" style={{ color: '#1360ee', fontWeight: 600, textDecoration: 'none' }}>SHAHIN</a> are required to comply with this regulation by ensuring their vehicles are equipped with an approved GPS tracker that meets the specified standards set by <a href="#" style={{ color: '#1360ee', fontWeight: 600, textDecoration: 'none' }}>SIRA</a>. Failure to comply may result in penalties or legal consequences.
               </p>
-              <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+              <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
                 Overall, <a href="#" style={{ color: '#1360ee', fontWeight: 600, textDecoration: 'none' }}>SHAHIN</a> is an essential regulation that enhances the safety and security measures for transport vehicles in Dubai. It provides authorities with tracking capabilities through GPS technology, ultimately contributing to a safer transportation environment.
               </p>
             </div>

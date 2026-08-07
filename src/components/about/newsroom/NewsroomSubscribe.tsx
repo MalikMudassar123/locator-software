@@ -13,7 +13,7 @@ export default function NewsroomSubscribe() {
       <style href="nr-newsroomsubscribe" precedence="medium">{`
         .nrs { padding: clamp(40px,5vw,64px) 28px clamp(56px,7vw,80px); background: #f7f9fc; }
         .nrs-card {
-          max-width: 1240px; margin: 0 auto;
+          max-width: var(--w-1240); margin: 0 auto;
           display: grid; grid-template-columns: 56px minmax(0,1fr) minmax(0,420px); gap: clamp(16px,2.4vw,28px);
           align-items: center;
           background: #fff; border: 1px solid #e7ecf6; border-radius: 18px;
@@ -24,15 +24,15 @@ export default function NewsroomSubscribe() {
 
         .nrs-ico { width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center; background: rgba(19,96,238,.1); color: #1360ee; }
 
-        .nrs-title { margin: 0 0 6px; font-size: clamp(18px,2.1vw,24px); font-weight: 800; letter-spacing: -.02em; color: #0b1220; }
-        .nrs-sub { margin: 0; font-size: 13.5px; line-height: 1.6; color: #6b7484; max-width: 52ch; }
+        .nrs-title { margin: 0 0 6px; font-size: max(clamp(18px,2.1vw,24px), min(1.667vw, 34.8px)); font-weight: 800; letter-spacing: -.02em; color: #0b1220; }
+        .nrs-sub { margin: 0; font-size: var(--f-13-5); line-height: 1.6; color: #6b7484; max-width: 52ch; }
 
         .nrs-form { display: flex; gap: 10px; }
         @media (max-width: 460px) { .nrs-form { flex-direction: column; } }
         .nrs-input {
           flex: 1; min-width: 0; padding: 13px 16px; border-radius: 11px;
           border: 1.5px solid #e0e6f0; background: #fbfcfe;
-          font-family: inherit; font-size: 14px; color: #0b1220; outline: 0;
+          font-family: inherit; font-size: var(--f-14); color: #0b1220; outline: 0;
           transition: border-color .18s ${EASE}, box-shadow .18s ${EASE}, background .18s ${EASE};
         }
         .nrs-input::placeholder { color: #aab0bd; }
@@ -41,14 +41,14 @@ export default function NewsroomSubscribe() {
         .nrs-btn {
           display: inline-flex; align-items: center; justify-content: center; gap: 8px;
           padding: 13px 24px; border-radius: 11px; border: 0; cursor: pointer;
-          font-family: inherit; font-size: 13.5px; font-weight: 700; color: #fff;
+          font-family: inherit; font-size: var(--f-13-5); font-weight: 700; color: #fff;
           background: #1360ee; box-shadow: 0 12px 26px -12px rgba(19,96,238,.85);
           transition: background .18s ${EASE}, transform .18s ${EASE};
         }
         .nrs-btn:hover { background: #0d4fd4; transform: translateY(-1px); }
         .nrs-btn:disabled { background: #22a06b; cursor: default; transform: none; box-shadow: none; }
 
-        .nrs-note { margin: 9px 0 0; font-size: 11.5px; color: #a7b0c0; }
+        .nrs-note { margin: 9px 0 0; font-size: var(--f-11-5); color: #a7b0c0; }
       `}</style>
 
       <section id="newsroom-subscribe" className="nrs">

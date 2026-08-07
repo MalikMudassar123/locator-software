@@ -94,7 +94,7 @@ export default function ServiceFAQ() {
           display: flex; align-items: center; justify-content: space-between;
           width: 100%; padding: 10px 13px; border-radius: 9px;
           border: none; background: none; cursor: pointer;
-          font-family: inherit; font-size: 13px; font-weight: 600;
+          font-family: inherit; font-size: var(--f-13); font-weight: 600;
           color: #52525e; text-align: left;
           transition: background .15s ${EASE}, color .15s ${EASE};
         }
@@ -102,7 +102,7 @@ export default function ServiceFAQ() {
         .sfq-cat.on { background: #eef3ff; color: #1360ee; font-weight: 700; }
 
         .sfq-badge {
-          font-size: 10px; font-weight: 700; padding: 2px 7px;
+          font-size: var(--f-10); font-weight: 700; padding: 2px 7px;
           border-radius: 999px; background: rgba(0,0,0,.06); color: #8888a0;
           transition: background .15s, color .15s;
           font-variant-numeric: tabular-nums;
@@ -132,7 +132,7 @@ export default function ServiceFAQ() {
         }
 
         .sfq-num {
-          font-size: 10px; font-weight: 700;
+          font-size: var(--f-10); font-weight: 700;
           font-family: ui-monospace, 'Cascadia Code', monospace;
           color: #c4c4d0; padding-top: 3px; flex-shrink: 0;
           width: 18px; letter-spacing: .02em;
@@ -141,7 +141,7 @@ export default function ServiceFAQ() {
         .sfq-item.on .sfq-num { color: #1360ee; }
 
         .sfq-qtext {
-          flex: 1; font-size: 14.5px; font-weight: 700;
+          flex: 1; font-size: var(--f-14-5); font-weight: 700;
           line-height: 1.45; letter-spacing: -.01em; color: #1d1d1f;
           transition: color .18s ${EASE};
         }
@@ -162,7 +162,7 @@ export default function ServiceFAQ() {
 
         .sfq-ans {
           margin: 0; padding: 0 18px 20px 50px;
-          font-size: 13.5px; line-height: 1.72; color: #6e6e73;
+          font-size: var(--f-13-5); line-height: 1.72; color: #6e6e73;
           opacity: 0; transform: translateY(-7px);
           transition: opacity .22s 0s, transform .28s 0s ${EASE};
         }
@@ -183,12 +183,12 @@ export default function ServiceFAQ() {
       `}</style>
 
       <section id="faq" style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#fff', borderTop: '1px solid #f0f0f3' }}>
-        <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'var(--w-1120)', margin: '0 auto' }}>
 
           {/* Header */}
           <div data-reveal style={{ textAlign: 'center', marginBottom: '48px' }}>
             <span style={{
-              fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em',
+              fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em',
               color: '#1360ee', textTransform: 'uppercase' as const,
               display: 'block', marginBottom: '16px',
             }}>
@@ -197,7 +197,7 @@ export default function ServiceFAQ() {
             </span>
             <h2 style={{
               margin: 0,
-              fontSize: 'clamp(19px,2.2vw,26px)',
+              fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))',
               fontWeight: 800, lineHeight: 1.06,
               letterSpacing: '-.015em', color: '#1d1d1f',
             }}>
@@ -219,7 +219,7 @@ export default function ServiceFAQ() {
             >
               <p
                 className="sfq-sidebar-label"
-                style={{ margin: '6px 4px 8px', fontSize: '10px', fontWeight: 700, letterSpacing: '.07em', textTransform: 'uppercase' as const, color: '#b0b0be' }}
+                style={{ margin: '6px 4px 8px', fontSize: 'var(--f-10)', fontWeight: 700, letterSpacing: '.07em', textTransform: 'uppercase' as const, color: '#b0b0be' }}
               >
                 Browse by topic
               </p>
@@ -261,7 +261,7 @@ export default function ServiceFAQ() {
                 ))}
               </div>
 
-              <p style={{ margin: '24px 0 0', fontSize: '13px', color: '#a1a1a6', lineHeight: 1.55 }}>
+              <p style={{ margin: '24px 0 0', fontSize: 'var(--f-13)', color: '#a1a1a6', lineHeight: 1.55 }}>
                 Can&apos;t find what you&apos;re looking for?{' '}
                 <Link href="/contact" style={{ color: '#1360ee', fontWeight: 700, textDecoration: 'none' }}>
                   Contact our team

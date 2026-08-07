@@ -19,19 +19,19 @@ export default function AsateelSteps() {
       `}</style>
 
       <section id="enroll" style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#fff' }}>
-        <div className="asa-enroll-grid" style={{ maxWidth: '1180px', margin: '0 auto' }}>
+        <div className="asa-enroll-grid" style={{ maxWidth: 'var(--w-1180)', margin: '0 auto' }}>
 
           <div data-reveal="left">
-            <h2 style={{ margin: '0 0 14px', fontSize: 'clamp(22px,2.8vw,30px)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-.02em', color: '#1360ee' }}>
+            <h2 style={{ margin: '0 0 14px', fontSize: 'max(clamp(22px,2.8vw,30px), min(2.083vw, 43.5px))', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-.02em', color: '#1360ee' }}>
               Enroll in the ASATEEL Platform
             </h2>
-            <p style={{ margin: '0 0 8px', fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.8, color: '#6e6e73' }}>
+            <p style={{ margin: '0 0 8px', fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
               Enrolling on the <strong style={{ color: '#1d1d1f' }}>ASATEEL</strong> platform is quite simple. Transport operators can apply online through the ASATEEL portal{' '}
               <a href="https://asateel.itc.gov.ae" target="_blank" rel="noopener noreferrer" className="asa-portal-link">
                 https://asateel.itc.gov.ae
               </a>
             </p>
-            <p style={{ margin: '18px 0 14px', fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.6, color: '#6e6e73' }}>
+            <p style={{ margin: '18px 0 14px', fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.6, color: '#6e6e73' }}>
               Here is the process:
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -40,9 +40,9 @@ export default function AsateelSteps() {
                   <span style={{
                     width: 22, height: 22, borderRadius: '6px', flexShrink: 0, marginTop: '2px',
                     background: 'rgba(19,96,238,.12)', color: '#1360ee',
-                    display: 'grid', placeItems: 'center', fontSize: 11, fontWeight: 800,
+                    display: 'grid', placeItems: 'center', fontSize: 'var(--f-11)', fontWeight: 800,
                   }}>✓</span>
-                  <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.75, color: '#6e6e73' }}>{s}</p>
+                  <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.75, color: '#6e6e73' }}>{s}</p>
                 </div>
               ))}
             </div>

@@ -138,7 +138,7 @@ function TMStatusBadge({ task, staffId, small }: { task: any; staffId: number; s
               <button key={s} className="tm-status-option" style={{ color: sc.text, fontWeight: s === task.status ? 600 : 500 }}
                 onClick={() => { updateStatus(staffId, task.id, s); setOpen(false) }}>
                 <span style={{ width: 8, height: 8, borderRadius: '50%', background: sc.text, flexShrink: 0 }} />
-                {s}{s === task.status && <span style={{ marginLeft: 'auto', fontSize: 13 }}>✓</span>}
+                {s}{s === task.status && <span style={{ marginLeft: 'auto', fontSize: 'var(--f-13)' }}>✓</span>}
               </button>
             )
           })}
@@ -155,21 +155,21 @@ function TMTaskRow({ task, staffId, isSelected, onClick }: { task: any; staffId:
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div className="tm-task-badge">#{task.id}</div>
-          <span style={{ fontSize: 12, color: '#94a3b8', fontWeight: 500 }}>Job Description : </span>
-          <span style={{ fontSize: 13, fontWeight: 600, color: '#1e293b' }}>{task.desc}</span>
+          <span style={{ fontSize: 'var(--f-12)', color: '#94a3b8', fontWeight: 500 }}>Job Description : </span>
+          <span style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: '#1e293b' }}>{task.desc}</span>
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
-            <div style={{ fontSize: 10.5, color: '#94a3b8', display: 'flex', alignItems: 'center', gap: 4 }}>
+            <div style={{ fontSize: 'var(--f-10-5)', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: 4 }}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>
               {task.assigned?.split(' ')[0]}
             </div>
             <TMStatusBadge task={task} staffId={staffId} />
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 11, color: '#94a3b8', paddingLeft: 46 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 'var(--f-11)', color: '#94a3b8', paddingLeft: 46 }}>
           <span><b style={{ color: '#64748b', fontWeight: 500 }}>Sales Personal :</b> {task.personnel}</span>
           {task.completed && <span style={{ marginLeft: 'auto' }}><b style={{ color: '#64748b', fontWeight: 500 }}>Completed Time :</b> {task.completed}</span>}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 11, color: '#94a3b8', paddingLeft: 46 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 'var(--f-11)', color: '#94a3b8', paddingLeft: 46 }}>
           <span><b style={{ color: '#64748b', fontWeight: 500 }}>Time Window :</b> {task.window}</span>
           <span style={{ marginLeft: 'auto' }}><b style={{ color: '#64748b', fontWeight: 500 }}>Location :</b> {task.code}</span>
         </div>
@@ -187,7 +187,7 @@ function TMMapPlaceholder({ small }: { small?: boolean }) {
         <path d="M12 0C5.4 0 0 5.4 0 12c0 9 12 20 12 20s12-11 12-20C24 5.4 18.6 0 12 0z" fill="#EF4444" />
         <circle cx="12" cy="11" r="4.5" fill="#fff" />
       </svg>
-      <div style={{ position: 'absolute', bottom: 6, right: 8, fontSize: 9, fontWeight: 600, color: '#94a3b8', background: 'rgba(255,255,255,0.7)', padding: '2px 6px', borderRadius: 4 }}>Map</div>
+      <div style={{ position: 'absolute', bottom: 6, right: 8, fontSize: 'var(--f-9)', fontWeight: 600, color: '#94a3b8', background: 'rgba(255,255,255,0.7)', padding: '2px 6px', borderRadius: 4 }}>Map</div>
     </div>
   )
 }
@@ -197,15 +197,15 @@ function TMDetailPanel() {
   if (!t) return null
   const Field = ({ label, children, span }: { label: string; children: ReactNode; span?: boolean }) => (
     <div style={{ gridColumn: span ? '1 / -1' : undefined, minWidth: 0 }}>
-      <div style={{ fontSize: 10, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 3 }}>{label}</div>
-      <div style={{ fontSize: 13, fontWeight: 500, color: '#1e293b', lineHeight: 1.4 }}>{children}</div>
+      <div style={{ fontSize: 'var(--f-10)', fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 3 }}>{label}</div>
+      <div style={{ fontSize: 'var(--f-13)', fontWeight: 500, color: '#1e293b', lineHeight: 1.4 }}>{children}</div>
     </div>
   )
   const grid: React.CSSProperties = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 16px' }
   return (
     <div className="tm-detail-side">
       <div style={{ padding: '12px 16px', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontSize: 13, fontWeight: 600, color: '#1e293b' }}>Task #{t.id}</span>
+        <span style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: '#1e293b' }}>Task #{t.id}</span>
         <div style={{ display: 'flex', gap: 5 }}>
           {['✏️', '🗑️', '💬'].map((icon, i) => <button key={i} className="tm-detail-action">{icon}</button>)}
           <button className="tm-detail-action" onClick={() => setSelTaskId(null)}>✕</button>
@@ -222,8 +222,8 @@ function TMDetailPanel() {
           <Field label="Job Type">{t.type}</Field>
         </div>
         <div style={{ marginTop: 16 }}>
-          <div style={{ fontSize: 10, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Location</div>
-          <div style={{ fontSize: 13, fontWeight: 500, color: '#1e293b', marginBottom: 8 }}>{t.loc}</div>
+          <div style={{ fontSize: 'var(--f-10)', fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Location</div>
+          <div style={{ fontSize: 'var(--f-13)', fontWeight: 500, color: '#1e293b', marginBottom: 8 }}>{t.loc}</div>
           <TMMapPlaceholder />
         </div>
         <div style={{ ...grid, borderTop: '1px solid #e2e8f0', paddingTop: 14, marginTop: 16 }}>
@@ -234,7 +234,7 @@ function TMDetailPanel() {
         <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 14, marginTop: 16, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
           <Field label="Signature">{t.status === 'Completed' ? <span style={{ color: '#16a34a' }}>Signed ✓</span> : <span style={{ color: '#94a3b8', fontStyle: 'italic' }}>Pending</span>}</Field>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: 10, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Review</div>
+            <div style={{ fontSize: 'var(--f-10)', fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Review</div>
             <TMStatusBadge task={t} staffId={s.id} small />
           </div>
         </div>
@@ -260,8 +260,8 @@ function TMWebDashboard() {
               <div style={{ width: 14, height: 14, borderRadius: '50%', background: '#fff', position: 'absolute', top: 2, right: 2, boxShadow: '0 1px 2px rgba(0,0,0,0.2)' }} />
             </div>
             <div>
-              <span style={{ fontSize: 12.5, fontWeight: 600, color: '#1e293b' }}>Active Tasks</span>
-              <div style={{ fontSize: 10, color: '#94a3b8' }}>19/06/2026</div>
+              <span style={{ fontSize: 'var(--f-12-5)', fontWeight: 600, color: '#1e293b' }}>Active Tasks</span>
+              <div style={{ fontSize: 'var(--f-10)', color: '#94a3b8' }}>19/06/2026</div>
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -273,27 +273,27 @@ function TMWebDashboard() {
             </button>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <button className="tm-toolbar-btn" style={{ fontSize: 11 }}>All items are sel… ▾</button>
+            <button className="tm-toolbar-btn" style={{ fontSize: 'var(--f-11)' }}>All items are sel… ▾</button>
             <button className="tm-toolbar-btn primary">Create A Task</button>
             <button className="tm-toolbar-btn primary">Locations</button>
-            <button className="tm-toolbar-btn" style={{ padding: '5px 8px', fontSize: 14, fontWeight: 600 }}>⋮</button>
+            <button className="tm-toolbar-btn" style={{ padding: '5px 8px', fontSize: 'var(--f-14)', fontWeight: 600 }}>⋮</button>
           </div>
         </div>
         {/* Staff + stats */}
         {selStaff && (
           <div style={{ padding: '12px 16px', background: topBg, borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div className="tm-avatar" style={{ background: selStaff.color, width: 44, height: 44, fontSize: 15 }}>{selStaff.initials}</div>
+              <div className="tm-avatar" style={{ background: selStaff.color, width: 44, height: 44, fontSize: 'var(--f-15)' }}>{selStaff.initials}</div>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', textTransform: 'uppercase' }}>{selStaff.name} <span style={{ fontSize: 11, color: '#64748b', fontWeight: 500, textTransform: 'none' }}>[{selStaff.shift}]</span></div>
-                <div style={{ fontSize: 10.5, color: '#94a3b8', fontFamily: 'ui-monospace,monospace', marginTop: 2 }}>[{selStaff.vehicle}]</div>
+                <div style={{ fontSize: 'var(--f-14)', fontWeight: 600, color: '#1e293b', textTransform: 'uppercase' }}>{selStaff.name} <span style={{ fontSize: 'var(--f-11)', color: '#64748b', fontWeight: 500, textTransform: 'none' }}>[{selStaff.shift}]</span></div>
+                <div style={{ fontSize: 'var(--f-10-5)', color: '#94a3b8', fontFamily: 'ui-monospace,monospace', marginTop: 2 }}>[{selStaff.vehicle}]</div>
               </div>
             </div>
             <div style={{ display: 'flex', gap: 10 }}>
               {[{ n: st.total, l: 'Total', c: '#1e293b' }, { n: st.assigned, l: 'Assigned', c: accent }, { n: st.inProgress, l: 'In progress', c: '#d97706' }, { n: st.completed, l: 'Completed', c: '#16a34a' }].map(x => (
                 <div key={x.l} style={{ textAlign: 'center', minWidth: 60, padding: '8px', borderRadius: 8, background: '#fff', border: '1px solid #e2e8f0' }}>
-                  <div style={{ fontSize: 20, fontWeight: 600, color: x.c, fontVariantNumeric: 'tabular-nums' }}>{x.n}</div>
-                  <div style={{ fontSize: 10, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.02em' }}>{x.l}</div>
+                  <div style={{ fontSize: 'var(--f-20)', fontWeight: 600, color: x.c, fontVariantNumeric: 'tabular-nums' }}>{x.n}</div>
+                  <div style={{ fontSize: 'var(--f-10)', fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.02em' }}>{x.l}</div>
                 </div>
               ))}
             </div>
@@ -307,8 +307,8 @@ function TMWebDashboard() {
         </div>
         {/* Footer */}
         {selStaff?.tasks.length > 0 && (
-          <div style={{ padding: '8px 16px', borderTop: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 11, color: '#94a3b8' }}>
-            <input placeholder="Search..." style={{ border: '1px solid #e2e8f0', borderRadius: 6, padding: '5px 10px', fontSize: 11, fontFamily: 'inherit', outline: 'none', width: 140 }} />
+          <div style={{ padding: '8px 16px', borderTop: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 'var(--f-11)', color: '#94a3b8' }}>
+            <input placeholder="Search..." style={{ border: '1px solid #e2e8f0', borderRadius: 6, padding: '5px 10px', fontSize: 'var(--f-11)', fontFamily: 'inherit', outline: 'none', width: 140 }} />
             <span style={{ color: accent, fontWeight: 600 }}>showing 1-{selStaff.tasks.length} of {selStaff.tasks.length} items</span>
           </div>
         )}
@@ -322,9 +322,9 @@ function TMWebDashboard() {
 // ── Mobile app ───────────────────────────────────────────────────
 function StatusBar({ time }: { time: string }) {
   return (
-    <div style={{ height: 36, padding: '0 24px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', paddingBottom: 4, fontSize: 11, fontWeight: 600, color: '#fff', flexShrink: 0, background: '#1360EF' }}>
+    <div style={{ height: 36, padding: '0 24px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', paddingBottom: 4, fontSize: 'var(--f-11)', fontWeight: 600, color: '#fff', flexShrink: 0, background: '#1360EF' }}>
       <span>{time}</span>
-      <span style={{ display: 'flex', gap: 4, alignItems: 'center', fontSize: 10 }}>
+      <span style={{ display: 'flex', gap: 4, alignItems: 'center', fontSize: 'var(--f-10)' }}>
         <svg width="14" height="10" viewBox="0 0 16 12" fill="#fff"><rect x="0" y="8" width="3" height="4" rx="0.5" /><rect x="4.5" y="5" width="3" height="7" rx="0.5" /><rect x="9" y="2" width="3" height="10" rx="0.5" /><rect x="13.5" y="0" width="2.5" height="12" rx="0.5" opacity="0.3" /></svg>
         <svg width="14" height="10" viewBox="0 0 16 12" fill="#fff"><path d="M8 2C5.2 2 2.7 3.1 1 5l1.4 1.4C3.8 5 5.8 4 8 4s4.2 1 5.6 2.4L15 5c-1.7-1.9-4.2-3-7-3zm0 4c-1.7 0-3.2.7-4.2 1.8L5.2 9.2C5.9 8.5 6.9 8 8 8s2.1.5 2.8 1.2l1.4-1.4C11.2 6.7 9.7 6 8 6z" /></svg>
         <svg width="20" height="10" viewBox="0 0 25 12" fill="#fff"><rect x="0" y="1" width="20" height="10" rx="2" fill="none" stroke="#fff" strokeWidth="1" /><rect x="21" y="3.5" width="2" height="5" rx="1" fill="#fff" /><rect x="1.5" y="2.5" width="14" height="7" rx="1" fill="#fff" /></svg>
@@ -342,7 +342,7 @@ function BottomNav({ active }: { active: string }) {
   return (
     <div style={{ display: 'flex', background: '#fff', borderTop: '1px solid #e2e8f0', padding: '6px 0 18px', flexShrink: 0 }}>
       {items.map((item, i) => (
-        <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, fontSize: 10, fontWeight: 600, color: item.label === active ? '#1360EF' : '#94a3b8', cursor: 'pointer', padding: 4 }}>
+        <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, fontSize: 'var(--f-10)', fontWeight: 600, color: item.label === active ? '#1360EF' : '#94a3b8', cursor: 'pointer', padding: 4 }}>
           {item.icon}<span>{item.label}</span>
         </div>
       ))}
@@ -367,14 +367,14 @@ function TMSignaturePad() {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-        <span style={{ fontSize: 11, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Signature</span>
-        {hasSig && <button onClick={clear} style={{ background: 'none', border: 'none', color: '#ef4444', fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Clear</button>}
+        <span style={{ fontSize: 'var(--f-11)', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Signature</span>
+        {hasSig && <button onClick={clear} style={{ background: 'none', border: 'none', color: '#ef4444', fontSize: 'var(--f-11)', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Clear</button>}
       </div>
       <canvas ref={canvasRef} width={300} height={90}
         style={{ border: '1.5px dashed #cbd5e1', borderRadius: 10, background: '#fff', cursor: 'crosshair', touchAction: 'none', width: '100%', height: 90, display: 'block' }}
         onMouseDown={start} onMouseMove={move} onMouseUp={end} onMouseLeave={end}
         onTouchStart={start} onTouchMove={move} onTouchEnd={end} />
-      {!hasSig && <div style={{ fontSize: 10, color: '#b0b8c4', textAlign: 'center', marginTop: 3 }}>Sign above to confirm delivery</div>}
+      {!hasSig && <div style={{ fontSize: 'var(--f-10)', color: '#b0b8c4', textAlign: 'center', marginTop: 3 }}>Sign above to confirm delivery</div>}
     </div>
   )
 }
@@ -394,15 +394,15 @@ function TMPhotoUpload() {
   const remove = (id: number) => setPhotos(prev => prev.filter(p => p.id !== id))
   return (
     <div>
-      <div style={{ fontSize: 11, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 6 }}>Delivery Photos</div>
+      <div style={{ fontSize: 'var(--f-11)', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 6 }}>Delivery Photos</div>
       <div className={`tm-photo-drop${dragOver ? ' dragover' : ''}`}
         onClick={() => inputRef.current?.click()}
         onDrop={e => { e.preventDefault(); setDragOver(false); addFiles(e.dataTransfer.files) }}
         onDragOver={e => { e.preventDefault(); setDragOver(true) }}
         onDragLeave={() => setDragOver(false)}>
-        <div style={{ fontSize: 22, marginBottom: 2 }}>📷</div>
-        <div style={{ fontSize: 11.5, fontWeight: 600, color: '#64748b' }}>Tap or drag photos here</div>
-        <div style={{ fontSize: 9.5, color: '#94a3b8', marginTop: 1 }}>Supports multiple images</div>
+        <div style={{ fontSize: 'var(--f-22)', marginBottom: 2 }}>📷</div>
+        <div style={{ fontSize: 'var(--f-11-5)', fontWeight: 600, color: '#64748b' }}>Tap or drag photos here</div>
+        <div style={{ fontSize: 'var(--f-9-5)', color: '#94a3b8', marginTop: 1 }}>Supports multiple images</div>
         <input ref={inputRef} type="file" accept="image/*" multiple hidden onChange={e => e.target.files && addFiles(e.target.files)} />
       </div>
       {photos.length > 0 && (
@@ -411,7 +411,7 @@ function TMPhotoUpload() {
             <div key={p.id} style={{ width: 52, height: 52, borderRadius: 8, overflow: 'hidden', position: 'relative', border: '1px solid #e2e8f0' }}>
               { /* eslint-disable-next-line @next/next/no-img-element */ }
               <img src={p.url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
-              <button onClick={(e) => { e.stopPropagation(); remove(p.id) }} style={{ position: 'absolute', top: 2, right: 2, width: 16, height: 16, borderRadius: '50%', background: 'rgba(0,0,0,0.5)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 9, display: 'grid', placeItems: 'center', lineHeight: 1 }}>×</button>
+              <button onClick={(e) => { e.stopPropagation(); remove(p.id) }} style={{ position: 'absolute', top: 2, right: 2, width: 16, height: 16, borderRadius: '50%', background: 'rgba(0,0,0,0.5)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 'var(--f-9)', display: 'grid', placeItems: 'center', lineHeight: 1 }}>×</button>
             </div>
           ))}
         </div>
@@ -426,22 +426,22 @@ function TMMobileTaskCard({ task, index, onClick }: { task: any; index: number; 
     <div className="tm-mobile-card" onClick={onClick}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 10, color: '#94a3b8', fontWeight: 600 }}>Job Description</div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#1e293b', marginTop: 1 }}>{task.desc}</div>
+          <div style={{ fontSize: 'var(--f-10)', color: '#94a3b8', fontWeight: 600 }}>Job Description</div>
+          <div style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: '#1e293b', marginTop: 1 }}>{task.desc}</div>
         </div>
-        <div style={{ width: 26, height: 26, borderRadius: 6, background: '#1360EF', color: '#fff', display: 'grid', placeItems: 'center', fontSize: 11, fontWeight: 600, flexShrink: 0, marginLeft: 8 }}>{index + 1}</div>
+        <div style={{ width: 26, height: 26, borderRadius: 6, background: '#1360EF', color: '#fff', display: 'grid', placeItems: 'center', fontSize: 'var(--f-11)', fontWeight: 600, flexShrink: 0, marginLeft: 8 }}>{index + 1}</div>
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
-          <div style={{ fontSize: 10, color: '#94a3b8', fontWeight: 600 }}>Location</div>
-          <div style={{ fontSize: 12, fontWeight: 600, color: '#1360EF', marginTop: 1 }}>{task.loc.toUpperCase()}</div>
+          <div style={{ fontSize: 'var(--f-10)', color: '#94a3b8', fontWeight: 600 }}>Location</div>
+          <div style={{ fontSize: 'var(--f-12)', fontWeight: 600, color: '#1360EF', marginTop: 1 }}>{task.loc.toUpperCase()}</div>
         </div>
         <div style={{ textAlign: 'right' }}>
           <div style={{ width: 36, height: 36, borderRadius: '50%', background: c.bg, display: 'grid', placeItems: 'center', marginLeft: 'auto', marginBottom: 3 }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={c.text} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="8" r="4" /><path d="M5 20c0-4 3.5-6 7-6s7 2 7 6" />{task.status === 'Completed' && <path d="M15 17l2 2 3.5-3.5" strokeWidth="2.5" />}</svg>
           </div>
-          <div style={{ fontSize: 10.5, fontWeight: 600, color: c.text }}>{task.status}</div>
-          <div style={{ fontSize: 9.5, color: '#b0b8c4' }}>{task.assigned?.split(' ')[0]}</div>
+          <div style={{ fontSize: 'var(--f-10-5)', fontWeight: 600, color: c.text }}>{task.status}</div>
+          <div style={{ fontSize: 'var(--f-9-5)', color: '#b0b8c4' }}>{task.assigned?.split(' ')[0]}</div>
         </div>
       </div>
     </div>
@@ -458,8 +458,8 @@ function TMMobileTaskDetail({ task, staffMember, onBack }: { task: any; staffMem
   }
   const Field = ({ label, children }: { label: string; children: ReactNode }) => (
     <div style={{ marginBottom: 12 }}>
-      <div style={{ fontSize: 10, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 2 }}>{label}</div>
-      <div style={{ fontSize: 13, fontWeight: 600, color: '#1e293b' }}>{children}</div>
+      <div style={{ fontSize: 'var(--f-10)', fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 2 }}>{label}</div>
+      <div style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: '#1e293b' }}>{children}</div>
     </div>
   )
   return (
@@ -472,11 +472,11 @@ function TMMobileTaskDetail({ task, staffMember, onBack }: { task: any; staffMem
       </div>
       <div style={{ flex: 1, overflowY: 'auto', padding: 14, background: '#F0F4F7' }}>
         <div style={{ textAlign: 'center', marginBottom: 14 }}>
-          <button onClick={cycleStatus} style={{ background: c.bg, color: c.text, border: `1.5px solid ${c.border}`, padding: '7px 22px', borderRadius: 999, fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <button onClick={cycleStatus} style={{ background: c.bg, color: c.text, border: `1.5px solid ${c.border}`, padding: '7px 22px', borderRadius: 999, fontSize: 'var(--f-12)', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
             <span style={{ width: 7, height: 7, borderRadius: '50%', background: c.text }} />
-            {task.status}<span style={{ fontSize: 9, opacity: 0.6 }}>▼</span>
+            {task.status}<span style={{ fontSize: 'var(--f-9)', opacity: 0.6 }}>▼</span>
           </button>
-          <div style={{ fontSize: 9, color: '#b0b8c4', marginTop: 3 }}>Tap to change status</div>
+          <div style={{ fontSize: 'var(--f-9)', color: '#b0b8c4', marginTop: 3 }}>Tap to change status</div>
         </div>
         <div style={{ background: '#fff', borderRadius: 14, padding: 14, marginBottom: 10, boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
           <Field label="Assigned By">{task.by}</Field>
@@ -487,13 +487,13 @@ function TMMobileTaskDetail({ task, staffMember, onBack }: { task: any; staffMem
         <div style={{ background: '#fff', borderRadius: 14, padding: 14, marginBottom: 10, boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
           <Field label="Assigned Time">{task.assigned || '–'}</Field>
           <Field label="In Progress Time">{task.started || '–'}</Field>
-          <div><div style={{ fontSize: 10, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 2 }}>Completed Time</div>
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#1e293b' }}>{task.completed || '–'}</div></div>
+          <div><div style={{ fontSize: 'var(--f-10)', fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 2 }}>Completed Time</div>
+            <div style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: '#1e293b' }}>{task.completed || '–'}</div></div>
         </div>
         {task.status === 'Completed' && (
           <div style={{ background: '#fff', borderRadius: 14, padding: 14, marginBottom: 10, boxShadow: '0 1px 3px rgba(0,0,0,0.05)', animation: 'tmSlideUp 0.3s ease' }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#1e293b', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 7 }}>
-              <span style={{ width: 24, height: 24, borderRadius: 7, background: '#e8faf0', display: 'grid', placeItems: 'center', fontSize: 13 }}>✅</span>Delivery Confirmation
+            <div style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: '#1e293b', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 7 }}>
+              <span style={{ width: 24, height: 24, borderRadius: 7, background: '#e8faf0', display: 'grid', placeItems: 'center', fontSize: 'var(--f-13)' }}>✅</span>Delivery Confirmation
             </div>
             <div style={{ marginBottom: 14 }}><TMSignaturePad /></div>
             <TMPhotoUpload />
@@ -533,21 +533,21 @@ function TMMobileApp() {
                   <span style={{ color: '#fff', ...PHONE_TITLE }}>Task Listing</span>
                   {/* Sized down with the title it sits beside — at 11px against a
                       13px heading the count read as a second word, not a badge. */}
-                  <span style={{ background: 'rgba(255,255,255,0.3)', color: '#fff', fontSize: 10, fontWeight: 600, padding: '2px 6px', borderRadius: 5 }}>{allTasks.length}</span>
+                  <span style={{ background: 'rgba(255,255,255,0.3)', color: '#fff', fontSize: 'var(--f-10)', fontWeight: 600, padding: '2px 6px', borderRadius: 5 }}>{allTasks.length}</span>
                 </div>
               </div>
               <div style={{ flex: 1, overflowY: 'auto', padding: 14, background: '#F0F4F7' }}>
                 <div style={{ background: '#fff', borderRadius: 12, padding: 4, marginBottom: 10, display: 'flex', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
                   {['Yesterday', 'Today', 'Tomorrow', 'All'].map(d => (
-                    <button key={d} onClick={() => setDateTab(d)} style={{ flex: 1, padding: '7px 2px', border: 'none', background: 'transparent', fontFamily: 'inherit', fontSize: 11.5, fontWeight: d === dateTab ? 700 : 500, color: d === dateTab ? '#1360EF' : '#94a3b8', cursor: 'pointer', borderRadius: 8 }}>{d}</button>
+                    <button key={d} onClick={() => setDateTab(d)} style={{ flex: 1, padding: '7px 2px', border: 'none', background: 'transparent', fontFamily: 'inherit', fontSize: 'var(--f-11-5)', fontWeight: d === dateTab ? 700 : 500, color: d === dateTab ? '#1360EF' : '#94a3b8', cursor: 'pointer', borderRadius: 8 }}>{d}</button>
                   ))}
                 </div>
                 <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
                   <div style={{ flex: 1, minWidth: 0, background: '#fff', borderRadius: 10, padding: '8px 12px', display: 'flex', alignItems: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-                    <input placeholder="Search For" style={{ border: 'none', outline: 'none', flex: 1, minWidth: 0, fontFamily: 'inherit', fontSize: 12, color: '#1e293b', background: 'transparent' }} />
+                    <input placeholder="Search For" style={{ border: 'none', outline: 'none', flex: 1, minWidth: 0, fontFamily: 'inherit', fontSize: 'var(--f-12)', color: '#1e293b', background: 'transparent' }} />
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /></svg>
                   </div>
-                  <button style={{ width: 36, height: 36, borderRadius: 10, background: '#1360EF', border: 'none', color: '#fff', cursor: 'pointer', fontSize: 15, display: 'grid', placeItems: 'center' }}>↻</button>
+                  <button style={{ width: 36, height: 36, borderRadius: 10, background: '#1360EF', border: 'none', color: '#fff', cursor: 'pointer', fontSize: 'var(--f-15)', display: 'grid', placeItems: 'center' }}>↻</button>
                 </div>
                 {allTasks.map((task, i) => <TMMobileTaskCard key={task.id} task={task} index={i} onClick={() => openTask(task)} />)}
               </div>

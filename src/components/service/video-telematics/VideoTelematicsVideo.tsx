@@ -9,7 +9,7 @@ export default function VideoTelematicsVideo() {
 
   return (
     <section style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#f5f7fa' }}>
-      <div data-reveal style={{ maxWidth: '900px', margin: '0 auto' }}>
+      <div data-reveal style={{ maxWidth: 'var(--w-900)', margin: '0 auto' }}>
         <div style={{
           position: 'relative', borderRadius: '16px', overflow: 'hidden',
           aspectRatio: '16 / 9', background: '#0f1117',

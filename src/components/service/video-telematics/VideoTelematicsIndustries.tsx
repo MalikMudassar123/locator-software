@@ -104,7 +104,7 @@ export default function VideoTelematicsIndustries() {
           display: flex; align-items: center; justify-content: center;
           writing-mode: vertical-rl; transform: rotate(180deg);
           padding: 26px 0;
-          font-size: clamp(13px,1.25vw,16px); font-weight: 800;
+          font-size: max(clamp(13px,1.25vw,16px), min(1.111vw, 23.2px)); font-weight: 800;
           letter-spacing: .1em; text-transform: uppercase; color: #fff;
           white-space: nowrap; overflow: hidden;
           /* Holds the label off bright patches of the photo. */
@@ -129,12 +129,12 @@ export default function VideoTelematicsIndustries() {
         }
         .vti-body h3 {
           margin: 0 0 10px;
-          font-size: clamp(20px,2.2vw,29px); font-weight: 800;
+          font-size: max(clamp(20px,2.2vw,29px), min(2.014vw, 42.05px)); font-weight: 800;
           letter-spacing: -.02em; line-height: 1.12; color: #fff;
         }
         .vti-body p {
           margin: 0; max-width: 52ch;
-          font-size: clamp(13px,1.1vw,14.5px); line-height: 1.6;
+          font-size: max(clamp(13px,1.1vw,14.5px), min(1.007vw, 21.02px)); line-height: 1.6;
           color: rgba(255,255,255,.9);
         }
 
@@ -158,13 +158,13 @@ export default function VideoTelematicsIndustries() {
       `}</style>
 
       <section style={{ padding: 'clamp(56px,7vw,88px) 28px', background: '#fff' }}>
-        <div style={{ maxWidth: '1180px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'var(--w-1180)', margin: '0 auto' }}>
           <div data-reveal style={{ textAlign: 'center', maxWidth: '680px', margin: '0 auto clamp(36px,5vw,52px)' }}>
-            <span style={{ fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
+            <span style={{ fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
               <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
               Industries we serve
             </span>
-            <h2 style={{ margin: 0, fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+            <h2 style={{ margin: 0, fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               Revolutionizing Industries with AI Camera &amp; Video Telematics
             </h2>
           </div>

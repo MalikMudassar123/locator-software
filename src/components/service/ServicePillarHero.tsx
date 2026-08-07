@@ -24,11 +24,11 @@ export default function ServicePillarHero({
         .spx-tabs {
           position: relative; z-index: 1;
           display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
-          max-width: 960px; margin: 0 auto clamp(32px,5vw,52px);
+          max-width: var(--w-960); margin: 0 auto clamp(32px,5vw,52px);
         }
         .spx-tab {
           display: inline-flex; align-items: center; gap: 8px;
-          font-size: 13px; font-weight: 700; color: #6e6e73;
+          font-size: var(--f-13); font-weight: 700; color: #6e6e73;
           padding: 9px 16px 9px 10px; border-radius: 999px;
           border: 1px solid #e8ecf4; background: #fff; text-decoration: none;
           transition: .2s ${EASE};
@@ -78,16 +78,16 @@ export default function ServicePillarHero({
             {active.icon}
           </div>
 
-          <span className="spx-anim" style={{ animationDelay: '.08s', display: 'block', fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: active.accent, textTransform: 'uppercase', marginBottom: '16px' }}>
+          <span className="spx-anim" style={{ animationDelay: '.08s', display: 'block', fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: active.accent, textTransform: 'uppercase', marginBottom: '16px' }}>
             <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: active.accent, borderRadius: '2px' }} /></span>
             Locator Services — {active.tagline}
           </span>
 
-          <h1 className="spx-anim" style={{ animationDelay: '.14s', margin: 0, fontSize: 'clamp(21px,2.5vw,28px)', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+          <h1 className="spx-anim" style={{ animationDelay: '.14s', margin: 0, fontSize: 'max(clamp(21px,2.5vw,28px), min(1.944vw, 40.6px))', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-.015em', color: '#1d1d1f' }}>
             {title}
           </h1>
 
-          <p className="spx-anim" style={{ animationDelay: '.22s', margin: '20px auto 0', maxWidth: '600px', fontSize: 'clamp(15px,1.5vw,17.5px)', lineHeight: 1.7, color: '#52525e' }}>
+          <p className="spx-anim" style={{ animationDelay: '.22s', margin: '20px auto 0', maxWidth: '600px', fontSize: 'max(clamp(15px,1.5vw,17.5px), min(1.215vw, 25.38px))', lineHeight: 1.7, color: '#52525e' }}>
             {lead}
           </p>
         </div>

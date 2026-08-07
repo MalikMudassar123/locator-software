@@ -10,9 +10,9 @@
 // These bring every phone screen onto the dashboards' scale. Shared rather than
 // repeated inline because the three modules each carry several app bars, and the
 // point of the change is that they all match — one missed and it shows.
-export const PHONE_TITLE = { fontSize: 13, fontWeight: 600 } as const   // app bars, sheet headers, screen titles
-export const PHONE_SECTION = { fontSize: 12.5, fontWeight: 600 } as const // sub-section headings inside a screen
-export const PHONE_BAR_ICON = { fontSize: 15 } as const                 // back arrows — icons read smaller than text at equal px
+export const PHONE_TITLE = { fontSize: 'var(--f-13)', fontWeight: 600 } as const   // app bars, sheet headers, screen titles
+export const PHONE_SECTION = { fontSize: 'var(--f-12-5)', fontWeight: 600 } as const // sub-section headings inside a screen
+export const PHONE_BAR_ICON = { fontSize: 'var(--f-15)' } as const                 // back arrows — icons read smaller than text at equal px
 
 export default function ModuleShowcaseStyles() {
   return (
@@ -26,7 +26,7 @@ export default function ModuleShowcaseStyles() {
       .ms-tab {
         display: flex; align-items: center; gap: 7px;
         padding: 10px 26px; border-radius: 11px; border: none; background: transparent;
-        font-family: inherit; font-size: 13.5px; font-weight: 500; color: #64748b;
+        font-family: inherit; font-size: var(--f-13-5); font-weight: 500; color: #64748b;
         cursor: pointer; transition: all .2s ease; white-space: nowrap;
       }
       .ms-tab:hover { color: #334155; }
@@ -87,7 +87,7 @@ export default function ModuleShowcaseStyles() {
 
       /* ── Task Manager web ──────────────────────────────────────── */
       .tm-task-panel { display: flex; flex-direction: column; overflow: hidden; }
-      .tm-toolbar-btn { font-family: inherit; font-size: 11.5px; font-weight: 500; padding: 5px 12px; border-radius: 7px; border: 1px solid #e2e8f0; background: #fff; color: #475569; cursor: pointer; transition: .15s ease; white-space: nowrap; }
+      .tm-toolbar-btn { font-family: inherit; font-size: var(--f-11-5); font-weight: 500; padding: 5px 12px; border-radius: 7px; border: 1px solid #e2e8f0; background: #fff; color: #475569; cursor: pointer; transition: .15s ease; white-space: nowrap; }
       .tm-toolbar-btn:hover { background: #f1f5f9; }
       .tm-toolbar-btn.primary { background: #1360EF; color: #fff; border-color: #1360EF; }
       .tm-task-list-scroll { flex: 1; overflow-y: auto; padding: 6px 12px; }
@@ -96,15 +96,15 @@ export default function ModuleShowcaseStyles() {
       .tm-task-row { display: flex; gap: 10px; align-items: center; padding: 12px 14px; border-radius: 10px; border: 1px solid transparent; cursor: pointer; transition: all .15s ease; margin-bottom: 2px; }
       .tm-task-row:hover { background: #f8fafc; border-color: #e2e8f0; }
       .tm-task-row.selected { background: #EAF1FF; border: 2px dashed #CDD8EC; }
-      .tm-task-badge { background: #1360EF; color: #fff; font-size: 11.5px; font-weight: 600; padding: 4px 9px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; }
-      .tm-avatar { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 600; color: #fff; flex-shrink: 0; }
-      .tm-status { display: inline-flex; align-items: center; gap: 5px; padding: 4px 11px; border-radius: 999px; font-size: 12px; font-weight: 600; cursor: pointer; position: relative; transition: transform .15s ease; white-space: nowrap; user-select: none; }
+      .tm-task-badge { background: #1360EF; color: #fff; font-size: var(--f-11-5); font-weight: 600; padding: 4px 9px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; }
+      .tm-avatar { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: var(--f-12); font-weight: 600; color: #fff; flex-shrink: 0; }
+      .tm-status { display: inline-flex; align-items: center; gap: 5px; padding: 4px 11px; border-radius: 999px; font-size: var(--f-12); font-weight: 600; cursor: pointer; position: relative; transition: transform .15s ease; white-space: nowrap; user-select: none; }
       .tm-status:hover { transform: scale(1.05); }
       .tm-status-dropdown { position: absolute; top: calc(100% + 4px); right: 0; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 4px; box-shadow: 0 10px 30px -8px rgba(0,0,0,.16); z-index: 60; min-width: 145px; }
-      .tm-status-option { display: flex; align-items: center; gap: 7px; padding: 7px 11px; border-radius: 7px; font-size: 12px; font-weight: 500; cursor: pointer; transition: background .1s ease; border: none; background: transparent; width: 100%; font-family: inherit; text-align: left; }
+      .tm-status-option { display: flex; align-items: center; gap: 7px; padding: 7px 11px; border-radius: 7px; font-size: var(--f-12); font-weight: 500; cursor: pointer; transition: background .1s ease; border: none; background: transparent; width: 100%; font-family: inherit; text-align: left; }
       .tm-status-option:hover { background: #f1f5f9; }
       .tm-detail-side { background: #f8fafc; display: flex; flex-direction: column; overflow: hidden; border-left: 1px solid #e2e8f0; animation: tmSlideIn .25s ease; }
-      .tm-detail-action { width: 28px; height: 28px; border-radius: 7px; border: 1px solid #e2e8f0; background: #fff; display: grid; place-items: center; cursor: pointer; color: #64748b; transition: all .15s ease; font-size: 13px; padding: 0; }
+      .tm-detail-action { width: 28px; height: 28px; border-radius: 7px; border: 1px solid #e2e8f0; background: #fff; display: grid; place-items: center; cursor: pointer; color: #64748b; transition: all .15s ease; font-size: var(--f-13); padding: 0; }
       .tm-detail-action:hover { background: #ebf0ff; color: #1360EF; border-color: #c7d2fe; }
       .tm-detail-scroll { flex: 1; overflow-y: auto; padding: 18px; }
       .tm-detail-scroll::-webkit-scrollbar { width: 4px; }

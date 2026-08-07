@@ -13,7 +13,7 @@ export default function ServiceComingSoon({ accent }: { accent: string }) {
         }
         .svc-btn {
           display: inline-flex; align-items: center; gap: 8px;
-          font-family: inherit; font-size: 14px; font-weight: 700;
+          font-family: inherit; font-size: var(--f-14); font-weight: 700;
           padding: 13px 28px; border-radius: 999px; text-decoration: none;
           background: #1360ee; color: #fff; box-shadow: 0 10px 24px rgba(19,96,238,.3);
           transition: .18s ${EASE};
@@ -31,10 +31,10 @@ export default function ServiceComingSoon({ accent }: { accent: string }) {
               <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.5 2" />
             </svg>
           </div>
-          <h2 style={{ margin: '0 0 14px', fontSize: 'clamp(22px,2.6vw,30px)', fontWeight: 800, letterSpacing: '-.02em', color: '#1d1d1f' }}>
+          <h2 style={{ margin: '0 0 14px', fontSize: 'max(clamp(22px,2.6vw,30px), min(2.083vw, 43.5px))', fontWeight: 800, letterSpacing: '-.02em', color: '#1d1d1f' }}>
             This page is on its way
           </h2>
-          <p style={{ margin: '0 auto 30px', maxWidth: '480px', fontSize: 'clamp(14px,1.3vw,16px)', lineHeight: 1.7, color: '#6e6e73' }}>
+          <p style={{ margin: '0 auto 30px', maxWidth: '480px', fontSize: 'max(clamp(14px,1.3vw,16px), min(1.111vw, 23.2px))', lineHeight: 1.7, color: '#6e6e73' }}>
             We&rsquo;re putting the finishing touches on this service. Reach out to our team in the meantime for full details.
           </p>
           <Link href="/contact" className="svc-btn">

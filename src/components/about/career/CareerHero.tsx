@@ -24,7 +24,7 @@ export default function CareerHero() {
         }
 
         .ch-body { position: relative; z-index: 2; flex: 1; display: flex; align-items: center; padding: clamp(28px,5vw,60px) 28px clamp(48px,6vw,72px); }
-        .ch-inner { max-width: 1180px; width: 100%; margin: 0 auto; }
+        .ch-inner { max-width: var(--w-1180); width: 100%; margin: 0 auto; }
         /* Wide enough that the headline wraps on its own words instead of
            being squeezed into a narrow column. */
         .ch-content { max-width: min(900px, 92vw); }
@@ -34,26 +34,26 @@ export default function CareerHero() {
            so it can never sit stranded beside a wrapped label. */
         .ch-eyebrow {
           display: block;
-          font-size: clamp(22px,2.8vw,32px); font-weight: 800; letter-spacing: .04em;
+          font-size: max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px)); font-weight: 800; letter-spacing: .04em;
           text-transform: uppercase; color: #6ea2ff; margin-bottom: 18px;
         }
         .ch-eyebrow-rule { display: block; margin-bottom: 12px; }
         .ch-eyebrow-rule span { display: inline-block; width: 34px; height: 3px; background: #6ea2ff; border-radius: 2px; }
 
         .ch-title {
-          margin: 0; font-size: clamp(32px,5.4vw,68px); font-weight: 800;
+          margin: 0; font-size: max(clamp(32px,5.4vw,68px), min(4.722vw, 98.6px)); font-weight: 800;
           text-transform: uppercase; line-height: 1.08; letter-spacing: -.015em;
           color: #fff; max-width: 16ch;
           text-shadow: 0 4px 30px rgba(0,0,0,.35);
         }
 
-        .ch-lead { margin: 22px 0 0; max-width: 48ch; font-size: clamp(15px,1.4vw,17.5px); line-height: 1.75; color: rgba(255,255,255,.78); }
+        .ch-lead { margin: 22px 0 0; max-width: 48ch; font-size: max(clamp(15px,1.4vw,17.5px), min(1.215vw, 25.38px)); line-height: 1.75; color: rgba(255,255,255,.78); }
 
         .ch-cta-row { display: flex; gap: 14px; margin-top: clamp(30px,3.8vw,42px); flex-wrap: wrap; }
         .ch-cta {
           display: inline-flex; align-items: center; gap: 10px;
           padding: 16px 28px; border-radius: 12px;
-          font-size: 13.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+          font-size: var(--f-13-5); font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
           text-decoration: none; transition: background .2s ease, border-color .2s ease, transform .2s ease, box-shadow .2s ease;
         }
         .ch-cta-primary { background: #1360ee; color: #fff; border: 1.5px solid #1360ee; box-shadow: 0 14px 32px -10px rgba(19,96,238,.65); }

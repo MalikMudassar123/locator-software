@@ -240,7 +240,7 @@ export default function VideoHeroSection({
             #f2f4f8 40%,
             #eef0f4 100%
           );
-          padding: clamp(48px, 7vw, 96px) 0 clamp(56px, 8vw, 110px);
+          padding: var(--s-section-y) 0;
           overflow: hidden;
           font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
             sans-serif;
@@ -283,7 +283,7 @@ export default function VideoHeroSection({
         }
 
         .vhs__headline {
-          font-size: clamp(26px, 4vw, 48px);
+          font-size: var(--t-display);
           font-weight: 700;
           color: var(--headline);
           letter-spacing: -0.025em;
@@ -292,7 +292,7 @@ export default function VideoHeroSection({
         }
 
         .vhs__subline {
-          font-size: clamp(14px, 1.4vw, 17px);
+          font-size: var(--t-lead);
           color: var(--subline);
           font-weight: 400;
           line-height: 1.6;
@@ -305,7 +305,11 @@ export default function VideoHeroSection({
           position: relative;
           z-index: 5;
           width: 100%;
-          max-width: 1100px;
+          /* Was a flat 1100px — see the --w-* token block in globals.css. Every
+             decorative block below is positioned against THIS box, so the video
+             card's own cap grows with it (--w-video) rather than staying at 800px
+             and letting the blocks drift off the edges of the video they overlap. */
+          max-width: var(--w-narrow);
           margin: 0 auto;
           padding: 0 clamp(16px, 4vw, 48px);
         }
@@ -441,7 +445,9 @@ export default function VideoHeroSection({
           position: relative;
           z-index: 10;
           width: 100%;
-          max-width: min(90%, 800px);
+          /* The 90% is what keeps the blocks peeking out on either side and is
+             unchanged; only the pixel cap now scales — see --w-video. */
+          max-width: min(90%, var(--w-video));
           margin: 0 auto;
         }
 
@@ -532,8 +538,8 @@ export default function VideoHeroSection({
           left: 50%;
           transform: translate(-50%, -50%) scale(1);
           z-index: 5;
-          width: clamp(52px, 7vw, 72px);
-          height: clamp(52px, 7vw, 72px);
+          width: var(--i-play);
+          height: var(--i-play);
           border-radius: 50%;
           border: none;
           cursor: pointer;

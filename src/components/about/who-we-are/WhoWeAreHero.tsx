@@ -23,7 +23,7 @@ export default function WhoWeAreHero() {
            never leave it stranded beside the middle of a two-line block. */
         .wwa-eyebrow {
           display: block;
-          font-size: clamp(22px,2.8vw,32px); font-weight: 800; letter-spacing: .04em;
+          font-size: max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px)); font-weight: 800; letter-spacing: .04em;
           color: #1360ee; text-transform: uppercase;
         }
         .wwa-eyebrow span {
@@ -33,7 +33,7 @@ export default function WhoWeAreHero() {
         }
 
         .wwa-btn {
-          font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
+          font-family: inherit; font-size: var(--f-14); font-weight: 700; cursor: pointer;
           padding: 14px 28px; border-radius: 999px; border: none;
           transition: .18s ${EASE};
           display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
@@ -45,11 +45,11 @@ export default function WhoWeAreHero() {
 
         .wwa-badge {
           display: inline-flex; align-items: center; gap: 8px;
-          font-size: 12.5px; font-weight: 700; color: #52525e;
+          font-size: var(--f-12-5); font-weight: 700; color: #52525e;
           background: #fff; border: 1px solid #e6e9f0; border-radius: 999px;
           padding: 7px 15px; box-shadow: 0 2px 10px rgba(20,40,90,.05);
         }
-        .wwa-chip { font-size: 12.5px; font-weight: 600; color: #52525e; background: rgba(19,96,238,.06); border: 1px solid rgba(19,96,238,.14); border-radius: 999px; padding: 6px 14px; }
+        .wwa-chip { font-size: var(--f-12-5); font-weight: 600; color: #52525e; background: rgba(19,96,238,.06); border: 1px solid rgba(19,96,238,.14); border-radius: 999px; padding: 6px 14px; }
       `}</style>
 
       <section className="wwa-hero">
@@ -62,11 +62,11 @@ export default function WhoWeAreHero() {
             <span /> Who We Are
           </span>
 
-          <h1 className="wwa-anim" style={{ animationDelay: '.12s', margin: '18px auto 0', maxWidth: '26ch', fontSize: 'clamp(21px,2.5vw,28px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+          <h1 className="wwa-anim" style={{ animationDelay: '.12s', margin: '18px auto 0', maxWidth: '26ch', fontSize: 'max(clamp(21px,2.5vw,28px), min(1.944vw, 40.6px))', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
             Shaping the future of <span style={{ color: '#1360ee' }}>connected mobility</span>
           </h1>
 
-          <p className="wwa-anim" style={{ animationDelay: '.2s', margin: '20px auto 0', maxWidth: '620px', fontSize: 'clamp(15px,1.5vw,17.5px)', lineHeight: 1.7, color: '#52525e' }}>
+          <p className="wwa-anim" style={{ animationDelay: '.2s', margin: '20px auto 0', maxWidth: '620px', fontSize: 'max(clamp(15px,1.5vw,17.5px), min(1.215vw, 25.38px))', lineHeight: 1.7, color: '#52525e' }}>
             LOCATOR is more than a GPS tracking provider — we&apos;re a technology company building intelligent fleet telematics and IoT solutions that connect vehicles and assets, and turn real-time data into actionable business intelligence.
           </p>
 

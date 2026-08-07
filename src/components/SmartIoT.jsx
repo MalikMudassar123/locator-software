@@ -125,7 +125,7 @@ export default function IoTFeaturesSection({
         .iot {
           position: relative;
           width: 100%;
-          padding: clamp(60px, 8vw, 110px) clamp(20px, 4vw, 60px) clamp(60px, 7vw, 96px);
+          padding: var(--s-section-y) var(--s-section-x);
           background: linear-gradient(180deg, #fbfcfd 0%, #f4f6f9 100%);
           overflow: hidden;
           font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -224,7 +224,7 @@ export default function IoTFeaturesSection({
 
         .iot__heading {
           margin: 0 0 clamp(14px, 2vw, 24px);
-          font-size: clamp(28px, 4.2vw, 56px);
+          font-size: var(--t-display);
           font-weight: 400;
           color: #4b5560;
           line-height: 1.2;
@@ -244,7 +244,7 @@ export default function IoTFeaturesSection({
         .iot__subheading {
           margin: 0 auto;
           max-width: 700px;
-          font-size: clamp(13px, 1.15vw, 16px);
+          font-size: var(--t-lead);
           color: #4b5560;
           line-height: 1.6;
           font-weight: 400;
@@ -254,11 +254,16 @@ export default function IoTFeaturesSection({
         .iot__grid-cards {
           position: relative;
           z-index: 2;
-          max-width: 1280px;
+          /* Was a flat 1280px. See the --w-* token block in globals.css: identical
+             below ~1600px, tracks the viewport above it. The header above keeps its
+             own 1100px cap on purpose — that one is a reading measure for a centred
+             heading, not a container, and a wider monitor does not make a long line
+             of prose easier to read. */
+          max-width: var(--w-mid);
           margin: 0 auto;
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: clamp(20px, 2.2vw, 32px);
+          gap: var(--s-grid-gap);
         }
 
         @media (max-width: 1023px) {
@@ -329,7 +334,7 @@ function FeatureCard({ feature, delay }) {
           background: #ffffff;
           border: 1px solid #e2e8f4;
           color: #0f1e35;
-          font-size: 14.5px;
+          font-size: var(--t-body);
           font-weight: 700;
           line-height: 1.25;
           text-decoration: none;
@@ -380,7 +385,7 @@ function FeatureCard({ feature, delay }) {
           position: relative;
           background: linear-gradient(165deg, #f7f9fc 0%, #eef2f7 100%);
           border-radius: 20px;
-          padding: clamp(22px, 2.4vw, 30px) clamp(22px, 2.4vw, 30px) clamp(20px, 2.2vw, 28px);
+          padding: var(--s-card-y) var(--s-card-x);
           display: flex;
           flex-direction: column;
           min-height: clamp(420px, 36vw, 480px);
@@ -417,8 +422,8 @@ function FeatureCard({ feature, delay }) {
 
         .fc__icon {
           flex-shrink: 0;
-          width: 38px;
-          height: 38px;
+          width: var(--i-tile);
+          height: var(--i-tile);
           border-radius: 9px;
           background: linear-gradient(135deg, #d9e8fb 0%, #c0d8f5 100%);
           display: flex;
@@ -429,7 +434,7 @@ function FeatureCard({ feature, delay }) {
 
         .fc__title {
           margin: 4px 0 0;
-          font-size: clamp(15px, 1.3vw, 18px);
+          font-size: var(--t-h3);
           font-weight: 600;
           color: #4a5560;
           line-height: 1.35;
@@ -438,7 +443,7 @@ function FeatureCard({ feature, delay }) {
 
         .fc__description {
           margin: 0 0 clamp(16px, 2vw, 22px);
-          font-size: clamp(11px, 0.9vw, 12.5px);
+          font-size: var(--t-micro);
           color: #6b8aa8;
           line-height: 1.6;
           font-weight: 400;

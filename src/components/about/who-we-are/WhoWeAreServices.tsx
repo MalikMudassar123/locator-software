@@ -116,7 +116,7 @@ export default function WhoWeAreServices() {
       <style>{`
         .wws-section { position: relative; padding: clamp(56px,7vw,96px) 28px; background: #fff; overflow: hidden; }
         .wws-head { text-align: center; max-width: 640px; margin: 0 auto clamp(44px,6vw,72px); }
-        .wws-wrap { position: relative; max-width: 1120px; margin: 0 auto; }
+        .wws-wrap { position: relative; max-width: var(--w-1120); margin: 0 auto; }
 
         .wws-spine { position: absolute; top: 8px; bottom: 8px; left: 50%; width: 3px; transform: translateX(-50%); background: #e2e8f4; border-radius: 3px; z-index: 0; }
         .wws-fill { position: relative; width: 100%; height: 0; background: linear-gradient(180deg, #1360ee 0%, #7c3aed 55%, #13923f 100%); border-radius: 3px; transition: height .15s linear; }
@@ -142,7 +142,7 @@ export default function WhoWeAreServices() {
         .wws-row[data-side="left"] .wws-card::after { right: calc(-1 * clamp(20px,3vw,40px)); }
         .wws-row[data-side="right"] .wws-card::after { left: calc(-1 * clamp(20px,3vw,40px)); }
 
-        .wws-kicker { display: inline-flex; align-items: center; gap: 9px; font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 12px; }
+        .wws-kicker { display: inline-flex; align-items: center; gap: 9px; font-size: var(--f-12); font-weight: 800; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 12px; }
         .wws-kicker-line { width: 26px; height: 2px; border-radius: 2px; }
 
         @media (max-width: 768px) {
@@ -158,14 +158,14 @@ export default function WhoWeAreServices() {
 
       <section className="wws-section">
         <div className="wws-head" data-reveal>
-          <span style={{ display: 'block', fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', marginBottom: '16px' }}>
+          <span style={{ display: 'block', fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', marginBottom: '16px' }}>
             <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
             What We Do
           </span>
-          <h2 style={{ margin: 0, fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+          <h2 style={{ margin: 0, fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
             One connected platform for every part of your fleet
           </h2>
-          <p style={{ margin: '16px auto 0', fontSize: 'clamp(14px,1.35vw,16px)', color: '#6e6e73', lineHeight: 1.6 }}>
+          <p style={{ margin: '16px auto 0', fontSize: 'max(clamp(14px,1.35vw,16px), min(1.111vw, 23.2px))', color: '#6e6e73', lineHeight: 1.6 }}>
             Intelligent technologies to monitor, manage, and optimize every aspect of your operations.
           </p>
         </div>
@@ -184,8 +184,8 @@ export default function WhoWeAreServices() {
                     <span className="wws-kicker-line" style={{ background: s.accent }} />
                     {s.label}
                   </span>
-                  <h3 style={{ margin: '0 0 10px', fontSize: 'clamp(18px,2vw,24px)', fontWeight: 800, letterSpacing: '-.02em', color: '#1d1d1f' }}>{s.title}</h3>
-                  <p style={{ margin: 0, fontSize: 'clamp(14px,1.25vw,15.5px)', lineHeight: 1.75, color: '#52525e' }}>{s.body}</p>
+                  <h3 style={{ margin: '0 0 10px', fontSize: 'max(clamp(18px,2vw,24px), min(1.667vw, 34.8px))', fontWeight: 800, letterSpacing: '-.02em', color: '#1d1d1f' }}>{s.title}</h3>
+                  <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.75, color: '#52525e' }}>{s.body}</p>
                 </div>
               </div>
             )

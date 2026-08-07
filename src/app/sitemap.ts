@@ -16,6 +16,7 @@ const ROUTES: { path: string; priority: number }[] = [
   { path: "/about/career", priority: 0.6 },
   ...JOBS.map((j) => ({ path: `/about/career/${j.slug}`, priority: 0.5 })),
   { path: "/software", priority: 0.9 },
+  { path: "/benefits-of-gps-tracking", priority: 0.7 },
   { path: "/service/fleet-telematics", priority: 0.9 },
   { path: "/service/video-telematics", priority: 0.9 },
   { path: "/service/smart-iot", priority: 0.6 },

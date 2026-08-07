@@ -12,8 +12,8 @@ export default function IndustryHero({ industry }: { industry: Industry }) {
         .ixh-crumbs-bar { border-bottom: 1px solid #eef1f7; }
         .ixh-crumbs {
           display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-          max-width: 1280px; margin: 0 auto; padding: 16px 28px;
-          font-size: 14px; color: #6e6e73;
+          max-width: var(--w-1280); margin: 0 auto; padding: 16px 28px;
+          font-size: var(--f-14); color: #6e6e73;
         }
         .ixh-crumbs a { color: #1d1d1f; font-weight: 600; text-decoration: none; transition: color .18s ease; }
         .ixh-crumbs a:hover { color: #1360ee; }
@@ -35,25 +35,25 @@ export default function IndustryHero({ industry }: { industry: Industry }) {
         .ixh-photo-body {
           position: relative; z-index: 2; height: 100%;
           display: flex; align-items: flex-end;
-          max-width: 1280px; margin: 0 auto; padding: 0 28px clamp(26px,4vw,46px);
+          max-width: var(--w-1280); margin: 0 auto; padding: 0 28px clamp(26px,4vw,46px);
         }
         .ixh-content { max-width: min(760px, 90vw); }
 
         .ixh-eyebrow {
           display: inline-flex; align-items: center; gap: 12px;
-          font-size: clamp(13px,1.15vw,15px); font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+          font-size: max(clamp(13px,1.15vw,15px), min(1.042vw, 21.75px)); font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
           color: #9ec2ff; margin-bottom: 16px;
           text-shadow: 0 2px 12px rgba(0,0,0,.35);
         }
         .ixh-eyebrow i { display: block; width: 34px; height: 3px; background: #9ec2ff; border-radius: 2px; }
 
         .ixh-title {
-          margin: 0; font-size: clamp(30px,4.6vw,56px); font-weight: 800;
+          margin: 0; font-size: max(clamp(30px,4.6vw,56px), min(3.889vw, 81.2px)); font-weight: 800;
           line-height: 1.08; letter-spacing: -.02em; color: #fff; max-width: 20ch;
           text-shadow: 0 2px 4px rgba(0,0,0,.45), 0 8px 34px rgba(0,0,0,.4);
         }
 
-        .ixh-lead { margin: 16px 0 0; max-width: 62ch; font-size: clamp(14px,1.25vw,16.5px); line-height: 1.72; color: rgba(255,255,255,.86); }
+        .ixh-lead { margin: 16px 0 0; max-width: 62ch; font-size: max(clamp(14px,1.25vw,16.5px), min(1.146vw, 23.93px)); line-height: 1.72; color: rgba(255,255,255,.86); }
       `}</style>
 
       <section className="ixh-hero">

@@ -24,30 +24,30 @@ export default function TrackingDevicesHero() {
 
         .td-back {
           display: inline-flex; align-items: center; gap: 6px;
-          color: #6e6e73; font-size: 13px; font-weight: 600;
+          color: #6e6e73; font-size: var(--f-13); font-weight: 600;
           text-decoration: none; margin-bottom: 18px;
           transition: color .18s ease, gap .18s ease;
         }
         .td-back:hover { color: #1360ee; gap: 9px; }
 
-        .td-topbar { display: flex; justify-content: flex-end; padding: 0 4px 8px; max-width: 1200px; margin: 0 auto; }
-        .td-phone-top { display: inline-flex; align-items: center; gap: 8px; color: #1360ee; font-size: 16px; font-weight: 800; text-decoration: none; }
+        .td-topbar { display: flex; justify-content: flex-end; padding: 0 4px 8px; max-width: var(--w-1200); margin: 0 auto; }
+        .td-phone-top { display: inline-flex; align-items: center; gap: 8px; color: #1360ee; font-size: var(--f-16); font-weight: 800; text-decoration: none; }
 
         .td-grid {
           position: relative; z-index: 1;
           display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px,2.5vw,36px);
-          align-items: center; max-width: 1240px; margin: 0 auto;
+          align-items: center; max-width: var(--w-1240); margin: 0 auto;
           padding-bottom: clamp(40px,5vw,64px);
         }
         @media (max-width: 940px) { .td-grid { grid-template-columns: 1fr; gap: 36px; } }
 
         .td-h1 {
-          margin: 0; font-size: clamp(30px,3.8vw,48px); font-weight: 800;
+          margin: 0; font-size: max(clamp(30px,3.8vw,48px), min(3.333vw, 69.6px)); font-weight: 800;
           line-height: 1.1; letter-spacing: -.03em; color: #1d1d1f;
         }
         .td-lead {
           margin: 18px 0 0; max-width: 46ch;
-          font-size: clamp(14px,1.25vw,16px); line-height: 1.7; color: #52525e;
+          font-size: max(clamp(14px,1.25vw,16px), min(1.111vw, 23.2px)); line-height: 1.7; color: #52525e;
         }
 
         .td-cta-row { display: flex; gap: 14px; margin-top: 30px; }
@@ -55,7 +55,7 @@ export default function TrackingDevicesHero() {
           font-family: inherit; font-weight: 700; cursor: pointer;
           padding: clamp(14px,1.6vw,17px) clamp(18px,2vw,24px); border-radius: 12px; border: none;
           transition: .18s ${EASE}; display: inline-flex; align-items: center; gap: 10px;
-          text-decoration: none; font-size: clamp(13.5px,1.15vw,15px);
+          text-decoration: none; font-size: max(clamp(13.5px,1.15vw,15px), min(1.042vw, 21.75px));
         }
         .td-btn-primary { background: #1360ee; color: #fff; box-shadow: 0 10px 24px rgba(19,96,238,.28); }
         .td-btn-primary:hover { background: #0d4fd4; transform: translateY(-1px); box-shadow: 0 12px 28px rgba(19,96,238,.38); }
@@ -92,7 +92,7 @@ export default function TrackingDevicesHero() {
         .td-stats-band { border-top: 1px solid #e7ebf3; background: #fff; }
         .td-stats {
           display: grid; grid-template-columns: repeat(3, 1fr);
-          max-width: 1280px; margin: 0 auto; padding: 0 28px;
+          max-width: var(--w-1280); margin: 0 auto; padding: 0 28px;
         }
         @media (max-width: 700px) { .td-stats { grid-template-columns: 1fr; } }
         .td-stat { padding: clamp(24px,3vw,34px) clamp(20px,2.4vw,32px); border-left: 1px solid #e7ebf3; }
@@ -101,8 +101,8 @@ export default function TrackingDevicesHero() {
           .td-stat { border-left: none; border-top: 1px solid #e7ebf3; padding-left: 0; }
           .td-stat:first-child { border-top: none; }
         }
-        .td-stat-n { font-size: clamp(26px,3vw,38px); font-weight: 800; letter-spacing: -.03em; color: #1d1d1f; line-height: 1; }
-        .td-stat-l { margin-top: 10px; font-size: 13px; line-height: 1.5; color: #6e6e73; font-weight: 600; max-width: 26ch; }
+        .td-stat-n { font-size: max(clamp(26px,3vw,38px), min(2.639vw, 55.1px)); font-weight: 800; letter-spacing: -.03em; color: #1d1d1f; line-height: 1; }
+        .td-stat-l { margin-top: 10px; font-size: var(--f-13); line-height: 1.5; color: #6e6e73; font-weight: 600; max-width: 26ch; }
       `}</style>
 
       <section className="td-hero">

@@ -20,12 +20,12 @@ export default function NewsroomHighlights() {
     <>
       <style href="nr-newsroomhighlights" precedence="medium">{`
         .nrx { padding: clamp(44px,6vw,72px) 28px; background: #fff; border-top: 1px solid #eef2f8; }
-        .nrx-inner { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: clamp(20px,3vw,36px); }
+        .nrx-inner { max-width: var(--w-1240); margin: 0 auto; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: clamp(20px,3vw,36px); }
         @media (max-width: 1000px) { .nrx-inner { grid-template-columns: 1fr; gap: 36px; } }
 
         .nrx-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #0b1220; }
-        .nrx-head h2 { margin: 0; font-size: 15.5px; font-weight: 800; letter-spacing: -.015em; color: #0b1220; }
-        .nrx-head a { font-size: 12px; font-weight: 700; color: #1360ee; text-decoration: none; white-space: nowrap; }
+        .nrx-head h2 { margin: 0; font-size: var(--f-15-5); font-weight: 800; letter-spacing: -.015em; color: #0b1220; }
+        .nrx-head a { font-size: var(--f-12); font-weight: 700; color: #1360ee; text-decoration: none; white-space: nowrap; }
         .nrx-head a:hover { text-decoration: underline; }
 
         .nrx-list { display: flex; flex-direction: column; gap: 4px; }
@@ -38,24 +38,24 @@ export default function NewsroomHighlights() {
         .nrx-vid:hover .nrx-thumb img { transform: scale(1.07); opacity: 1; }
         .nrx-play { position: absolute; inset: 0; display: grid; place-items: center; }
         .nrx-play span { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.92); color: #0b1220; box-shadow: 0 5px 14px rgba(0,0,0,.32); }
-        .nrx-dur { position: absolute; left: 6px; bottom: 6px; z-index: 2; font-size: 9.5px; font-weight: 700; color: #fff; background: rgba(0,0,0,.72); padding: 2px 5px; border-radius: 4px; }
-        .nrx-vid-title { margin: 0 0 3px; font-size: 12.5px; font-weight: 700; line-height: 1.38; color: #0b1220; letter-spacing: -.01em; }
-        .nrx-vid-meta { margin: 0; font-size: 11px; color: #97a1b3; }
+        .nrx-dur { position: absolute; left: 6px; bottom: 6px; z-index: 2; font-size: var(--f-9-5); font-weight: 700; color: #fff; background: rgba(0,0,0,.72); padding: 2px 5px; border-radius: 4px; }
+        .nrx-vid-title { margin: 0 0 3px; font-size: var(--f-12-5); font-weight: 700; line-height: 1.38; color: #0b1220; letter-spacing: -.01em; }
+        .nrx-vid-meta { margin: 0; font-size: var(--f-11); color: #97a1b3; }
 
         /* ── Social rows ── */
         .nrx-soc { display: grid; grid-template-columns: 116px minmax(0,1fr); gap: 12px; align-items: center; padding: 9px; border-radius: 12px; text-decoration: none; transition: background .18s ${EASE}; }
         .nrx-soc:hover { background: #f6f9fe; }
         .nrx-soc-badge { position: absolute; left: 6px; top: 6px; z-index: 2; width: 20px; height: 20px; border-radius: 6px; display: grid; place-items: center; color: #fff; }
-        .nrx-soc-text { margin: 0 0 4px; font-size: 12px; line-height: 1.45; color: #2b3446; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .nrx-soc-cta { font-size: 11px; font-weight: 700; color: #1360ee; }
+        .nrx-soc-text { margin: 0 0 4px; font-size: var(--f-12); line-height: 1.45; color: #2b3446; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .nrx-soc-cta { font-size: var(--f-11); font-weight: 700; color: #1360ee; }
 
         /* ── Media rows ── */
         .nrx-media { display: block; padding: 13px 10px; border-radius: 12px; text-decoration: none; border-bottom: 1px solid #f0f3f9; transition: background .18s ${EASE}; }
         .nrx-media:last-child { border-bottom: 0; }
         .nrx-media:hover { background: #f6f9fe; }
-        .nrx-media-pub { display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #475569; border: 1px solid #e2e8f2; padding: 4px 8px; border-radius: 6px; margin-bottom: 9px; }
-        .nrx-media-title { margin: 0 0 4px; font-size: 12.8px; font-weight: 700; line-height: 1.42; color: #0b1220; letter-spacing: -.01em; }
-        .nrx-media-date { font-size: 11px; color: #97a1b3; }
+        .nrx-media-pub { display: inline-block; font-size: var(--f-10); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #475569; border: 1px solid #e2e8f2; padding: 4px 8px; border-radius: 6px; margin-bottom: 9px; }
+        .nrx-media-title { margin: 0 0 4px; font-size: var(--f-12-8); font-weight: 700; line-height: 1.42; color: #0b1220; letter-spacing: -.01em; }
+        .nrx-media-date { font-size: var(--f-11); color: #97a1b3; }
       `}</style>
 
       <section className="nrx">

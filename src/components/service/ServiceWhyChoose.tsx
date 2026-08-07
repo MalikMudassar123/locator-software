@@ -40,7 +40,7 @@ export default function ServiceWhyChoose() {
   return (
     <>
       <style>{`
-        .swc-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(36px,5vw,72px); align-items: center; max-width: 1200px; margin: 0 auto; }
+        .swc-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(36px,5vw,72px); align-items: center; max-width: var(--w-1200); margin: 0 auto; }
         @media (max-width: 940px) { .swc-grid { grid-template-columns: 1fr; gap: 40px; } .swc-grid > div:last-child { order: -1; } }
 
         .swc-row { display: flex; gap: 16px; align-items: flex-start; }
@@ -58,11 +58,11 @@ export default function ServiceWhyChoose() {
         <div className="swc-grid">
           {/* Left: copy + reasons */}
           <div data-reveal="left">
-            <span style={{ fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
+            <span style={{ fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
               <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
               Why LOCATOR
             </span>
-            <h2 style={{ margin: '0 0 clamp(28px,4vw,40px)', fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+            <h2 style={{ margin: '0 0 clamp(28px,4vw,40px)', fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               Why businesses choose LOCATOR
             </h2>
 
@@ -71,8 +71,8 @@ export default function ServiceWhyChoose() {
                 <div key={r.title} className="swc-row">
                   <span className="swc-ic" style={{ background: `${r.accent}14`, color: r.accent }}>{r.icon}</span>
                   <div>
-                    <h3 style={{ margin: '0 0 7px', fontSize: 'clamp(16px,1.7vw,19px)', fontWeight: 800, letterSpacing: '-.018em', color: '#1d1d1f' }}>{r.title}</h3>
-                    <p style={{ margin: 0, fontSize: 'clamp(13.5px,1.25vw,15px)', lineHeight: 1.7, color: '#6e6e73', maxWidth: '46ch' }}>{r.desc}</p>
+                    <h3 style={{ margin: '0 0 7px', fontSize: 'max(clamp(16px,1.7vw,19px), min(1.319vw, 27.55px))', fontWeight: 800, letterSpacing: '-.018em', color: '#1d1d1f' }}>{r.title}</h3>
+                    <p style={{ margin: 0, fontSize: 'max(clamp(13.5px,1.25vw,15px), min(1.042vw, 21.75px))', lineHeight: 1.7, color: '#6e6e73', maxWidth: '46ch' }}>{r.desc}</p>
                   </div>
                 </div>
               ))}

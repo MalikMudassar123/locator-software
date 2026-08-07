@@ -103,7 +103,7 @@ export default function BlogSection() {
           position: relative;
           width: 100%;
           background: #ffffff;
-          padding: clamp(60px, 7vw, 100px) clamp(20px, 5vw, 40px);
+          padding: var(--s-section-y) var(--s-section-x);
           overflow: hidden;
           isolation: isolate;
         }
@@ -149,7 +149,10 @@ export default function BlogSection() {
         .bs__wrap {
           position: relative;
           z-index: 1;
-          max-width: 1100px;
+          /* Was a flat 1100px — see the --w-* token block in globals.css. Only the
+             two-up card row widens; .bs__head keeps its 620px measure so the
+             centred heading and blurb stay readable over a wider row. */
+          max-width: var(--w-narrow);
           margin: 0 auto;
           display: flex;
           flex-direction: column;
@@ -187,7 +190,7 @@ export default function BlogSection() {
         }
 
         .bs__h2 {
-          font-size: clamp(26px, 3.6vw, 42px);
+          font-size: var(--t-display);
           font-weight: 800;
           color: #0b1d35;
           line-height: 1.16;
@@ -204,7 +207,7 @@ export default function BlogSection() {
         }
 
         .bs__desc {
-          font-size: clamp(14px, 1.45vw, 16px);
+          font-size: var(--t-lead);
           color: #607590;
           line-height: 1.72;
           margin: 0;
@@ -218,7 +221,7 @@ export default function BlogSection() {
           width: 100%;
           display: grid;
           grid-template-columns: repeat(2, 1fr);
-          gap: clamp(18px, 2.5vw, 32px);
+          gap: var(--s-grid-gap);
         }
         @media (max-width: 680px) {
           .bs__row { grid-template-columns: 1fr; }
@@ -467,7 +470,7 @@ function BlogCard({ post, delay, visible }) {
 
         /* Title */
         .bc__title {
-          font-size: clamp(14.5px, 1.35vw, 17px);
+          font-size: var(--t-h3);
           font-weight: 700;
           color: #0b1d35;
           line-height: 1.42;
@@ -479,7 +482,7 @@ function BlogCard({ post, delay, visible }) {
 
         /* Excerpt */
         .bc__excerpt {
-          font-size: clamp(12.5px, 1.05vw, 13.5px);
+          font-size: var(--t-body);
           color: #607590;
           line-height: 1.72;
           margin: 0;

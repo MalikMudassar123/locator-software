@@ -420,14 +420,39 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     const update = () => {
       const w = el.offsetWidth;
       if (!w) return;
-      // Allow modest upscaling so the scene fills a wide sticky panel instead of
-      // sitting in dead space; capped so it never overflows the viewport height.
-      setScale(Math.min(1.18, w / W));
+      // Upscaling cap, so the scene fills a wide sticky panel instead of drawing at
+      // its 580px canvas size in the middle of one. Two things bound it:
+      //
+      //   · the panel's WIDTH   — w / W below;
+      //   · the VIEWPORT's HEIGHT — this panel is 100vh on the pinned branch, so a
+      //     scene taller than the viewport is clipped by the pinned frame. The old
+      //     flat 1.18 was that guard expressed as a guess about how tall screens
+      //     are; measuring instead lets a tall display go further while a short one
+      //     is protected properly.
+      //
+      // The 1.18 floor is the value this cap used to have unconditionally, so the
+      // measurement can only ever raise the ceiling above what shipped, never lower
+      // it — nothing that fits today can start being scaled down. And below 1024px
+      // the layout is stacked rather than pinned, where the flat 1.18 still applies
+      // and tablets are untouched.
+      const isPinnedLayout = window.matchMedia('(min-width: 1024px)').matches;
+      const cap = isPinnedLayout
+        ? Math.max(1.18, Math.min(1.5, (window.innerHeight * 0.86) / H))
+        : 1.18;
+      setScale(Math.min(cap, w / W));
     };
     update();
     const ro = new ResizeObserver(update);
     ro.observe(el);
-    return () => ro.disconnect();
+    // The cap reads window.innerHeight, which the ResizeObserver above cannot see:
+    // it watches this element, and this element's height is derived from the scale
+    // rather than from the viewport. A vertical-only resize would otherwise leave a
+    // stale cap in place until something else forced a re-measure.
+    window.addEventListener('resize', update);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', update);
+    };
   }, []);
 
   useLayoutEffect(() => () => {
@@ -950,6 +975,13 @@ export default forwardRef(function Scene1Icons(_props, ref) {
     const row = el.closest('.ss-row');
     if (!row) return;
 
+    // Built here rather than inside the gsap.context callback below: the wheel
+    // handlers at the bottom of this effect are OUTSIDE that callback's scope, so
+    // a `machine` declared in there is not in scope by the time they close over
+    // it. getMachine memoises into machineRef, so this is still the one instance
+    // the ScrollTriggers use.
+    const machine = getMachine();
+
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
 
@@ -969,8 +1001,6 @@ export default forwardRef(function Scene1Icons(_props, ref) {
           { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(1.6)' }, 0.65);
         phoneTlRef.current = tl;
       };
-
-      const machine = getMachine();
 
       // Desktop: pin the whole row so nothing moves while the phone is revealed.
       mm.add('(min-width: 1024px)', () => {

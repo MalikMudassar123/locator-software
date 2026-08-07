@@ -51,7 +51,7 @@ function EMDropdown({ label, options }: { label: string; options: string[] }) {
   }, [open])
   return (
     <div ref={ref} style={{ position: 'relative' }}>
-      <button onClick={() => setOpen(!open)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 12, fontWeight: 600, color: '#475569', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap' }}>
+      <button onClick={() => setOpen(!open)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 'var(--f-12)', fontWeight: 600, color: '#475569', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap' }}>
         {sel}
         <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#94a3b8" strokeWidth="1.5" strokeLinecap="round"><path d="M1 1l4 4 4-4" /></svg>
       </button>
@@ -73,15 +73,15 @@ function EMDetailPanel({ expense, onClose }: { expense: any; onClose: () => void
   const cat = EM_CATEGORIES[expense.category] || EM_CATEGORIES['--']
   const Field = ({ label, children, span }: { label: string; children: ReactNode; span?: boolean }) => (
     <div style={{ gridColumn: span ? '1 / -1' : undefined, minWidth: 0 }}>
-      <div style={{ fontSize: 10, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 3 }}>{label}</div>
-      <div style={{ fontSize: 13, fontWeight: 500, color: '#1e293b', lineHeight: 1.4 }}>{children}</div>
+      <div style={{ fontSize: 'var(--f-10)', fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 3 }}>{label}</div>
+      <div style={{ fontSize: 'var(--f-13)', fontWeight: 500, color: '#1e293b', lineHeight: 1.4 }}>{children}</div>
     </div>
   )
   const grid: React.CSSProperties = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 16px' }
   return (
     <div className="tm-detail-side" style={{ width: 300, flexShrink: 0 }}>
       <div style={{ padding: '12px 16px', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontSize: 13, fontWeight: 600, color: '#1e293b' }}>Expense #{expense.id}</span>
+        <span style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: '#1e293b' }}>Expense #{expense.id}</span>
         <div style={{ display: 'flex', gap: 5 }}>
           {['✏️', '💬'].map((icon, i) => <button key={i} className="tm-detail-action">{icon}</button>)}
           <button className="tm-detail-action" onClick={onClose}>✕</button>
@@ -89,10 +89,10 @@ function EMDetailPanel({ expense, onClose }: { expense: any; onClose: () => void
       </div>
       <div className="tm-detail-scroll">
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
-          <div style={{ width: 40, height: 40, borderRadius: 10, background: `${cat.color}20`, display: 'grid', placeItems: 'center', fontSize: 20 }}>{cat.icon}</div>
+          <div style={{ width: 40, height: 40, borderRadius: 10, background: `${cat.color}20`, display: 'grid', placeItems: 'center', fontSize: 'var(--f-20)' }}>{cat.icon}</div>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 600, color: '#1e293b' }}>{expense.description}</div>
-            <div style={{ fontSize: 11, color: '#94a3b8' }}>{expense.category !== '--' ? expense.category : 'Payment'}</div>
+            <div style={{ fontSize: 'var(--f-14)', fontWeight: 600, color: '#1e293b' }}>{expense.description}</div>
+            <div style={{ fontSize: 'var(--f-11)', color: '#94a3b8' }}>{expense.category !== '--' ? expense.category : 'Payment'}</div>
           </div>
         </div>
         <div style={grid}>
@@ -108,7 +108,7 @@ function EMDetailPanel({ expense, onClose }: { expense: any; onClose: () => void
         </div>
         <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 14, marginTop: 16 }}>
           <Field label="Status">
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '4px 11px', borderRadius: 999, fontSize: 12, fontWeight: 600, background: expense.type === 'payment' ? '#e8faf0' : '#fff5e6', color: expense.type === 'payment' ? '#16a34a' : '#d97706' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '4px 11px', borderRadius: 999, fontSize: 'var(--f-12)', fontWeight: 600, background: expense.type === 'payment' ? '#e8faf0' : '#fff5e6', color: expense.type === 'payment' ? '#16a34a' : '#d97706' }}>
               <span style={{ width: 7, height: 7, borderRadius: '50%', background: expense.type === 'payment' ? '#16a34a' : '#d97706' }} />
               {expense.type === 'payment' ? 'Approved' : 'Pending Review'}
             </span>
@@ -133,23 +133,23 @@ function EMWebDashboard() {
               <div style={{ width: 34, height: 34, borderRadius: '50%', background: '#dbeafe', display: 'grid', placeItems: 'center' }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2"><circle cx="12" cy="8" r="4" /><path d="M5 20c0-4 3.5-6 7-6s7 2 7 6" /></svg>
               </div>
-              <div><div style={{ fontSize: 12.5, fontWeight: 600, color: '#1e293b', lineHeight: 1.2 }}>anshad</div><div style={{ fontSize: 10, color: '#94a3b8' }}>nill</div></div>
+              <div><div style={{ fontSize: 'var(--f-12-5)', fontWeight: 600, color: '#1e293b', lineHeight: 1.2 }}>anshad</div><div style={{ fontSize: 'var(--f-10)', color: '#94a3b8' }}>nill</div></div>
             </div>
             <div style={{ marginLeft: 'auto', textAlign: 'right', marginRight: 8, flexShrink: 0 }}>
-              <div style={{ fontSize: 12.5, fontWeight: 600, color: '#1e293b' }}>Total Balance : <span style={{ color: '#ef4444' }}>-1478.00 AED</span></div>
-              <div style={{ fontSize: 10, color: '#94a3b8' }}>01-05-2026 To 20-06-2026</div>
+              <div style={{ fontSize: 'var(--f-12-5)', fontWeight: 600, color: '#1e293b' }}>Total Balance : <span style={{ color: '#ef4444' }}>-1478.00 AED</span></div>
+              <div style={{ fontSize: 'var(--f-10)', color: '#94a3b8' }}>01-05-2026 To 20-06-2026</div>
             </div>
-            <button className="em-pay-btn" style={{ background: '#2563eb', color: '#fff', border: 'none', padding: '6px 14px', borderRadius: 6, fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', letterSpacing: '0.02em', whiteSpace: 'nowrap' }}>MAKE A PAYMENT</button>
+            <button className="em-pay-btn" style={{ background: '#2563eb', color: '#fff', border: 'none', padding: '6px 14px', borderRadius: 6, fontSize: 'var(--f-11)', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', letterSpacing: '0.02em', whiteSpace: 'nowrap' }}>MAKE A PAYMENT</button>
             <EMDropdown label="Custom Date" options={['Custom Date', 'Last 7 Days', 'Last 30 Days', 'This Month', 'Last Month']} />
             <EMDropdown label="All Categories" options={['All Categories', 'PARKING', 'R&M- CARS', 'ACCESSORIES PURCHASE']} />
             <EMDropdown label="All" options={['All', 'Approved', 'Pending', 'Rejected']} />
-            <button className="em-dots-btn" style={{ width: 30, height: 30, borderRadius: 8, background: '#2563eb', border: 'none', color: '#fff', cursor: 'pointer', display: 'grid', placeItems: 'center', fontSize: 15, fontWeight: 600, flexShrink: 0 }}>⋮</button>
+            <button className="em-dots-btn" style={{ width: 30, height: 30, borderRadius: 8, background: '#2563eb', border: 'none', color: '#fff', cursor: 'pointer', display: 'grid', placeItems: 'center', fontSize: 'var(--f-15)', fontWeight: 600, flexShrink: 0 }}>⋮</button>
           </div>
           <div style={{ flex: 1, overflowY: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12.5 }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--f-12-5)' }}>
               <thead>
                 <tr style={{ borderBottom: '2px solid #f0f0f0' }}>
-                  {cols.map(c => <th key={c} style={{ padding: '10px 12px', textAlign: 'center', fontSize: 11.5, fontWeight: 600, color: '#64748b', background: '#fafbfc', whiteSpace: 'nowrap', position: 'sticky', top: 0, zIndex: 2 }}>{c}</th>)}
+                  {cols.map(c => <th key={c} style={{ padding: '10px 12px', textAlign: 'center', fontSize: 'var(--f-11-5)', fontWeight: 600, color: '#64748b', background: '#fafbfc', whiteSpace: 'nowrap', position: 'sticky', top: 0, zIndex: 2 }}>{c}</th>)}
                 </tr>
               </thead>
               <tbody>
@@ -158,13 +158,13 @@ function EMWebDashboard() {
                   return (
                     <tr key={exp.id} onClick={() => setSelectedId(isSel ? null : exp.id)} onMouseEnter={() => setHoverRow(exp.id)} onMouseLeave={() => setHoverRow(null)}
                       style={{ borderBottom: '1px solid #f5f5f5', cursor: 'pointer', background: isSel ? '#EAF1FF' : isHov ? '#f8fafc' : isPay ? '#f0fdf4' : 'transparent', borderLeft: isPay ? '3px solid #22c55e' : '3px solid transparent', transition: 'background 0.15s ease' }}>
-                      <td style={{ padding: '11px 12px', textAlign: 'center', fontSize: 12, color: '#475569', whiteSpace: 'nowrap' }}>{exp.date}</td>
-                      <td style={{ padding: '11px 12px', textAlign: 'center', fontSize: 12, fontWeight: 600, color: '#1e293b' }}>{exp.employee}</td>
-                      <td style={{ padding: '11px 12px', textAlign: 'center', fontSize: 12, color: '#475569' }}>{exp.category}</td>
-                      <td style={{ padding: '11px 12px', textAlign: 'center', fontSize: 12, color: '#475569', maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{exp.description}</td>
-                      <td style={{ padding: '11px 12px', textAlign: 'center', fontSize: 12, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{exp.billAmount ? `${exp.billAmount.toFixed(2)} AED` : '--'}</td>
-                      <td style={{ padding: '11px 12px', textAlign: 'center', fontSize: 12, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{exp.paidAmount ? `${exp.paidAmount.toFixed(2)} AED` : '--'}</td>
-                      <td style={{ padding: '11px 12px', textAlign: 'center', fontSize: 12, fontWeight: 600, fontVariantNumeric: 'tabular-nums', color: exp.balance < 0 ? '#ef4444' : '#1e293b' }}>{exp.balance.toFixed(2)} AED</td>
+                      <td style={{ padding: '11px 12px', textAlign: 'center', fontSize: 'var(--f-12)', color: '#475569', whiteSpace: 'nowrap' }}>{exp.date}</td>
+                      <td style={{ padding: '11px 12px', textAlign: 'center', fontSize: 'var(--f-12)', fontWeight: 600, color: '#1e293b' }}>{exp.employee}</td>
+                      <td style={{ padding: '11px 12px', textAlign: 'center', fontSize: 'var(--f-12)', color: '#475569' }}>{exp.category}</td>
+                      <td style={{ padding: '11px 12px', textAlign: 'center', fontSize: 'var(--f-12)', color: '#475569', maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{exp.description}</td>
+                      <td style={{ padding: '11px 12px', textAlign: 'center', fontSize: 'var(--f-12)', fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{exp.billAmount ? `${exp.billAmount.toFixed(2)} AED` : '--'}</td>
+                      <td style={{ padding: '11px 12px', textAlign: 'center', fontSize: 'var(--f-12)', fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{exp.paidAmount ? `${exp.paidAmount.toFixed(2)} AED` : '--'}</td>
+                      <td style={{ padding: '11px 12px', textAlign: 'center', fontSize: 'var(--f-12)', fontWeight: 600, fontVariantNumeric: 'tabular-nums', color: exp.balance < 0 ? '#ef4444' : '#1e293b' }}>{exp.balance.toFixed(2)} AED</td>
                     </tr>
                   )
                 })}
@@ -172,8 +172,8 @@ function EMWebDashboard() {
             </table>
           </div>
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, padding: '10px 16px', borderTop: '1px solid #e2e8f0', flexShrink: 0 }}>
-            <div style={{ padding: '7px 18px', borderRadius: 8, fontSize: 12.5, fontWeight: 600, background: '#fef2f2', color: '#ef4444', fontVariantNumeric: 'tabular-nums' }}>760.00 AED</div>
-            <div style={{ padding: '7px 18px', borderRadius: 8, fontSize: 12.5, fontWeight: 600, background: '#f0fdf4', color: '#166534', fontVariantNumeric: 'tabular-nums' }}>1100.00 AED</div>
+            <div style={{ padding: '7px 18px', borderRadius: 8, fontSize: 'var(--f-12-5)', fontWeight: 600, background: '#fef2f2', color: '#ef4444', fontVariantNumeric: 'tabular-nums' }}>760.00 AED</div>
+            <div style={{ padding: '7px 18px', borderRadius: 8, fontSize: 'var(--f-12-5)', fontWeight: 600, background: '#f0fdf4', color: '#166534', fontVariantNumeric: 'tabular-nums' }}>1100.00 AED</div>
           </div>
         </div>
         {selectedExpense && <EMDetailPanel expense={selectedExpense} onClose={() => setSelectedId(null)} />}
@@ -185,8 +185,8 @@ function EMWebDashboard() {
 function EMFormField({ label, value, placeholder }: { label: string; value?: string; placeholder?: string }) {
   return (
     <div style={{ marginBottom: 14 }}>
-      <div style={{ fontSize: 12, fontWeight: 600, color: '#94a3b8', marginBottom: 4 }}>{label}</div>
-      <input defaultValue={value} placeholder={placeholder} style={{ width: '100%', border: '1px solid #e2e8f0', borderRadius: 10, padding: '11px 14px', fontSize: 13, fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box', color: '#1e293b' }} />
+      <div style={{ fontSize: 'var(--f-12)', fontWeight: 600, color: '#94a3b8', marginBottom: 4 }}>{label}</div>
+      <input defaultValue={value} placeholder={placeholder} style={{ width: '100%', border: '1px solid #e2e8f0', borderRadius: 10, padding: '11px 14px', fontSize: 'var(--f-13)', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box', color: '#1e293b' }} />
     </div>
   )
 }
@@ -199,12 +199,12 @@ function EMAddExpenseModal({ onClose }: { onClose: () => void }) {
       <div style={{ position: 'relative', marginTop: 'auto', background: '#fff', borderRadius: '20px 20px 0 0', padding: '20px 18px 30px', maxHeight: '88%', overflowY: 'auto', animation: 'emSlideUp 0.3s ease' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
           <span style={{ ...PHONE_TITLE, color: '#1e293b' }}>Add Expense</span>
-          <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: '50%', border: '1px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer', fontSize: 14, display: 'grid', placeItems: 'center', color: '#64748b', padding: 0 }}>✕</button>
+          <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: '50%', border: '1px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer', fontSize: 'var(--f-14)', display: 'grid', placeItems: 'center', color: '#64748b', padding: 0 }}>✕</button>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="1.8"><rect x="1" y="6" width="22" height="11" rx="3" /><circle cx="6" cy="17" r="2" /><circle cx="18" cy="17" r="2" /><path d="M5 6l2-3h10l2 3" /></svg>
-            <span style={{ fontSize: 13, fontWeight: 600, color: '#1e293b' }}>Related To Vehicle</span>
+            <span style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: '#1e293b' }}>Related To Vehicle</span>
           </div>
           <div onClick={() => setVehicleOn(!vehicleOn)} style={{ width: 44, height: 24, borderRadius: 12, cursor: 'pointer', background: vehicleOn ? '#2563eb' : '#cbd5e1', transition: 'background 0.2s', position: 'relative', padding: 2 }}>
             <div style={{ width: 20, height: 20, borderRadius: 10, background: '#fff', boxShadow: '0 1px 3px rgba(0,0,0,.2)', transition: 'transform 0.2s', transform: vehicleOn ? 'translateX(20px)' : 'translateX(0)' }} />
@@ -212,8 +212,8 @@ function EMAddExpenseModal({ onClose }: { onClose: () => void }) {
         </div>
         {vehicleOn && <EMFormField label="Vehicle" value="Shamnad Support C 19753" />}
         <div style={{ marginBottom: 14 }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: '#94a3b8', marginBottom: 4 }}>Category</div>
-          <div style={{ border: '1px solid #e2e8f0', borderRadius: 10, padding: '11px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#94a3b8', fontSize: 13 }}>
+          <div style={{ fontSize: 'var(--f-12)', fontWeight: 600, color: '#94a3b8', marginBottom: 4 }}>Category</div>
+          <div style={{ border: '1px solid #e2e8f0', borderRadius: 10, padding: '11px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#94a3b8', fontSize: 'var(--f-13)' }}>
             <span>Select category</span>
             <svg width="12" height="7" viewBox="0 0 10 6" fill="none" stroke="#94a3b8" strokeWidth="1.5" strokeLinecap="round"><path d="M1 1l4 4 4-4" /></svg>
           </div>
@@ -221,14 +221,14 @@ function EMAddExpenseModal({ onClose }: { onClose: () => void }) {
         <EMFormField label="Amount" placeholder="0.00" />
         <EMFormField label="Odometer" placeholder="Enter reading" />
         <div style={{ marginBottom: 14 }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: '#94a3b8', marginBottom: 4 }}>Description</div>
-          <textarea placeholder="Add details..." style={{ width: '100%', border: '1px solid #e2e8f0', borderRadius: 10, padding: '11px 14px', fontSize: 13, fontFamily: 'inherit', minHeight: 70, resize: 'vertical', outline: 'none', boxSizing: 'border-box', color: '#1e293b' }} />
+          <div style={{ fontSize: 'var(--f-12)', fontWeight: 600, color: '#94a3b8', marginBottom: 4 }}>Description</div>
+          <textarea placeholder="Add details..." style={{ width: '100%', border: '1px solid #e2e8f0', borderRadius: 10, padding: '11px 14px', fontSize: 'var(--f-13)', fontFamily: 'inherit', minHeight: 70, resize: 'vertical', outline: 'none', boxSizing: 'border-box', color: '#1e293b' }} />
         </div>
         <div style={{ marginBottom: 18 }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: '#94a3b8', marginBottom: 4 }}>Attachment</div>
-          <span style={{ fontSize: 13, fontWeight: 600, color: '#2563eb', cursor: 'pointer' }}>Upload Attachment</span>
+          <div style={{ fontSize: 'var(--f-12)', fontWeight: 600, color: '#94a3b8', marginBottom: 4 }}>Attachment</div>
+          <span style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: '#2563eb', cursor: 'pointer' }}>Upload Attachment</span>
         </div>
-        <button style={{ width: '100%', padding: '13px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Send</button>
+        <button style={{ width: '100%', padding: '13px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 12, fontSize: 'var(--f-15)', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Send</button>
       </div>
     </div>
   )
@@ -245,13 +245,13 @@ function EMMobileCard({ exp, onClick }: { exp: any; onClick: () => void }) {
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={cat.color} strokeWidth="1.8"><circle cx="12" cy="12" r="9" /><path d="M12 8v4l2 2" /></svg>
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 11, color: '#94a3b8', fontWeight: 500 }}>{dateParts[0]} {dateParts[1]} PM</div>
-          <div style={{ fontSize: 13.5, fontWeight: 600, color: '#1e293b', marginTop: 1 }}>{exp.description === '-' ? cat.label : exp.description}</div>
-          <div style={{ fontSize: 12, fontWeight: 600, color: '#2563eb', marginTop: 1 }}>{exp.category !== '--' ? exp.category : 'PAYMENT'}</div>
+          <div style={{ fontSize: 'var(--f-11)', color: '#94a3b8', fontWeight: 500 }}>{dateParts[0]} {dateParts[1]} PM</div>
+          <div style={{ fontSize: 'var(--f-13-5)', fontWeight: 600, color: '#1e293b', marginTop: 1 }}>{exp.description === '-' ? cat.label : exp.description}</div>
+          <div style={{ fontSize: 'var(--f-12)', fontWeight: 600, color: '#2563eb', marginTop: 1 }}>{exp.category !== '--' ? exp.category : 'PAYMENT'}</div>
         </div>
         <div style={{ flexShrink: 0, textAlign: 'right' }}>
-          <div style={{ fontSize: 13, fontWeight: 600, color: isPay ? '#16a34a' : '#dc2626' }}>{isPay ? '+' : '−'} AED {amt?.toFixed(1)}</div>
-          <div style={{ fontSize: 10.5, fontWeight: 600, color: isPay ? '#16a34a' : '#dc2626' }}>{isPay ? 'Approved' : 'Pending'}</div>
+          <div style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: isPay ? '#16a34a' : '#dc2626' }}>{isPay ? '+' : '−'} AED {amt?.toFixed(1)}</div>
+          <div style={{ fontSize: 'var(--f-10-5)', fontWeight: 600, color: isPay ? '#16a34a' : '#dc2626' }}>{isPay ? 'Approved' : 'Pending'}</div>
         </div>
       </div>
     </div>
@@ -263,8 +263,8 @@ function EMMobileDetail({ exp, onBack }: { exp: any; onBack: () => void }) {
   const isPay = exp.type === 'payment'
   const Field = ({ label, children }: { label: string; children: ReactNode }) => (
     <div style={{ marginBottom: 12 }}>
-      <div style={{ fontSize: 10, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 2 }}>{label}</div>
-      <div style={{ fontSize: 13, fontWeight: 600, color: '#1e293b' }}>{children}</div>
+      <div style={{ fontSize: 'var(--f-10)', fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 2 }}>{label}</div>
+      <div style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: '#1e293b' }}>{children}</div>
     </div>
   )
   return (
@@ -275,11 +275,11 @@ function EMMobileDetail({ exp, onBack }: { exp: any; onBack: () => void }) {
       </div>
       <div style={{ flex: 1, overflowY: 'auto', padding: 14, background: '#F0F4F7' }}>
         <div style={{ background: '#fff', borderRadius: 14, padding: 16, marginBottom: 10, boxShadow: '0 1px 3px rgba(0,0,0,.05)', textAlign: 'center' }}>
-          <div style={{ width: 50, height: 50, borderRadius: 14, background: `${cat.color}18`, display: 'grid', placeItems: 'center', fontSize: 26, margin: '0 auto 10px' }}>{cat.icon}</div>
-          <div style={{ fontSize: 16, fontWeight: 600, color: '#1e293b' }}>{exp.description}</div>
-          <div style={{ fontSize: 12, fontWeight: 600, color: '#94a3b8', marginTop: 2 }}>{exp.category !== '--' ? exp.category : 'Payment'}</div>
-          <div style={{ fontSize: 24, fontWeight: 600, marginTop: 12, color: isPay ? '#16a34a' : '#dc2626' }}>{isPay ? '+' : '−'} AED {(isPay ? exp.paidAmount : exp.billAmount)?.toFixed(2)}</div>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 8, padding: '4px 14px', borderRadius: 999, fontSize: 12, fontWeight: 600, background: isPay ? '#e8faf0' : '#fff5e6', color: isPay ? '#16a34a' : '#d97706' }}>
+          <div style={{ width: 50, height: 50, borderRadius: 14, background: `${cat.color}18`, display: 'grid', placeItems: 'center', fontSize: 'var(--f-26)', margin: '0 auto 10px' }}>{cat.icon}</div>
+          <div style={{ fontSize: 'var(--f-16)', fontWeight: 600, color: '#1e293b' }}>{exp.description}</div>
+          <div style={{ fontSize: 'var(--f-12)', fontWeight: 600, color: '#94a3b8', marginTop: 2 }}>{exp.category !== '--' ? exp.category : 'Payment'}</div>
+          <div style={{ fontSize: 'var(--f-24)', fontWeight: 600, marginTop: 12, color: isPay ? '#16a34a' : '#dc2626' }}>{isPay ? '+' : '−'} AED {(isPay ? exp.paidAmount : exp.billAmount)?.toFixed(2)}</div>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 8, padding: '4px 14px', borderRadius: 999, fontSize: 'var(--f-12)', fontWeight: 600, background: isPay ? '#e8faf0' : '#fff5e6', color: isPay ? '#16a34a' : '#d97706' }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: isPay ? '#16a34a' : '#d97706' }} />{isPay ? 'Approved' : 'Pending'}
           </div>
         </div>
@@ -292,8 +292,8 @@ function EMMobileDetail({ exp, onBack }: { exp: any; onBack: () => void }) {
         <div style={{ background: '#fff', borderRadius: 14, padding: 14, boxShadow: '0 1px 3px rgba(0,0,0,.05)' }}>
           <Field label="Bill Amount">{exp.billAmount ? `${exp.billAmount.toFixed(2)} AED` : '—'}</Field>
           <Field label="Paid Amount">{exp.paidAmount ? `${exp.paidAmount.toFixed(2)} AED` : '—'}</Field>
-          <div><div style={{ fontSize: 10, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 2 }}>Balance</div>
-            <div style={{ fontSize: 13, fontWeight: 600, color: exp.balance < 0 ? '#ef4444' : '#1e293b' }}>{exp.balance.toFixed(2)} AED</div></div>
+          <div><div style={{ fontSize: 'var(--f-10)', fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 2 }}>Balance</div>
+            <div style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: exp.balance < 0 ? '#ef4444' : '#1e293b' }}>{exp.balance.toFixed(2)} AED</div></div>
         </div>
       </div>
     </>
@@ -328,12 +328,12 @@ function EMMobileApp() {
               <div style={{ flex: 1, overflowY: 'auto', padding: 14, background: '#F0F4F7' }}>
                 <div style={{ background: '#fff', borderRadius: 12, padding: 4, marginBottom: 14, display: 'flex', boxShadow: '0 1px 3px rgba(0,0,0,.04)' }}>
                   {['Payments', 'History'].map(t => (
-                    <button key={t} onClick={() => setTab(t)} style={{ flex: 1, padding: '9px 2px', border: 'none', fontFamily: 'inherit', fontSize: 13, fontWeight: t === tab ? 600 : 500, cursor: 'pointer', borderRadius: 9, background: t === tab ? '#2563eb' : 'transparent', color: t === tab ? '#fff' : '#94a3b8' }}>{t}</button>
+                    <button key={t} onClick={() => setTab(t)} style={{ flex: 1, padding: '9px 2px', border: 'none', fontFamily: 'inherit', fontSize: 'var(--f-13)', fontWeight: t === tab ? 600 : 500, cursor: 'pointer', borderRadius: 9, background: t === tab ? '#2563eb' : 'transparent', color: t === tab ? '#fff' : '#94a3b8' }}>{t}</button>
                   ))}
                 </div>
                 <div style={{ background: '#f0fdf4', borderRadius: 14, padding: '16px 20px', marginBottom: 14, textAlign: 'center', border: '1px solid #dcfce7' }}>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: '#475569' }}>Available Balance</div>
-                  <div style={{ fontSize: 24, fontWeight: 600, color: '#dc2626', marginTop: 4 }}>− AED {Math.abs(EM_TOTAL_BALANCE).toFixed(2)}</div>
+                  <div style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: '#475569' }}>Available Balance</div>
+                  <div style={{ fontSize: 'var(--f-24)', fontWeight: 600, color: '#dc2626', marginTop: 4 }}>− AED {Math.abs(EM_TOTAL_BALANCE).toFixed(2)}</div>
                 </div>
                 {expenses.map(exp => <EMMobileCard key={exp.id} exp={exp} onClick={() => { setSelExp(exp); setView('detail') }} />)}
               </div>

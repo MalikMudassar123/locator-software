@@ -3,8 +3,22 @@
 import Image from 'next/image'
 import Navbar from './Navbar'
 
+// The hero is full-bleed, so nothing here was ever "squeezed into a container" — the
+// type had simply stopped growing at ceilings reached around 860px wide, leaving a
+// 30px headline adrift in a 2560px band.
+//
+// Every ceiling in this file now reads `max(OLD, min(ramp, CEILING))`, which can
+// never resolve below the flat value it replaces and so cannot shrink anything.
+// The ramp is affine (`3.2vw - 19px`) rather than a plain coefficient: it is chosen
+// to pass through exactly 30px at ~1540px, which lets it climb steeply afterwards
+// while leaving standard desktop untouched. A plain `Kvw` steep enough to reach 56px
+// would have started lifting the headline from 1250px.
+//
+// These stay well inside .hero-headline-stack's min-height at every size, so the
+// geometry that centres the headline between the navbar and the skyline is unaffected
+// — unlike the skyline's own width below, which is part of that geometry.
 const headlineStyle: React.CSSProperties = {
-  fontSize: 'clamp(17px, 3.5vw, 30px)',
+  fontSize: 'clamp(17px, 3.5vw, max(30px, min(3.2vw - 19px, 56px)))',
   fontWeight: 300,
   color: 'rgba(255,255,255,0.58)',
   lineHeight: 1.45,
@@ -13,13 +27,13 @@ const headlineStyle: React.CSSProperties = {
 }
 
 const subheadingStyle: React.CSSProperties = {
-  fontSize: 'clamp(12px, 1.6vw, 15px)',
+  fontSize: 'clamp(12px, 1.6vw, max(15px, min(1.6vw - 9.5px, 26px)))',
   fontWeight: 300,
   color: 'rgba(255,255,255,0.42)',
   lineHeight: 1.5,
   letterSpacing: '0.01em',
   margin: '0.6rem 0 0',
-  maxWidth: '38rem',
+  maxWidth: 'max(38rem, min(39vw, 60rem))',
 }
 
 const heroHeadlines = [
@@ -310,7 +324,7 @@ export default function HeroSection() {
           position: 'absolute',
           bottom: 0,
           left: '2%',
-          width: 'clamp(180px, 28vw, 420px)',
+          width: 'clamp(180px, 28vw, max(420px, min(26vw, 44vh, 640px)))',
           zIndex: 7,
           pointerEvents: 'none',
         }}
@@ -338,7 +352,7 @@ export default function HeroSection() {
           position: 'absolute',
           top: '8%',
           right: '4%',
-          width: 'clamp(160px, 24vw, 380px)',
+          width: 'clamp(160px, 24vw, max(380px, min(23vw, 39vh, 580px)))',
           zIndex: 7,
           pointerEvents: 'none',
         }}
@@ -390,7 +404,21 @@ export default function HeroSection() {
           left: '50%',
           transform: 'translateX(-50%)',
           width: '98%',
-          maxWidth: 'clamp(280px, 70vw, 590px)',
+          // TWIN of --hero-skyline-h in globals.css — change one, change the other.
+          //
+          // The 590px ceiling this replaces was reached at 843px wide and never moved
+          // again, so the skyline was the same size on a 2560px monitor as on a laptop.
+          // It cannot simply track width, though: the hero is 67.5vh tall and the
+          // headline is centred in the band between the navbar and the top of the
+          // skyline, so every pixel the skyline gains comes straight out of that band.
+          //
+          // `119vh - 512px` is that budget written out. Solving
+          // band = 0.675vh - 80 - 0.5661w >= 210 (the headline stack's own min-height)
+          // gives w <= 1.192vh - 512, so the skyline grows only as far as the band can
+          // pay for it. On a 2560x1440 display that is 1059px; at 1745x880 it resolves
+          // below 590 and the max() floor keeps today's size, which is correct —
+          // the band there is already tighter than the stack.
+          maxWidth: 'max(590px, min(52vw, 119vh - 512px, 1100px))',
           zIndex: 8,
           pointerEvents: 'none',
         }}
@@ -417,7 +445,7 @@ export default function HeroSection() {
           alt="Cloud"
           width={400}
           height={267}
-          style={{ opacity: 0.7, width: 'clamp(180px, 30vw, 400px)', height: 'auto' }}
+          style={{ opacity: 0.7, width: 'clamp(180px, 30vw, max(400px, min(26vw, 46vh, 620px)))', height: 'auto' }}
         />
       </div>
 

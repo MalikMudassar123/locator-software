@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -10,8 +10,13 @@ import { ABOUT_PAGES } from '@/components/about/data'
 import { SERVICE_PAGES } from '@/components/service/data'
 import { SOFTWARE_MODULES } from '@/components/software/modules-data'
 import { INDUSTRY_NAV_ITEMS } from '@/components/industries/industries-nav'
+import WavingHands from '@/components/common/WavingHands'
 
 const QUOTE_HREF = '/get-a-quote'
+
+// useLayoutEffect warns when it runs during server rendering, where there is no
+// layout to read. Same hook on the client, a no-op-safe useEffect on the server.
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -54,19 +59,59 @@ export default function Navbar() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null) // open shutter mega-menu
   const [renderMenu, setRenderMenu] = useState<string | null>(null) // kept during close anim
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const megaInnerRef = useRef<HTMLDivElement>(null)
+  const [megaH, setMegaH] = useState(0)
   const pathname = usePathname()
   const router = useRouter()
-  const CTA_LINE_HEIGHT = 22
+  // Roll height for the hover text swap. In em (not px) so the two label copies
+  // track the button's fluid font-size and the pill keeps the same height as the
+  // software navbar's CTA, whose line box is the font's normal ~1.2.
+  const CTA_LINE_HEIGHT = '1.2em'
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  useEffect(() => { if (activeMenu) setRenderMenu(activeMenu) }, [activeMenu])
   useEffect(() => { setActiveMenu(null); setOpen(false) }, [pathname])
+
+  // Measured height of the shutter's contents, published to CSS as --mega-h.
+  //
+  // The panel used to open by transitioning grid-template-rows 0fr → 1fr. That
+  // technique animates an intrinsic size, so the browser re-resolves layout every
+  // frame — and it has no defined value to interpolate *between* when the content
+  // swaps, which is why moving from one menu to another snapped instead of easing.
+  // A measured pixel height fixes both: the transition has real endpoints, so
+  // switching menus glides from the old height to the new one.
+  //
+  // ResizeObserver rather than a one-shot measure — it catches the grid dropping
+  // from four columns to three at a breakpoint, and fonts loading in late, both of
+  // which change the height after the initial read.
+  //
+  // useLayoutEffect, not useEffect: this has to measure and commit the new height
+  // before the browser paints. With useEffect the panel gets painted once at the
+  // stale height first, which is a visible hitch on the opening frame.
+  useIsomorphicLayoutEffect(() => {
+    const el = megaInnerRef.current
+    if (!el) return
+    const ro = new ResizeObserver(() => setMegaH(el.offsetHeight))
+    ro.observe(el)
+    setMegaH(el.offsetHeight)
+    return () => ro.disconnect()
+  }, [renderMenu, mounted])
 
   const openMega = (href: string) => {
     if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null }
+    // Both in the same handler, so React batches them into ONE render and the
+    // content mounts in the same commit that adds .open.
+    //
+    // This is what was making the bar turn white a visible beat before the drawer
+    // moved. renderMenu used to be set by an effect watching activeMenu, so the
+    // first render after hover had .open applied but no content mounted — nothing
+    // to measure, so --mega-h was still 0 and the panel opened to nothing. Only
+    // after the effect ran, and the measure effect after that, did the height
+    // become real. Three round-trips of render → paint → effect before the drawer
+    // could start, while the navbar's own colour transition had begun immediately.
+    setRenderMenu(href)
     setActiveMenu(href)
   }
   const scheduleClose = () => {
@@ -77,6 +122,12 @@ export default function Navbar() {
     if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null }
   }
   const activeDD = renderMenu ? NAV_DROPDOWNS[renderMenu] : null
+  // Navbar flips to a white bar with the blue wordmark whenever the mega-menu
+  // shutter or the mobile drawer is showing — matches the white panel beneath it
+  // instead of leaving a blue bar floating above a white one.
+  const isPanelOpen = open || !!activeMenu
+  const navTextColor = isPanelOpen ? '#1d1d1f' : '#ffffff'
+  const navUnderline = isPanelOpen ? '#1360ee' : 'rgba(255,255,255,0.85)'
 
   useEffect(() => {
     if (open) {
@@ -90,6 +141,24 @@ export default function Navbar() {
     <>
       <style>{`
         .hn-chev { transition: transform .3s cubic-bezier(.22,.61,.36,1); flex-shrink: 0; }
+
+        /* ── The bar flip ───────────────────────────────────────────────────────
+           Everything that changes when the shutter opens — background, shadow,
+           logo, link colour, the flag's ring — runs on this one duration and curve
+           so the bar reads as a single object changing state.
+           It was glitchy because the pieces disagreed: the links carried Tailwind's
+           transition-all, which is 150ms, while the background and logo were on
+           300ms. The text finished flipping while the bar behind it was still half
+           blue. transition-all was also animating properties that should never
+           animate here, font-weight among them.
+           240ms is the whole budget now: fast enough to feel immediate, long enough
+           that nothing snaps. */
+        .hn-link {
+          transition: color .24s cubic-bezier(.4,0,.2,1),
+                      opacity .24s cubic-bezier(.4,0,.2,1),
+                      border-color .24s cubic-bezier(.4,0,.2,1);
+        }
+        .hn-flag { transition: border-color .24s cubic-bezier(.4,0,.2,1); }
 
         /* ── Mobile drawer sizing ─────────────────────────────────────────────
            100vh on mobile is the viewport WITH the URL bar retracted, so on first
@@ -111,30 +180,81 @@ export default function Navbar() {
           position: fixed; inset: 80px 0 0 0; z-index: 1000;
           background: rgba(6,20,60,0.22);
           opacity: 0; pointer-events: none;
-          transition: opacity .32s ease;
+          /* Leaves faster than it arrives, and faster than the panel — a dim that
+             lingers after the drawer has gone is the thing that makes a close feel
+             sticky. */
+          transition: opacity .18s ease;
         }
-        .hn-backdrop.open { opacity: 1; pointer-events: auto; }
+        .hn-backdrop.open { opacity: 1; pointer-events: auto; transition: opacity .3s ease; }
 
         .hn-mega {
           position: fixed; top: 80px; left: 0; right: 0; z-index: 1001;
           background: #ffffff;
           border-bottom: 1px solid #ececf1;
-          box-shadow: 0 40px 60px -34px rgba(15,23,42,.32);
-          display: grid; grid-template-rows: 0fr;
+          /* Measured px height (see --mega-h) rather than grid-template-rows 0fr→1fr.
+             The fr trick animates an intrinsic size — no defined endpoints — so it
+             cannot interpolate when the content swaps, and it re-resolves layout
+             every frame. */
+          /* Clipping happens on .hn-mega-clip, one level down, not here — the shadow
+             strip below is a child, and a parent with overflow:hidden would cut the
+             very shadow it is meant to cast. */
+          height: 0;
           opacity: 0; pointer-events: none;
-          transition: grid-template-rows .52s cubic-bezier(.16,1,.3,1),
-                      opacity .34s ease;
-          will-change: grid-template-rows;
+          /* Closing. Declared on the base rule, so it is the direction that plays
+             when .open is removed: the panel is gone in .2s while the height eases
+             out slightly slower, which reads as it being pulled up rather than
+             deflating. Content leaves first — see .hn-mega-inner. */
+          transition: height .32s cubic-bezier(.36,0,.28,1), opacity .19s ease;
+          /* Own compositor layer. Without it the height change repaints the panel
+             into whatever layer the hero occupies, and every frame drags the page
+             behind it through paint as well. */
+          transform: translateZ(0);
+          backface-visibility: hidden;
+          will-change: height;
         }
-        .hn-mega.open { grid-template-rows: 1fr; opacity: 1; pointer-events: auto; }
-        .hn-mega-clip { overflow: hidden; min-height: 0; }
+        /* The drop shadow lives on a pseudo-element pinned to the bottom edge rather
+           than on .hn-mega itself. A 60px-blur shadow on a box whose height changes
+           every frame has to be re-rasterised every frame, and on a full-width panel
+           that is the single most expensive thing in the whole animation. Here it is
+           a fixed-size strip that the panel simply carries down with it. */
+        .hn-mega::after {
+          content: ''; position: absolute; left: 0; right: 0; bottom: 0;
+          height: 60px; pointer-events: none;
+          box-shadow: 0 40px 60px -34px rgba(15,23,42,.32);
+        }
+        .hn-mega.open {
+          height: var(--mega-h, 0px); opacity: 1; pointer-events: auto;
+          /* Opening. Longer, and on a decelerating curve so it arrives softly.
+             Asymmetry is what makes a drawer feel weighted — the same curve both
+             ways always feels mechanical. */
+          /* easeOutQuint-ish: ~70% of the distance is covered in the first third, then
+             a long tail. That front-loading is what makes a drawer feel responsive to
+             the hover while still settling gently instead of stopping dead. */
+          transition: height .52s cubic-bezier(.19,1,.22,1), opacity .16s ease;
+        }
+        .hn-mega-clip { height: 100%; overflow: hidden; min-height: 0; }
         .hn-mega-inner {
           max-width: 1200px; margin: 0 auto;
           padding: clamp(26px,3vw,40px) clamp(20px,4vw,48px) clamp(32px,3.4vw,46px);
-          opacity: 0; transform: translateY(-10px);
-          transition: opacity .4s ease .04s, transform .55s cubic-bezier(.16,1,.3,1) .04s;
+          /* Seals this subtree off from the parent's height animation. Without it the
+             browser has to consider re-laying-out every card, icon and line of text
+             on each frame of the open; with it the panel's height is proven not to
+             affect anything inside, so the frames cost a clip and nothing more. This
+             is the difference between smooth and butter on a slow machine. */
+          contain: layout style;
+          /* Closed state doubles as the close transition: fast fade, no delay, so the
+             text is gone before the panel has collapsed far enough to crop it. */
+          opacity: 0; transform: translateY(-8px);
+          transition: opacity .16s ease, transform .2s ease;
+          will-change: transform, opacity;
         }
-        .hn-mega.open .hn-mega-inner { opacity: 1; transform: none; }
+        .hn-mega.open .hn-mega-inner {
+          opacity: 1; transform: none;
+          /* Shorter than the panel's .52s and started immediately, so the content
+             finishes settling before the panel does. Content that lands last always
+             looks like it is catching up with the drawer. */
+          transition: opacity .3s ease .02s, transform .44s cubic-bezier(.19,1,.22,1) .02s;
+        }
         .hn-mega-head { margin-bottom: 22px; }
         .hn-mega-label { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1360ee; }
         .hn-mega-blurb { margin: 6px 0 0; font-size: 14px; color: #6e6e73; max-width: 560px; line-height: 1.5; }
@@ -162,43 +282,74 @@ export default function Navbar() {
         .hn-mega-go { margin-left: auto; color: #cfd3dc; flex-shrink: 0; opacity: 0; transform: translateX(-4px); transition: transform .2s ease, color .2s ease, opacity .2s ease; }
         .hn-mega-card:hover .hn-mega-go { color: #1360ee; transform: translateX(0); opacity: 1; }
 
-        @keyframes hnCardIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-        .hn-mega.open .hn-mega-card { animation: hnCardIn .5s cubic-bezier(.16,1,.3,1) both; }
-        .hn-mega.open .hn-mega-card:nth-child(1) { animation-delay: .06s; }
-        .hn-mega.open .hn-mega-card:nth-child(2) { animation-delay: .10s; }
-        .hn-mega.open .hn-mega-card:nth-child(3) { animation-delay: .14s; }
-        .hn-mega.open .hn-mega-card:nth-child(4) { animation-delay: .18s; }
-        .hn-mega.open .hn-mega-card:nth-child(5) { animation-delay: .22s; }
-        .hn-mega.open .hn-mega-card:nth-child(6) { animation-delay: .26s; }
-        .hn-mega.open .hn-mega-card:nth-child(7) { animation-delay: .30s; }
-        .hn-mega.open .hn-mega-card:nth-child(8) { animation-delay: .34s; }
+        /* Stagger tightened from 40ms to 26ms steps. The last of eight cards used to
+           finish at ~0.84s — long after the panel itself had settled, which is what
+           made the open read as laggy even though the drawer was quick. */
+        @keyframes hnCardIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+        .hn-mega.open .hn-mega-card { animation: hnCardIn .42s cubic-bezier(.16,1,.3,1) both; }
+        .hn-mega.open .hn-mega-card:nth-child(1) { animation-delay: .05s; }
+        .hn-mega.open .hn-mega-card:nth-child(2) { animation-delay: .076s; }
+        .hn-mega.open .hn-mega-card:nth-child(3) { animation-delay: .102s; }
+        .hn-mega.open .hn-mega-card:nth-child(4) { animation-delay: .128s; }
+        .hn-mega.open .hn-mega-card:nth-child(5) { animation-delay: .154s; }
+        .hn-mega.open .hn-mega-card:nth-child(6) { animation-delay: .18s; }
+        .hn-mega.open .hn-mega-card:nth-child(7) { animation-delay: .206s; }
+        .hn-mega.open .hn-mega-card:nth-child(8) { animation-delay: .232s; }
         @media (prefers-reduced-motion: reduce) {
-          .hn-mega { transition: opacity .2s ease; }
-          .hn-mega-inner { transition: opacity .2s ease; transform: none; }
+          .hn-mega, .hn-mega.open { transition: opacity .2s ease; }
+          .hn-mega-inner, .hn-mega.open .hn-mega-inner { transition: opacity .2s ease; transform: none; }
           .hn-mega.open .hn-mega-card { animation: none; }
         }
       `}</style>
 
       <nav
         className="absolute top-0 left-0 right-0 z-10 h-16 md:h-20"
-        style={{ paddingLeft: 'clamp(20px, 4vw, 50px)', paddingRight: 'clamp(20px, 4vw, 50px)' }}
+        style={{
+          paddingLeft: 'clamp(20px, 4vw, var(--nav-pad))',
+          paddingRight: 'clamp(20px, 4vw, var(--nav-pad))',
+          background: isPanelOpen ? '#ffffff' : 'transparent',
+          boxShadow: isPanelOpen ? '0 1px 0 rgba(15,23,42,0.08)' : 'none',
+          // Opening: no delay, the bar changes with the drawer. Closing: hold the
+          // white for 110ms first. The panel takes ~320ms to retract, and without
+          // the hold the bar snaps back to transparent while a white panel is still
+          // visible underneath it — a blue bar floating on white for a few frames.
+          transition: isPanelOpen
+            ? 'background .24s cubic-bezier(.4,0,.2,1), box-shadow .24s cubic-bezier(.4,0,.2,1)'
+            : 'background .24s cubic-bezier(.4,0,.2,1) .11s, box-shadow .24s cubic-bezier(.4,0,.2,1) .11s',
+        }}
         onMouseLeave={scheduleClose}
       >
         <div className="h-full flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center" onMouseEnter={() => setActiveMenu(null)}>
+          {/* Logo — cross-fades to the blue wordmark (same file the footer uses) once the bar
+              goes white. Fixed-size box + two stacked images so the swap never changes the
+              logo's rendered width — a src swap between differently-proportioned files would
+              otherwise nudge the nav links sideways every time the bar toggles. */}
+          <Link
+            href="/"
+            className="flex items-center"
+            onMouseEnter={() => setActiveMenu(null)}
+            style={{ position: 'relative', width: 'calc(var(--nav-logo-h) * 3)', height: 'var(--nav-logo-h)', flexShrink: 0 }}
+          >
+            <span className="sr-only">Locator</span>
             <Image
               src="/logo.png"
-              alt="Locator"
-              width={120}
-              height={40}
-              style={{ width: 'auto', height: '40px' }}
+              alt=""
+              fill
+              sizes="120px"
+              style={{ objectFit: 'contain', objectPosition: 'left center', opacity: isPanelOpen ? 0 : 1, transition: 'opacity .24s cubic-bezier(.4,0,.2,1)' }}
               priority
+            />
+            <Image
+              src="/logo-blue.png"
+              alt=""
+              fill
+              sizes="120px"
+              style={{ objectFit: 'contain', objectPosition: 'left center', opacity: isPanelOpen ? 1 : 0, transition: 'opacity .24s cubic-bezier(.4,0,.2,1)' }}
             />
           </Link>
 
           {/* Nav Links — desktop only */}
-          <ul className="hidden lg:flex items-center gap-6 list-none m-0 p-0">
+          <ul className="hn-navlinks hidden lg:flex items-center gap-6 list-none m-0 p-0">
             {navLinks.map(l => {
               const isActive = l.href === '/' ? pathname === '/' : pathname.startsWith(l.href)
               const dd = NAV_DROPDOWNS[l.href]
@@ -212,11 +363,12 @@ export default function Navbar() {
                       aria-expanded={isCurrent}
                       onMouseEnter={() => openMega(l.href)}
                       onClick={() => setActiveMenu(null)}
-                      className="text-white text-sm transition-all whitespace-nowrap"
+                      className="hn-link text-sm whitespace-nowrap"
                       style={{
+                        color: navTextColor,
                         fontWeight: isActive ? 800 : 600,
                         opacity: isActive || isCurrent ? 1 : 0.82,
-                        borderBottom: isActive ? '2px solid rgba(255,255,255,0.85)' : '2px solid transparent',
+                        borderBottom: isActive ? `2px solid ${navUnderline}` : '2px solid transparent',
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '4px',
@@ -235,11 +387,12 @@ export default function Navbar() {
                       aria-expanded={isCurrent}
                       onMouseEnter={() => openMega(l.href)}
                       onClick={() => (isCurrent ? setActiveMenu(null) : openMega(l.href))}
-                      className="text-white text-sm transition-all whitespace-nowrap"
+                      className="hn-link text-sm whitespace-nowrap"
                       style={{
+                        color: navTextColor,
                         fontWeight: isActive ? 800 : 600,
                         opacity: isActive || isCurrent ? 1 : 0.82,
-                        borderBottom: isActive ? '2px solid rgba(255,255,255,0.85)' : '2px solid transparent',
+                        borderBottom: isActive ? `2px solid ${navUnderline}` : '2px solid transparent',
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '4px',
@@ -264,11 +417,12 @@ export default function Navbar() {
                     <Link
                       href={l.href}
                       onMouseEnter={() => setActiveMenu(null)}
-                      className="text-white text-sm transition-all whitespace-nowrap"
+                      className="hn-link text-sm whitespace-nowrap"
                       style={{
+                        color: navTextColor,
                         fontWeight: isActive ? 800 : 600,
                         opacity: isActive ? 1 : 0.82,
-                        borderBottom: isActive ? '2px solid rgba(255,255,255,0.85)' : '2px solid transparent',
+                        borderBottom: isActive ? `2px solid ${navUnderline}` : '2px solid transparent',
                         paddingBottom: '2px',
                       }}
                     >
@@ -287,27 +441,118 @@ export default function Navbar() {
               alt="UAE"
               width={32}
               height={32}
-              className="rounded-full border-2 border-white/30 hidden sm:block"
+              className="hn-flag rounded-full hidden sm:block"
+              style={{ border: isPanelOpen ? '2px solid #e2e7f0' : '2px solid rgba(255,255,255,0.3)' }}
             />
 
-            {/* Get a Quote — desktop */}
-            <div className="hidden sm:inline-flex items-center justify-center">
+            {/* Get a Quote — desktop. A single blade of light travels around the pill's
+                rim: a conic gradient rotated via a registered @property angle, masked
+                down to the border band, with a blurred copy underneath for the halo.
+                See .nav-cta-ring / .nav-cta-wrap::before in globals.css. */}
+            {/* Pointer layer. Owns the tilt, the magnetic pull and the position of the
+                cursor light; the wrap inside owns the looping breathe. They have to be
+                separate elements because a CSS animation on `transform` wins over any
+                declared transform, so tilt and breathe on one element cannot coexist.
+                Vars are written straight onto the node rather than through state — this
+                fires on every mousemove, and a re-render per frame would be absurd. */}
+            <div
+              className="hidden sm:inline-flex nav-cta-tilt"
+              onMouseMove={(e) => {
+                const el = e.currentTarget
+                const r = el.getBoundingClientRect()
+                const x = (e.clientX - r.left) / r.width
+                const y = (e.clientY - r.top) / r.height
+                el.style.setProperty('--mx', `${x * 100}%`)
+                el.style.setProperty('--my', `${y * 100}%`)
+                // Rotate away from the cursor on the vertical axis, toward it on the
+                // horizontal — the combination reads as a solid object being looked at
+                // from an angle rather than a card flopping about.
+                el.style.setProperty('--ty', `${(x - 0.5) * 15}deg`)
+                el.style.setProperty('--tx', `${(0.5 - y) * 11}deg`)
+                el.style.setProperty('--pull-x', `${(x - 0.5) * 7}px`)
+                el.style.setProperty('--pull-y', `${(y - 0.5) * 5}px`)
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget
+                el.style.setProperty('--tx', '0deg')
+                el.style.setProperty('--ty', '0deg')
+                el.style.setProperty('--pull-x', '0px')
+                el.style.setProperty('--pull-y', '0px')
+                el.style.setProperty('--mx', '50%')
+                el.style.setProperty('--my', '50%')
+              }}
+            >
+            <div
+              className="inline-flex items-center justify-center nav-cta-wrap"
+              style={{
+                // One tone, not a spectrum. Multi-hue gradients are the thing that dates
+                // a control fastest; a single blade of light travelling a fine rim is the
+                // current premium read, and it costs the brand nothing because the only
+                // colour on the hero is the light itself. --cta-light is the head of the
+                // blade, --cta-dim the tail it fades out through.
+                //
+                // Over the blue hero the light is pure white — maximum value contrast
+                // against the backdrop without introducing a second hue. Over the white
+                // bar white would be invisible, so it becomes the brand blue.
+                // Light on a dark backdrop reads as luminous at almost any strength;
+                // the same effect on white has no darkness to glow into, so every value
+                // below is softer on the light bar. A full-strength blue blade there
+                // stops looking lit and starts looking like a thick drawn outline.
+                '--cta-light': isPanelOpen ? '#3b82f6' : '#ffffff',
+                '--cta-dim': isPanelOpen ? 'rgba(59,130,246,0.20)' : 'rgba(255,255,255,0.32)',
+                // Bloom around the filament, same hue as the light so the glow reads as
+                // the light spilling rather than as a separate coloured shadow.
+                '--cta-glow': isPanelOpen ? 'rgba(59,130,246,0.34)' : 'rgba(255,255,255,0.92)',
+                // Halo colours, split from the filament's. Blurring a saturated blue over
+                // white leaves a grey-blue smudge the size of the blur radius; these keep
+                // the halo as a hint while the filament stays crisp. Undefined on the
+                // hero, where the CSS falls back to the values above.
+                ...(isPanelOpen ? {
+                  '--cta-aura-light': 'rgba(59,130,246,0.40)',
+                  '--cta-aura-dim': 'rgba(59,130,246,0.10)',
+                  '--cta-flare-peak': '0.5',
+                } : {}),
+                // The unlit rim. Glass, not metal: a low-alpha tone of the backdrop's own
+                // colour, so between passes the pill reads as a quiet frosted edge instead
+                // of an outline drawn round it. All the drama comes from the light moving
+                // over it, which is what keeps the resting state calm and the motion loud.
+                // Blue-tinted rather than slate on the light bar — a neutral grey rim next
+                // to a blue label just looks dirty.
+                '--cta-track': isPanelOpen ? 'rgba(59,130,246,0.13)' : 'rgba(255,255,255,0.30)',
+                // Glass shaping on that rim — a lit top edge and a containing hairline.
+                // Cheap to add and it is what stops the resting state looking like a
+                // plain translucent band between passes of the light.
+                '--cta-edge': isPanelOpen ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.75)',
+                '--cta-hairline': isPanelOpen ? 'rgba(59,130,246,0.20)' : 'rgba(255,255,255,0.22)',
+              } as React.CSSProperties}
+            >
+              {/* Two hands reaching out from behind the pill and waving. Mounted
+                  before the ring so the lit filament sweeps over them, and inside
+                  the wrap so they inherit the breathe and the hover lift — hands
+                  that move with the button is what stops them looking pasted on.
+                  Decorative and pointer-events:none throughout: the button's own
+                  hit area and label are untouched. See .cta-hand in globals.css. */}
+              <WavingHands />
+              <span className="nav-cta-ring" aria-hidden="true" />
               <button
                 className="nav-cta-pulse"
                 style={{
-                  background: '#ffffff',
+                  // Barely-there vertical gradient rather than flat #fff — it catches the
+                  // eye as a lit surface instead of a paper cut-out. No transform here:
+                  // the wrap owns the hover lift, and a static offset on the button would
+                  // push it off-centre inside the ring and make the band uneven.
+                  background: 'linear-gradient(180deg, #ffffff 0%, #f4f8fd 100%)',
                   color: '#0a89dd',
                   border: 'none',
-                  borderRadius: '12px',
-                  padding: '14px 26px',
-                  fontSize: '13px',
-                  fontWeight: 600,
+                  // Size + shape matched to the software navbar's .swn-cta pill.
+                  borderRadius: '999px',
+                  padding: 'var(--nav-cta-py) max(22px, min(0.66vw + 11.7px, 29px))',
+                  fontSize: 'var(--nav-link)',
+                  fontWeight: 700,
                   fontFamily: 'inherit',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
-                  letterSpacing: '0.01em',
-                  transition: 'transform 0.45s cubic-bezier(0.65, 0, 0.35, 1)',
-                  transform: 'translateY(-1.5px)',
+                  letterSpacing: '0.015em',
                   display: 'inline-flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -317,11 +562,18 @@ export default function Navbar() {
                 onMouseLeave={() => setCtaHover(false)}
                 onClick={() => router.push(QUOTE_HREF)}
               >
+                {/* Idle sheen. A real element rather than a third pseudo — the
+                    button's ::before is the hover wipe and its ::after is the
+                    cursor light, both already spoken for. Sits on z-index -1 so
+                    it passes under the label, and the button's own overflow:hidden
+                    is what keeps it inside the pill's radius. Purely decorative;
+                    see .nav-cta-shine in globals.css. */}
+                <span className="nav-cta-shine" aria-hidden="true" />
                 <span
                   aria-hidden="true"
                   style={{
                     display: 'block',
-                    height: `${CTA_LINE_HEIGHT}px`,
+                    height: CTA_LINE_HEIGHT,
                     overflow: 'hidden',
                     position: 'relative',
                   }}
@@ -330,14 +582,14 @@ export default function Navbar() {
                     style={{
                       display: 'block',
                       transition: 'transform 0.55s cubic-bezier(0.65, 0, 0.35, 1)',
-                      transform: ctaHover ? `translateY(-${CTA_LINE_HEIGHT}px)` : 'translateY(0)',
+                      transform: ctaHover ? `translateY(-${CTA_LINE_HEIGHT})` : 'translateY(0)',
                       willChange: 'transform',
                     }}
                   >
-                    <span style={{ display: 'block', height: `${CTA_LINE_HEIGHT}px`, lineHeight: `${CTA_LINE_HEIGHT}px` }}>
+                    <span style={{ display: 'block', height: CTA_LINE_HEIGHT, lineHeight: CTA_LINE_HEIGHT }}>
                       Get a Quote
                     </span>
-                    <span style={{ display: 'block', height: `${CTA_LINE_HEIGHT}px`, lineHeight: `${CTA_LINE_HEIGHT}px` }}>
+                    <span style={{ display: 'block', height: CTA_LINE_HEIGHT, lineHeight: CTA_LINE_HEIGHT }}>
                       Get a Quote
                     </span>
                   </span>
@@ -346,6 +598,24 @@ export default function Navbar() {
                   Get a Quote
                 </span>
               </button>
+
+              {/* Sparks. Two four-point glints that pop on the flare beat, the second
+                  offset so they fire in sequence rather than together — a single
+                  synchronised pair reads as decoration, a staggered one reads as an
+                  event happening. Drawn as SVG rather than CSS shapes because a true
+                  concave star needs curves, and a gradient-built one always reads as
+                  a plus sign. */}
+              <span className="nav-cta-spark nav-cta-spark--a" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0c.6 6.6 4.8 10.8 12 12-7.2 1.2-11.4 5.4-12 12-.6-6.6-4.8-10.8-12-12C7.2 10.8 11.4 6.6 12 0Z" />
+                </svg>
+              </span>
+              <span className="nav-cta-spark nav-cta-spark--b" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0c.6 6.6 4.8 10.8 12 12-7.2 1.2-11.4 5.4-12 12-.6-6.6-4.8-10.8-12-12C7.2 10.8 11.4 6.6 12 0Z" />
+                </svg>
+              </span>
+            </div>
             </div>
 
             {/* Hamburger — visible below lg */}
@@ -374,10 +644,11 @@ export default function Navbar() {
             aria-label={activeDD?.label}
             onMouseEnter={cancelClose}
             onMouseLeave={scheduleClose}
+            style={{ '--mega-h': `${megaH}px` } as React.CSSProperties}
           >
             <div className="hn-mega-clip">
               {activeDD && (
-                <div className="hn-mega-inner">
+                <div className="hn-mega-inner" ref={megaInnerRef}>
                   <div className="hn-mega-head">
                     <span className="hn-mega-label">{activeDD.label}</span>
                     <p className="hn-mega-blurb">{activeDD.blurb}</p>

@@ -1,0 +1,157 @@
+'use client'
+import { useState } from 'react'
+import Link from 'next/link'
+
+const EASE = 'cubic-bezier(.22,.61,.36,1)'
+
+const STATS = [
+  'Experience up to 40% reduction in vehicle maintenance cost',
+  'Improve the behaviour of your drivers by over 60%',
+  'See over 40% increase in fleet productivity',
+  'Reduce the cost of fuel consumption by around 20%',
+  'Get your full return on investment within 12 months',
+]
+
+const TABS = [
+  {
+    key: 'quote',
+    label: 'Request a quote',
+    headline: 'Request for a quote — it’s free',
+    body: 'Tell us your fleet size and we’ll put together a tailored, no-obligation quote within one business day.',
+    stat: { value: '950,104+', sub: 'quotes generated to date' },
+    cta: { label: 'Get a free quote', href: '/get-a-quote' },
+    icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5" /><path d="M8 11l2.5 2.5L16 8" /></svg>
+    ),
+  },
+  {
+    key: 'demo',
+    label: 'Get a free demo',
+    headline: 'See LOCATOR running live',
+    body: 'Book a walkthrough with our team and watch the platform track a real device in real time.',
+    stat: { value: '20 min', sub: 'average demo length' },
+    cta: { label: 'Book a free demo', href: '/contact' },
+    icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="6 3 20 12 6 21" /></svg>
+    ),
+  },
+  {
+    key: 'install',
+    label: 'Get installed',
+    headline: 'Professional installation, UAE-wide',
+    body: 'Our certified technicians fit and configure every device on-site, so it starts reporting from day one.',
+    stat: { value: '48 hrs', sub: 'typical install turnaround' },
+    cta: { label: 'Schedule installation', href: '/contact' },
+    icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z" /></svg>
+    ),
+  },
+  {
+    key: 'monitor',
+    label: 'Start monitoring',
+    headline: 'Go live on the LOCATOR dashboard',
+    body: 'Once installed, your fleet appears instantly on the platform — live location, alerts, and reports from minute one.',
+    stat: { value: '99.9%', sub: 'tracking network uptime' },
+    cta: { label: 'View the platform', href: '/software' },
+    icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+    ),
+  },
+]
+
+export default function GpsTrackerWhy() {
+  const [active, setActive] = useState(0)
+  const tab = TABS[active]
+
+  return (
+    <>
+      <style>{`
+        .gtw-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(36px,5vw,72px); align-items: center; max-width: 1200px; margin: 0 auto; }
+        @media (max-width: 940px) { .gtw-grid { grid-template-columns: 1fr; } }
+        .gtw-stat { display: flex; align-items: flex-start; gap: 12px; }
+        .gtw-tick {
+          width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; margin-top: 1px;
+          background: rgba(255,255,255,.16); color: #fff; display: grid; place-items: center;
+        }
+        .gtw-tab {
+          font-family: inherit; cursor: pointer; border: none; text-align: left;
+          padding: 12px 16px; border-radius: 12px; font-size: 13px; font-weight: 700;
+          background: rgba(255,255,255,.06); color: rgba(255,255,255,.68);
+          transition: background .2s ${EASE}, color .2s ${EASE};
+          white-space: nowrap;
+        }
+        .gtw-tab:hover { background: rgba(255,255,255,.12); color: #fff; }
+        .gtw-tab.on { background: #1360ee; color: #fff; }
+        .gtw-panel { animation: gtwIn .35s ${EASE} both; }
+        @keyframes gtwIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+      `}</style>
+
+      <section style={{ padding: 'clamp(56px,7vw,92px) 28px', background: '#0f1117' }}>
+        <div className="gtw-grid">
+          {/* Copy + stats */}
+          <div data-reveal="left">
+            <span style={{ fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: 'rgba(255,255,255,.85)', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
+              <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: 'rgba(255,255,255,.5)', borderRadius: '2px' }} /></span>
+              Built For Every Fleet
+            </span>
+            <h2 style={{ margin: '0 0 16px', fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.3, letterSpacing: '-.015em', color: '#fff' }}>
+              The complete GPS tracking device for everyone
+            </h2>
+            <p style={{ margin: '0 0 28px', fontSize: 'clamp(13.5px,1.25vw,15px)', lineHeight: 1.75, color: 'rgba(255,255,255,.62)', maxWidth: '48ch' }}>
+              A reliable, trusted tracking device that puts your business on steroids today. With this
+              GPS tracker online, you can:
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {STATS.map(s => (
+                <div key={s} className="gtw-stat">
+                  <span className="gtw-tick">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                  </span>
+                  <span style={{ fontSize: '14.5px', color: 'rgba(255,255,255,.85)', fontWeight: 600, lineHeight: 1.5 }}>{s}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Tabs + interactive panel */}
+          <div data-reveal="right">
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
+              {TABS.map((t, i) => (
+                <button key={t.key} className={`gtw-tab${i === active ? ' on' : ''}`} onClick={() => setActive(i)}>
+                  {t.label}
+                </button>
+              ))}
+            </div>
+
+            <div key={tab.key} className="gtw-panel" style={{
+              background: 'linear-gradient(155deg, #171a22, #10131a)',
+              border: '1px solid rgba(255,255,255,.08)',
+              borderRadius: '22px', padding: 'clamp(28px,4vw,40px)',
+            }}>
+              <span style={{ width: '52px', height: '52px', borderRadius: '14px', background: 'rgba(19,96,238,.16)', color: '#5b93ff', display: 'grid', placeItems: 'center', marginBottom: '20px' }}>
+                {tab.icon}
+              </span>
+              <h3 style={{ margin: '0 0 10px', fontSize: 'clamp(17px,1.8vw,21px)', fontWeight: 800, color: '#fff', letterSpacing: '-.01em' }}>{tab.headline}</h3>
+              <p style={{ margin: '0 0 26px', fontSize: '14px', lineHeight: 1.7, color: 'rgba(255,255,255,.62)', maxWidth: '42ch' }}>{tab.body}</p>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '18px' }}>
+                <div>
+                  <div style={{ fontSize: '26px', fontWeight: 800, color: '#fff', letterSpacing: '-.01em' }}>{tab.stat.value}</div>
+                  <div style={{ fontSize: '12px', color: 'rgba(255,255,255,.5)', marginTop: '2px' }}>{tab.stat.sub}</div>
+                </div>
+                <Link href={tab.cta.href} style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '7px',
+                  background: '#1360ee', color: '#fff', fontSize: '13.5px', fontWeight: 700,
+                  padding: '12px 20px', borderRadius: '999px', textDecoration: 'none',
+                  transition: `background .2s ${EASE}, transform .2s ${EASE}`,
+                }}>
+                  {tab.cta.label} →
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  )
+}

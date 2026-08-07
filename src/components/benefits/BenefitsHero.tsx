@@ -63,8 +63,14 @@ export default function BenefitsHero() {
         }
         /* The one word that carries the page. Weight and colour do the emphasis —
            no gradient fill, which at this size reads as decoration rather than
-           as meaning. */
-        .bgt-title em { font-style: normal; color: #0a89dd; }
+           as meaning.
+
+           #1360ee, the theme blue, not the #0a89dd sky accent this used to use.
+           The sky tone is an eyebrow/hairline colour: against white it only
+           reaches 3.7:1, which is under AA and visibly washes out at display
+           size. The theme blue reaches 5.3:1 and matches the emphasis colour
+           every other hero on the site uses. */
+        .bgt-title em { font-style: normal; color: #1360ee; }
 
         .bgt-lead {
           margin: clamp(22px,3vw,30px) 0 0; max-width: 62ch;

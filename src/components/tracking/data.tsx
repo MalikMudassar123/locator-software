@@ -59,9 +59,15 @@ export const USE_CASES: UseCase[] = [
   },
 ]
 
-export type Voice = { quote: string; company: string; person: string; role: string }
+/**
+ * `rating` is not invented here — these same four quotes already carry
+ * `rating: 5` in components/service/serviceTestimonials.ts, which is what the
+ * gps-tracker / car-tracker pages publish. Carrying the figure across keeps the
+ * two surfaces telling the same story.
+ */
+export type Voice = { quote: string; company: string; person: string; role: string; logo: string; rating: number }
 
-/** Customer quotes, carried over verbatim. */
+/** Customer quotes, carried over verbatim, each with the client's own mark. */
 export const VOICES: Voice[] = [
   {
     quote:
@@ -69,6 +75,8 @@ export const VOICES: Voice[] = [
     company: 'Safari Mall',
     person: 'Shameem',
     role: 'Transport',
+    logo: '/footer_pages_images/safari.png',
+    rating: 5,
   },
   {
     quote:
@@ -76,6 +84,8 @@ export const VOICES: Voice[] = [
     company: 'Med7',
     person: 'Susan',
     role: 'Manager',
+    logo: '/footer_pages_images/med.png',
+    rating: 5,
   },
   {
     quote:
@@ -83,6 +93,8 @@ export const VOICES: Voice[] = [
     company: 'TAD-BEER',
     person: 'Shahid',
     role: 'IT Manager',
+    logo: '/footer_pages_images/tad.png',
+    rating: 5,
   },
   {
     quote:
@@ -90,5 +102,7 @@ export const VOICES: Voice[] = [
     company: 'Blue Rhine',
     person: 'Ahmed',
     role: 'Admin',
+    logo: '/footer_pages_images/blue.png',
+    rating: 5,
   },
 ]

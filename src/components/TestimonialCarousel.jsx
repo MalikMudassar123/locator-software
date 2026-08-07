@@ -375,7 +375,7 @@ function TestimonialCard({ testimonial, delay = 0, isCurrentPage }) {
       <p className="tcard__text">{testimonial.text}</p>
       <div className="tcard__name">{testimonial.name}</div>
       <div className="tcard__avatar">
-        <Avatar src={testimonial.avatar} name={testimonial.name} />
+        <Avatar src={testimonial.avatar} name={testimonial.name} logo={testimonial.logo} />
       </div>
       <style jsx>{`
         .tcard {
@@ -464,7 +464,7 @@ function TestimonialCard({ testimonial, delay = 0, isCurrentPage }) {
   );
 }
 
-function Avatar({ src, name }) {
+function Avatar({ src, name, logo = false }) {
   const [failed, setFailed] = useState(false);
   const initials = name
     .split(" ")
@@ -512,7 +512,26 @@ function Avatar({ src, name }) {
     );
   }
 
-  return <img src={src} alt={name} loading="lazy" onError={() => setFailed(true)} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />;
+  // Faces fill the circle; logos are letterboxed on white and inset so the
+  // wordmark clears the curve. `cover` on a logo crops precisely the part that
+  // identifies the company.
+  return (
+    <img
+      src={src}
+      alt={name}
+      loading="lazy"
+      onError={() => setFailed(true)}
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "block",
+        objectFit: logo ? "contain" : "cover",
+        background: logo ? "#ffffff" : undefined,
+        padding: logo ? "14%" : undefined,
+        boxSizing: "border-box",
+      }}
+    />
+  );
 }
 
 function GoogleLogo() {

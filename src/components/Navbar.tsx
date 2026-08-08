@@ -10,7 +10,7 @@ import { ABOUT_PAGES } from '@/components/about/data'
 import { SERVICE_PAGES } from '@/components/service/data'
 import { SOFTWARE_MODULES } from '@/components/software/modules-data'
 import { INDUSTRY_NAV_ITEMS } from '@/components/industries/industries-nav'
-import WavingHands from '@/components/common/WavingHands'
+import GlassButton from '@/components/common/GlassButton'
 
 const QUOTE_HREF = '/get-a-quote'
 
@@ -487,88 +487,58 @@ export default function Navbar() {
               style={{
                 // One tone, not a spectrum. Multi-hue gradients are the thing that dates
                 // a control fastest; a single blade of light travelling a fine rim is the
-                // current premium read, and it costs the brand nothing because the only
-                // colour on the hero is the light itself. --cta-light is the head of the
-                // blade, --cta-dim the tail it fades out through.
+                // current premium read. --cta-light is the head of the blade, --cta-dim
+                // the tail it fades out through.
                 //
-                // Over the blue hero the light is pure white — maximum value contrast
-                // against the backdrop without introducing a second hue. Over the white
-                // bar white would be invisible, so it becomes the brand blue.
-                // Light on a dark backdrop reads as luminous at almost any strength;
-                // the same effect on white has no darkness to glow into, so every value
-                // below is softer on the light bar. A full-strength blue blade there
-                // stops looking lit and starts looking like a thick drawn outline.
-                '--cta-light': isPanelOpen ? '#3b82f6' : '#ffffff',
-                '--cta-dim': isPanelOpen ? 'rgba(59,130,246,0.20)' : 'rgba(255,255,255,0.32)',
+                // These no longer switch on isPanelOpen. They used to: the face was white,
+                // so on the white bar a white blade had nothing to show against and had to
+                // become blue. The face is now permanently blue glass, and THAT is what the
+                // light plays against — the blade sits on the rim of a dark object in both
+                // states, so a second palette would only mean blue light on a blue pill,
+                // which is the one combination that reads as a drawn outline rather than as
+                // light. Constant light on a constant surface; the bar behind is irrelevant.
+                '--cta-light': '#ffffff',
+                '--cta-dim': 'rgba(255,255,255,0.32)',
                 // Bloom around the filament, same hue as the light so the glow reads as
                 // the light spilling rather than as a separate coloured shadow.
-                '--cta-glow': isPanelOpen ? 'rgba(59,130,246,0.34)' : 'rgba(255,255,255,0.92)',
-                // Halo colours, split from the filament's. Blurring a saturated blue over
-                // white leaves a grey-blue smudge the size of the blur radius; these keep
-                // the halo as a hint while the filament stays crisp. Undefined on the
-                // hero, where the CSS falls back to the values above.
-                ...(isPanelOpen ? {
-                  '--cta-aura-light': 'rgba(59,130,246,0.40)',
-                  '--cta-aura-dim': 'rgba(59,130,246,0.10)',
-                  '--cta-flare-peak': '0.5',
-                } : {}),
-                // The unlit rim. Glass, not metal: a low-alpha tone of the backdrop's own
-                // colour, so between passes the pill reads as a quiet frosted edge instead
-                // of an outline drawn round it. All the drama comes from the light moving
-                // over it, which is what keeps the resting state calm and the motion loud.
-                // Blue-tinted rather than slate on the light bar — a neutral grey rim next
-                // to a blue label just looks dirty.
-                '--cta-track': isPanelOpen ? 'rgba(59,130,246,0.13)' : 'rgba(255,255,255,0.30)',
+                '--cta-glow': 'rgba(255,255,255,0.92)',
+                // The unlit rim. Glass, not metal: a low-alpha white, so between passes the
+                // pill reads as a quiet frosted edge instead of an outline drawn round it.
+                // All the drama comes from the light moving over it, which is what keeps the
+                // resting state calm and the motion loud. On the white bar this band simply
+                // goes quiet against it — which is correct: with a mega-menu open the CTA
+                // should recede, not compete with the panel.
+                '--cta-track': 'rgba(255,255,255,0.30)',
                 // Glass shaping on that rim — a lit top edge and a containing hairline.
                 // Cheap to add and it is what stops the resting state looking like a
                 // plain translucent band between passes of the light.
-                '--cta-edge': isPanelOpen ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.75)',
-                '--cta-hairline': isPanelOpen ? 'rgba(59,130,246,0.20)' : 'rgba(255,255,255,0.22)',
+                '--cta-edge': 'rgba(255,255,255,0.75)',
+                '--cta-hairline': 'rgba(255,255,255,0.22)',
               } as React.CSSProperties}
             >
-              {/* Two hands reaching out from behind the pill and waving. Mounted
-                  before the ring so the lit filament sweeps over them, and inside
-                  the wrap so they inherit the breathe and the hover lift — hands
-                  that move with the button is what stops them looking pasted on.
-                  Decorative and pointer-events:none throughout: the button's own
-                  hit area and label are untouched. See .cta-hand in globals.css. */}
-              <WavingHands />
               <span className="nav-cta-ring" aria-hidden="true" />
-              <button
-                className="nav-cta-pulse"
-                style={{
-                  // Barely-there vertical gradient rather than flat #fff — it catches the
-                  // eye as a lit surface instead of a paper cut-out. No transform here:
-                  // the wrap owns the hover lift, and a static offset on the button would
-                  // push it off-centre inside the ring and make the band uneven.
-                  background: 'linear-gradient(180deg, #ffffff 0%, #f4f8fd 100%)',
-                  color: '#0a89dd',
-                  border: 'none',
-                  // Size + shape matched to the software navbar's .swn-cta pill.
-                  borderRadius: '999px',
-                  padding: 'var(--nav-cta-py) max(22px, min(0.66vw + 11.7px, 29px))',
-                  fontSize: 'var(--nav-link)',
-                  fontWeight: 700,
-                  fontFamily: 'inherit',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                  letterSpacing: '0.015em',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  lineHeight: 1,
-                }}
+              {/* Liquid-glass face. Replaces the white pill that used to live here;
+                  it keeps that pill's exact padding, font size and radius (see
+                  .glass-btn in globals.css) so the ring band and the nav row's
+                  geometry are unchanged.
+
+                  One palette in both bar states — deliberately NOT `inverted`
+                  when the bar goes white. The pill is opaque (the canvas is
+                  translucent but paints over a solid blue ground beneath it), so
+                  it holds its own contrast on white without a second identity,
+                  and the CTA stays the same object whether or not a mega-menu is
+                  open. The `inverted` prop is still there for placing this button
+                  on a light page body, where it has no lit rim to separate it.
+
+                  Slower and slightly under full strength: at nav size the glass
+                  is background texture behind a label, not the subject. */}
+              <GlassButton
+                speed="4.6s"
+                intensity={0.85}
                 onMouseEnter={() => setCtaHover(true)}
                 onMouseLeave={() => setCtaHover(false)}
                 onClick={() => router.push(QUOTE_HREF)}
               >
-                {/* Idle sheen. A real element rather than a third pseudo — the
-                    button's ::before is the hover wipe and its ::after is the
-                    cursor light, both already spoken for. Sits on z-index -1 so
-                    it passes under the label, and the button's own overflow:hidden
-                    is what keeps it inside the pill's radius. Purely decorative;
-                    see .nav-cta-shine in globals.css. */}
-                <span className="nav-cta-shine" aria-hidden="true" />
                 <span
                   aria-hidden="true"
                   style={{
@@ -597,24 +567,12 @@ export default function Navbar() {
                 <span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>
                   Get a Quote
                 </span>
-              </button>
+              </GlassButton>
 
-              {/* Sparks. Two four-point glints that pop on the flare beat, the second
-                  offset so they fire in sequence rather than together — a single
-                  synchronised pair reads as decoration, a staggered one reads as an
-                  event happening. Drawn as SVG rather than CSS shapes because a true
-                  concave star needs curves, and a gradient-built one always reads as
-                  a plus sign. */}
-              <span className="nav-cta-spark nav-cta-spark--a" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 0c.6 6.6 4.8 10.8 12 12-7.2 1.2-11.4 5.4-12 12-.6-6.6-4.8-10.8-12-12C7.2 10.8 11.4 6.6 12 0Z" />
-                </svg>
-              </span>
-              <span className="nav-cta-spark nav-cta-spark--b" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 0c.6 6.6 4.8 10.8 12 12-7.2 1.2-11.4 5.4-12 12-.6-6.6-4.8-10.8-12-12C7.2 10.8 11.4 6.6 12 0Z" />
-                </svg>
-              </span>
+              {/* The two spark glints that used to fire off the rim here went with the
+                  hands. They were the playful layer on a plain white pill; against a
+                  moving glass face they are one animation too many. .nav-cta-spark
+                  is still in globals.css if they are ever wanted back. */}
             </div>
             </div>
 

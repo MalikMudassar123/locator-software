@@ -3370,3 +3370,268 @@ h6 {
   .skip-btn--up:hover .skip-btn__chevron { transform: rotate(180deg); }
 }
 
+
+/* ══════════════════════════════════════════════════════════════════════════
+   GLASS BUTTON  (components/common/GlassButton.tsx)
+
+   The face of the nav CTA. A <canvas> of drifting light blobs is the surface;
+   everything below is the glass sitting on top of it — a gloss arc across the
+   crown, a curved bounce reflection inside the bottom edge, and the label.
+
+   Sizing is copied verbatim from the white pill this replaced (same
+   --nav-cta-py, same fluid horizontal padding, same --nav-link size, same
+   999px radius) so the ring, the hands and the row geometry are untouched.
+   ═════════════════════════════════════════════════════════════════════════ */
+.glass-btn {
+  /* Declared here as well as inline, so the button is correct if it is ever
+     used without props. */
+  --ai-pulse-speed: 3.5s;
+  --ai-intensity: 1;
+  /* Deliberately not a multiple of --ai-pulse-speed. If the gloss breathe and the
+     sheen sweep share a factor they lock into one beat within a few cycles and the
+     button starts to look like it is pulsing on a metronome; leaving the periods
+     coprime keeps the two events drifting past each other. */
+  --ai-sheen-speed: 5.6s;
+
+  position: relative;
+  /* Own stacking context: the layers below index against each other, not
+     against the navbar, and overflow clips the canvas to the pill's radius. */
+  isolation: isolate;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: var(--nav-cta-py) max(22px, min(0.66vw + 11.7px, 29px));
+  border: none;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: var(--nav-link);
+  font-weight: 700;
+  letter-spacing: 0.015em;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  color: #ffffff;
+
+  /* Ground under the canvas. Not decoration — it is what the button looks like
+     for the frame before the first rAF, with JS disabled, and behind the
+     canvas's own translucent fill. Matches the gradient the canvas paints. */
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 55%, #60a5fa 100%);
+
+  /* Glass edges: a lit crown, a shaded sill, then contact and ambient shadow.
+     The inner pair is what stops a translucent surface reading as a flat
+     coloured rectangle. */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, calc(0.55 * var(--ai-intensity))),
+    inset 0 -1px 0 rgba(8, 25, 60, 0.28),
+    0 1px 2px rgba(12, 38, 80, 0.18),
+    0 8px 20px -8px rgba(12, 38, 80, calc(0.45 * var(--ai-intensity)));
+  transition:
+    box-shadow 0.4s cubic-bezier(0.22, 0.61, 0.36, 1),
+    color 0.24s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark glass, for when the bar behind it goes white. Same construction, cooler
+   ground; the canvas swaps to slate with cyan blobs to match. */
+.glass-btn--inverted {
+  color: #f1f5f9;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #334155 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, calc(0.28 * var(--ai-intensity))),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+    0 1px 2px rgba(8, 20, 45, 0.22),
+    0 8px 20px -8px rgba(8, 20, 45, calc(0.5 * var(--ai-intensity)));
+}
+
+/* No hover lift here: .nav-cta-wrap already owns the translate/scale for this
+   control, and a second transform on the child would double it. This is only
+   the shadow deepening under a button that has already risen. */
+.glass-btn:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, calc(0.7 * var(--ai-intensity))),
+    inset 0 -1px 0 rgba(8, 25, 60, 0.3),
+    0 2px 4px rgba(12, 38, 80, 0.2),
+    0 18px 34px -10px rgba(12, 38, 80, calc(0.55 * var(--ai-intensity)));
+}
+
+.glass-btn__canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  pointer-events: none;
+  /* Half a pixel of blur. The blobs are already soft radial gradients, but at
+     nav size their outer rings still band slightly against each other; this
+     melts fourteen discs into one moving surface. */
+  filter: blur(0.5px);
+}
+
+/* Crown gloss. Asymmetric radii — round at the top where it meets the pill's
+   edge, flattened ellipse at the bottom where it dissolves — because a plain
+   rectangle of white fading downward reads as a gradient overlay, and a curved
+   one reads as light sitting on a domed surface. */
+.glass-btn__gloss {
+  position: absolute;
+  z-index: 1;
+  top: 1px;
+  left: 6%;
+  right: 6%;
+  height: 46%;
+  border-radius: 999px 999px 60% 60% / 999px 999px 100% 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 255, 255, 0.16) 55%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
+  /* The breathe. Opacity rather than transform or box-shadow: the wrap outside
+     is already animating transform, and a second animated transform on a child
+     compounds into a wobble. --ai-pulse-speed is the whole reason the prop
+     exists, so it drives this. */
+  animation: glassBtnGloss var(--ai-pulse-speed) ease-in-out infinite;
+}
+
+/* Bounce light inside the bottom edge — the second reflection real glass has,
+   thrown back up off the far wall. An ellipse hung mostly below the pill so
+   only its top arc is inside the clip. */
+.glass-btn__reflection {
+  position: absolute;
+  z-index: 1;
+  left: 10%;
+  right: 10%;
+  bottom: -34%;
+  height: 74%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0.1) 42%,
+    rgba(255, 255, 255, 0) 72%
+  );
+  opacity: calc(0.9 * var(--ai-intensity));
+  pointer-events: none;
+}
+.glass-btn--inverted .glass-btn__reflection {
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(125, 211, 252, 0.28) 0%,
+    rgba(56, 189, 248, 0.1) 44%,
+    rgba(56, 189, 248, 0) 74%
+  );
+}
+
+/* Specular sweep. The pill holds still for most of the cycle, then one band of
+   white crosses it and is gone — a polished object catching a light as you walk
+   past it. This is the beat the eye actually notices; the canvas and the gloss
+   are the surface it happens ON.
+
+   Two things make it read as a reflection rather than as a loading shimmer.
+   First, the duty cycle: ~2.4s of travel against ~3.2s of stillness. The
+   instinct is to make it quick and repeat it often, and that is exactly what
+   skeleton loaders do. Second, the angle — a vertical band crossing a pill
+   reads as a wiper, a skewed one reads as light.
+
+   Unlike the white pill that used to be here, this face is a mid-blue, so the
+   sheen can work by BRIGHTNESS. That is why the core is near-opaque white here
+   where the old .nav-cta-shine had to fake it with hue: on white there was no
+   headroom left to brighten into, and a white-on-white sweep just read as the
+   button blinking. */
+.glass-btn__sheen {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  /* Wide enough for gradual ramps at nav size. A narrow band has to be bright to
+     register at all, which is the opposite of what a reflection looks like. */
+  width: 42%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 28%,
+    rgba(255, 255, 255, 0.38) 44%,
+    /* The specular hit: one thin near-opaque gleam, a few percent of the band. */
+    rgba(255, 255, 255, 0.92) 51%,
+    rgba(255, 255, 255, 0.34) 58%,
+    rgba(255, 255, 255, 0.08) 76%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  filter: blur(0.5px);
+  /* Sweep and fade split across two animations on one period, rather than one
+     with more keyframes. The fade needs hold points partway through; putting
+     those on a shared timeline would chop the travel into three separately-eased
+     segments and turn a glide into a stutter. Split, each interpolates once. */
+  animation:
+    glassBtnSheenSweep var(--ai-sheen-speed) cubic-bezier(0.45, 0, 0.25, 1) infinite,
+    glassBtnSheenFade var(--ai-sheen-speed) ease-in-out infinite;
+}
+/* Cyan rather than white on dark glass — pure white over slate reads as a hole
+   punched in the surface, a tinted gleam reads as the surface being lit. */
+.glass-btn--inverted .glass-btn__sheen {
+  background: linear-gradient(
+    100deg,
+    rgba(224, 242, 254, 0) 0%,
+    rgba(224, 242, 254, 0.08) 28%,
+    rgba(186, 230, 253, 0.3) 44%,
+    rgba(255, 255, 255, 0.7) 51%,
+    rgba(186, 230, 253, 0.26) 58%,
+    rgba(224, 242, 254, 0.06) 76%,
+    rgba(224, 242, 254, 0) 100%
+  );
+}
+/* On approach the cycle tightens so the sweep answers the cursor instead of
+   making it wait out the idle gap. Same duration-only override the sparks used. */
+.glass-btn:hover .glass-btn__sheen { animation-duration: 1.9s; }
+
+.glass-btn__text {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* The blobs drift under the label, so its contrast is not constant. A tight
+     shadow keeps the type legible over the light passes without reading as a
+     drop shadow over the dark ones. */
+  text-shadow: 0 1px 2px rgba(6, 20, 50, 0.38);
+}
+
+@keyframes glassBtnGloss {
+  0%, 100% { opacity: calc(0.6 * var(--ai-intensity)); }
+  50%      { opacity: calc(0.95 * var(--ai-intensity)); }
+}
+
+/* Starts and ends fully off the face — the band is 42% wide and skewed, so it
+   needs to clear its own corners before the fade lets go of it, or the sweep
+   appears to start mid-pill. */
+@keyframes glassBtnSheenSweep {
+  0%, 56% { transform: translateX(-180%) skewX(-18deg); }
+  100%    { transform: translateX(420%) skewX(-18deg); }
+}
+@keyframes glassBtnSheenFade {
+  0%, 56% { opacity: 0; }
+  66%     { opacity: var(--ai-intensity); }
+  86%     { opacity: var(--ai-intensity); }
+  100%    { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The canvas stops itself (one static frame, no rAF — see GlassButton.tsx);
+     this is the CSS half. Held at the midpoint so the glass still looks lit. */
+  .glass-btn__gloss {
+    animation: none;
+    opacity: calc(0.78 * var(--ai-intensity));
+  }
+  /* The sheen has no meaningful resting state — a band frozen mid-pill is just a
+     stripe — so it goes rather than pausing. */
+  .glass-btn__sheen {
+    animation: none;
+    opacity: 0;
+  }
+}

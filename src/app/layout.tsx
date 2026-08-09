@@ -36,7 +36,12 @@ const inter = localFont({
   variable: "--font-inter",
   display: "swap",
   src: [
-    { path: "./fonts/Inter-Variable.woff2", weight: "400 600", style: "normal" },
+    // Range widened 600 -> 700 for the Get a Quote pill, which the reference
+    // renders at bold. This is a descriptor, not a subset: the same file backs
+    // it either way, so nothing that already asks for 400-600 changes. If the
+    // file's wght axis genuinely stops short of 700 the browser clamps and we
+    // get 600 back, which is the previous behaviour rather than a regression.
+    { path: "./fonts/Inter-Variable.woff2", weight: "400 700", style: "normal" },
   ],
 });
 

@@ -445,136 +445,53 @@ export default function Navbar() {
               style={{ border: isPanelOpen ? '2px solid #e2e7f0' : '2px solid rgba(255,255,255,0.3)' }}
             />
 
-            {/* Get a Quote — desktop. A single blade of light travels around the pill's
-                rim: a conic gradient rotated via a registered @property angle, masked
-                down to the border band, with a blurred copy underneath for the halo.
-                See .nav-cta-ring / .nav-cta-wrap::before in globals.css. */}
-            {/* Pointer layer. Owns the tilt, the magnetic pull and the position of the
-                cursor light; the wrap inside owns the looping breathe. They have to be
-                separate elements because a CSS animation on `transform` wins over any
-                declared transform, so tilt and breathe on one element cannot coexist.
-                Vars are written straight onto the node rather than through state — this
-                fires on every mousemove, and a re-render per frame would be absurd. */}
-            <div
-              className="hidden sm:inline-flex nav-cta-tilt"
-              onMouseMove={(e) => {
-                const el = e.currentTarget
-                const r = el.getBoundingClientRect()
-                const x = (e.clientX - r.left) / r.width
-                const y = (e.clientY - r.top) / r.height
-                el.style.setProperty('--mx', `${x * 100}%`)
-                el.style.setProperty('--my', `${y * 100}%`)
-                // Rotate away from the cursor on the vertical axis, toward it on the
-                // horizontal — the combination reads as a solid object being looked at
-                // from an angle rather than a card flopping about.
-                el.style.setProperty('--ty', `${(x - 0.5) * 15}deg`)
-                el.style.setProperty('--tx', `${(0.5 - y) * 11}deg`)
-                el.style.setProperty('--pull-x', `${(x - 0.5) * 7}px`)
-                el.style.setProperty('--pull-y', `${(y - 0.5) * 5}px`)
-              }}
-              onMouseLeave={(e) => {
-                const el = e.currentTarget
-                el.style.setProperty('--tx', '0deg')
-                el.style.setProperty('--ty', '0deg')
-                el.style.setProperty('--pull-x', '0px')
-                el.style.setProperty('--pull-y', '0px')
-                el.style.setProperty('--mx', '50%')
-                el.style.setProperty('--my', '50%')
-              }}
-            >
-            <div
-              className="inline-flex items-center justify-center nav-cta-wrap"
-              style={{
-                // One tone, not a spectrum. Multi-hue gradients are the thing that dates
-                // a control fastest; a single blade of light travelling a fine rim is the
-                // current premium read. --cta-light is the head of the blade, --cta-dim
-                // the tail it fades out through.
-                //
-                // These no longer switch on isPanelOpen. They used to: the face was white,
-                // so on the white bar a white blade had nothing to show against and had to
-                // become blue. The face is now permanently blue glass, and THAT is what the
-                // light plays against — the blade sits on the rim of a dark object in both
-                // states, so a second palette would only mean blue light on a blue pill,
-                // which is the one combination that reads as a drawn outline rather than as
-                // light. Constant light on a constant surface; the bar behind is irrelevant.
-                '--cta-light': '#ffffff',
-                '--cta-dim': 'rgba(255,255,255,0.32)',
-                // Bloom around the filament, same hue as the light so the glow reads as
-                // the light spilling rather than as a separate coloured shadow.
-                '--cta-glow': 'rgba(255,255,255,0.92)',
-                // The unlit rim. Glass, not metal: a low-alpha white, so between passes the
-                // pill reads as a quiet frosted edge instead of an outline drawn round it.
-                // All the drama comes from the light moving over it, which is what keeps the
-                // resting state calm and the motion loud. On the white bar this band simply
-                // goes quiet against it — which is correct: with a mega-menu open the CTA
-                // should recede, not compete with the panel.
-                '--cta-track': 'rgba(255,255,255,0.30)',
-                // Glass shaping on that rim — a lit top edge and a containing hairline.
-                // Cheap to add and it is what stops the resting state looking like a
-                // plain translucent band between passes of the light.
-                '--cta-edge': 'rgba(255,255,255,0.75)',
-                '--cta-hairline': 'rgba(255,255,255,0.22)',
-              } as React.CSSProperties}
-            >
-              <span className="nav-cta-ring" aria-hidden="true" />
-              {/* Liquid-glass face. Replaces the white pill that used to live here;
-                  it keeps that pill's exact padding, font size and radius (see
-                  .glass-btn in globals.css) so the ring band and the nav row's
-                  geometry are unchanged.
+            {/* Get a Quote — desktop. Built to a supplied reference image; the whole
+                appearance lives in .glass-btn in globals.css.
 
-                  One palette in both bar states — deliberately NOT `inverted`
-                  when the bar goes white. The pill is opaque (the canvas is
-                  translucent but paints over a solid blue ground beneath it), so
-                  it holds its own contrast on white without a second identity,
-                  and the CTA stays the same object whether or not a mega-menu is
-                  open. The `inverted` prop is still there for placing this button
-                  on a light page body, where it has no lit rim to separate it.
-
-                  Slower and slightly under full strength: at nav size the glass
-                  is background texture behind a label, not the subject. */}
-              <GlassButton
-                speed="4.6s"
-                intensity={0.85}
-                onMouseEnter={() => setCtaHover(true)}
-                onMouseLeave={() => setCtaHover(false)}
-                onClick={() => router.push(QUOTE_HREF)}
+                The pointer-tilt layer, the breathing wrap and the rotating light-blade
+                ring that used to sit around this button are gone. None of them appear
+                in the reference, and the ring in particular fought it: the reference's
+                rim is a fixed reflection of one light off the right-hand cap, not a
+                filament travelling the circumference. Their CSS is still in globals.css,
+                unused, alongside .nav-cta-pulse and .nav-cta-spark. */}
+            <GlassButton
+              className="hidden sm:inline-flex"
+              onMouseEnter={() => setCtaHover(true)}
+              onMouseLeave={() => setCtaHover(false)}
+              onClick={() => router.push(QUOTE_HREF)}
+            >
+              {/* Hover label roll. Kept because it is invisible at rest, so the button
+                  still matches the reference still exactly; the reference shows no
+                  hover state, and this was the behaviour here before the reskin. */}
+              <span
+                aria-hidden="true"
+                style={{
+                  display: 'block',
+                  height: CTA_LINE_HEIGHT,
+                  overflow: 'hidden',
+                  position: 'relative',
+                }}
               >
                 <span
-                  aria-hidden="true"
                   style={{
                     display: 'block',
-                    height: CTA_LINE_HEIGHT,
-                    overflow: 'hidden',
-                    position: 'relative',
+                    transition: 'transform 0.55s cubic-bezier(0.65, 0, 0.35, 1)',
+                    transform: ctaHover ? `translateY(-${CTA_LINE_HEIGHT})` : 'translateY(0)',
+                    willChange: 'transform',
                   }}
                 >
-                  <span
-                    style={{
-                      display: 'block',
-                      transition: 'transform 0.55s cubic-bezier(0.65, 0, 0.35, 1)',
-                      transform: ctaHover ? `translateY(-${CTA_LINE_HEIGHT})` : 'translateY(0)',
-                      willChange: 'transform',
-                    }}
-                  >
-                    <span style={{ display: 'block', height: CTA_LINE_HEIGHT, lineHeight: CTA_LINE_HEIGHT }}>
-                      Get a Quote
-                    </span>
-                    <span style={{ display: 'block', height: CTA_LINE_HEIGHT, lineHeight: CTA_LINE_HEIGHT }}>
-                      Get a Quote
-                    </span>
+                  <span style={{ display: 'block', height: CTA_LINE_HEIGHT, lineHeight: CTA_LINE_HEIGHT }}>
+                    Get a Quote
+                  </span>
+                  <span style={{ display: 'block', height: CTA_LINE_HEIGHT, lineHeight: CTA_LINE_HEIGHT }}>
+                    Get a Quote
                   </span>
                 </span>
-                <span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>
-                  Get a Quote
-                </span>
-              </GlassButton>
-
-              {/* The two spark glints that used to fire off the rim here went with the
-                  hands. They were the playful layer on a plain white pill; against a
-                  moving glass face they are one animation too many. .nav-cta-spark
-                  is still in globals.css if they are ever wanted back. */}
-            </div>
-            </div>
+              </span>
+              <span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>
+                Get a Quote
+              </span>
+            </GlassButton>
 
             {/* Hamburger — visible below lg */}
             <button
@@ -821,24 +738,15 @@ export default function Navbar() {
                 United Arab Emirates
               </span>
             </div>
-            <button
-              style={{
-                background: '#ffffff',
-                color: '#0a89dd',
-                border: 'none',
-                borderRadius: '12px',
-                padding: '16px',
-                fontSize: '15px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                width: '100%',
-                letterSpacing: '0.01em',
-                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.18)',
-              }}
+            {/* Same button as the desktop bar, full width. The reference shows one
+                design, so the drawer does not get a second one — only the width and
+                the fixed padding change (see .glass-btn--block in globals.css). */}
+            <GlassButton
+              className="glass-btn--block"
               onClick={() => { setOpen(false); router.push(QUOTE_HREF) }}
             >
               Get a Quote
-            </button>
+            </GlassButton>
           </div>
         </div>,
         document.body

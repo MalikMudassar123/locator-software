@@ -454,8 +454,15 @@ export default function Navbar() {
                 rim is a fixed reflection of one light off the right-hand cap, not a
                 filament travelling the circumference. Their CSS is still in globals.css,
                 unused, alongside .nav-cta-pulse and .nav-cta-spark. */}
+            {/* Spacing and the small-screen hide both live in .glass-btn--nav,
+                not in Tailwind utilities here — see the note on that rule in
+                globals.css. In short: this file's unlayered `* { margin: 0 }`
+                and .glass-btn's own unlayered `display` beat anything Tailwind
+                puts in @layer utilities, so `ml-5` and `hidden` were no-ops.
+                The margin goes on the button rather than widening the row's
+                gap-3, which also separates the button from the hamburger. */}
             <GlassButton
-              className="hidden sm:inline-flex"
+              className="glass-btn--nav"
               onMouseEnter={() => setCtaHover(true)}
               onMouseLeave={() => setCtaHover(false)}
               onClick={() => router.push(QUOTE_HREF)}

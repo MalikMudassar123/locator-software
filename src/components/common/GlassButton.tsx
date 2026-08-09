@@ -28,6 +28,8 @@ export interface GlassButtonProps extends ButtonHTMLAttributes<HTMLButtonElement
   sheenSpeed?: string
   /** Seconds for one lap of the light travelling the rim. */
   traceSpeed?: string
+  /** Period of one full pulse, contraction and release. */
+  beatSpeed?: string
   /** 0.5–1.5. Scales the sweep's peak and the outward bloom together. */
   intensity?: number
 }
@@ -37,6 +39,7 @@ export default function GlassButton({
   className = '',
   sheenSpeed = '5.6s',
   traceSpeed = '4.8s',
+  beatSpeed = '2.4s',
   intensity = 1,
   ...props
 }: GlassButtonProps) {
@@ -46,6 +49,7 @@ export default function GlassButton({
       style={{
         '--ai-sheen-speed': sheenSpeed,
         '--ai-trace-speed': traceSpeed,
+        '--ai-beat-speed': beatSpeed,
         '--ai-intensity': intensity,
       } as React.CSSProperties}
       {...props}

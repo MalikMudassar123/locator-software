@@ -3393,6 +3393,11 @@ h6 {
      the face sweep sync up within a few cycles, and two lights arriving together
      on a beat is the difference between a lit object and a blinking one. */
   --ai-trace-speed: 4.8s;
+  /* Now that the pulse runs continuously the period has to stretch a little:
+     the same 2.2s felt brisk with a pause in it and restless without one. 2.4s
+     is the width where the rise still has some snap but the button never looks
+     like it is hurrying. */
+  --ai-beat-speed: 2.4s;
   --ai-intensity: 1;
 
   position: relative;
@@ -3485,16 +3490,30 @@ h6 {
       rgba(4, 18, 74, 0.09) 74%,
       rgba(4, 18, 74, 0.2) 100%
     ),
+    /* Thinned further, on request — roughly a fifth of the hero now reads
+       through instead of a tenth. Alpha still climbs toward the cyan end: the
+       deep blue has contrast to spare, while the bright cap would go washy and
+       lose the filament's ground if it thinned by the same amount. */
     linear-gradient(
       96deg,
-      #2649e6 0%,
-      #2457ea 22%,
-      #1e6eec 42%,
-      #1a85f0 58%,
-      #12a6f4 78%,
-      #10bcf7 92%,
-      #1ccbf9 100%
+      rgba(38, 73, 230, 0.76) 0%,
+      rgba(36, 87, 234, 0.765) 22%,
+      rgba(30, 110, 236, 0.775) 42%,
+      rgba(26, 133, 240, 0.785) 58%,
+      rgba(18, 166, 244, 0.795) 78%,
+      rgba(16, 188, 247, 0.815) 92%,
+      rgba(28, 203, 249, 0.82) 100%
     );
+
+  /* What turns the transparency into glass rather than into a faded button.
+     The hero behind this is not a flat colour — it has a skyline, clouds and
+     vehicles in it, and at 88% those would show through as recognisable shapes
+     and make the label harder to read. Blurring the backdrop keeps the hero's
+     COLOUR coming through, which is the part that was asked for, and discards
+     its detail, which is the part that would be noise. Saturate compensates for
+     the blur averaging the hue toward grey. */
+  backdrop-filter: blur(6px) saturate(1.2);
+  -webkit-backdrop-filter: blur(6px) saturate(1.2);
 
   /* EVERY LENGTH BELOW IS SCALED FOR A ~48px BUTTON, not for the reference.
      This is the thing that was actually washing the face out. The reference
@@ -3530,6 +3549,27 @@ h6 {
     inset -3px -3px 10px -9px rgba(6, 22, 88, 0.7);
 
   transition: box-shadow 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
+  animation: glassBtnBeat var(--ai-beat-speed) ease-in-out infinite;
+}
+
+/* Continuous pulse — no rest between strokes.
+
+   The two earlier versions (lub-dub, then a single stroke with a long pause)
+   both spent most of the cycle stationary, which made the movement arrive as an
+   event. Removing the pause changes what it is: the button is now always in
+   motion, so nothing ever announces itself.
+
+   The one thing kept from the beat is asymmetry. The peak sits at 38%, not 50%,
+   so with ease-in-out the rise is noticeably quicker than the fall. A perfectly
+   symmetric oscillation is a throb; a fast contraction easing into a slow
+   release is what still reads as a pulse even with the silence taken out.
+
+   3.2% amplitude — a touch under the resting version, because continuous motion
+   is more conspicuous than intermittent motion of the same size. transform
+   only, so nothing in the row reflows. */
+@keyframes glassBtnBeat {
+  0%, 100% { transform: scale(1); }
+  38%      { transform: scale(1.032); }
 }
 
 /* Both hairlines use the band trick .nav-cta-ring already uses in this file:
@@ -3855,6 +3895,29 @@ h6 {
     inset 0 -1px 0 rgba(255, 255, 255, 0.18);
 }
 
+/* The navbar instance.
+   Both of these have to be written here, unlayered, rather than as Tailwind
+   utilities on the element — and the reason is worth knowing before touching
+   this button again. `* { margin: 0 }` near the top of this file is UNLAYERED,
+   .glass-btn's own `display: inline-flex` is unlayered, and Tailwind v4 emits
+   its utilities inside @layer utilities. An unlayered rule beats a layered one
+   outright, whatever the specificity. So `ml-5` and `hidden` on this button
+   both silently did nothing: the margin lost to the star reset, and `hidden`
+   lost to .glass-btn's own display, which meant the desktop CTA was rendering
+   on mobile alongside the drawer's copy of it. The .hn-* rules further up this
+   file use the same trap on purpose. */
+.glass-btn--nav {
+  /* On top of the row's gap-3, so 32px of clear air between flag and pill. */
+  margin-left: 20px;
+}
+/* Below Tailwind's sm (40rem) the drawer carries the CTA, so the bar's copy
+   goes. Hand-written media query for the reason above. */
+@media (max-width: 39.99rem) {
+  .glass-btn--nav {
+    display: none;
+  }
+}
+
 /* Full-width variant for the mobile drawer. Same skin, same radius, same type:
    the reference shows one button, so there is no second design for small
    screens. Only the width and the fixed padding differ, because the drawer's
@@ -3885,5 +3948,11 @@ h6 {
   .glass-btn__trace-head {
     animation: none;
     opacity: 0;
+  }
+  /* The beat is exactly the kind of unprompted looping motion this query exists
+     to stop. Killing the animation leaves scale(1), which is the correct
+     resting state, so nothing else is needed. */
+  .glass-btn {
+    animation: none;
   }
 }

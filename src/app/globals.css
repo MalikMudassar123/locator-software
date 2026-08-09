@@ -3410,18 +3410,22 @@ h6 {
   align-items: center;
   justify-content: center;
 
-  /* Geometry. The reference button is ~3.3 : 1, its cap height is ~33% of its
-     height, and its side padding is ~0.6x its height; these three keep those
-     ratios while running a few pixels larger than the pill this replaced.
+  /* Geometry, matched to .swn-cta — the Get a quote pill on the software page
+     navbar (SoftwareNavbar.tsx). These three are its values verbatim, so the two
+     buttons are the same size and shape at every viewport width. The earlier
+     +3px / +1.5px offsets are gone; they are what had drifted the two apart.
 
-     Derived from the nav tokens with an offset rather than set as flat pixels,
-     and NOT by editing the tokens themselves — --nav-cta-py is shared with
-     .swn-cta on the software navbar and --nav-link drives every nav link, so
-     changing either to grow this one button would move things it has no
-     business moving. calc() on top keeps the fluid viewport tracking intact. */
+     Kept as named tokens rather than inlined so the pairing is visible, and NOT
+     folded back into --nav-cta-py / --nav-link themselves: those are shared with
+     .swn-cta and with every nav link, so anything set through them would move
+     far more than this button.
+
+     line-height:1 here plus the 1.2em label roll in Navbar.tsx gives the same
+     content height as .swn-cta's plain text on its default ~1.2 line box, which
+     is what makes the heights agree and not just the padding. */
   --gq-py: var(--nav-cta-py);
-  --gq-px: calc(max(22px, min(0.66vw + 11.7px, 29px)) + 3px);
-  --gq-fs: calc(var(--nav-link) + 1.5px);
+  --gq-px: max(22px, min(0.66vw + 11.7px, 29px));
+  --gq-fs: var(--nav-link);
   padding: var(--gq-py) var(--gq-px);
   border: none;
   border-radius: 999px;
@@ -3446,6 +3450,7 @@ h6 {
   /* The reference sets tighter than the old pill's +0.015em. */
   letter-spacing: -0.01em;
   line-height: 1;
+  /* Label colour from a376d0a, restored with the face. */
   color: #ffffff;
   /* One tight specular pass and nothing else. A wide halo was tried here and
      removed: at any useful alpha the per-glyph shadows of an eleven-character
@@ -3490,30 +3495,13 @@ h6 {
       rgba(4, 18, 74, 0.09) 74%,
       rgba(4, 18, 74, 0.2) 100%
     ),
-    /* Thinned further, on request — roughly a fifth of the hero now reads
-       through instead of a tenth. Alpha still climbs toward the cyan end: the
-       deep blue has contrast to spare, while the bright cap would go washy and
-       lose the filament's ground if it thinned by the same amount. */
-    linear-gradient(
-      96deg,
-      rgba(38, 73, 230, 0.76) 0%,
-      rgba(36, 87, 234, 0.765) 22%,
-      rgba(30, 110, 236, 0.775) 42%,
-      rgba(26, 133, 240, 0.785) 58%,
-      rgba(18, 166, 244, 0.795) 78%,
-      rgba(16, 188, 247, 0.815) 92%,
-      rgba(28, 203, 249, 0.82) 100%
-    );
+    /* Face colour taken verbatim from commit a376d0a, as requested. 135deg and
+       three stops, exactly as it was there — not re-derived, not re-sampled.
 
-  /* What turns the transparency into glass rather than into a faded button.
-     The hero behind this is not a flat colour — it has a skyline, clouds and
-     vehicles in it, and at 88% those would show through as recognisable shapes
-     and make the label harder to read. Blurring the backdrop keeps the hero's
-     COLOUR coming through, which is the part that was asked for, and discards
-     its detail, which is the part that would be noise. Saturate compensates for
-     the blur averaging the hue toward grey. */
-  backdrop-filter: blur(6px) saturate(1.2);
-  -webkit-backdrop-filter: blur(6px) saturate(1.2);
+       Opaque, with no backdrop-filter: that is how it was in a376d0a, and it is
+       also what the colour needs. A translucent face samples the hero behind it
+       and comes back a different colour than the one asked for. */
+    linear-gradient(135deg, #2563eb 0%, #3b82f6 55%, #60a5fa 100%);
 
   /* EVERY LENGTH BELOW IS SCALED FOR A ~48px BUTTON, not for the reference.
      This is the thing that was actually washing the face out. The reference
@@ -3855,11 +3843,14 @@ h6 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  /* Shine, done with two tight shadows. Both radii are deliberately small:
-     a contact shadow under the baseline for weight, and a 3px cool sheen that
-     is narrower than the gaps between characters.
+  /* Shine, done with two tight shadows: a contact shadow under the baseline for
+     weight, and a 3px cool sheen narrower than the gaps between characters.
+     Both are built for white type on a saturated blue face, which is what this
+     is again — they were briefly wrong during the white-pill detour and are
+     right once more.
 
-     Neither of the obvious alternatives works on THIS button:
+     Neither of the obvious alternatives works on THIS button, whatever the
+     palette, and both have already been tried:
 
      · A wide blur (10px was tried) is the haze box — across an eleven-character
        label the per-glyph shadows overlap into one soft rectangle behind the
@@ -3926,12 +3917,12 @@ h6 {
 .glass-btn--block {
   display: flex;
   width: 100%;
-  /* Grown by the same +2px / +1.5px as the desktop pill, so the two stay the
-     same button at two widths. Flat values rather than the --gq-* calcs: the
-     drawer's rows are full-bleed, so there is no fluid width for them to
-     track. */
-  padding: 17px 22px;
-  font-size: 16.5px;
+  /* Back to the pre-bump values, in step with the desktop pill returning to
+     .swn-cta's geometry — the two should stay one button at two widths. Flat
+     rather than the --gq-* tokens: the drawer's rows are full-bleed, so there
+     is no fluid width for them to track. */
+  padding: 15px 22px;
+  font-size: 15px;
 }
 
 @media (prefers-reduced-motion: reduce) {

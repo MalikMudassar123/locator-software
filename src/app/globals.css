@@ -3460,48 +3460,61 @@ h6 {
      gradient's job below, not the type's. */
   text-shadow: 0 0 1px rgba(224, 244, 255, 0.45);
 
-  /* Sampled across the reference.
-     Two corrections over the previous pass, both of which were washing it out:
-     the left end was indigo (too much blue relative to green, hue ~232) where
-     the reference is a true royal blue nearer hue 226, and the right end ran up
-     to #25d8fb, a pale sky tint. The reference's cyan is high-chroma but only
-     mid-lightness — vivid, not pale — so the top end is pulled back down.
-     96deg, not 90: the darkest point is the top-left corner, not the mid-left
-     edge.
-
-     Seven stops, not six, and the ramp is slower through the first half. The
-     reference holds deep royal blue well past its own midpoint and is still
-     clearly blue at 55%; the previous version had reached #1179ef by 50% and so
-     spent its whole right half in cyan, which read as a lighter button overall
-     even though no single stop was wrong.
-
-     Lifted about one step in lightness from the sampled values, on request.
-     Hue and saturation are held — every stop moves by roughly the same amount
-     in L only, so the ramp lightens without any part of it going chalky. */
   background:
-    /* Doming pass, painted OVER the hue ramp. The ramp alone runs left-to-right,
-       which gives the pill a direction but no BODY — nothing tells the eye the
-       surface curves toward the viewer. This adds the vertical component: a lit
-       crown, a neutral band through the middle where the surface faces you, and
-       a shaded sill.
+    /* GLOSS + DOMING, painted over the hue ramp.
+       Two jobs in one layer. The doming half is what gives the pill a body: the
+       ramp below runs left-to-right, so on its own it has direction but nothing
+       tells the eye the surface curves toward you. This adds the vertical
+       component — a lit crown, a neutral band through the middle where the
+       surface faces you, a shaded sill.
+       The gloss half is the knee at 46-50%. A highlight that fades out smoothly
+       reads as a soft matte dome; one that falls off sharply at a definite line
+       reads as a hard reflective surface, which is what "shiny" actually is.
+       That single hard-ish stop does more for the glass look than the brightness
+       does.
        Neutral white and neutral navy rather than lighter and darker blues, so
        the hue stays constant down the height. Tinting the shading is what makes
        a domed button look like two colours stacked. */
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.2) 0%,
-      rgba(255, 255, 255, 0.07) 24%,
-      rgba(255, 255, 255, 0) 44%,
-      rgba(4, 18, 74, 0.09) 74%,
-      rgba(4, 18, 74, 0.2) 100%
+      rgba(255, 255, 255, 0.42) 0%,
+      rgba(255, 255, 255, 0.26) 20%,
+      rgba(255, 255, 255, 0.09) 43%,
+      rgba(255, 255, 255, 0) 49%,
+      rgba(4, 18, 74, 0.05) 76%,
+      rgba(4, 18, 74, 0.12) 100%
     ),
-    /* Face colour taken verbatim from commit a376d0a, as requested. 135deg and
-       three stops, exactly as it was there — not re-derived, not re-sampled.
+    /* Face colour from commit a376d0a — same three hues, same 135deg, now down
+       to roughly half opacity. This is the number that decides whether the thing
+       is glass or a tinted panel, and 0.78 was firmly the latter: at that alpha
+       the tint dominates whatever is behind it, so nothing reads as being SEEN
+       THROUGH. Around 0.55 the backdrop is a real participant in the colour.
+       Alpha still climbs toward the light end — #2563eb has contrast to spare,
+       #60a5fa would go washy if it thinned as far. */
+    linear-gradient(
+      135deg,
+      rgba(37, 99, 235, 0.26) 0%,
+      rgba(59, 130, 246, 0.29) 55%,
+      rgba(96, 165, 250, 0.32) 100%
+    );
 
-       Opaque, with no backdrop-filter: that is how it was in a376d0a, and it is
-       also what the colour needs. A translucent face samples the hero behind it
-       and comes back a different colour than the one asked for. */
-    linear-gradient(135deg, #2563eb 0%, #3b82f6 55%, #60a5fa 100%);
+  /* The other half of the glass, and it has to scale WITH the alpha. A thin tint
+     over a sharp backdrop is a window; a thin tint over a heavily blurred one is
+     frosted glass, and frosted is what reads as a physical pane. At 14px the
+     hero's skyline and clouds dissolve into pure colour behind the label instead
+     of showing through as recognisable shapes and fighting it.
+     saturate(1.6) is not decoration either: averaging a large blur radius pulls
+     every hue toward grey, and without pushing it back the button picks up a
+     dead, cloudy cast exactly where it is meant to look luminous. */
+  /* brightness() is the piece that lets the tint go this thin. At ~0.28 alpha
+     the label is sitting on the hero, not on the button, and white type over a
+     bright sky loses its edges. Real tinted glass darkens what is behind it, so
+     dimming the backdrop is physically what this material does — and it buys
+     back the contrast that the transparency spent, without putting any opacity
+     back into the face. Lower it before raising the alpha if the text ever
+     reads thin; that keeps the glass and fixes the legibility. */
+  backdrop-filter: blur(22px) saturate(1.85) brightness(0.92);
+  -webkit-backdrop-filter: blur(22px) saturate(1.85) brightness(0.92);
 
   /* EVERY LENGTH BELOW IS SCALED FOR A ~48px BUTTON, not for the reference.
      This is the thing that was actually washing the face out. The reference
@@ -3510,6 +3523,11 @@ h6 {
      the gradient as a pale haze. Read the reference's effects as FRACTIONS of
      its height and they come out roughly a quarter of what was here. */
   box-shadow:
+    /* All-round haze. The reference glows into the page on every side, not only
+       under the light source — a lit pane spills everywhere and is merely
+       BRIGHTEST where the source is. The directional pair below still does the
+       brightest-at-the-right-cap job; this is the ambient bed under it. */
+    0 0 16px rgba(90, 195, 255, calc(0.32 * var(--ai-intensity))),
     /* Cyan bloom, offset down-right — offsetting rather than spreading evenly is
        what puts the light source at the right cap, as in the reference. */
     7px 5px 18px -6px rgba(34, 205, 248, calc(0.9 * var(--ai-intensity))),
@@ -3529,12 +3547,32 @@ h6 {
        into visible inner edges.
        No white inset along the bottom — that drew a light line across the
        bottom-LEFT, where the reference has nothing at all. */
-    inset 0 4px 7px -4px rgba(255, 255, 255, 0.55),
-    inset 0 -5px 9px -5px rgba(4, 16, 70, 0.5),
+    /* Crisp outer hairline, right around the perimeter. The reference's rim is
+       CONTINUOUS — the ::before and ::after above are partial specular
+       highlights, which is a different thing and cannot describe a pane's
+       boundary on their own. */
+    0 0 0 1px rgba(170, 232, 255, 0.46),
+    /* THE GLASS EDGE, in two steps. This pairing is what sells thickness in the
+       reference: a bright line hard against the boundary, then a much fainter
+       band a couple of pixels inside it. One line alone gives a sticker with a
+       stroke; the second line is the far face of the pane seen through the near
+       one, and the eye reads the gap between them as depth.
+       Order matters — the 1px is listed first so it paints on top of the 3px. */
+    inset 0 0 0 1px rgba(255, 255, 255, 0.58),
+    inset 0 0 0 3px rgba(255, 255, 255, 0.12),
+    /* Light caught in the body of the pane, just inside the edge. Carries more
+       of the button now: with the fill this thin, the edge and the light in it
+       ARE the object — the tint is barely doing any work. */
+    inset 0 0 14px -2px rgba(180, 230, 255, 0.3),
+    inset 0 4px 7px -4px rgba(255, 255, 255, 0.85),
+    /* Kept lightening as the tint thinned. Over a near-clear fill a heavy navy
+       inset stops reading as the underside of a curve and starts reading as
+       dirt trapped in it. */
+    inset 0 -5px 9px -5px rgba(4, 16, 70, 0.22),
     /* A trace of the old corner shaping, kept quiet. Pure top-down lighting on
        a shape this wide flattens the caps; this puts a little fall-off back into
        the lower right so the ends still turn away from the light. */
-    inset -3px -3px 10px -9px rgba(6, 22, 88, 0.7);
+    inset -3px -3px 10px -9px rgba(6, 22, 88, 0.32);
 
   transition: box-shadow 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
   animation: glassBtnBeat var(--ai-beat-speed) ease-in-out infinite;
@@ -3872,18 +3910,37 @@ h6 {
 /* The reference shows no hover state, so this stays inside what the still
    already establishes: the same light, turned up. No transform, no colour
    shift, nothing that changes the object. */
+/* box-shadow is one property, so a hover value REPLACES the whole list rather
+   than adding to it. Every layer that defines the glass — the outer hairline,
+   the two-step edge, the caught light — has to be restated here or the pane
+   loses its boundary the moment the pointer arrives. Only the bloom values
+   differ from the resting state. */
 .glass-btn:hover {
   box-shadow:
+    0 0 22px rgba(90, 195, 255, calc(0.42 * var(--ai-intensity))),
     12px 9px 28px -7px rgba(34, 205, 248, calc(1 * var(--ai-intensity))),
     4px 4px 11px -3px rgba(34, 205, 248, calc(0.7 * var(--ai-intensity))),
+    0 0 0 1px rgba(170, 232, 255, 0.44),
     0 12px 26px -12px rgba(18, 52, 150, 0.62),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.28);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.46),
+    inset 0 0 0 3px rgba(255, 255, 255, 0.09),
+    inset 0 0 12px -2px rgba(180, 230, 255, 0.28),
+    inset 0 4px 7px -4px rgba(255, 255, 255, 0.8),
+    inset 0 -5px 9px -5px rgba(4, 16, 70, 0.34),
+    inset -3px -3px 10px -9px rgba(6, 22, 88, 0.32);
 }
 .glass-btn:active {
   box-shadow:
+    0 0 12px rgba(90, 195, 255, calc(0.26 * var(--ai-intensity))),
     6px 5px 16px -8px rgba(34, 205, 248, calc(0.7 * var(--ai-intensity))),
+    0 0 0 1px rgba(170, 232, 255, 0.3),
     0 4px 12px -8px rgba(18, 52, 150, 0.5),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.18);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.34),
+    inset 0 0 0 3px rgba(255, 255, 255, 0.06),
+    inset 0 0 8px -2px rgba(180, 230, 255, 0.18),
+    inset 0 3px 6px -4px rgba(255, 255, 255, 0.6),
+    inset 0 -5px 9px -5px rgba(4, 16, 70, 0.34),
+    inset -3px -3px 10px -9px rgba(6, 22, 88, 0.32);
 }
 
 /* The navbar instance.

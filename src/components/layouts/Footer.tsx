@@ -243,39 +243,58 @@ export default function Footer() {
         {/* ── Divider ── */}
         <div style={{ margin: '32px 0 0', height: '1px', background: 'linear-gradient(90deg, transparent, #e2e7f0 15%, #e2e7f0 85%, transparent)' }} />
 
-        {/* ── Bottom bar ── */}
-        <div style={{ padding: '18px 0 22px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '14px' }}>
-          <Link href="/" className="footer-logo" style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-            <Image src="/logo.png" alt="Locator" width={100} height={32} style={{ width: 'auto', height: '30px' }} />
-          </Link>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            {socialLinks.map(s => (
-              <a
-                key={s.label}
-                href={s.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={s.label}
-                className="footer-social"
-              >
-                {s.icon}
-              </a>
-            ))}
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-            <span style={{ color: '#8a93a2', fontSize: 'var(--f-11)' }}>
+        {/* ── Bottom bar ──
+            Two groups, not three: legal on the left, the people behind it on the
+            right. The brand mark that used to sit here is gone — the same logo
+            already opens the footer a few hundred pixels above, and repeating it
+            inside one block reads as a mistake rather than as reinforcement. */}
+        <div className="footer-bottom">
+          <div className="footer-bottom-legal">
+            <span>
               Copyright 2026{' '}
               <a href="https://aryzetech.com" target="_blank" rel="noopener noreferrer" className="footer-textlink">
                 Synosys
               </a>
-              {' '}| All Rights Reserved
+              {' '}· All Rights Reserved
             </span>
-            <span style={{ color: '#d5dae3', fontSize: 'var(--f-11)' }}>|</span>
+            <span className="footer-sep" aria-hidden="true" />
             <a href="/sitemap.xml" className="footer-textlink">
               Sitemap
             </a>
+          </div>
+
+          <div className="footer-bottom-meta">
+            <div className="footer-socials">
+              {socialLinks.map(s => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={s.label}
+                  className="footer-social"
+                >
+                  {s.icon}
+                </a>
+              ))}
+            </div>
+
+            <span className="footer-sep" aria-hidden="true" />
+
+            <span>
+              Crafted by{' '}
+              <a
+                href="https://www.linkedin.com/in/mudassar-fullstack/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-textlink footer-credit"
+              >
+                Mudassar
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M4.98 3.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM2.4 21h5.16V9.5H2.4zM9.9 9.5V21h5.16v-6.06c0-1.6.3-3.15 2.29-3.15 1.95 0 1.98 1.83 1.98 3.25V21h5.16v-7c0-4.24-.92-7.5-5.88-7.5-2.38 0-3.98 1.31-4.64 2.55h-.07V9.5z" />
+                </svg>
+              </a>
+            </span>
           </div>
         </div>
       </div>
@@ -457,12 +476,54 @@ export default function Footer() {
         }
 
         /* Logo */
-        .footer-logo {
-          transition: opacity 280ms ${EASE}, transform 280ms ${EASE};
+        /* Bottom bar */
+        /* The right padding is a keep-out for the ContactDock chat launcher, which
+           is position:fixed at right:20px and 48px wide (see ContactDock's
+           --cd-edge / --cd-size). This footer row only insets 20px from the
+           viewport, so without the reserve the last item — the credit — sits
+           underneath the button at every width, not just narrow ones. */
+        .footer-bottom {
+          padding: 18px 64px 22px 0;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: space-between;
+          gap: 14px 24px;
         }
-        .footer-logo:hover {
-          opacity: 0.82;
-          transform: translateY(-1px);
+        .footer-bottom-legal,
+        .footer-bottom-meta {
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 12px;
+          color: #8a93a2;
+          font-size: var(--f-11);
+        }
+        .footer-socials { display: flex; align-items: center; gap: 10px; }
+
+        /* A hairline rule rather than a typed "|" — it holds its weight when the
+           text around it wraps, where a pipe would be left stranded on a line. */
+        .footer-sep {
+          width: 1px;
+          height: 12px;
+          background: #dfe4ed;
+          flex-shrink: 0;
+        }
+
+        /* Stacked and centred once the row can no longer hold both groups —
+           space-between on a wrapped flex line otherwise shoves the two groups to
+           opposite edges with a gap of dead space between them. */
+        @media (max-width: 640px) {
+          .footer-bottom {
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            /* The dock tucks in to --cd-edge:12px below this breakpoint, so the
+               keep-out shrinks with it. */
+            padding-right: 52px;
+          }
+          .footer-bottom-legal,
+          .footer-bottom-meta { justify-content: center; }
         }
 
         /* Social icons */
@@ -499,6 +560,20 @@ export default function Footer() {
         .footer-textlink:hover {
           color: #1360ee;
         }
+        /* Keeps the name and its LinkedIn mark on one line, and stops the icon
+           being pushed onto its own row when the bottom bar wraps. */
+        .footer-credit {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          font-weight: 600;
+          white-space: nowrap;
+        }
+        .footer-credit svg {
+          opacity: .7;
+          transition: opacity 280ms ${EASE};
+        }
+        .footer-credit:hover svg { opacity: 1; }
       `}</style>
     </footer>
   )

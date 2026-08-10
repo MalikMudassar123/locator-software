@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
@@ -6,26 +7,23 @@ const OFFERS = [
   {
     title: 'Fuel Management',
     desc: 'Our vehicle GPS tracker helps ensure fuel is effectively managed, cutting waste and unnecessary consumption across your fleet.',
-    bg: '#eef3ff', color: '#1360ee',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 22V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16" /><path d="M13 9h3a2 2 0 0 1 2 2v2a1 1 0 0 0 1 1 1 1 0 0 0 1-1V8l-3-3" /><line x1="3" y1="22" x2="15" y2="22" /></svg>
-    ),
+    tint: '#eef3ff',
+    img: '/footer_pages_images/car-gps-tracker/fuel-management.svg',
+    alt: 'Fuel pump and consumption analytics for a tracked fleet',
   },
   {
     title: 'Real-Time Location & GPS',
     desc: 'LOCATOR is the best GPS tracker for cars when it comes to helping you see the exact location of your vehicles, live.',
-    bg: '#edfff4', color: '#13923f',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
-    ),
+    tint: '#edfff4',
+    img: '/footer_pages_images/car-gps-tracker/real-time-location.svg',
+    alt: 'Vehicle tracked live on a phone map with driver, speed, and fuel readings',
   },
   {
     title: 'Customizable Notifications & Alerts',
     desc: 'LOCATOR has been developed to help ensure that you make the right decisions, backed by alerts tailored to your fleet.',
-    bg: '#fff3e8', color: '#f2600a',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
-    ),
+    tint: '#fff3e8',
+    img: '/footer_pages_images/car-gps-tracker/notifications.svg',
+    alt: 'Hand holding a phone receiving a LOCATOR alert about a parked car',
   },
 ]
 
@@ -36,12 +34,16 @@ export default function CarGpsOffers() {
         .cgo-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; max-width: 1120px; margin: clamp(40px,5vw,56px) auto 0; }
         @media (max-width: 820px) { .cgo-cards { grid-template-columns: 1fr; } }
         .cgo-card {
-          background: #fff; border: 1px solid #e7ebf3; border-radius: 20px; padding: 30px 26px;
+          background: #fff; border: 1px solid #e7ebf3; border-radius: 20px; overflow: hidden;
+          display: flex; flex-direction: column;
           transition: transform .26s ${EASE}, box-shadow .26s ${EASE}, border-color .26s ${EASE};
         }
         .cgo-card:hover { transform: translateY(-4px); box-shadow: 0 22px 44px -20px rgba(19,96,238,.22); border-color: #dbe6ff; }
-        .cgo-icon { width: 52px; height: 52px; border-radius: 15px; display: grid; place-items: center; margin-bottom: 18px; transition: transform .26s ${EASE}; }
-        .cgo-card:hover .cgo-icon { transform: scale(1.06) rotate(-3deg); }
+        /* Tint fades to white at the edges so each illustration's own backdrop blends in */
+        .cgo-media { padding: 22px 22px 4px; display: grid; place-items: center; }
+        .cgo-media img { width: 100%; max-width: 260px; height: auto; display: block; transition: transform .3s ${EASE}; }
+        .cgo-card:hover .cgo-media img { transform: translateY(-4px) scale(1.03); }
+        .cgo-body { padding: 22px 26px 28px; }
         .cgo-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; font-size: 13px; font-weight: 700; color: #1360ee; text-decoration: none; }
       `}</style>
 
@@ -64,10 +66,14 @@ export default function CarGpsOffers() {
         <div className="cgo-cards">
           {OFFERS.map(o => (
             <div key={o.title} className="cgo-card" data-reveal>
-              <span className="cgo-icon" style={{ background: o.bg, color: o.color }}>{o.icon}</span>
-              <h3 style={{ margin: '0 0 8px', fontSize: '16px', fontWeight: 800, color: '#1d1d1f', letterSpacing: '-.01em' }}>{o.title}</h3>
-              <p style={{ margin: 0, fontSize: '13.5px', lineHeight: 1.65, color: '#6e6e73' }}>{o.desc}</p>
-              <Link href="/contact" className="cgo-link">Read details →</Link>
+              <div className="cgo-media" style={{ background: `radial-gradient(circle at 50% 62%, ${o.tint}, #ffffff 74%)` }}>
+                <Image src={o.img} alt={o.alt} width={1143} height={863} sizes="(max-width: 820px) 88vw, 320px" unoptimized />
+              </div>
+              <div className="cgo-body">
+                <h3 style={{ margin: '0 0 8px', fontSize: '16px', fontWeight: 800, color: '#1d1d1f', letterSpacing: '-.01em' }}>{o.title}</h3>
+                <p style={{ margin: 0, fontSize: '13.5px', lineHeight: 1.65, color: '#6e6e73' }}>{o.desc}</p>
+                <Link href="/contact" className="cgo-link">Read details →</Link>
+              </div>
             </div>
           ))}
         </div>

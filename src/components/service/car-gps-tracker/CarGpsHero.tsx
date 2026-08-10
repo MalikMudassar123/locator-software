@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 import Link from 'next/link'
 import SoftwareNavbar from '@/components/software/SoftwareNavbar'
 
@@ -62,43 +63,18 @@ export default function CarGpsHero() {
             </div>
           </div>
 
-          {/* Visual — a map card staged like a phone screen, floating on a soft blue field */}
+          {/* Visual — the artwork carries its own blue blob, phone, map, and accents */}
           <div className="cgh-viz" style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
-            <div style={{ position: 'relative', width: 'min(100%, 400px)', aspectRatio: '1 / 1', display: 'grid', placeItems: 'center' }}>
-              {/* Soft blue blob backdrop */}
-              <div aria-hidden="true" style={{ position: 'absolute', inset: '-4%', borderRadius: '46% 54% 58% 42% / 48% 44% 56% 52%', background: 'radial-gradient(circle at 40% 32%, #dbe9fd, #c7ddfb 70%)', zIndex: 0 }} />
-
-              {/* Phone-style map card */}
-              <div className="cgh-float" style={{
-                position: 'relative', zIndex: 1, width: '68%', aspectRatio: '0.62 / 1',
-                borderRadius: '26px', overflow: 'hidden', background: '#fff',
-                border: '6px solid #fff', boxShadow: '0 40px 70px -26px rgba(19,96,238,.34), 0 4px 14px rgba(20,40,90,.08)',
-              }}>
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(145deg,#dce8f4,#e8f2fb)' }} />
-                <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0 }} preserveAspectRatio="none">
-                  {[16, 34, 52, 70, 88].map(p => (<line key={`h${p}`} x1="0" y1={`${p}%`} x2="100%" y2={`${p}%`} stroke="rgba(255,255,255,.6)" strokeWidth="4" />))}
-                  {[20, 40, 60, 80].map(p => (<line key={`v${p}`} x1={`${p}%`} y1="0" x2={`${p}%`} y2="100%" stroke="rgba(255,255,255,.6)" strokeWidth="4" />))}
-                  <polyline points="18%,72% 34%,52% 52%,60% 70%,30%" stroke="#1360ee" strokeWidth="2.4" fill="none" strokeDasharray="7,4" strokeOpacity=".8" />
-                </svg>
-                {[
-                  { l: '34%', t: '52%', c: '#1360ee', big: true },
-                  { l: '70%', t: '30%', c: '#1fbf5b', big: false },
-                  { l: '18%', t: '72%', c: '#6e6e73', big: false },
-                ].map((p, i) => (
-                  <div key={i} style={{ position: 'absolute', left: p.l, top: p.t, transform: 'translate(-50%,-100%)', zIndex: 2 }}>
-                    <svg width={p.big ? 26 : 18} height={p.big ? 26 : 18} viewBox="0 0 24 24" fill={p.c}><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" /></svg>
-                  </div>
-                ))}
-              </div>
-
-              {/* Floating accent icons */}
-              <div className="cgh-float" style={{ position: 'absolute', zIndex: 2, right: '2%', top: '10%', width: '48px', height: '48px', borderRadius: '14px', background: '#fff', boxShadow: '0 14px 28px rgba(15,23,42,.16)', display: 'grid', placeItems: 'center', animationDelay: '-1.5s' }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1360ee" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>
-              </div>
-              <div className="cgh-float" style={{ position: 'absolute', zIndex: 2, left: '0%', bottom: '6%', width: '48px', height: '48px', borderRadius: '14px', background: '#fff', boxShadow: '0 14px 28px rgba(15,23,42,.16)', display: 'grid', placeItems: 'center', animationDelay: '-3s' }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1360ee" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 0 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 0 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1-1.55V3a2 2 0 0 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z" /></svg>
-              </div>
-            </div>
+            <Image
+              className="cgh-float"
+              src="/footer_pages_images/car-gps-tracker/hero.png"
+              alt="Route traced across a map with a phone dropping a live location pin"
+              width={1200}
+              height={1010}
+              sizes="(max-width: 900px) 88vw, 460px"
+              style={{ width: '100%', maxWidth: '460px', height: 'auto', display: 'block' }}
+              priority
+            />
           </div>
         </div>
       </section>

@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import SoftwareNavbar from '@/components/software/SoftwareNavbar'
 
@@ -8,9 +9,8 @@ const EASE = 'cubic-bezier(.22,.61,.36,1)'
  * pages use: this page has a product to show, and a live-map panel beside the
  * headline says what the product is faster than another paragraph would.
  *
- * The panel is drawn, not photographed. A screenshot at this size is unreadable
- * and dates the moment the UI changes; a diagram of the same idea stays legible
- * at any width and weighs nothing.
+ * The panel is an illustration rather than a screenshot: it stays legible at any
+ * width and does not date the moment the UI changes.
  */
 export default function CarTrackingHero() {
   return (
@@ -111,51 +111,13 @@ export default function CarTrackingHero() {
         .cts-trust svg { width: 15px; height: 15px; color: #1fbf5b; flex-shrink: 0; }
 
         /* ── Panel ───────────────────────────────────────────────────────────── */
+        /* The artwork is a full-bleed blue plate, so it gets a rounded clip and a
+           lifted shadow rather than the browser-chrome frame a screenshot needs. */
         .cts-panel {
-          position: relative; border-radius: 20px; background: #fff;
-          border: 1px solid #e7ebf3; overflow: hidden;
-          box-shadow: 0 40px 80px -40px rgba(20,40,90,.44), 0 2px 8px rgba(20,40,90,.06);
+          position: relative; border-radius: 22px; overflow: hidden; line-height: 0;
+          box-shadow: 0 44px 84px -40px rgba(19,96,238,.6), 0 2px 8px rgba(20,40,90,.08);
         }
-        .cts-panel-bar {
-          display: flex; align-items: center; gap: 6px;
-          padding: 11px 15px; border-bottom: 1px solid #eef1f7;
-        }
-        .cts-panel-bar b {
-          font-size: var(--f-11); color: #6e6e73; font-weight: 600; margin-left: 8px;
-        }
-        .cts-panel-map {
-          position: relative; height: clamp(240px,30vw,320px);
-          background: linear-gradient(150deg,#e6eefa,#f2f7fd);
-        }
-        .cts-road { stroke: #fff; stroke-linecap: round; }
-        /* The tracked car. Draws its own trail, then the marker rides it — the
-           dash offset and the motion path run on one duration so the dot always
-           sits at the head of the line it has drawn. */
-        @keyframes ctsTrail { from { stroke-dashoffset: 320; } to { stroke-dashoffset: 0; } }
-        @keyframes ctsPing { 0% { r: 5; opacity: .55; } 100% { r: 15; opacity: 0; } }
-        @media (prefers-reduced-motion: no-preference) {
-          .cts-trail { stroke-dasharray: 320; animation: ctsTrail 4.6s ${EASE} infinite alternate; }
-          .cts-ping { animation: ctsPing 2.1s ${EASE} infinite; }
-        }
-
-        .cts-chip {
-          position: absolute; display: flex; align-items: center; gap: 8px;
-          background: rgba(255,255,255,.94); backdrop-filter: blur(8px);
-          border: 1px solid rgba(20,40,90,.07); border-radius: 12px;
-          padding: 9px 12px; box-shadow: 0 10px 26px -14px rgba(20,40,90,.55);
-        }
-        .cts-chip b { display: block; font-size: var(--f-11-5); font-weight: 700; color: #1d1d1f; line-height: 1.3; }
-        .cts-chip span { display: block; font-size: var(--f-10); color: #6e6e73; line-height: 1.4; }
-        .cts-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-
-        .cts-panel-foot {
-          display: grid; grid-template-columns: repeat(4,1fr);
-          border-top: 1px solid #eef1f7;
-        }
-        .cts-panel-foot div { padding: 12px 8px; text-align: center; }
-        .cts-panel-foot div + div { border-left: 1px solid #f2f4f9; }
-        .cts-panel-foot b { display: block; font-size: var(--f-16); font-weight: 800; letter-spacing: -.02em; }
-        .cts-panel-foot span { display: block; font-size: var(--f-10); color: #6e6e73; font-weight: 600; margin-top: 2px; }
+        .cts-panel img { display: block; width: 100%; height: auto; }
 
         @media (max-width: 520px) {
           .cts-actions .cts-btn { flex: 1 1 100%; justify-content: center; }
@@ -217,62 +179,15 @@ export default function CarTrackingHero() {
           </div>
 
           {/* ── Live map panel ── */}
-          <div className="cts-panel cts-anim" style={{ '--d': '260ms' } as React.CSSProperties} aria-hidden="true">
-            <div className="cts-panel-bar">
-              {(['#ff5f57', '#febc2e', '#28c840'] as const).map(c => (
-                <span key={c} style={{ width: 9, height: 9, borderRadius: '50%', background: c }} />
-              ))}
-              <b>locator.ae — live fleet map</b>
-            </div>
-
-            <div className="cts-panel-map">
-              <svg width="100%" height="100%" preserveAspectRatio="none" style={{ position: 'absolute', inset: 0 }}>
-                {[22, 44, 66, 86].map(p => (
-                  <line key={`h${p}`} className="cts-road" x1="0" y1={`${p}%`} x2="100%" y2={`${p}%`} strokeWidth="8" />
-                ))}
-                {[20, 46, 72].map(p => (
-                  <line key={`v${p}`} className="cts-road" x1={`${p}%`} y1="0" x2={`${p}%`} y2="100%" strokeWidth="6" />
-                ))}
-              </svg>
-
-              <svg width="100%" height="100%" viewBox="0 0 400 300" preserveAspectRatio="none" style={{ position: 'absolute', inset: 0 }}>
-                <path
-                  className="cts-trail"
-                  d="M40 250 L110 250 L110 140 L200 140 L200 70 L330 70"
-                  fill="none" stroke="#1360ee" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" opacity=".85"
-                />
-                <circle className="cts-ping" cx="330" cy="70" r="5" fill="none" stroke="#1360ee" strokeWidth="2" />
-              </svg>
-
-              <div className="cts-chip" style={{ left: '8%', top: '12%' }}>
-                <span className="cts-dot" style={{ background: '#1fbf5b' }} />
-                <div>
-                  <b>VAN-204 · 62 km/h</b>
-                  <span>Jebel Ali, Dubai · moving</span>
-                </div>
-              </div>
-              <div className="cts-chip" style={{ right: '7%', bottom: '11%' }}>
-                <span className="cts-dot" style={{ background: '#ff9f0a' }} />
-                <div>
-                  <b>TRK-118 · idle 14 min</b>
-                  <span>Engine on · alert sent</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="cts-panel-foot">
-              {[
-                { v: '32', l: 'Active', c: '#1fbf5b' },
-                { v: '8', l: 'Idle', c: '#ff9f0a' },
-                { v: '6', l: 'Stopped', c: '#6e6e73' },
-                { v: '1', l: 'Offline', c: '#ff5f57' },
-              ].map(x => (
-                <div key={x.l}>
-                  <b style={{ color: x.c }}>{x.v}</b>
-                  <span>{x.l}</span>
-                </div>
-              ))}
-            </div>
+          <div className="cts-panel cts-anim" style={{ '--d': '260ms' } as React.CSSProperties}>
+            <Image
+              src="/footer_pages_images/car-tracking-system/hero.png"
+              alt="A tracked car reporting its live location, speed and ignition status to a phone map"
+              width={1200}
+              height={1215}
+              sizes="(max-width: 940px) 92vw, 46vw"
+              priority
+            />
           </div>
         </div>
       </section>

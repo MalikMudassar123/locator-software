@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { CAPABILITIES } from './data'
 
@@ -42,11 +43,11 @@ export default function CarTrackingOffering() {
         @media (max-width: 940px) { .cto-grid { grid-template-columns: 1fr; max-width: 620px; margin: 0 auto; } }
 
         .cto-card {
-          position: relative; display: flex; flex-direction: column;
+          position: relative; display: flex; flex-direction: column; overflow: hidden;
           background: #fff; border: 1px solid #e8ecf4; border-radius: 20px;
-          padding: clamp(26px,3vw,34px);
           transition: transform .38s ${EASE}, box-shadow .38s ${EASE}, border-color .38s ${EASE};
         }
+        .cto-body { position: relative; display: flex; flex-direction: column; flex: 1; padding: clamp(26px,3vw,34px); }
         /* The tint washes in from the top on hover rather than the whole card
            changing colour — it keeps the body text on white, where it stays
            readable, and it is the same move the rest of the site's cards use. */
@@ -61,22 +62,25 @@ export default function CarTrackingOffering() {
         }
         .cto-card:hover::before { opacity: 1; }
 
-        .cto-card-top {
-          position: relative; display: flex; align-items: center; justify-content: space-between;
-          margin-bottom: clamp(18px,2.2vw,24px);
+        /* The three illustrations arrive at different aspect ratios, so the media
+           box fixes one and letterboxes them into it — otherwise the cards start
+           at three different heights and the row loses its baseline. */
+        .cto-media {
+          position: relative; aspect-ratio: 4 / 3; overflow: hidden;
+          background: linear-gradient(160deg,#f2f7ff,#fbfcff);
+          border-bottom: 1px solid #eef1f7;
         }
-        .cto-icon {
-          width: 52px; height: 52px; border-radius: 15px; display: grid; place-items: center;
-          background: linear-gradient(145deg,#eaf1ff,#f6f9ff);
-          border: 1px solid #dbe6fb; color: #1360ee;
-          transition: transform .38s ${EASE}, box-shadow .38s ${EASE};
+        .cto-media img {
+          width: 100%; height: 100%; object-fit: contain; display: block;
+          padding: clamp(14px,2vw,22px);
+          transition: transform .45s ${EASE};
         }
-        .cto-icon svg { width: 24px; height: 24px; }
-        .cto-card:hover .cto-icon { transform: translateY(-2px) scale(1.04); box-shadow: 0 14px 26px -14px rgba(19,96,238,.6); }
+        .cto-card:hover .cto-media img { transform: scale(1.04); }
 
         .cto-num {
+          position: absolute; top: 14px; right: 16px; z-index: 1;
           font-size: var(--f-13); font-weight: 800; letter-spacing: .1em;
-          color: #c4cddd; font-variant-numeric: tabular-nums;
+          color: #a9b6cc; font-variant-numeric: tabular-nums;
         }
 
         .cto-card h3 {
@@ -121,18 +125,20 @@ export default function CarTrackingOffering() {
           <div className="cto-grid">
             {CAPABILITIES.map((c, i) => (
               <article key={c.title} className="cto-card" data-reveal data-reveal-delay={i * 110}>
-                <div className="cto-card-top">
-                  <span className="cto-icon">{c.icon}</span>
+                <div className="cto-media">
                   <span className="cto-num">{String(i + 1).padStart(2, '0')}</span>
+                  <Image src={c.img} alt={c.alt} width={1143} height={863} sizes="(max-width: 940px) 92vw, 360px" />
                 </div>
-                <h3>{c.title}</h3>
-                <p>{c.desc}</p>
-                <Link href={c.href} className="cto-link">
-                  Read details
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M5 12h14M13 6l6 6-6 6" />
-                  </svg>
-                </Link>
+                <div className="cto-body">
+                  <h3>{c.title}</h3>
+                  <p>{c.desc}</p>
+                  <Link href={c.href} className="cto-link">
+                    Read details
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M5 12h14M13 6l6 6-6 6" />
+                    </svg>
+                  </Link>
+                </div>
               </article>
             ))}
           </div>

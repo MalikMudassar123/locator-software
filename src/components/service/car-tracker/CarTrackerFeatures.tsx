@@ -91,20 +91,22 @@ export default function CarTrackerFeatures() {
             </div>
           </div>
 
-          {/* Real platform screenshot */}
-          <div data-reveal="right">
-            <div style={{
-              borderRadius: '18px', overflow: 'hidden', border: '1px solid #e4e4e8',
-              boxShadow: '0 30px 70px -28px rgba(20,40,90,.24), 0 4px 14px rgba(20,40,90,.06)',
-            }}>
-              <Image
-                src="/dashboard.png"
-                alt="LOCATOR live fleet dashboard — vehicle list and map view"
-                width={1600}
-                height={1019}
-                style={{ width: '100%', height: 'auto', display: 'block' }}
-              />
-            </div>
+          {/* Real platform screens, fanned out of a laptop */}
+          <div data-reveal="right" style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
+            {/* Ambient wash so the cut-out render sits on the section rather than floating */}
+            <div aria-hidden="true" style={{
+              position: 'absolute', inset: '8% 2%', zIndex: 0, borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(19,96,238,.12), transparent 68%)',
+              filter: 'blur(8px)',
+            }} />
+            <Image
+              src="/footer_pages_images/car-tracker/best-gps.png"
+              alt="LOCATOR fleet dashboard, reports, and map views fanned out of a laptop"
+              width={526}
+              height={485}
+              sizes="(max-width: 940px) 88vw, 480px"
+              style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '500px', height: 'auto', display: 'block' }}
+            />
           </div>
         </div>
       </section>

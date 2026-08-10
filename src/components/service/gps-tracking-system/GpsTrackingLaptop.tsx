@@ -19,43 +19,20 @@ const STATS = [
 function LaptopMock() {
   return (
     <div style={{ position: 'relative', display: 'grid', placeItems: 'center', padding: '20px 0 40px' }}>
-      {/* Fanned "ghost" screens behind the laptop, built from the same real dashboard shot */}
-      {[
-        { rotate: -10, x: -34, y: 10, scale: 0.86, opacity: 0.35, z: 0 },
-        { rotate: -6,  x: -18, y: 4,  scale: 0.92, opacity: 0.55, z: 1 },
-      ].map((g, i) => (
-        <div key={i} aria-hidden="true" style={{
-          position: 'absolute', zIndex: g.z, width: 'min(84%, 380px)', aspectRatio: '1600 / 1019',
-          borderRadius: '10px', overflow: 'hidden', border: '1px solid #e4e4e8',
-          boxShadow: '0 20px 40px -20px rgba(20,40,90,.22)',
-          transform: `translate(${g.x}px, ${g.y}px) rotate(${g.rotate}deg) scale(${g.scale})`,
-          opacity: g.opacity, background: '#eef3fb',
-        }}>
-          <Image src="/dashboard.png" alt="" width={1600} height={1019} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-        </div>
-      ))}
-
-      {/* Laptop screen */}
-      <div style={{ position: 'relative', zIndex: 2, width: 'min(88%, 400px)' }}>
-        <div style={{
-          background: '#191a1e', borderRadius: '14px 14px 4px 4px', padding: '9px 9px 5px',
-          boxShadow: '0 34px 60px -22px rgba(20,40,90,.32), 0 4px 14px rgba(20,40,90,.08)',
-        }}>
-          <div style={{ borderRadius: '5px', overflow: 'hidden', aspectRatio: '1600 / 1019', background: '#eef3fb' }}>
-            <Image src="/dashboard.png" alt="LOCATOR live fleet dashboard" width={1600} height={1019} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
-          </div>
-        </div>
-        {/* Base / keyboard deck */}
-        <div style={{
-          width: '112%', marginLeft: '-6%', height: '14px',
-          background: 'linear-gradient(180deg, #d4d6db, #b7bac1)',
-          borderRadius: '0 0 10px 10px',
-          boxShadow: '0 10px 18px -6px rgba(20,40,90,.28)',
-          display: 'flex', justifyContent: 'center',
-        }}>
-          <div style={{ width: '64px', height: '5px', marginTop: '2px', background: '#9a9da5', borderRadius: '999px' }} />
-        </div>
-      </div>
+      {/* Ambient wash so the cut-out render sits on the white section */}
+      <div aria-hidden="true" style={{
+        position: 'absolute', inset: '10% 4%', zIndex: 0, borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(19,96,238,.12), transparent 68%)',
+        filter: 'blur(10px)',
+      }} />
+      <Image
+        src="/footer_pages_images/gps-tracking-system/laptop.png"
+        alt="LOCATOR fleet dashboard, live map, and report screens fanned out of a laptop"
+        width={636}
+        height={586}
+        sizes="(max-width: 900px) 88vw, 460px"
+        style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '470px', height: 'auto', display: 'block' }}
+      />
     </div>
   )
 }

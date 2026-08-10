@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { REASONS } from './data'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
@@ -41,6 +42,14 @@ export default function CarTrackingWhyChoose() {
           margin: clamp(16px,2vw,22px) 0 0; max-width: 44ch;
           font-size: var(--f-15-5); line-height: 1.72; color: #6e6e73;
         }
+
+        /* Sits under the sticky heading. Capped in height so the whole sticky
+           block stays shorter than the viewport — otherwise it would stick by its
+           top edge and leave the bottom permanently cut off. */
+        .ctw-art { margin-top: clamp(24px,3vw,34px); max-width: 340px; }
+        .ctw-art img { display: block; width: 100%; height: auto; }
+        @media (max-width: 940px) { .ctw-art { display: none; } }
+        @media (max-height: 760px) { .ctw-art { display: none; } }
 
         .ctw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px,2vw,22px); }
         @media (max-width: 620px) { .ctw-grid { grid-template-columns: 1fr; } }
@@ -90,6 +99,16 @@ export default function CarTrackingWhyChoose() {
               three: what it can do, what it costs, who answers when it breaks, and whether
               it plays well with the rest of your stack.
             </p>
+
+            <div className="ctw-art">
+              <Image
+                src="/footer_pages_images/car-tracking-system/why-choose.png"
+                alt="LOCATOR reports, charts and live map running across laptop and phone"
+                width={1200}
+                height={987}
+                sizes="340px"
+              />
+            </div>
           </header>
 
           <div className="ctw-grid">

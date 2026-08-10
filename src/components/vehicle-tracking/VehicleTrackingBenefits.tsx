@@ -72,12 +72,9 @@ export default function VehicleTrackingBenefits() {
 
         /* ── Visual ── */
         .vtb-visual { position: relative; }
-        .vtb-frame {
-          position: relative; border-radius: 22px; overflow: hidden;
-          border: 1px solid #e3e9f3;
-          background: linear-gradient(160deg,#f2f7ff,#eaf2fe);
-          box-shadow: 0 40px 80px -44px rgba(20,40,90,.42);
-        }
+        /* No frame — the artwork is a cut-out on transparency, so a bordered card
+           would only draw a box around its empty corners. */
+        .vtb-frame { position: relative; }
         .vtb-frame img { display: block; width: 100%; height: auto; }
 
         .vtb-badge {
@@ -125,10 +122,10 @@ export default function VehicleTrackingBenefits() {
           <div className="vtb-visual" data-reveal="left" data-reveal-delay={100}>
             <div className="vtb-frame">
               <Image
-                src="/app-hero.png"
-                alt="The LOCATOR mobile app showing a tracked vehicle's live position and trip detail"
+                src="/footer_pages_images/vehicle-tracking-system/benefits.png"
+                alt="A driver at the wheel, surrounded by the reports, timings and location data a tracking system collects"
                 width={1200}
-                height={900}
+                height={1300}
                 sizes="(max-width: 940px) 92vw, 44vw"
               />
             </div>

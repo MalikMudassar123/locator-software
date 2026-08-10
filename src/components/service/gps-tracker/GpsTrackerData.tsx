@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
@@ -11,60 +12,6 @@ const CHECKLIST = [
   'Monitoring the usage of every asset',
   'Automating routine fleet workflows',
 ]
-
-function ReportCard() {
-  const bars = [42, 68, 55, 80, 64, 90, 74]
-  return (
-    <div style={{
-      background: '#fff', borderRadius: '20px', border: '1px solid #e7ebf3',
-      boxShadow: '0 30px 70px -28px rgba(19,96,238,.22), 0 4px 14px rgba(20,40,90,.06)',
-      overflow: 'hidden',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '14px 18px', borderBottom: '1px solid #eef1f7' }}>
-        <div style={{ display: 'flex', gap: '5px' }}>
-          {['#ff5f57', '#febc2e', '#28c840'].map(c => (
-            <span key={c} style={{ width: '9px', height: '9px', borderRadius: '50%', background: c, display: 'inline-block' }} />
-          ))}
-        </div>
-        <span style={{ fontSize: '11.5px', color: '#6e6e73', fontWeight: 600, marginLeft: '6px' }}>Detailed Report &middot; VAN-204</span>
-      </div>
-
-      <div style={{ padding: '20px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '10px', marginBottom: '18px' }}>
-          {[
-            { l: 'Distance', v: '284 km', c: '#1360ee' },
-            { l: 'Trips',    v: '9',      c: '#13923f' },
-            { l: 'Idle',     v: '38 min', c: '#c2740a' },
-          ].map(s => (
-            <div key={s.l} style={{ background: '#f5f7fb', borderRadius: '12px', padding: '12px' }}>
-              <div style={{ fontSize: '10px', color: '#8a93a2', fontWeight: 600, marginBottom: '5px' }}>{s.l}</div>
-              <div style={{ fontSize: '16px', fontWeight: 800, color: s.c }}>{s.v}</div>
-            </div>
-          ))}
-        </div>
-
-        <div style={{ background: '#f5f7fb', borderRadius: '14px', padding: '16px' }}>
-          <div style={{ fontSize: '11px', fontWeight: 700, color: '#6e6e73', marginBottom: '10px' }}>Distance covered — this week</div>
-          <div style={{ display: 'flex', alignItems: 'flex-end', gap: '6px', height: '90px' }}>
-            {bars.map((h, i) => (
-              <div key={i} style={{ flex: 1, borderRadius: '4px 4px 0 0', background: i === 5 ? '#1360ee' : '#dbe3f5', height: `${h}%`, transition: `height .3s ${EASE}` }} />
-            ))}
-          </div>
-          <div style={{ display: 'flex', gap: '6px', marginTop: '6px' }}>
-            {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => (
-              <div key={i} style={{ flex: 1, textAlign: 'center', fontSize: '9.5px', fontWeight: 700, color: i === 5 ? '#1360ee' : '#a1a1a6' }}>{d}</div>
-            ))}
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '14px', padding: '11px 14px', background: '#edfff4', borderRadius: '12px' }}>
-          <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#13923f', flexShrink: 0 }} />
-          <span style={{ fontSize: '12px', fontWeight: 700, color: '#13923f' }}>100% accurate &middot; Report generated in real time</span>
-        </div>
-      </div>
-    </div>
-  )
-}
 
 export default function GpsTrackerData() {
   return (
@@ -111,8 +58,21 @@ export default function GpsTrackerData() {
           </div>
 
           {/* Visual */}
-          <div data-reveal="right">
-            <ReportCard />
+          <div data-reveal="right" style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
+            {/* Soft blue wash so the illustration sits on the section instead of floating */}
+            <div aria-hidden="true" style={{
+              position: 'absolute', inset: '6% 4%', zIndex: 0, borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(19,96,238,.10), transparent 68%)',
+              filter: 'blur(6px)',
+            }} />
+            <Image
+              src="/footer_pages_images/gps-tracker/accurate-data.png"
+              alt="Detailed GPS tracker reports printing out of a mobile device"
+              width={1193}
+              height={1072}
+              sizes="(max-width: 900px) 90vw, 46vw"
+              style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '520px', height: 'auto', display: 'block' }}
+            />
           </div>
         </div>
       </section>

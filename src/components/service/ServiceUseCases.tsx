@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
@@ -7,32 +8,22 @@ const USE_CASES = [
     title: 'Sales & Service Tracking',
     desc: 'The ideal solution to track and monitor sales and service vehicles that carry employees and products on the road.',
     href: '/service/fleet-telematics',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="4" width="14" height="16" rx="2" /><path d="M17 9h2.5L22 12.5V16h-5" /><circle cx="7.5" cy="20" r="1.6" /><circle cx="17.5" cy="20" r="1.6" />
-      </svg>
-    ),
+    img: '/footer_pages_images/gps-tracker/vehicle_tracking.jpg',
+    alt: 'Sales and service vehicle tracked live on a desktop dashboard',
   },
   {
     title: 'Delivery & Trucks Tracking',
     desc: 'Customer service and fleet efficiency that result in the financial success of your service delivery and trucking business.',
     href: '/service/fleet-telematics',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="1" y="7" width="13" height="10" rx="1.5" /><path d="M14 10h4l3.5 3.5V17h-7.5" /><circle cx="6" cy="19" r="1.7" /><circle cx="17.5" cy="19" r="1.7" />
-      </svg>
-    ),
+    img: '/footer_pages_images/gps-tracker/truck-tracking.jpg',
+    alt: 'Delivery truck monitored through the LOCATOR fleet dashboard',
   },
   {
     title: 'Asset Tracking',
     desc: 'Monitor important events of generators and other assets — location, fuel level, running hours, temperature, and more.',
     href: '/service/smart-iot',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" />
-        <rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" />
-      </svg>
-    ),
+    img: '/footer_pages_images/gps-tracker/asset-tracking.jpg',
+    alt: 'Construction assets and generators pinned on a tracking map',
   },
 ]
 
@@ -53,16 +44,17 @@ export default function ServiceUseCases() {
         @media (max-width: 820px) { .suc-cards { grid-template-columns: 1fr; } }
         .suc-card {
           background: #fff; border: 1px solid #e7ebf3; border-radius: 20px;
-          padding: 30px 26px; text-align: left; text-decoration: none; display: block;
+          overflow: hidden; text-align: left; text-decoration: none; display: block;
           transition: transform .26s ${EASE}, box-shadow .26s ${EASE}, border-color .26s ${EASE};
         }
         .suc-card:hover { transform: translateY(-4px); box-shadow: 0 22px 44px -20px rgba(19,96,238,.28); border-color: #dbe6ff; }
-        .suc-icon {
-          width: 50px; height: 50px; border-radius: 14px; background: #eef3ff; color: #1360ee;
-          display: grid; place-items: center; margin-bottom: 18px;
-          transition: transform .26s ${EASE};
+        .suc-media {
+          display: block; overflow: hidden; background: #f3f7ff;
+          border-bottom: 1px solid #eef1f7;
         }
-        .suc-card:hover .suc-icon { transform: scale(1.06) rotate(-3deg); }
+        .suc-media img { width: 100%; height: auto; display: block; transition: transform .35s ${EASE}; }
+        .suc-card:hover .suc-media img { transform: scale(1.04); }
+        .suc-body { padding: 24px 26px 28px; }
         .suc-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; font-size: 13px; font-weight: 700; color: #1360ee; }
       `}</style>
 
@@ -83,10 +75,14 @@ export default function ServiceUseCases() {
           <div className="suc-cards">
             {USE_CASES.map(u => (
               <Link key={u.title} href={u.href} className="suc-card" data-reveal>
-                <span className="suc-icon">{u.icon}</span>
-                <h3 style={{ margin: '0 0 8px', fontSize: '16px', fontWeight: 800, color: '#1d1d1f', letterSpacing: '-.01em' }}>{u.title}</h3>
-                <p style={{ margin: 0, fontSize: '13.5px', lineHeight: 1.65, color: '#6e6e73' }}>{u.desc}</p>
-                <span className="suc-link">Read details →</span>
+                <div className="suc-media">
+                  <Image src={u.img} alt={u.alt} width={302} height={228} sizes="(max-width: 820px) 92vw, 360px" />
+                </div>
+                <div className="suc-body">
+                  <h3 style={{ margin: '0 0 8px', fontSize: '16px', fontWeight: 800, color: '#1d1d1f', letterSpacing: '-.01em' }}>{u.title}</h3>
+                  <p style={{ margin: 0, fontSize: '13.5px', lineHeight: 1.65, color: '#6e6e73' }}>{u.desc}</p>
+                  <span className="suc-link">Read details →</span>
+                </div>
               </Link>
             ))}
           </div>

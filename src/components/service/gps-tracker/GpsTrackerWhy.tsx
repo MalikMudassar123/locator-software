@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
@@ -20,9 +21,7 @@ const TABS = [
     body: 'Tell us your fleet size and we’ll put together a tailored, no-obligation quote within one business day.',
     stat: { value: '950,104+', sub: 'quotes generated to date' },
     cta: { label: 'Get a free quote', href: '/get-a-quote' },
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5" /><path d="M8 11l2.5 2.5L16 8" /></svg>
-    ),
+    img: { src: '/footer_pages_images/gps-tracker/request-for-a-quote.svg', w: 831, h: 665, alt: 'Requesting a free GPS tracker quote online' },
   },
   {
     key: 'demo',
@@ -31,9 +30,7 @@ const TABS = [
     body: 'Book a walkthrough with our team and watch the platform track a real device in real time.',
     stat: { value: '20 min', sub: 'average demo length' },
     cta: { label: 'Book a free demo', href: '/contact' },
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="6 3 20 12 6 21" /></svg>
-    ),
+    img: { src: '/footer_pages_images/gps-tracker/get-a-free-demo.svg', w: 802, h: 617, alt: 'Live walkthrough demo of the LOCATOR tracking platform' },
   },
   {
     key: 'install',
@@ -42,9 +39,7 @@ const TABS = [
     body: 'Our certified technicians fit and configure every device on-site, so it starts reporting from day one.',
     stat: { value: '48 hrs', sub: 'typical install turnaround' },
     cta: { label: 'Schedule installation', href: '/contact' },
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z" /></svg>
-    ),
+    img: { src: '/footer_pages_images/gps-tracker/get-installed.svg', w: 803, h: 617, alt: 'Certified technician installing a GPS tracker device on-site' },
   },
   {
     key: 'monitor',
@@ -53,9 +48,7 @@ const TABS = [
     body: 'Once installed, your fleet appears instantly on the platform — live location, alerts, and reports from minute one.',
     stat: { value: '99.9%', sub: 'tracking network uptime' },
     cta: { label: 'View the platform', href: '/software' },
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
-    ),
+    img: { src: '/footer_pages_images/gps-tracker/start-monitoring.svg', w: 803, h: 617, alt: 'Monitoring a live fleet on the LOCATOR dashboard' },
   },
 ]
 
@@ -128,9 +121,25 @@ export default function GpsTrackerWhy() {
               border: '1px solid rgba(255,255,255,.08)',
               borderRadius: '22px', padding: 'clamp(28px,4vw,40px)',
             }}>
-              <span style={{ width: '52px', height: '52px', borderRadius: '14px', background: 'rgba(19,96,238,.16)', color: '#5b93ff', display: 'grid', placeItems: 'center', marginBottom: '20px' }}>
-                {tab.icon}
-              </span>
+              {/* Illustration sits on a light tile so the artwork stays readable on the dark panel */}
+              <div style={{
+                position: 'relative', marginBottom: '24px',
+                borderRadius: '16px', overflow: 'hidden',
+                background: 'linear-gradient(160deg, #ffffff 0%, #f2f6fd 100%)',
+                border: '1px solid rgba(255,255,255,.1)',
+                padding: 'clamp(14px,2.2vw,22px)',
+                display: 'grid', placeItems: 'center',
+              }}>
+                <Image
+                  src={tab.img.src}
+                  alt={tab.img.alt}
+                  width={tab.img.w}
+                  height={tab.img.h}
+                  sizes="(max-width: 940px) 88vw, 46vw"
+                  unoptimized={tab.img.src.endsWith('.svg')}
+                  style={{ width: '100%', maxWidth: '380px', height: 'auto', display: 'block' }}
+                />
+              </div>
               <h3 style={{ margin: '0 0 10px', fontSize: 'clamp(17px,1.8vw,21px)', fontWeight: 800, color: '#fff', letterSpacing: '-.01em' }}>{tab.headline}</h3>
               <p style={{ margin: '0 0 26px', fontSize: '14px', lineHeight: 1.7, color: 'rgba(255,255,255,.62)', maxWidth: '42ch' }}>{tab.body}</p>
 

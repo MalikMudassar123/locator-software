@@ -44,6 +44,12 @@ export default function GpsTrackingSystemPage() {
         eyebrow="The App In Action"
         heading="See screenshots of our GPS tracking system for vehicles in UAE"
         lead="From these screenshots, you can see that LOCATOR is highly customizable. It has been developed to meet the varying needs of individuals and businesses."
+        screens={[
+          { src: '/footer_pages_images/gps-tracking-system/home-page.png', alt: 'LOCATOR app login screen', w: 592, h: 1024 },
+          { src: '/footer_pages_images/gps-tracking-system/poi.png', alt: 'LOCATOR app map view with every tracked vehicle and point of interest', w: 592, h: 1024 },
+          { src: '/footer_pages_images/gps-tracking-system/detailed-report.png', alt: 'LOCATOR app detailed report — trips, parking, and idling with durations and distances', w: 592, h: 1024 },
+          { src: '/footer_pages_images/gps-tracking-system/idling-alert.png', alt: 'LOCATOR app idling alert pinned to the vehicle location on the map', w: 592, h: 1024 },
+        ]}
       />
       <ServiceVideo />
       <ServiceUseCases />

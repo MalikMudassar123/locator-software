@@ -22,10 +22,8 @@ const PROOF = [
 /**
  * The opening.
  *
- * A wide isometric city panel sits opposite the headline — the reference used an
- * illustration of a tracked city, and the idea is right: it says "everything on
- * one map" before a single line of copy is read. Ours is drawn rather than a
- * stock raster, so it stays crisp at any width, weighs nothing, and can animate.
+ * An isometric city panel sits opposite the headline — it says "everything on
+ * one map" before a single line of copy is read.
  */
 export default function VehicleTrackingHero() {
   return (
@@ -118,46 +116,12 @@ export default function VehicleTrackingHero() {
         .vth-proof-row img:hover { filter: none; opacity: 1; }
 
         /* ── Isometric city panel ── */
-        /* Optically raised. The copy column is far taller than the artwork, so
-           centring the row leaves the illustration sitting well below the
-           headline it belongs to — it reads as having slipped down the page.
-           Pulling it up aligns it with the title block instead of with the
-           column's midpoint. Desktop only: once the layout stacks there is no
-           second column to align against, and a negative margin would collide
-           with the copy above it. */
+        /* No optical raise here: the artwork is close to square, so its height is
+           near the copy column's and centring already lands it against the title
+           block. The negative margin this rule used to carry was tuned for a much
+           wider drawing and would now pull the image clear of the headline. */
         .vth-art { position: relative; }
-        .vth-art svg { display: block; width: 100%; height: auto; overflow: visible; }
-        @media (min-width: 961px) {
-          .vth-art { margin-top: clamp(-96px, -6.5vw, -40px); }
-        }
-
-        /* Pins drop in, then hold a slow float. Each sets its own --d so the four
-           land in sequence rather than together. */
-        @keyframes vthDrop { 0% { opacity: 0; transform: translateY(-16px) scale(.7); } 60% { opacity: 1; } 100% { opacity: 1; transform: none; } }
-        @keyframes vthFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-        @media (prefers-reduced-motion: no-preference) {
-          .vth-pin { opacity: 0; transform-box: fill-box; transform-origin: 50% 100%;
-            animation: vthDrop .7s ${EASE} var(--d,0ms) forwards, vthFloat 4.2s ease-in-out var(--fd,0ms) infinite; }
-          .vth-dash { stroke-dasharray: 6 7; animation: vthDash 2.4s linear infinite; }
-          @keyframes vthDash { to { stroke-dashoffset: -26; } }
-        }
-
-        /* 24%, not 40%: this is a percentage of the art box, and the box lost its
-           empty top when the viewBox was tightened. 24% of the new box lands on
-           the same point of the drawing that 40% of the old one did. */
-        .vth-card {
-          position: absolute; left: 4%; top: 24%;
-          display: flex; align-items: center; gap: 11px;
-          background: #fff; border: 1px solid #e7ebf3; border-radius: 14px;
-          padding: 11px 15px; box-shadow: 0 20px 40px -20px rgba(20,40,90,.5);
-        }
-        .vth-card b { display: block; font-size: var(--f-12); font-weight: 800; color: #1d1d1f; line-height: 1.3; }
-        .vth-card span { display: block; font-size: var(--f-10-5); color: #6e6e73; margin-top: 2px; }
-        .vth-card i {
-          width: 8px; height: 8px; border-radius: 50%; background: #1fbf5b; flex-shrink: 0;
-          box-shadow: 0 0 0 4px rgba(31,191,91,.18);
-        }
-        @media (max-width: 560px) { .vth-card { display: none; } }
+        .vth-art img { display: block; width: 100%; height: auto; }
       `}</style>
 
       <section className="vth">
@@ -214,86 +178,14 @@ export default function VehicleTrackingHero() {
 
           {/* ── Isometric city ── */}
           <div className="vth-art vth-anim" style={{ '--d': '240ms' } as React.CSSProperties}>
-            {/* viewBox starts at y=100, not 0. The topmost drawn thing is a pin
-                cap at y≈110, so the first fifth of a 0-based box was dead space —
-                and because the box is what the grid centres, that emptiness was
-                pushing the whole illustration down the page. 10 units of headroom
-                are left for the pins' float. */}
-            <svg viewBox="0 100 620 372" role="img" aria-label="Illustration of a city with tracked vehicles and location pins on a live map">
-              <defs>
-                <linearGradient id="vthSky" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stopColor="#eef5ff" /><stop offset="1" stopColor="#f8fbff" />
-                </linearGradient>
-                <linearGradient id="vthPin" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stopColor="#3b82f6" /><stop offset="1" stopColor="#1360ee" />
-                </linearGradient>
-                <linearGradient id="vthTower" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stopColor="#dbe8fb" /><stop offset="1" stopColor="#c3d8f6" />
-                </linearGradient>
-              </defs>
-
-              {/* Ground plane */}
-              <ellipse cx="310" cy="330" rx="300" ry="132" fill="url(#vthSky)" />
-
-              {/* Roads, drawn as two crossing isometric bands */}
-              <path d="M40 300 L300 168 L580 300 L320 432 Z" fill="#e6eefa" />
-              <path d="M120 300 L300 210 L500 300 L320 390 Z" fill="#f4f8ff" />
-              <path className="vth-dash" d="M110 300 L300 205 L510 300" fill="none" stroke="#1360ee" strokeWidth="2.4" strokeLinecap="round" opacity=".55" />
-
-              {/* Towers */}
-              {[
-                { x: 352, y: 172, w: 44, h: 96 },
-                { x: 404, y: 146, w: 38, h: 122 },
-                { x: 450, y: 190, w: 34, h: 78 },
-              ].map(t => (
-                <g key={t.x}>
-                  <path d={`M${t.x} ${t.y + t.h} L${t.x} ${t.y} L${t.x + t.w / 2} ${t.y - 18} L${t.x + t.w / 2} ${t.y + t.h - 18} Z`} fill="url(#vthTower)" />
-                  <path d={`M${t.x + t.w / 2} ${t.y - 18} L${t.x + t.w} ${t.y} L${t.x + t.w} ${t.y + t.h} L${t.x + t.w / 2} ${t.y + t.h - 18} Z`} fill="#aec9ef" />
-                  {[0, 1, 2, 3].map(r => (
-                    <rect key={r} x={t.x + 8} y={t.y + 14 + r * 22} width={t.w / 2 - 16} height="9" rx="2" fill="#fff" opacity=".8" />
-                  ))}
-                </g>
-              ))}
-
-              {/* Vehicles — simple isometric blocks, enough to read at a glance */}
-              {[
-                { x: 168, y: 258, c: '#1360ee', w: 54 },
-                { x: 262, y: 300, c: '#f97316', w: 66 },
-                { x: 356, y: 268, c: '#0a89dd', w: 48 },
-              ].map(v => (
-                <g key={v.x}>
-                  <path d={`M${v.x} ${v.y} l${v.w} -26 l26 13 l-${v.w} 26 z`} fill={v.c} opacity=".92" />
-                  <path d={`M${v.x} ${v.y} l26 13 l0 15 l-26 -13 z`} fill={v.c} opacity=".7" />
-                  <path d={`M${v.x + v.w} ${v.y - 26} l26 13 l0 15 l-26 -13 z`} fill={v.c} opacity=".55" />
-                </g>
-              ))}
-
-              {/* Location pins */}
-              {[
-                { x: 150, y: 190, d: 500, f: 0 },
-                { x: 268, y: 150, d: 640, f: 400 },
-                { x: 396, y: 118, d: 780, f: 800 },
-                { x: 486, y: 226, d: 920, f: 1200 },
-              ].map(p => (
-                <g key={p.x} className="vth-pin" style={{ '--d': `${p.d}ms`, '--fd': `${p.f}ms` } as React.CSSProperties}>
-                  <path
-                    d={`M${p.x} ${p.y + 44} c0 0 -18 -22 -18 -34 a18 18 0 0 1 36 0 c0 12 -18 34 -18 34 z`}
-                    fill="url(#vthPin)"
-                  />
-                  <circle cx={p.x} cy={p.y + 10} r="6.4" fill="#fff" />
-                </g>
-              ))}
-
-              <ellipse cx="310" cy="420" rx="180" ry="14" fill="#1360ee" opacity=".07" />
-            </svg>
-
-            <div className="vth-card">
-              <i />
-              <div>
-                <b>Pickup 88746</b>
-                <span>En route · Sheikh Zayed Rd</span>
-              </div>
-            </div>
+            <Image
+              src="/footer_pages_images/vehicle-tracking-system/hero.png"
+              alt="Cars, trucks, a boat, a scooter and site machinery pinned across a city on one live map"
+              width={1000}
+              height={963}
+              sizes="(max-width: 960px) 92vw, 54vw"
+              priority
+            />
           </div>
         </div>
       </section>

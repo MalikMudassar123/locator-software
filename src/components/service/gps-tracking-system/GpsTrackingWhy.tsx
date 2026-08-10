@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
 const LEFT_ITEMS = [
@@ -15,75 +17,22 @@ const RIGHT_ITEMS = [
 ]
 
 function PhoneMock() {
-  const segments = [
-    { pct: 42, color: '#1fbf5b' },
-    { pct: 21, color: '#ff9f0a' },
-    { pct: 37, color: '#ff5f57' },
-  ]
-  let acc = 0
-  const stops = segments.map(s => {
-    const from = acc
-    acc += s.pct
-    return `${s.color} ${from}% ${acc}%`
-  }).join(', ')
-
   return (
-    <div style={{
-      width: 'min(58vw, 220px)', borderRadius: '30px', overflow: 'hidden',
-      background: '#0f1117', border: '6px solid #0f1117',
-      boxShadow: '0 34px 60px -22px rgba(19,96,238,.34), 0 4px 14px rgba(20,40,90,.1)',
-    }}>
-      {/* Status bar */}
-      <div style={{ background: '#1360ee', padding: '10px 14px 6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ fontSize: '10px', color: '#fff', fontWeight: 700 }}>5:26</span>
-        <span style={{ fontSize: '10px', color: '#fff', fontWeight: 800, letterSpacing: '.02em' }}>LOC@TOR</span>
-        <span style={{ fontSize: '9px', color: 'rgba(255,255,255,.85)', fontWeight: 700 }}>87%</span>
-      </div>
-
-      <div style={{ background: '#fff', padding: '18px 16px 14px' }}>
-        {/* Ring chart */}
-        <div style={{
-          width: '128px', height: '128px', borderRadius: '50%', margin: '0 auto 12px',
-          background: `conic-gradient(${stops})`,
-          display: 'grid', placeItems: 'center', position: 'relative',
-        }}>
-          <div style={{ width: '84px', height: '84px', borderRadius: '50%', background: '#fff', display: 'grid', placeItems: 'center' }}>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '19px', fontWeight: 800, color: '#1360ee' }}>13</div>
-              <div style={{ fontSize: '8px', color: '#8a93a2', fontWeight: 700 }}>TOTAL</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Status legend */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '14px' }}>
-          {[
-            { l: 'Moving', v: '6', c: '#1fbf5b' },
-            { l: 'Idling', v: '3', c: '#ff9f0a' },
-            { l: 'Stopped', v: '4', c: '#ff5f57' },
-          ].map(s => (
-            <div key={s.l} style={{ textAlign: 'center' }}>
-              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: s.c, margin: '0 auto 4px' }} />
-              <div style={{ fontSize: '11px', fontWeight: 800, color: '#1d1d1f' }}>{s.v}</div>
-              <div style={{ fontSize: '8px', color: '#8a93a2', fontWeight: 600 }}>{s.l}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Quick-action tiles */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '7px' }}>
-          {['Live View', 'Trips', 'Report', 'Summary'].map(t => (
-            <div key={t} style={{ background: '#f5f7fb', borderRadius: '9px', padding: '9px 10px', fontSize: '9.5px', fontWeight: 700, color: '#3a3a3c' }}>{t}</div>
-          ))}
-        </div>
-      </div>
-
-      {/* Bottom nav */}
-      <div style={{ background: '#fff', borderTop: '1px solid #eef1f7', display: 'flex', justifyContent: 'space-around', padding: '9px 0' }}>
-        {[0, 1, 2].map(i => (
-          <span key={i} style={{ width: '16px', height: '16px', borderRadius: '4px', background: i === 1 ? '#1360ee' : '#dbe3f5', display: 'inline-block' }} />
-        ))}
-      </div>
+    <div style={{ position: 'relative', display: 'grid', placeItems: 'center' }}>
+      {/* Ambient wash behind the cut-out device */}
+      <div aria-hidden="true" style={{
+        position: 'absolute', width: '128%', aspectRatio: '1 / 1', zIndex: 0, borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(19,96,238,.14), transparent 66%)',
+        filter: 'blur(10px)',
+      }} />
+      <Image
+        src="/footer_pages_images/gps-tracking-system/dashboard.png"
+        alt="LOCATOR app dashboard — moving, idling, and stopped vehicle counts with live view, trips, reports, and summary"
+        width={592}
+        height={1024}
+        sizes="(max-width: 900px) 58vw, 250px"
+        style={{ position: 'relative', zIndex: 1, width: 'min(58vw, 250px)', height: 'auto', display: 'block' }}
+      />
     </div>
   )
 }

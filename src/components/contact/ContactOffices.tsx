@@ -20,20 +20,6 @@ type Office = {
 const OFFICES: Office[] = [
   {
     n: '01',
-    city: 'Abu Dhabi',
-    emirate: 'Emirate of Abu Dhabi',
-    badge: 'Regional Office',
-    img: '/Rental & Leasing,Transportation & Logistics -1,Transportation & Logistics/cover image indutries.webp',
-    imgAlt: 'Locator Abu Dhabi — industrial and logistics corridor',
-    address: 'Capital Mall, Mohammed Bin Zayed City,\nAbu Dhabi, United Arab Emirates',
-    phone: '+971 52 675 1880',
-    phoneHref: 'tel:+971526751880',
-    email: 'info@locator.ae',
-    hours: 'Mon – Sat · 9:00 AM – 6:00 PM',
-    maps: 'https://maps.google.com/?q=Capital+Mall+Mohammed+Bin+Zayed+City+Abu+Dhabi',
-  },
-  {
-    n: '02',
     city: 'Dubai',
     emirate: 'Emirate of Dubai',
     badge: 'Head Office',
@@ -45,6 +31,20 @@ const OFFICES: Office[] = [
     email: 'info@locator.ae',
     hours: 'Mon – Sat · 9:00 AM – 6:00 PM',
     maps: 'https://maps.google.com/?q=Sheikh+Zayed+Road+Trade+Centre+1+Dubai',
+  },
+  {
+    n: '02',
+    city: 'Abu Dhabi',
+    emirate: 'Emirate of Abu Dhabi',
+    badge: 'Regional Office',
+    img: '/Rental & Leasing,Transportation & Logistics -1,Transportation & Logistics/cover image indutries.webp',
+    imgAlt: 'Locator Abu Dhabi — industrial and logistics corridor',
+    address: 'Capital Mall, Mohammed Bin Zayed City,\nAbu Dhabi, United Arab Emirates',
+    phone: '+971 52 675 1880',
+    phoneHref: 'tel:+971526751880',
+    email: 'info@locator.ae',
+    hours: 'Mon – Sat · 9:00 AM – 6:00 PM',
+    maps: 'https://maps.google.com/?q=Capital+Mall+Mohammed+Bin+Zayed+City+Abu+Dhabi',
   },
 ]
 
@@ -233,7 +233,7 @@ export default function ContactOffices() {
           </span>
           <h2 className="cto-title"><span>UAE</span></h2>
           <p className="cto-sub">
-            Two teams on the ground — Abu Dhabi and Dubai — covering installation, support,
+            Two teams on the ground — Dubai and Abu Dhabi — covering installation, support,
             and compliance across all seven emirates.
           </p>
         </div>

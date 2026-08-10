@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
 const CHECKLIST = [
@@ -6,13 +8,6 @@ const CHECKLIST = [
   'Knowing when drivers are deviating from their normal routes',
   'Getting notified when your cars are due for maintenance',
   'And many more',
-]
-
-const ALERTS = [
-  { icon: '⛽', title: 'Fuel consumption spike',    sub: 'VAN-204 · 18 L today',        bg: '#fff3e8', c: '#c2740a' },
-  { icon: '🧭', title: 'Route deviation detected',   sub: 'TRK-118 · Off planned route', bg: '#eef3ff', c: '#1360ee' },
-  { icon: '🔧', title: 'Maintenance due',            sub: 'VAN-211 · 320 km remaining',   bg: '#fff0f2', c: '#c0384d' },
-  { icon: '✅', title: 'Trip completed safely',       sub: 'BUS-007 · No violations',      bg: '#edfff4', c: '#13923f' },
 ]
 
 export default function CarGpsAbout() {
@@ -28,8 +23,6 @@ export default function CarGpsAbout() {
           transition: transform .2s ${EASE}, background .2s ${EASE};
         }
         .cga-item:hover .cga-check { background: #1360ee; color: #fff; transform: scale(1.08); }
-        .cga-alert-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; transition: transform .2s ${EASE}; }
-        .cga-alert-row:hover { transform: translateX(3px); }
       `}</style>
 
       <section style={{ padding: 'clamp(56px,7vw,92px) 28px', background: '#f7f9fc' }}>
@@ -60,26 +53,21 @@ export default function CarGpsAbout() {
             </div>
           </div>
 
-          {/* Live alerts visual */}
-          <div data-reveal="right">
-            <div style={{ background: '#fff', borderRadius: '20px', border: '1px solid #e7ebf3', boxShadow: '0 30px 70px -28px rgba(19,96,238,.2), 0 4px 14px rgba(20,40,90,.06)', overflow: 'hidden' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '16px 20px', borderBottom: '1px solid #eef1f7' }}>
-                <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#1fbf5b', boxShadow: '0 0 0 4px rgba(31,191,91,.18)' }} />
-                <span style={{ fontSize: '13px', fontWeight: 800, color: '#1d1d1f' }}>Live Alerts</span>
-                <span style={{ marginLeft: 'auto', fontSize: '11px', color: '#8a93a2', fontWeight: 600 }}>Just now</span>
-              </div>
-              <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {ALERTS.map(a => (
-                  <div key={a.title} className="cga-alert-row" style={{ background: a.bg }}>
-                    <span style={{ fontSize: '18px' }}>{a.icon}</span>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: '13px', fontWeight: 700, color: '#1d1d1f' }}>{a.title}</div>
-                      <div style={{ fontSize: '11.5px', color: a.c, marginTop: '1px' }}>{a.sub}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+          {/* Device alerts illustration */}
+          <div data-reveal="right" style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
+            <div aria-hidden="true" style={{
+              position: 'absolute', inset: '8% 6%', zIndex: 0, borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(19,96,238,.12), transparent 68%)',
+              filter: 'blur(8px)',
+            }} />
+            <Image
+              src="/footer_pages_images/car-gps-tracker/about-device.png"
+              alt="Fleet manager receiving LOCATOR alerts for fuel, routes, servicing, and messages"
+              width={600}
+              height={900}
+              sizes="(max-width: 900px) 76vw, 400px"
+              style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '380px', height: 'auto', display: 'block' }}
+            />
           </div>
         </div>
       </section>

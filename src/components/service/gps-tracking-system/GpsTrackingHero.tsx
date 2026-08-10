@@ -28,7 +28,8 @@ export default function GpsTrackingHero() {
     <>
       <style>{`
         @keyframes gtsRise { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
-        @keyframes gtsDrift { 0%,100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-12px) rotate(-4deg); } }
+        /* The artwork is already fanned at an angle, so this just floats it — no extra tilt */
+        @keyframes gtsDrift { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
         .gts-hero { position: relative; overflow: hidden; background: #ffffff; }
         .gts-hero-grid {
           position: relative; z-index: 1; max-width: 1200px; margin: 0 auto;
@@ -80,10 +81,11 @@ export default function GpsTrackingHero() {
           <div className="gts-viz" style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
             <div className="gts-viz-inner" style={{ position: 'relative', width: '100%', maxWidth: '480px' }}>
               <Image
-                src="/app-hero.png"
-                alt="LOCATOR GPS tracking app — live view, trip summary, and graphical report screens"
-                width={1600}
-                height={1244}
+                src="/footer_pages_images/gps-tracking-system/hero.png"
+                alt="LOCATOR GPS tracking app screens — live map, dashboard, trip summaries, detailed reports, and login"
+                width={822}
+                height={791}
+                sizes="(max-width: 900px) 88vw, 480px"
                 style={{ width: '100%', height: 'auto', display: 'block', filter: 'drop-shadow(0 34px 54px rgba(19,96,238,.22))' }}
                 priority
               />

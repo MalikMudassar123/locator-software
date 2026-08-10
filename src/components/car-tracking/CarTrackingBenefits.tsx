@@ -61,11 +61,9 @@ export default function CarTrackingBenefits() {
 
         /* ── Visual ── */
         .ctb-visual { position: relative; }
-        .ctb-frame {
-          position: relative; border-radius: 22px; overflow: hidden;
-          border: 1px solid #e3e9f3; background: #fff;
-          box-shadow: 0 40px 80px -44px rgba(20,40,90,.45);
-        }
+        /* No frame — the artwork is a cut-out with its own blue field, so a
+           bordered card would just draw a box around empty corners. */
+        .ctb-frame { position: relative; }
         .ctb-frame img { display: block; width: 100%; height: auto; }
 
         /* Floating figure. Sits half off the frame so the panel reads as layered
@@ -116,10 +114,10 @@ export default function CarTrackingBenefits() {
           <div className="ctb-visual" data-reveal="left" data-reveal-delay={120}>
             <div className="ctb-frame">
               <Image
-                src="/dashboard.png"
-                alt="LOCATOR reporting dashboard showing fleet trips, utilisation and cost per vehicle"
-                width={1200}
-                height={820}
+                src="/footer_pages_images/car-tracking-system/how-you-benefit.png"
+                alt="LOCATOR fleet map held on a tablet, surrounded by trip, cost and monthly report figures"
+                width={1242}
+                height={828}
                 sizes="(max-width: 940px) 92vw, 46vw"
               />
             </div>

@@ -14,7 +14,8 @@ export type Capability = {
   title: string
   desc: string
   href: string
-  icon: ReactNode
+  img: string
+  alt: string
 }
 
 /** "What we offer" — the three things the platform is for. */
@@ -24,36 +25,24 @@ export const CAPABILITIES: Capability[] = [
     desc:
       'Every vehicle, every driver, every route — live on one map. See where each car is, what it is doing and how it got there, without calling anyone to ask.',
     href: '/service/fleet-telematics',
-    icon: (
-      <svg viewBox="0 0 24 24" {...s} aria-hidden="true">
-        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-        <circle cx="12" cy="10" r="3" />
-      </svg>
-    ),
+    img: '/footer_pages_images/car-tracking-system/real-time-fleet-visibility.png',
+    alt: 'A tracked car reporting its route to a satellite and a live map on screen',
   },
   {
     title: 'Reduced fleet cost',
     desc:
       'Idling, speeding, after-hours use and unplanned detours are where a fleet quietly leaks money. LOCATOR measures all four, so you can act on the ones that cost most.',
     href: '/benefits-of-gps-tracking',
-    icon: (
-      <svg viewBox="0 0 24 24" {...s} aria-hidden="true">
-        <path d="M12 2v20" />
-        <path d="M17 6.5A3.5 3.5 0 0 0 13.5 3h-3a3.5 3.5 0 0 0 0 7h3a3.5 3.5 0 0 1 0 7h-3A3.5 3.5 0 0 1 7 13.5" />
-      </svg>
-    ),
+    img: '/footer_pages_images/car-tracking-system/reduced-fleet-cost.png',
+    alt: 'Fuel pump beside a falling cost chart, reviewed under a magnifier',
   },
   {
     title: 'Effortless reporting',
     desc:
       'Trip histories, fuel, utilisation, driver behaviour and maintenance due — scheduled to your inbox or exported on demand. Decisions backed by the record, not by memory.',
     href: '/software',
-    icon: (
-      <svg viewBox="0 0 24 24" {...s} aria-hidden="true">
-        <path d="M3 3v18h18" />
-        <path d="M7 15l4-5 3 3 5-7" />
-      </svg>
-    ),
+    img: '/footer_pages_images/car-tracking-system/easy-reporting.png',
+    alt: 'Fleet report panels showing utilisation, fuel and cost breakdowns',
   },
 ]
 

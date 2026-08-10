@@ -1,15 +1,19 @@
 import Image from 'next/image'
+import ServiceAppCarousel, { type AppScreen } from './ServiceAppCarousel'
 
 type ServiceAppScreensProps = {
   eyebrow?: string
   heading?: string
   lead?: string
+  /** Pass phone screenshots to render them as a rotating device carousel instead of the single hero image. */
+  screens?: AppScreen[]
 }
 
 export default function ServiceAppScreens({
   eyebrow = 'The App In Action',
   heading = 'See screenshots of our GPS tracker app in action',
   lead = 'Real screens from the LOCATOR mobile app — live vehicle view, trip summaries, and detailed graphical reports, all tailored to your fleet.',
+  screens,
 }: ServiceAppScreensProps) {
   return (
     <>
@@ -34,13 +38,17 @@ export default function ServiceAppScreens({
 
           <div data-reveal="zoom" style={{ position: 'relative' }}>
             <div className="sas-glow" aria-hidden="true" />
-            <Image
-              src="/app-hero.png"
-              alt="LOCATOR mobile app — graphical report, live view, and summary screens"
-              width={1600}
-              height={1244}
-              style={{ position: 'relative', width: '100%', maxWidth: '880px', height: 'auto', display: 'block', margin: '0 auto' }}
-            />
+            {screens?.length ? (
+              <ServiceAppCarousel screens={screens} />
+            ) : (
+              <Image
+                src="/app-hero.png"
+                alt="LOCATOR mobile app — graphical report, live view, and summary screens"
+                width={1600}
+                height={1244}
+                style={{ position: 'relative', width: '100%', maxWidth: '880px', height: 'auto', display: 'block', margin: '0 auto' }}
+              />
+            )}
           </div>
         </div>
       </section>

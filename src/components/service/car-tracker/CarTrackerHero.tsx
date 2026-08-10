@@ -17,10 +17,6 @@ export default function CarTrackerHero() {
           0%,100% { opacity: .12; transform: scale(1) rotate(0deg); }
           50%      { opacity: .2;  transform: scale(1.05) rotate(180deg); }
         }
-        @keyframes ctPulse {
-          0%,100% { transform: scale(1);   opacity: .55; }
-          50%      { transform: scale(1.08); opacity: .8; }
-        }
         .ct-hero { position: relative; overflow: hidden; isolation: isolate; background: linear-gradient(135deg, #1a6bf0 0%, #0d4fd4 100%); }
         .ct-hero-grid {
           position: relative; z-index: 1;
@@ -38,7 +34,6 @@ export default function CarTrackerHero() {
           .ct-hero-copy { animation: ctHeroRise .85s ${EASE} .05s both; }
           .ct-hero-viz  { animation: ctHeroRise .9s ${EASE} .15s both; }
           .ct-ring { animation: ctRing 12s linear infinite; }
-          .ct-pulse { animation: ctPulse 4.5s ease-in-out infinite; }
         }
         .ct-ring { position: absolute; border-radius: 50%; border: 1px solid rgba(255,255,255,.22); pointer-events: none; }
         .ct-btn {
@@ -91,17 +86,12 @@ export default function CarTrackerHero() {
 
           {/* Visual — real app screens on an amber ambient glow */}
           <div className="ct-hero-viz" style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
-            <div className="ct-pulse" aria-hidden="true" style={{
-              position: 'absolute', width: 'min(78%, 340px)', aspectRatio: '1 / 1',
-              borderRadius: '50%', top: '48%', left: '50%', transform: 'translate(-50%,-50%)',
-              background: 'radial-gradient(circle, rgba(255,170,40,.55), transparent 70%)',
-              filter: 'blur(10px)', zIndex: 0,
-            }} />
             <Image
-              src="/app-hero.png"
-              alt="LOCATOR Car Tracker app — live view, trip summary, and graphical reports"
-              width={1600}
-              height={1244}
+              src="/footer_pages_images/car-tracker/hero.png"
+              alt="LOCATOR Car Tracker app — trips view with route playback and live view with vehicle status"
+              width={1200}
+              height={1215}
+              sizes="(max-width: 900px) 88vw, 520px"
               style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '520px', height: 'auto', display: 'block', filter: 'drop-shadow(0 30px 50px rgba(9,25,60,.4))' }}
               priority
             />

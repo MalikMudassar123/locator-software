@@ -3,36 +3,17 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
-const NAMED_LOGOS = [
-  { name: "ABU DHABI EXECUTIVE OFFICE",     src: "/client Logo/ABU-DHABI-EXECUTIVE-OFFICE.png" },
-  { name: "AL LAITH GROUP",                  src: "/client Logo/AL LAITH Group.png" },
-  { name: "Aditya Birla Group",              src: "/client Logo/Aditya-Birla-Group-Logo-Vector-600x600-1 (1).jpg" },
-  { name: "DB Schenker",                     src: "/client Logo/DB-SCHENKER.png" },
-  { name: "ELMEC",                           src: "/client Logo/ELMEC-.png" },
-  { name: "GMG",                             src: "/client Logo/GMG.png" },
-  { name: "Refrigerated Transport System",   src: "/client Logo/Refrigerated-Transport-System-logo.png" },
-  { name: "Silver Line Group",               src: "/client Logo/SILVER-LINE-GROUP .png" },
-  { name: "United Al Saqer Heavy Equipment", src: "/client Logo/United al saqerHeavy equiment .png" },
-  { name: "Access Hire Middle East",         src: "/client Logo/access-hire-middle-east-logo.png" },
-  { name: "Al Furath",                       src: "/client Logo/al-furath-.png" },
-  { name: "Al Ghazal Transport",             src: "/client Logo/al-ghazal-transport.png" },
-  { name: "Bakemart",                        src: "/client Logo/bakemart_logo.jpeg" },
-  { name: "Samsung",                         src: "/client Logo/samsung.png" },
-];
-
-/* Client wall export — filenames carry no company names, so each is labelled
-   generically by number for alt text. */
+/* Client logos from /public/client logos folder */
 const CLIENT_LOGO_NUMBERS = [
   1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
   23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41,
   42, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 55, 57, 58, 59, 60,
 ];
-const NUMBERED_LOGOS = CLIENT_LOGO_NUMBERS.map((n) => {
+
+const ALL_LOGOS = CLIENT_LOGO_NUMBERS.map((n) => {
   const padded = String(n).padStart(2, "0");
   return { name: `Client ${padded}`, src: `/client logos/client-${padded}.png` };
 });
-
-const ALL_LOGOS = [...NAMED_LOGOS, ...NUMBERED_LOGOS];
 
 /* Split into three rows of roughly equal length */
 const ROW_SIZE = Math.ceil(ALL_LOGOS.length / 3);
@@ -93,9 +74,9 @@ export default function LogoMarquee({ speed1 = 92, speed2 = 102, speed3 = 112 })
 
       <style jsx>{`
         .lm {
-          --gap: clamp(40px, 5vw, 76px);
-          --logo-h: clamp(44px, 5.6vw, 72px);
-          --logo-max-w: clamp(140px, 18vw, 230px);
+          --gap: clamp(50px, 6vw, 90px);
+          --logo-h: clamp(58px, 6.5vw, 88px);
+          --logo-max-w: clamp(165px, 20vw, 260px);
 
           position: relative;
           width: 100%;
@@ -187,8 +168,8 @@ function LogoItem({ logo }) {
       <Image
         src={logo.src}
         alt={logo.name}
-        width={230}
-        height={72}
+        width={260}
+        height={88}
         className="lmi__img"
         style={{
           width: "auto",

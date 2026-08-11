@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
-const ALL_LOGOS = [
+const NAMED_LOGOS = [
   { name: "ABU DHABI EXECUTIVE OFFICE",     src: "/client Logo/ABU-DHABI-EXECUTIVE-OFFICE.png" },
   { name: "AL LAITH GROUP",                  src: "/client Logo/AL LAITH Group.png" },
   { name: "Aditya Birla Group",              src: "/client Logo/Aditya-Birla-Group-Logo-Vector-600x600-1 (1).jpg" },
@@ -20,11 +20,27 @@ const ALL_LOGOS = [
   { name: "Samsung",                         src: "/client Logo/samsung.png" },
 ];
 
-/* Split into two rows — first 7 in row 1, remaining 7 in row 2 */
-const ROW_1 = ALL_LOGOS.slice(0, 7);
-const ROW_2 = ALL_LOGOS.slice(7);
+/* Client wall export — filenames carry no company names, so each is labelled
+   generically by number for alt text. */
+const CLIENT_LOGO_NUMBERS = [
+  1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+  23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41,
+  42, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 55, 57, 58, 59, 60,
+];
+const NUMBERED_LOGOS = CLIENT_LOGO_NUMBERS.map((n) => {
+  const padded = String(n).padStart(2, "0");
+  return { name: `Client ${padded}`, src: `/client logos/client-${padded}.png` };
+});
 
-export default function LogoMarquee({ speed1 = 38, speed2 = 44 }) {
+const ALL_LOGOS = [...NAMED_LOGOS, ...NUMBERED_LOGOS];
+
+/* Split into three rows of roughly equal length */
+const ROW_SIZE = Math.ceil(ALL_LOGOS.length / 3);
+const ROW_1 = ALL_LOGOS.slice(0, ROW_SIZE);
+const ROW_2 = ALL_LOGOS.slice(ROW_SIZE, ROW_SIZE * 2);
+const ROW_3 = ALL_LOGOS.slice(ROW_SIZE * 2);
+
+export default function LogoMarquee({ speed1 = 92, speed2 = 102, speed3 = 112 }) {
   const sectionRef = useRef(null);
   const [active, setActive] = useState(false);
 
@@ -64,13 +80,22 @@ export default function LogoMarquee({ speed1 = 38, speed2 = 44 }) {
             ))}
           </div>
         </div>
+
+        {/* ROW 3 — scrolls left */}
+        <div className="lm__row">
+          <div className="lm__track lm__track--left" style={{ "--dur": `${speed3}s` }}>
+            {[...ROW_3, ...ROW_3].map((logo, i) => (
+              <LogoItem key={`r3-${i}`} logo={logo} />
+            ))}
+          </div>
+        </div>
       </div>
 
       <style jsx>{`
         .lm {
-          --gap: clamp(32px, 4vw, 64px);
-          --logo-h: clamp(32px, 4vw, 52px);
-          --logo-max-w: clamp(100px, 14vw, 180px);
+          --gap: clamp(40px, 5vw, 76px);
+          --logo-h: clamp(44px, 5.6vw, 72px);
+          --logo-max-w: clamp(140px, 18vw, 230px);
 
           position: relative;
           width: 100%;
@@ -162,13 +187,13 @@ function LogoItem({ logo }) {
       <Image
         src={logo.src}
         alt={logo.name}
-        width={180}
-        height={52}
+        width={230}
+        height={72}
         className="lmi__img"
         style={{
           width: "auto",
-          height: "clamp(28px, 3.6vw, 48px)",
-          maxWidth: "clamp(90px, 12vw, 160px)",
+          height: "var(--logo-h)",
+          maxWidth: "var(--logo-max-w)",
           objectFit: "contain",
           objectPosition: "center",
           userSelect: "none",

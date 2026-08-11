@@ -9,6 +9,7 @@ import SoftwareCTA from '@/components/software/SoftwareCTA'
 import ScrollReveal from '@/components/software/ScrollReveal'
 import Footer from '@/components/layouts/Footer'
 
+const LogoMarquee = dynamic(() => import('@/components/Logomarquee'))
 const SoftwareFAQ = dynamic(() => import('@/components/software/SoftwareFAQ'))
 
 export const metadata: Metadata = {
@@ -26,6 +27,7 @@ export default function SoftwarePage() {
       <ModulesSection />
       <DashcamShowcase />
       <SoftwareBlog />
+      <LogoMarquee />
       <SoftwareFAQ />
       <SoftwareCTA />
       <Footer />

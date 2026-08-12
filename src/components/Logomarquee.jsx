@@ -75,8 +75,8 @@ export default function LogoMarquee({ speed1 = 92, speed2 = 102, speed3 = 112 })
       <style jsx>{`
         .lm {
           --gap: clamp(50px, 6vw, 90px);
-          --logo-h: clamp(58px, 6.5vw, 88px);
-          --logo-max-w: clamp(165px, 20vw, 260px);
+          --logo-h: clamp(80px, 9vw, 120px);
+          --logo-max-w: clamp(220px, 26vw, 350px);
 
           position: relative;
           width: 100%;
@@ -163,8 +163,14 @@ export default function LogoMarquee({ speed1 = 92, speed2 = 102, speed3 = 112 })
 }
 
 function LogoItem({ logo }) {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <div className="lmi">
+    <div 
+      className="lmi"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <Image
         src={logo.src}
         alt={logo.name}
@@ -179,6 +185,8 @@ function LogoItem({ logo }) {
           objectPosition: "center",
           userSelect: "none",
           pointerEvents: "none",
+          filter: isHovered ? "grayscale(0%)" : "grayscale(100%)",
+          transition: "filter 0.3s ease",
         }}
       />
 
@@ -191,10 +199,12 @@ function LogoItem({ logo }) {
           padding: 0 clamp(6px, 0.8vw, 12px);
           opacity: 0.85;
           transition: opacity 0.3s ease, transform 0.3s ease;
+          transform: scale(${isHovered ? 2.0 : 1});
+          z-index: ${isHovered ? 10 : 1};
+          position: relative;
         }
         .lmi:hover {
           opacity: 1;
-          transform: scale(1.07);
         }
       `}</style>
     </div>

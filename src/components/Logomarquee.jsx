@@ -198,10 +198,7 @@ function LogoItem({ logo }) {
           justify-content: center;
           padding: 0 clamp(6px, 0.8vw, 12px);
           opacity: 0.85;
-          transition: opacity 0.3s ease, transform 0.3s ease;
-          transform: scale(${isHovered ? 2.0 : 1});
-          z-index: ${isHovered ? 10 : 1};
-          position: relative;
+          transition: opacity 0.3s ease;
         }
         .lmi:hover {
           opacity: 1;

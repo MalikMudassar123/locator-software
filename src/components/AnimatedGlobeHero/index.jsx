@@ -1052,6 +1052,46 @@ export default function AnimatedGlobeHero({
             strokeWidth="1.5"
             opacity="0.22"
           />
+
+          {/* ============================================================
+              FORMATION BEAT — plays once, as the particles hand over.
+              Previously the sphere just faded up underneath them, which
+              read as a crossfade rather than as the thing being built.
+              ============================================================ */}
+          {/* Ignition: light strikes the rim and burns around it */}
+          <circle
+            cx={CX}
+            cy={CY}
+            r={R + 2}
+            pathLength="100"
+            fill="none"
+            stroke="#ffffff"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+            className="rim-ignite"
+            opacity="0"
+            // Start the burn at 12 o'clock rather than 3 o'clock
+            transform={`rotate(-90 ${CX} ${CY})`}
+          />
+          {/* Shockwave leaving the surface as the sphere completes */}
+          <circle
+            cx={CX}
+            cy={CY}
+            r={R}
+            fill="none"
+            stroke="#dff2ff"
+            className="shockwave"
+            opacity="0"
+          />
+          <circle
+            cx={CX}
+            cy={CY}
+            r={R}
+            fill="none"
+            stroke="#ffffff"
+            className="shockwave shockwave--late"
+            opacity="0"
+          />
         </g>
 
         {/* ====================================================================
@@ -1129,7 +1169,11 @@ export default function AnimatedGlobeHero({
             const dur = 3.2 + (i % 4) * 0.4;
             const begin = `${i * 0.35}s`;
             return (
-              <g key={node.name}>
+              <g
+                key={node.name}
+                className="city-node"
+                style={{ animationDelay: `${4.0 + i * 0.08}s` }}
+              >
                 {/* Unfiltered: these pulse forever, so a blur filter here was
                     16 re-rasterizations per frame (8 nodes x 2 layers). The
                     wide low-opacity disc gives the same halo for free. */}
@@ -1382,6 +1426,44 @@ export default function AnimatedGlobeHero({
         .globe-hero.is-active :global(.orbital-layer) {
           animation: globeFadeIn 1.1s ease-out 3.6s forwards;
         }
+        /* Rings draw themselves on rather than the whole ellipse fading up. */
+        .globe-hero :global(.orbit-ring--outer),
+        .globe-hero :global(.orbit-ring--inner) {
+          stroke-dasharray: 400;
+          stroke-dashoffset: 400;
+        }
+        .globe-hero.is-active :global(.orbit-ring--outer) {
+          animation: orbitDraw 2s cubic-bezier(0.22, 1, 0.36, 1) 3.6s forwards,
+                     ringPulse 6s ease-in-out 5.6s infinite;
+        }
+        .globe-hero.is-active :global(.orbit-ring--inner) {
+          animation: orbitDraw 1.7s cubic-bezier(0.22, 1, 0.36, 1) 3.85s forwards,
+                     ringPulse 5.2s ease-in-out 5.55s infinite;
+        }
+
+        /* ----- Formation beat (each plays exactly once) ----- */
+        .globe-hero :global(.rim-ignite),
+        .globe-hero :global(.shockwave) {
+          opacity: 0;
+        }
+        .globe-hero.is-active :global(.rim-ignite) {
+          animation: rimIgnite 1.9s cubic-bezier(0.4, 0, 0.2, 1) 2.75s forwards;
+        }
+        .globe-hero.is-active :global(.shockwave) {
+          transform-box: fill-box;
+          transform-origin: center;
+          animation: shockwave 1.6s cubic-bezier(0.16, 1, 0.3, 1) 3.5s forwards;
+        }
+        .globe-hero.is-active :global(.shockwave--late) {
+          animation-delay: 3.78s;
+        }
+        /* Nodes land one after another with a slight overshoot, rather than
+           the whole set appearing at once. */
+        .globe-hero.is-active :global(.city-node) {
+          transform-box: fill-box;
+          transform-origin: center;
+          animation: nodePop 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
 
         /* ----- Particle formation canvas -----
            Sits between the SVG layers and the stat cards. Pointer-events
@@ -1567,6 +1649,13 @@ export default function AnimatedGlobeHero({
           .globe-hero :global(.city-nodes),
           .globe-hero :global(.arcs),
           .globe-hero :global(.orbital-layer) { opacity: 1 !important; }
+          /* The rings are dash-drawn, so without their animation they'd stay
+             invisible — hand them a solid stroke instead. */
+          .globe-hero :global(.orbit-ring--outer),
+          .globe-hero :global(.orbit-ring--inner) { stroke-dashoffset: 0 !important; }
+          /* One-shot flourishes have no resting state worth showing. */
+          .globe-hero :global(.rim-ignite),
+          .globe-hero :global(.shockwave) { display: none !important; }
           .stat-card {
             opacity: 1 !important;
             transform: none !important;

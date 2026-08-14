@@ -106,6 +106,12 @@ type Slot = { index: number; state: 'entering' | 'visible' | 'exiting' }
 // with one-line bodies stacks on exactly the same rhythm as one with two — the
 // cards are absolutely positioned, so a card that outgrew the pitch used to
 // overlap the one below it instead of pushing it down.
+// Shared by the visible mockup and the warm-up block below. They MUST stay
+// identical: next/image picks a srcset candidate from `sizes`, so a warm-up
+// using a different string would fetch and cache a different URL than the one
+// the visible image later asks for — a wasted download and no cache hit.
+const MOCKUP_SIZES = '(max-width: 600px) 250px, (max-width: 900px) 300px, 380px'
+
 const CARD_H = 78
 const CARD_GAP = 14
 const PITCH = CARD_H + CARD_GAP
@@ -262,10 +268,44 @@ function ComposedPanel({ items, image }: { items: Notif[]; image: { src: string;
           alt={image.alt}
           width={image.w}
           height={image.h}
-          sizes="(max-width: 600px) 250px, (max-width: 900px) 300px, 380px"
+          sizes={MOCKUP_SIZES}
+          // next/image lazy-loads by default. This image only mounts at the
+          // moment its tab is clicked, so lazy loading meant the browser first
+          // had to mount it, then wait for an intersection callback, and only
+          // then start the request — which is why it arrived after the whole
+          // notification stack had finished animating in. It is on screen the
+          // instant it exists, so there is nothing to defer.
+          loading="eager"
           style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: '100%' }}
         />
       </div>
+    </div>
+  )
+}
+
+// Fetches every composed tab's mockup up front, off-screen, so clicking one of
+// those tabs paints an already-cached image instead of starting a request.
+// The four PNGs total well under a megabyte — trivial next to the video budget
+// — and this runs only once the section is near the viewport.
+//
+// Zero-sized overflow:hidden wrapper rather than display:none, because a
+// display:none image is not guaranteed to be fetched at all. `loading="eager"`
+// is what actually matters here: inside a zero-height box the lazy-load
+// observer has nothing sensible to measure against.
+function MockupPrefetch() {
+  return (
+    <div aria-hidden="true" style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+      {Object.values(IMAGE_MAP).map(img => (
+        <Image
+          key={img.src}
+          src={img.src}
+          alt=""
+          width={img.w}
+          height={img.h}
+          sizes={MOCKUP_SIZES}
+          loading="eager"
+        />
+      ))}
     </div>
   )
 }
@@ -601,7 +641,8 @@ export default function BenefitsSection() {
         }
       `}</style>
 
-      <section ref={sectionRef} id="benefits" style={{ padding: 'clamp(56px,7vw,80px) 28px 24px', background: '#ffffff' }}>
+      <section ref={sectionRef} id="benefits" style={{ padding: 'clamp(56px,7vw,80px) 28px 24px', background: '#ffffff', position: 'relative' }}>
+        {inView && <MockupPrefetch />}
         {/* Wider than the page's usual 1120px column, and matching ModulesSection's
             1440px. Both blocks are the same kind of thing — a big interactive
             showcase whose content is a screen, not prose — and at 1100px this one

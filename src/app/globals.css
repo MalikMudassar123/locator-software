@@ -3164,6 +3164,43 @@ h6 {
   100% { transform: translateX(100%); }
 }
 
+/* ── Globe formation: the "it assembles itself" beat ──────────────────────
+   The old reveal was a plain opacity fade under the particles, so the sphere
+   simply appeared. These give the moment of formation an actual event:
+   the rim strikes and burns around the circumference, a shockwave leaves the
+   surface, the lattice draws on, and the whole thing settles with a breath. */
+
+/* Circumference ignition — the rim draws itself around the globe once, from a
+   single point, then hands over to the static ring beneath it. pathLength=100
+   on the circle makes these numbers plain percentages. */
+@keyframes rimIgnite {
+  0%   { stroke-dasharray: 0 100;  stroke-dashoffset: 0;   opacity: 0; }
+  8%   { opacity: 1; }
+  70%  { stroke-dasharray: 100 100; stroke-dashoffset: 0;  opacity: 1; }
+  100% { stroke-dasharray: 100 100; stroke-dashoffset: 0;  opacity: 0; }
+}
+
+/* Shockwave leaving the surface as the sphere completes. */
+@keyframes shockwave {
+  0%   { transform: scale(1);    opacity: 0; stroke-width: 3; }
+  12%  { opacity: 0.75; }
+  100% { transform: scale(2.15); opacity: 0; stroke-width: 0.4; }
+}
+
+/* City node arrival — overshoot, then settle. */
+@keyframes nodePop {
+  0%   { opacity: 0; transform: scale(0); }
+  60%  { opacity: 1; transform: scale(1.5); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Orbit rings draw themselves on instead of fading in as a whole ellipse. */
+@keyframes orbitDraw {
+  0%   { opacity: 0; stroke-dashoffset: 400; }
+  15%  { opacity: 1; }
+  100% { opacity: 1; stroke-dashoffset: 0; }
+}
+
 /* ══════════════════════════════════════════════════════
    MOBILE NAV DRAWER — entrance animation
    ══════════════════════════════════════════════════════ */

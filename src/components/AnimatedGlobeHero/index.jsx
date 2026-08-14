@@ -185,10 +185,6 @@ function AnimatedNumber({ value, active, delay = 0, duration = 1600 }) {
       typeof window !== "undefined" &&
       window.matchMedia &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) {
-      setDisplay(info.raw);
-      return;
-    }
 
     startedRef.current = true;
     let rafId;
@@ -210,9 +206,16 @@ function AnimatedNumber({ value, active, delay = 0, duration = 1600 }) {
       rafId = requestAnimationFrame(tick);
     };
 
+    // Reduced motion skips the count entirely and just states the figure. Both
+    // paths go through the timer so the state update lands in a callback rather
+    // than synchronously in the effect body.
     timeoutId = setTimeout(() => {
+      if (reduced) {
+        setDisplay(info.raw);
+        return;
+      }
       rafId = requestAnimationFrame(tick);
-    }, delay);
+    }, reduced ? 0 : delay);
 
     return () => {
       clearTimeout(timeoutId);
@@ -266,7 +269,11 @@ function ParticleFormation({ active }) {
     const ctx = canvas.getContext("2d", { alpha: true });
     const rnd = mulberry32(20260601);
     const isSmall = window.innerWidth < 768;
-    const PARTICLE_COUNT = isSmall ? 1200 : 2000;
+    // Halved. This burst runs for ~4.4s starting the instant the section is
+    // scrolled to — exactly when the main thread is already busy with scrolling
+    // — so it was the most visible source of jank despite being temporary. At
+    // these sizes the cluster reads identically with half the dots.
+    const PARTICLE_COUNT = isSmall ? 600 : 1000;
 
     let dims = { w: 0, h: 0 };
     let map = { scale: 1, offX: 0, offY: 0 };
@@ -274,7 +281,9 @@ function ParticleFormation({ active }) {
 
     const setup = () => {
       const rect = canvas.getBoundingClientRect();
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // Capped at 1.5 rather than 2: on a 2x display that's 44% fewer pixels to
+      // fill per frame, and sub-2px glowing dots show no visible difference.
+      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       canvas.width = Math.max(1, Math.round(rect.width * dpr));
       canvas.height = Math.max(1, Math.round(rect.height * dpr));
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -489,13 +498,17 @@ function ParticleFormation({ active }) {
           (1 + (1 - growE) * 0.45) *
           (0.7 + facing * 0.5);
 
+        // fillRect, not arc(): a path + fill per particle costs several times a
+        // single rect, and below ~2px on screen a square dot and a round one are
+        // indistinguishable — especially under `lighter` compositing with a
+        // glow. Alpha is quantized to 1/64ths so long runs of particles share a
+        // fillStyle string and the canvas state machine stops churning.
+        const qAlpha = Math.round(alpha * 64) / 64;
         const r8 = Math.round(220 + 30 * (1 - p.tint));
         const g8 = Math.round(235 + 18 * (1 - p.tint));
-        const b8 = 255;
-        ctx.fillStyle = `rgba(${r8},${g8},${b8},${alpha})`;
-        ctx.beginPath();
-        ctx.arc(px, py, size, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.fillStyle = `rgba(${r8},${g8},255,${qAlpha})`;
+        const d = size * 2;
+        ctx.fillRect(px - size, py - size, d, d);
       }
 
       ctx.globalCompositeOperation = "source-over";
@@ -528,47 +541,66 @@ export default function AnimatedGlobeHero({
   className = "",
 }) {
   const sectionRef = useRef(null);
+  const svgRef = useRef(null);
   const [active, setActive] = useState(false);
+  // Bumped on every fresh entry. Used as a React key so the particle canvas and
+  // the stat cards remount, which is what makes their animations and counters
+  // genuinely restart rather than sit at their finished state.
+  const [runId, setRunId] = useState(0);
 
-  // Activate when the section scrolls into view: globe reveals first,
-  // then cards animate in (their CSS uses staggered --enter-delay).
-  // Fallback timer guarantees the section becomes visible even if
-  // IntersectionObserver doesn't fire (some hydration paths skip it).
+  // Plays whenever the section enters the viewport, and RESETS when it leaves,
+  // so scrolling away and coming back replays the whole sequence from zero.
+  // (Previously the observer disconnected on first sight — the animation was
+  // strictly once per page load.)
   useEffect(() => {
-    if (active) return;
-    const fallback = setTimeout(() => setActive(true), 4000);
+    const el = sectionRef.current;
+    if (!el) return;
 
-    if (!sectionRef.current || typeof IntersectionObserver === "undefined") {
-      setActive(true);
-      clearTimeout(fallback);
-      return;
-    }
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            setActive(true);
-            observer.disconnect();
-            clearTimeout(fallback);
-            break;
+            // Guarded so repeated intersection callbacks while already on
+            // screen can't restart the sequence mid-play.
+            setActive((wasActive) => {
+              if (!wasActive) setRunId((r) => r + 1);
+              return true;
+            });
+          } else {
+            setActive(false);
           }
         }
       },
-      // threshold 0 fires the moment ANY pixel enters the viewport,
-      // so short sections (or sections revealed by quick scrolls) still trigger.
-      { threshold: 0, rootMargin: "0px 0px -5% 0px" }
+      // threshold 0: enters on the first visible pixel, leaves only once the
+      // section is completely out of view.
+      { threshold: 0 }
     );
-    observer.observe(sectionRef.current);
-    return () => {
-      observer.disconnect();
-      clearTimeout(fallback);
-    };
-  }, [active]);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // SMIL (the arcs, city-node pulses and orbiting satellites) is driven by the
+  // SVG's own clock, not CSS, so it needs pausing and rewinding by hand.
+  // Pausing is the single biggest scroll win here: off screen, those ~90 SMIL
+  // timelines stop costing anything at all.
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!svg || typeof svg.pauseAnimations !== "function") return;
+    if (active) {
+      svg.setCurrentTime(0); // rewind so arcs restart with everything else
+      svg.unpauseAnimations();
+    } else {
+      svg.pauseAnimations();
+    }
+  }, [active, runId]);
 
   // Stable starfield
   const stars = useMemo(() => {
     const rnd = mulberry32(20260518);
-    return Array.from({ length: 90 }, () => ({
+    // 90 -> 48. Each star is an SVG circle carrying its own infinite CSS
+    // animation; they're small and scattered, so halving the count reads the
+    // same while halving the number of forever-running timelines.
+    return Array.from({ length: 48 }, () => ({
       cx: rnd() * VB_W,
       cy: rnd() * VB_H * 0.7, // Keep stars in upper portion
       r: 0.3 + rnd() * 1.1,
@@ -585,8 +617,12 @@ export default function AnimatedGlobeHero({
       role="img"
       aria-label="Animated globe with global network connections"
     >
-      <ParticleFormation active={active} />
+      {/* Keys are prefixed because this and the stats container are siblings:
+          a bare key={runId} gave both the same key and React warned about a
+          duplicate. The value still changes per run, which is the point. */}
+      <ParticleFormation key={`particles-${runId}`} active={active} />
       <svg
+        ref={svgRef}
         viewBox={`0 0 ${VB_W} ${VB_H}`}
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="xMidYMid slice"
@@ -1035,7 +1071,6 @@ export default function AnimatedGlobeHero({
             strokeWidth="0.7"
             transform={`rotate(-16 ${CX} ${CY})`}
             className="orbit-ring orbit-ring--outer"
-            filter="url(#softGlow)"
           />
           {/* Middle orbit — opposite tilt, dashed */}
           <ellipse
@@ -1059,28 +1094,31 @@ export default function AnimatedGlobeHero({
             className="orbit-ring orbit-ring--inner"
           />
 
-          {/* Orbiting satellites — native SVG animateMotion along each ring path */}
-          <circle r="2.8" fill="#ffffff" filter="url(#cometGlow)" className="satellite">
-            <animateMotion dur="18s" repeatCount="indefinite" rotate="auto"
-              path={`M ${CX - R * 1.48} ${CY} A ${R * 1.48} ${R * 0.46} -16 1 1 ${CX + R * 1.48} ${CY} A ${R * 1.48} ${R * 0.46} -16 1 1 ${CX - R * 1.48} ${CY}`}
-            />
-          </circle>
-          <circle r="1.7" fill="#cfeaff" filter="url(#softGlow)" className="satellite">
-            <animateMotion dur="13s" repeatCount="indefinite" rotate="auto" begin="-4s"
-              path={`M ${CX - R * 1.32} ${CY} A ${R * 1.32} ${R * 0.34} 22 1 0 ${CX + R * 1.32} ${CY} A ${R * 1.32} ${R * 0.34} 22 1 0 ${CX - R * 1.32} ${CY}`}
-            />
-          </circle>
-          <circle r="2.0" fill="#ffffff" filter="url(#softGlow)" className="satellite">
-            <animateMotion dur="22s" repeatCount="indefinite" rotate="auto" begin="-10s"
-              path={`M ${CX - R * 1.18} ${CY} A ${R * 1.18} ${R * 0.27} -6 1 1 ${CX + R * 1.18} ${CY} A ${R * 1.18} ${R * 0.27} -6 1 1 ${CX - R * 1.18} ${CY}`}
-            />
-          </circle>
-          {/* Counter-orbital small particle for extra life */}
-          <circle r="1.3" fill="#ffe7b8" filter="url(#softGlow)" className="satellite">
-            <animateMotion dur="26s" repeatCount="indefinite" rotate="auto" begin="-16s"
-              path={`M ${CX + R * 1.48} ${CY} A ${R * 1.48} ${R * 0.46} -16 1 0 ${CX - R * 1.48} ${CY} A ${R * 1.48} ${R * 0.46} -16 1 0 ${CX + R * 1.48} ${CY}`}
-            />
-          </circle>
+          {/* Orbiting satellites — native SVG animateMotion along each ring path.
+              Each is a two-circle stack (wide translucent halo + solid core)
+              rather than a filtered dot. A Gaussian-blur filter on a moving
+              element has to be re-rasterized on every single frame, for the
+              whole life of the page; two plain circles are drawn straight to the
+              compositor and read the same at this size. */}
+          {[
+            { rx: 1.48, ry: 0.46, rot: -16, dur: "18s", begin: "0s",   core: 1.5, halo: 4.5, fill: "#ffffff", sweep: 1 },
+            { rx: 1.32, ry: 0.34, rot: 22,  dur: "13s", begin: "-4s",  core: 1.0, halo: 3.2, fill: "#cfeaff", sweep: 0 },
+            { rx: 1.18, ry: 0.27, rot: -6,  dur: "22s", begin: "-10s", core: 1.2, halo: 3.6, fill: "#ffffff", sweep: 1 },
+            { rx: 1.48, ry: 0.46, rot: -16, dur: "26s", begin: "-16s", core: 0.8, halo: 2.6, fill: "#ffe7b8", sweep: 0, reverse: true },
+          ].map((s, i) => {
+            const a = R * s.rx;
+            const b = R * s.ry;
+            const x0 = s.reverse ? CX + a : CX - a;
+            const x1 = s.reverse ? CX - a : CX + a;
+            const path = `M ${x0} ${CY} A ${a} ${b} ${s.rot} 1 ${s.sweep} ${x1} ${CY} A ${a} ${b} ${s.rot} 1 ${s.sweep} ${x0} ${CY}`;
+            return (
+              <g key={i} className="satellite">
+                <animateMotion dur={s.dur} begin={s.begin} repeatCount="indefinite" rotate="auto" path={path} />
+                <circle r={s.halo} fill={s.fill} opacity="0.18" />
+                <circle r={s.core} fill={s.fill} />
+              </g>
+            );
+          })}
         </g>
 
         {/* ====================================================================
@@ -1092,11 +1130,18 @@ export default function AnimatedGlobeHero({
             const begin = `${i * 0.35}s`;
             return (
               <g key={node.name}>
-                <circle cx={node.x} cy={node.y} r="6" fill="#ffffff" opacity="0.15" filter="url(#brightGlow)">
+                {/* Unfiltered: these pulse forever, so a blur filter here was
+                    16 re-rasterizations per frame (8 nodes x 2 layers). The
+                    wide low-opacity disc gives the same halo for free. */}
+                <circle cx={node.x} cy={node.y} r="6" fill="#ffffff" opacity="0.15">
                   <animate attributeName="opacity" values="0.07;0.22;0.07" dur={`${dur}s`} begin={begin} repeatCount="indefinite" />
                   <animate attributeName="r" values="5;7.5;5" dur={`${dur}s`} begin={begin} repeatCount="indefinite" />
                 </circle>
-                <circle cx={node.x} cy={node.y} r="2" fill="#ffffff" filter="url(#softGlow)">
+                <circle cx={node.x} cy={node.y} r="2" fill="#ffffff" opacity="0.5">
+                  <animate attributeName="opacity" values="0.3;0.6;0.3" dur={`${dur}s`} begin={begin} repeatCount="indefinite" />
+                  <animate attributeName="r" values="2.6;3.6;2.6" dur={`${dur}s`} begin={begin} repeatCount="indefinite" />
+                </circle>
+                <circle cx={node.x} cy={node.y} r="2" fill="#ffffff">
                   <animate attributeName="opacity" values="0.55;1;0.55" dur={`${dur}s`} begin={begin} repeatCount="indefinite" />
                   <animate attributeName="r" values="1.7;2.4;1.7" dur={`${dur}s`} begin={begin} repeatCount="indefinite" />
                 </circle>
@@ -1144,7 +1189,6 @@ export default function AnimatedGlobeHero({
                 strokeLinejoin="round"
                 strokeOpacity="0"
                 strokeDasharray="0 100"
-                filter="url(#softGlow)"
               >
                 <animate
                   attributeName="stroke-dasharray"
@@ -1171,12 +1215,25 @@ export default function AnimatedGlobeHero({
                   repeatCount="indefinite"
                 />
               </path>
-              {/* Traveling comet head — outer glow (animateMotion) */}
-              <circle r="3" fill="#ffffff" opacity="0" filter="url(#cometGlow)">
+              {/* Traveling comet head — halo. Unfiltered for the same reason as
+                  the satellites: 12 blurred elements moving continuously was the
+                  single heaviest thing in the section. */}
+              <circle r="5" fill="#ffffff" opacity="0">
                 <animateMotion dur={dur} begin={begin} repeatCount="indefinite" path={arc.d} />
                 <animate
                   attributeName="opacity"
-                  values="0; 1; 1; 0"
+                  values="0; 0.22; 0.22; 0"
+                  keyTimes="0; 0.08; 0.92; 1"
+                  dur={dur}
+                  begin={begin}
+                  repeatCount="indefinite"
+                />
+              </circle>
+              <circle r="2.6" fill="#ffffff" opacity="0">
+                <animateMotion dur={dur} begin={begin} repeatCount="indefinite" path={arc.d} />
+                <animate
+                  attributeName="opacity"
+                  values="0; 0.5; 0.5; 0"
                   keyTimes="0; 0.08; 0.92; 1"
                   dur={dur}
                   begin={begin}
@@ -1232,7 +1289,9 @@ export default function AnimatedGlobeHero({
           FLOATING STAT CARDS — minimal glass-morphism
           ====================================================================== */}
       {showStats && (
-        <div className="globe-hero__stats">
+        // Remounts the cards on each entry, restarting both their CSS entrance
+        // and the count-up (which otherwise latches via startedRef).
+        <div className="globe-hero__stats" key={`stats-${runId}`}>
           {stats.map((stat, i) => (
             <div
               key={i}
@@ -1277,6 +1336,25 @@ export default function AnimatedGlobeHero({
           width: 100%;
           height: 100%;
           display: block;
+        }
+
+        /* ----- Off-screen = zero cost -----
+           The globe never stops moving: earth + cloud pans, two halo breaths,
+           a horizon pulse, three ring pulses and 90 twinkling stars all loop
+           forever, and every one of them keeps compositing while the visitor is
+           reading a completely different part of the page. That background load
+           is what made scrolling feel heavy well before this section arrived.
+           One rule parks all of it the moment the section leaves the viewport;
+           the SMIL clock is paused alongside it from JS. */
+        .globe-hero:not(.is-active),
+        .globe-hero:not(.is-active) * {
+          animation-play-state: paused !important;
+        }
+        /* Paint containment: the browser can skip this subtree's raster work
+           entirely when it's scrolled out, and can't be asked to reflow the
+           page because of anything happening inside it. */
+        .globe-hero {
+          contain: layout paint style;
         }
 
         /* Entrance gating — hidden until the section scrolls into view

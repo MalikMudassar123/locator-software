@@ -310,7 +310,7 @@ export default function RoadSection() {
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            background: '#0a89dd',
+            background: 'linear-gradient(135deg, #1f6ff0 0%, #0a84e3 100%)',
             color: '#ffffff',
             border: 'none',
             borderRadius: '8px',
@@ -319,7 +319,7 @@ export default function RoadSection() {
             fontWeight: 600,
             cursor: 'pointer',
             whiteSpace: 'nowrap',
-            boxShadow: '0 2px 10px rgba(26,132,184,0.35)',
+            boxShadow: '0 2px 10px rgba(21,120,235,0.35)',
           }}
         >
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none">

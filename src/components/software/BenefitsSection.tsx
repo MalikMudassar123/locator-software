@@ -32,18 +32,51 @@ const VIDEO_MAP: Record<number, { src: string; aspect: string }> = {
 // Flat list so every video can stay mounted + preloaded (no re-mount flash).
 const VIDEO_LIST = Object.entries(VIDEO_MAP).map(([idx, v]) => ({ idx: Number(idx), ...v }))
 
+// Notification data for cycling animation
+const NOTIFICATION_DATA = [
+  { driver: 'Ahmed K.', id: '#38291', location: 'Al Quoz Industrial', time: '09:12' },
+  { driver: 'Fatima R.', id: '#49357', location: 'Dubai Marina', time: '09:28' },
+  { driver: 'Omar S.', id: '#52104', location: 'Jebel Ali Free Zone', time: '09:35' },
+  { driver: 'Hassan M.', id: '#61847', location: 'Business Bay', time: '09:42' },
+  { driver: 'Aisha T.', id: '#73290', location: 'Al Barsha', time: '09:51' },
+  { driver: 'Khalid A.', id: '#84513', location: 'Dubai Silicon Oasis', time: '10:03' },
+]
+
+// After-hours notification data for cycling animation
+const AFTER_HOURS_DATA = [
+  { driver: 'James A.', id: '#50925', location: 'Al Khor Industrial Area', time: '22:47' },
+  { driver: 'Khalid M.', id: '#38104', location: 'Dubai Marina Dock', time: '23:15' },
+  { driver: 'Saeed R.', id: '#61287', location: 'Jebel Ali Free Zone', time: '01:32' },
+  { driver: 'Tariq H.', id: '#63827', location: 'Business Bay Tower', time: '02:18' },
+  { driver: 'Layla K.', id: '#74916', location: 'DIFC Gate Avenue', time: '02:55' },
+  { driver: 'Rashid S.', id: '#82054', location: 'JLT Cluster Y', time: '03:47' },
+]
+
+// Service reminders notification data for cycling animation
+const SERVICE_REMINDERS_DATA = [
+  { type: 'Service Reminder', vehicle: 'Alexander Sales', id: '30265', detail: 'Oil change overdue by 28,098 KM', time: '08:17', icon: 'wrench' },
+  { type: 'Service Reminder', vehicle: 'Thomas Sales', id: '49357', detail: 'Tire rotation overdue by 10,990 KM', time: '10:17', icon: 'wrench' },
+  { type: 'Documents Reminder', vehicle: 'Umer Sales', id: '15833', detail: 'Registration expires 2026-09-06', time: '11:30', icon: 'document' },
+  { type: 'Service Reminder', vehicle: 'Hassan Fleet', id: '62847', detail: 'Brake service due in 2,500 KM', time: '13:45', icon: 'wrench' },
+  { type: 'Documents Reminder', vehicle: 'Fatima Transport', id: '73921', detail: 'Insurance renewal due 2026-11-15', time: '14:22', icon: 'document' },
+  { type: 'Service Reminder', vehicle: 'Omar Logistics', id: '84513', detail: 'Engine diagnostic recommended', time: '15:08', icon: 'wrench' },
+]
+
 // index → static screen capture, for the four tabs that don't have a recording.
-const IMAGE_MAP: Record<number, { src: string; alt: string; w: number; h: number }> = {
-  2: { src: '/software_images/fleet-telematics/idle-alerts.png',      alt: 'LOCATOR live view flagging a vehicle idling for 30 minutes',       w: 725,  h: 698 },
-  3: { src: '/software_images/fleet-telematics/after-hours.png',      alt: 'LOCATOR live view of a vehicle moving outside office hours',       w: 435,  h: 366 },
-  5: { src: '/software_images/fleet-telematics/service-reminders.png', alt: 'LOCATOR notifications — service and document reminders due',       w: 1116, h: 1578 },
-  8: { src: '/software_images/fleet-telematics/geofence.png',         alt: 'LOCATOR live view with a vehicle inside a geofenced zone',          w: 1050, h: 1023 },
+const IMAGE_MAP: Record<number, { src: string; alt: string; w: number; h: number; objectFit?: 'contain' | 'cover'; objectPosition?: string; customLayout?: boolean }> = {
+  2: { src: '/software_images/fleet-telematics/geofence.png',         alt: 'LOCATOR live view with idle alerts and geofence monitoring',          w: 1050, h: 1023, customLayout: true },
+  3: { src: '/software_images/fleet-telematics/after-hours.png',      alt: 'LOCATOR live view of a vehicle moving outside office hours',       w: 435,  h: 366, customLayout: true },
+  5: { src: '/software_images/fleet-telematics/service-reminders.png', alt: 'LOCATOR notifications — service and document reminders due',       w: 1116, h: 1578, customLayout: true },
+  8: { src: '/software_images/fleet-telematics/idle-alerts.png',      alt: 'LOCATOR live view flagging a vehicle idling for 30 minutes',       w: 725,  h: 698 },
 }
 
 // ── Main export ──────────────────────────────────────────────────────────────
 
 export default function BenefitsSection() {
   const [active, setActive] = useState(0)
+  const [visibleNotifications, setVisibleNotifications] = useState<Array<{index: number, state: 'entering' | 'visible' | 'exiting'}>>([])
+  const [visibleAfterHoursNotifications, setVisibleAfterHoursNotifications] = useState<Array<{index: number, state: 'entering' | 'visible' | 'exiting'}>>([])
+  const [visibleServiceReminders, setVisibleServiceReminders] = useState<Array<{index: number, state: 'entering' | 'visible' | 'exiting'}>>([])
   const videoEntry = VIDEO_MAP[active] ?? null
   const videoSrc = videoEntry?.src ?? null
   const imageEntry = IMAGE_MAP[active] ?? null
@@ -68,6 +101,210 @@ export default function BenefitsSection() {
     })
   }, [active])
 
+  // Cycling notification animation - show 3, animate one at a time
+  useEffect(() => {
+    if (active !== 2) {
+      setVisibleNotifications([])
+      return
+    }
+
+    let currentNotifIndex = 0
+    const timers: NodeJS.Timeout[] = []
+    
+    // Initial sequence: add 3 notifications one by one
+    timers.push(setTimeout(() => {
+      setVisibleNotifications([{index: 0, state: 'entering'}])
+      setTimeout(() => {
+        setVisibleNotifications(prev => prev.map(n => ({...n, state: 'visible'})))
+      }, 900)
+    }, 800))
+    
+    timers.push(setTimeout(() => {
+      setVisibleNotifications(prev => [...prev, {index: 1, state: 'entering'}])
+      setTimeout(() => {
+        setVisibleNotifications(prev => prev.map((n, i) => i === prev.length - 1 ? {...n, state: 'visible'} : n))
+      }, 900)
+    }, 2800))
+    
+    timers.push(setTimeout(() => {
+      setVisibleNotifications(prev => [...prev, {index: 2, state: 'entering'}])
+      setTimeout(() => {
+        setVisibleNotifications(prev => prev.map((n, i) => i === prev.length - 1 ? {...n, state: 'visible'} : n))
+      }, 900)
+      currentNotifIndex = 3
+    }, 4800))
+    
+    // Start cycling after initial 3 are shown
+    timers.push(setTimeout(() => {
+      const cycleInterval = setInterval(() => {
+        // Mark first notification as exiting
+        setVisibleNotifications(prev => {
+          const updated = [...prev]
+          updated[0] = {...updated[0], state: 'exiting'}
+          return updated
+        })
+        
+        // After exit animation, remove it and add new one
+        setTimeout(() => {
+          setVisibleNotifications(prev => {
+            const newList = prev.slice(1)
+            newList.push({index: currentNotifIndex % 6, state: 'entering'})
+            return newList
+          })
+          
+          // Mark new notification as visible after entry animation
+          setTimeout(() => {
+            setVisibleNotifications(prev => prev.map((n, i) => 
+              i === prev.length - 1 ? {...n, state: 'visible'} : n
+            ))
+          }, 900)
+          
+          currentNotifIndex++
+        }, 800)
+      }, 3500)
+      
+      timers.push(cycleInterval as any)
+    }, 7500))
+
+    return () => timers.forEach(t => clearTimeout(t))
+  }, [active])
+
+  // After-Hours Vehicle Alerts cycling animation (tab index 3)
+  useEffect(() => {
+    if (active !== 3) {
+      setVisibleAfterHoursNotifications([])
+      return
+    }
+
+    let currentNotifIndex = 0
+    const timers: NodeJS.Timeout[] = []
+    
+    // Initial sequence: add 3 notifications one by one
+    timers.push(setTimeout(() => {
+      setVisibleAfterHoursNotifications([{index: 0, state: 'entering'}])
+      setTimeout(() => {
+        setVisibleAfterHoursNotifications(prev => prev.map(n => ({...n, state: 'visible'})))
+      }, 900)
+    }, 800))
+    
+    timers.push(setTimeout(() => {
+      setVisibleAfterHoursNotifications(prev => [...prev, {index: 1, state: 'entering'}])
+      setTimeout(() => {
+        setVisibleAfterHoursNotifications(prev => prev.map((n, i) => i === prev.length - 1 ? {...n, state: 'visible'} : n))
+      }, 900)
+    }, 2800))
+    
+    timers.push(setTimeout(() => {
+      setVisibleAfterHoursNotifications(prev => [...prev, {index: 2, state: 'entering'}])
+      setTimeout(() => {
+        setVisibleAfterHoursNotifications(prev => prev.map((n, i) => i === prev.length - 1 ? {...n, state: 'visible'} : n))
+      }, 900)
+      currentNotifIndex = 3
+    }, 4800))
+    
+    // Start cycling after initial 3 are shown
+    timers.push(setTimeout(() => {
+      const cycleInterval = setInterval(() => {
+        // Mark first notification as exiting
+        setVisibleAfterHoursNotifications(prev => {
+          const updated = [...prev]
+          updated[0] = {...updated[0], state: 'exiting'}
+          return updated
+        })
+        
+        // After exit animation, remove it and add new one
+        setTimeout(() => {
+          setVisibleAfterHoursNotifications(prev => {
+            const newList = prev.slice(1)
+            newList.push({index: currentNotifIndex % 6, state: 'entering'})
+            return newList
+          })
+          
+          // Mark new notification as visible after entry animation
+          setTimeout(() => {
+            setVisibleAfterHoursNotifications(prev => prev.map((n, i) => 
+              i === prev.length - 1 ? {...n, state: 'visible'} : n
+            ))
+          }, 900)
+          
+          currentNotifIndex++
+        }, 800)
+      }, 3500)
+      
+      timers.push(cycleInterval as any)
+    }, 7500))
+
+    return () => timers.forEach(t => clearTimeout(t))
+  }, [active])
+
+  // Fleet Service Reminders cycling animation (tab index 5)
+  useEffect(() => {
+    if (active !== 5) {
+      setVisibleServiceReminders([])
+      return
+    }
+
+    let currentNotifIndex = 0
+    const timers: NodeJS.Timeout[] = []
+    
+    // Initial sequence: add 3 notifications one by one
+    timers.push(setTimeout(() => {
+      setVisibleServiceReminders([{index: 0, state: 'entering'}])
+      setTimeout(() => {
+        setVisibleServiceReminders(prev => prev.map(n => ({...n, state: 'visible'})))
+      }, 900)
+    }, 800))
+    
+    timers.push(setTimeout(() => {
+      setVisibleServiceReminders(prev => [...prev, {index: 1, state: 'entering'}])
+      setTimeout(() => {
+        setVisibleServiceReminders(prev => prev.map((n, i) => i === prev.length - 1 ? {...n, state: 'visible'} : n))
+      }, 900)
+    }, 2800))
+    
+    timers.push(setTimeout(() => {
+      setVisibleServiceReminders(prev => [...prev, {index: 2, state: 'entering'}])
+      setTimeout(() => {
+        setVisibleServiceReminders(prev => prev.map((n, i) => i === prev.length - 1 ? {...n, state: 'visible'} : n))
+      }, 900)
+      currentNotifIndex = 3
+    }, 4800))
+    
+    // Start cycling after initial 3 are shown
+    timers.push(setTimeout(() => {
+      const cycleInterval = setInterval(() => {
+        // Mark first notification as exiting
+        setVisibleServiceReminders(prev => {
+          const updated = [...prev]
+          updated[0] = {...updated[0], state: 'exiting'}
+          return updated
+        })
+        
+        // After exit animation, remove it and add new one
+        setTimeout(() => {
+          setVisibleServiceReminders(prev => {
+            const newList = prev.slice(1)
+            newList.push({index: currentNotifIndex % 6, state: 'entering'})
+            return newList
+          })
+          
+          // Mark new notification as visible after entry animation
+          setTimeout(() => {
+            setVisibleServiceReminders(prev => prev.map((n, i) => 
+              i === prev.length - 1 ? {...n, state: 'visible'} : n
+            ))
+          }, 900)
+          
+          currentNotifIndex++
+        }, 800)
+      }, 3500)
+      
+      timers.push(cycleInterval as any)
+    }, 7500))
+
+    return () => timers.forEach(t => clearTimeout(t))
+  }, [active])
+
   const activeReady = videoSrc ? !!ready[videoSrc] : true
 
   const goUp   = () => setActive(p => Math.max(0, p - 1))
@@ -76,6 +313,82 @@ export default function BenefitsSection() {
   return (
     <>
       <style>{`
+        /* Professional smooth notification animations with absolute positioning */
+        @keyframes appleNotificationSlide {
+          0% {
+            opacity: 0;
+            transform: translateY(-50px) scale(0.92);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        
+        /* Smooth slide up and fade out - no height change */
+        @keyframes notificationSlideOut {
+          0% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(-30px) scale(0.92);
+          }
+        }
+        
+        .idle-notification {
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          transition: top 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        
+        .idle-notification.entering {
+          animation: appleNotificationSlide 0.9s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+        }
+        
+        .idle-notification.visible {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+        
+        .idle-notification.exiting {
+          animation: notificationSlideOut 0.8s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+        }
+
+        /* Responsive adjustments for idle alerts custom layout */
+        .idle-alerts-container {
+          overflow-y: auto;
+          overflow-x: hidden;
+        }
+        @media (max-width: 900px) {
+          .idle-alerts-container {
+            padding: 20px 16px 20px !important;
+            gap: 18px !important;
+          }
+          .idle-alerts-notifications {
+            max-width: 100% !important;
+          }
+          .idle-notification {
+            padding: 9px 12px !important;
+          }
+          .idle-mobile-mockup {
+            max-width: 240px !important;
+          }
+        }
+        @media (max-width: 600px) {
+          .idle-alerts-container {
+            padding: 16px 12px 16px !important;
+            gap: 16px !important;
+          }
+          .idle-notification {
+            padding: 8px 10px !important;
+          }
+          .idle-mobile-mockup {
+            max-width: 200px !important;
+          }
+        }
+
         /* Light loading placeholder for videos (never a black box) */
         @keyframes bfShimmer { 0% { background-position: -160% 0; } 100% { background-position: 160% 0; } }
         .bf-skeleton {
@@ -322,7 +635,7 @@ export default function BenefitsSection() {
                 style={{
                   flex: 1,
                   background: '#ffffff',
-                  overflow: 'hidden',
+                  overflow: imageEntry?.customLayout ? 'auto' : 'hidden',
                   position: 'relative',
                   ...(mediaAspect ? { '--media-ar': mediaAspect } as React.CSSProperties : {}),
                 }}
@@ -375,14 +688,307 @@ export default function BenefitsSection() {
 
                 {/* Static screen capture for tabs that don't have a recording */}
                 {!videoSrc && imageEntry && (
-                  <Image
-                    key={imageEntry.src}
-                    src={imageEntry.src}
-                    alt={imageEntry.alt}
-                    fill
-                    sizes="(max-width: 900px) 100vw, 60vw"
-                    style={{ objectFit: 'contain', objectPosition: 'center' }}
-                  />
+                  <>
+                    {imageEntry.customLayout ? (
+                      // Custom layout for tabs 2 (Idle Alerts) and 3 (After-Hours)
+                      active === 2 ? (
+                      // Tab 2: Idle Alerts - notifications at top, mobile below
+                      <div className="idle-alerts-container" style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'flex-start',
+                        width: '100%',
+                        height: '100%',
+                        padding: '24px 24px 20px',
+                        gap: '20px',
+                        position: 'relative',
+                      }}>
+                        {/* Notification list at top - 3 visible, animated cycling - ABSOLUTE POSITION */}
+                        <div className="idle-alerts-notifications" style={{
+                          position: 'relative',
+                          width: '100%',
+                          maxWidth: '380px',
+                          height: '210px', // Fixed height to contain 3 notifications with proper spacing
+                          flexShrink: 0,
+                        }}>
+                          {visibleNotifications.map((notif, position) => {
+                            const notification = NOTIFICATION_DATA[notif.index]
+                            return (
+                              <div 
+                                key={`${notif.index}-${position}`} 
+                                className={`idle-notification ${notif.state}`}
+                                style={{
+                                  position: 'absolute',
+                                  top: `${position * 70}px`, // Stack vertically: ~58px height + 12px gap = 70px spacing
+                                  left: 0,
+                                  right: 0,
+                                  background: 'rgba(255, 255, 255, 0.85)',
+                                  borderRadius: '14px',
+                                  padding: '10px 14px',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '10px',
+                                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.06)',
+                                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                                }}
+                              >
+                                <div style={{
+                                  width: '36px',
+                                  height: '36px',
+                                  borderRadius: '8px',
+                                  background: '#2563eb',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  flexShrink: 0,
+                                }}>
+                                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M12 8v4l3 3"/>
+                                  </svg>
+                                </div>
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1px' }}>
+                                    <strong style={{ fontSize: '13px', fontWeight: 700, color: '#1d1d1f' }}>Idle Alerts</strong>
+                                    <span style={{ fontSize: '11px', color: '#86868b' }}>{notification.time}</span>
+                                  </div>
+                                  <p style={{ fontSize: '12px', color: '#6e6e73', margin: 0, lineHeight: '1.4' }}>
+                                    {notification.driver} · {notification.id} · {notification.location}
+                                  </p>
+                                </div>
+                              </div>
+                            )
+                          })}
+                        </div>
+
+                        {/* Mobile device mockup below - compressed size - FIXED POSITION */}
+                        <div className="idle-mobile-mockup" style={{
+                          position: 'relative',
+                          width: '100%',
+                          maxWidth: '280px',
+                          flexShrink: 0,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                          <Image
+                            src={imageEntry.src}
+                            alt={imageEntry.alt}
+                            width={280}
+                            height={273}
+                            sizes="(max-width: 600px) 180px, (max-width: 900px) 220px, 280px"
+                            style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: 'auto', maxHeight: '280px' }}
+                          />
+                        </div>
+                      </div>
+                      ) : active === 3 ? (
+                      // Tab 3: After-Hours Vehicle Alerts - notifications at top, mobile below
+                      <div className="idle-alerts-container" style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'flex-start',
+                        width: '100%',
+                        height: '100%',
+                        padding: '24px 24px 20px',
+                        gap: '20px',
+                        position: 'relative',
+                      }}>
+                        {/* Notification list at top - 3 visible, animated cycling - ABSOLUTE POSITION */}
+                        <div className="idle-alerts-notifications" style={{
+                          position: 'relative',
+                          width: '100%',
+                          maxWidth: '380px',
+                          height: '210px',
+                          flexShrink: 0,
+                        }}>
+                          {visibleAfterHoursNotifications.map((notif, position) => {
+                            const notification = AFTER_HOURS_DATA[notif.index]
+                            return (
+                              <div 
+                                key={`${notif.index}-${position}`} 
+                                className={`idle-notification ${notif.state}`}
+                                style={{
+                                  position: 'absolute',
+                                  top: `${position * 70}px`,
+                                  left: 0,
+                                  right: 0,
+                                  background: 'rgba(255, 255, 255, 0.85)',
+                                  borderRadius: '14px',
+                                  padding: '10px 14px',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '10px',
+                                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.06)',
+                                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                                }}
+                              >
+                                <div style={{
+                                  width: '36px',
+                                  height: '36px',
+                                  borderRadius: '8px',
+                                  background: '#2563eb',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  flexShrink: 0,
+                                }}>
+                                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M12 6v6l4 2"/>
+                                  </svg>
+                                </div>
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px' }}>
+                                    <strong style={{ fontSize: '13px', fontWeight: 700, color: '#1d1d1f' }}>After-Hours Alert</strong>
+                                    <span style={{ fontSize: '11px', color: '#86868b', marginLeft: '8px' }}>{notification.time}</span>
+                                  </div>
+                                  <p style={{ fontSize: '12px', color: '#86868b', margin: 0, lineHeight: '1.4' }}>
+                                    {notification.driver} · {notification.id} · {notification.location}
+                                  </p>
+                                </div>
+                              </div>
+                            )
+                          })}
+                        </div>
+
+                        {/* Mobile device mockup below - compressed size - FIXED POSITION */}
+                        <div className="idle-mobile-mockup" style={{
+                          position: 'relative',
+                          width: '100%',
+                          maxWidth: '280px',
+                          flexShrink: 0,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                          <Image
+                            src={imageEntry.src}
+                            alt={imageEntry.alt}
+                            width={280}
+                            height={236}
+                            sizes="(max-width: 600px) 180px, (max-width: 900px) 220px, 280px"
+                            style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: 'auto', maxHeight: '280px' }}
+                          />
+                        </div>
+                      </div>
+                      ) : active === 5 ? (
+                      // Tab 5: Fleet Service Reminders - notifications at top, mobile below
+                      <div className="idle-alerts-container" style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'flex-start',
+                        width: '100%',
+                        height: '100%',
+                        padding: '24px 24px 20px',
+                        gap: '20px',
+                        position: 'relative',
+                      }}>
+                        {/* Notification list at top - 3 visible, animated cycling - ABSOLUTE POSITION */}
+                        <div className="idle-alerts-notifications" style={{
+                          position: 'relative',
+                          width: '100%',
+                          maxWidth: '380px',
+                          height: '210px',
+                          flexShrink: 0,
+                        }}>
+                          {visibleServiceReminders.map((notif, position) => {
+                            const notification = SERVICE_REMINDERS_DATA[notif.index]
+                            return (
+                              <div 
+                                key={`${notif.index}-${position}`} 
+                                className={`idle-notification ${notif.state}`}
+                                style={{
+                                  position: 'absolute',
+                                  top: `${position * 70}px`,
+                                  left: 0,
+                                  right: 0,
+                                  background: 'rgba(255, 255, 255, 0.85)',
+                                  borderRadius: '14px',
+                                  padding: '10px 14px',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '10px',
+                                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.06)',
+                                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                                }}
+                              >
+                                <div style={{
+                                  width: '36px',
+                                  height: '36px',
+                                  borderRadius: '8px',
+                                  background: '#2563eb',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  flexShrink: 0,
+                                }}>
+                                  {notification.icon === 'wrench' ? (
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
+                                      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                                    </svg>
+                                  ) : (
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
+                                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                      <polyline points="14 2 14 8 20 8"/>
+                                      <line x1="16" y1="13" x2="8" y2="13"/>
+                                      <line x1="16" y1="17" x2="8" y2="17"/>
+                                      <polyline points="10 9 9 9 8 9"/>
+                                    </svg>
+                                  )}
+                                </div>
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px' }}>
+                                    <strong style={{ fontSize: '13px', fontWeight: 700, color: '#1d1d1f' }}>{notification.type}</strong>
+                                    <span style={{ fontSize: '11px', color: '#86868b', marginLeft: '8px', flexShrink: 0 }}>{notification.time}</span>
+                                  </div>
+                                  <p style={{ fontSize: '12px', color: '#86868b', margin: 0, lineHeight: '1.4' }}>
+                                    {notification.vehicle} {notification.id} · {notification.detail}
+                                  </p>
+                                </div>
+                              </div>
+                            )
+                          })}
+                        </div>
+
+                        {/* Mobile device mockup below - compressed size - FIXED POSITION */}
+                        <div className="idle-mobile-mockup" style={{
+                          position: 'relative',
+                          width: '100%',
+                          maxWidth: '280px',
+                          flexShrink: 0,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                          <Image
+                            src={imageEntry.src}
+                            alt={imageEntry.alt}
+                            width={280}
+                            height={396}
+                            sizes="(max-width: 600px) 180px, (max-width: 900px) 220px, 280px"
+                            style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', height: 'auto', maxHeight: '400px' }}
+                          />
+                        </div>
+                      </div>
+                      ) : null
+                    ) : (
+                      // Default layout for other images
+                      <Image
+                        key={imageEntry.src}
+                        src={imageEntry.src}
+                        alt={imageEntry.alt}
+                        fill
+                        sizes="(max-width: 900px) 100vw, 60vw"
+                        style={{ 
+                          objectFit: imageEntry.objectFit || 'contain', 
+                          objectPosition: imageEntry.objectPosition || 'center' 
+                        }}
+                      />
+                    )}
+                  </>
                 )}
               </div>
             </div>

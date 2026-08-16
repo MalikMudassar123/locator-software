@@ -27,7 +27,7 @@ export default function SoftwarePage() {
       <ModulesSection />
       <DashcamShowcase />
       <SoftwareBlog />
-      <LogoMarquee />
+      {/* <LogoMarquee /> */}
       <SoftwareFAQ />
       <SoftwareCTA />
       <Footer />

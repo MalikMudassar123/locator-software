@@ -148,14 +148,21 @@ export default function WhoWeAreHero() {
            tracking, quiet; and the h1 is given the room a hero headline should
            have. That inversion, more than any graphic, is what made the
            section read as unfinished. */
+        /* Sized against the headline rather than in the abstract. The first
+           pass here over-corrected: coming off an eyebrow that was LARGER than
+           the h1, 11-13px swung too far the other way and the kicker stopped
+           registering at all. 13-18px puts it at roughly a quarter of the
+           headline on desktop (16.6 against 68 at 1440), which is the range
+           where it reads as a deliberate label — present, clearly subordinate,
+           not timid. */
         .wwa-eyebrow {
-          display: inline-flex; align-items: center; gap: 10px;
-          font-size: clamp(11px, .82vw, 13px);
+          display: inline-flex; align-items: center; gap: 13px;
+          font-size: clamp(13px, 1.15vw, 18px);
           font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
           color: #1360ee;
         }
         .wwa-eyebrow i {
-          display: block; width: 26px; height: 2px; border-radius: 2px;
+          display: block; width: clamp(28px, 2.4vw, 40px); height: 2px; border-radius: 2px;
           background: linear-gradient(90deg, transparent, #1360ee);
         }
         .wwa-eyebrow i:last-child { background: linear-gradient(90deg, #1360ee, transparent); }

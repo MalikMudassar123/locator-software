@@ -103,7 +103,9 @@ export default function Footer() {
 
         {/* ── Secondary brand mark — same logo used across the Software pages ── */}
         <div style={{ marginBottom: '36px', paddingLeft: '24px' }}>
-          <Image src="/llooogoo.png" alt="Locator" width={2617} height={911} style={{ width: 'auto', height: '48px' }} />
+          {/* eager: small, and lazy left an empty gap where the brand mark goes
+              for as long as the footer was on screen mid-download. */}
+          <Image src="/llooogoo.png" alt="Locator" width={2617} height={911} loading="eager" style={{ width: 'auto', height: '48px' }} />
         </div>
 
         {/* ── 5-column grid: [form] [company] [services] [support] [connect] ── */}

@@ -509,20 +509,20 @@ function FeatureIcon({ name }) {
 function FeaturePreview({ type, customImage }) {
   // If user passes a custom image src, render that instead of the placeholder SVG
   //
-  // loading="lazy" here is load-order plumbing, not a visual change — the card,
-  // its box and this image's geometry are identical either way. React 19 hoists a
-  // <link rel="preload" as="image"> into <head> for every EAGER <img> it
-  // server-renders. These three previews are 261KB of webp sitting in the fifth
-  // section of the page, and that preload put them in the head ahead of
-  // everything the first viewport actually needs, where they held sockets for
-  // ~20s on a throttled connection. Marking them lazy drops the head hint; the
-  // browser still fetches them well before the section scrolls into view.
+  // These three previews were briefly lazy, to keep 261KB of webp out of <head>
+  // while the stylesheet was still a separate request it could starve. That
+  // reason is gone — the CSS is inlined into the document now — and lazy cost
+  // more than it saved: the cards fade in on an IntersectionObserver, so on a
+  // slow connection they arrived, faded up and sat there as empty boxes while
+  // the artwork was still downloading. Measured on Slow 3G, graph.webp and
+  // percentage.webp were on screen and visible but unloaded across 5 and 11
+  // consecutive scroll positions. Eager costs bandwidth early; an empty card is
+  // the bug the client is reporting.
   if (customImage) {
     return (
       <img
         src={customImage}
         alt=""
-        loading="lazy"
         decoding="async"
         style={{
           width: "100%",

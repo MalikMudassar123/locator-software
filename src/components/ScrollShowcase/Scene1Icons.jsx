@@ -1244,16 +1244,27 @@ export default forwardRef(function Scene1Icons(_props, ref) {
           background:'#fff',
         }}
       >
-        {/* No `priority`: ScrollShowcase is the third section, never in the first
-            viewport, so a <link rel="preload"> for it in <head> only competed with
-            the resources that ARE. It still sits inside the pinned container, so
-            the browser starts fetching as soon as that container scrolls into
-            range — well before this scene animates in. */}
+        {/* EVERY artwork layer in this scene is loading="eager". Do not drop it.
+            These sit inside a ScrollTrigger-PINNED section: the section is already
+            filling the viewport while GSAP fades each layer in, so "near the
+            viewport" — the only thing lazy loading waits for — is already true by
+            the time the reveal starts. The fetch then begins as the layer becomes
+            visible and the user watches the mockup animate in with the artwork
+            missing, leaving an empty panel where the dashboard should be. That is
+            the Fleet/Video Telematics flash; it was reproduced at scrollY 1800,
+            3400 and 4600 and disappears when these load eagerly.
+            eager is NOT `priority` here: Next 16 gates the <link rel="preload"> on
+            a separate `preload` prop (isLazy = !priority && !preload && …), so
+            these stay out of <head> and never compete with the first viewport.
+            next/image requests them at Low priority either way — the only thing
+            that changes is that the request starts at page load instead of at
+            scroll. */}
         <Image
           src="/block 1/mobile.webp"
           alt="Mobile app interface"
           fill
           sizes={`${PHONE_W}px`}
+          loading="eager"
           style={{ objectFit:'cover', objectPosition:'center top' }}
         />
       </div>
@@ -1279,11 +1290,13 @@ export default forwardRef(function Scene1Icons(_props, ref) {
       >
         <BrowserChrome />
         <div style={{ position:'relative', flex:1, background:'#fff' }}>
+          {/* The big one — this is the panel that was visibly empty at scrollY 1800. */}
           <Image
             src="/block 1/werertrttr.webp"
             alt="Desktop dashboard interface"
             fill
             sizes={`${DT_W}px`}
+            loading="eager"
             style={{ objectFit:'contain', objectPosition:'left top' }}
           />
         </div>
@@ -1321,6 +1334,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
           alt="Vehicle hover popup"
           fill
           sizes="225px"
+          loading="eager"
           style={{ objectFit:'contain', objectPosition:'left top' }}
         />
       </div>
@@ -1349,6 +1363,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
           alt="Map/Satellite toggle"
           fill
           sizes="110px"
+          loading="eager"
           style={{ objectFit:'contain', objectPosition:'left top' }}
         />
       </div>

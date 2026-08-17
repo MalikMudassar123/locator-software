@@ -4,6 +4,7 @@ import "./globals.css";
 import { siteConfig } from "@/config/site";
 import ScrollRestoration from "@/components/ScrollRestoration";
 import ContactDock from "@/components/common/ContactDock";
+import StyledJsxRegistry from "./StyledJsxRegistry";
 
 // Self-hosted rather than next/font/google.
 //
@@ -129,11 +130,17 @@ export default function RootLayout({
             }),
           }}
         />
-        <ScrollRestoration />
-        {children}
-        {/* Last in the body so it paints over page content without needing to
-            out-bid anyone on z-index. It is position:fixed and adds no height. */}
-        <ContactDock />
+        {/* Wraps everything that can contain `<style jsx>` — page content and the
+            dock alike — so those rules are written into the document during
+            rendering instead of being injected by the client at hydration. See
+            StyledJsxRegistry for why. */}
+        <StyledJsxRegistry>
+          <ScrollRestoration />
+          {children}
+          {/* Last in the body so it paints over page content without needing to
+              out-bid anyone on z-index. It is position:fixed and adds no height. */}
+          <ContactDock />
+        </StyledJsxRegistry>
       </body>
     </html>
   );

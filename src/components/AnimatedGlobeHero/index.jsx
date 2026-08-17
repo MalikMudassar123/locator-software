@@ -86,6 +86,21 @@ const CITY_NODES = CITY_POLAR.map(({ angle, radius, name }) => {
 const SHOW_ORBITAL_RINGS = false;
 
 /**
+ * The shockwave — two rings that sit exactly on the globe's rim and then
+ * expand outward to 2.15x its radius while fading, fired at 3.5s and 3.78s,
+ * i.e. the moment the sphere finishes assembling. That outward pulse from the
+ * edge is the "signal coming off the border" the client asked to remove.
+ *
+ * Same flag treatment as SHOW_ORBITAL_RINGS: set to true to bring it back.
+ *
+ * NOT disabled alongside it: `rim-ignite`, the light that strikes and burns
+ * once AROUND the circumference. That one travels along the edge rather than
+ * leaving it, so it reads as the globe completing rather than as something
+ * being emitted, and the formation beat still needs a finish.
+ */
+const SHOW_FORMATION_SHOCKWAVE = false;
+
+/**
  * Connections — dense network mesh spanning the globe like flight routes.
  * 12 arcs distributed so the animation keeps a continuous flow of pulses.
  */
@@ -1095,24 +1110,28 @@ export default function AnimatedGlobeHero({
             transform={`rotate(-90 ${CX} ${CY})`}
           />
           {/* Shockwave leaving the surface as the sphere completes */}
-          <circle
-            cx={CX}
-            cy={CY}
-            r={R}
-            fill="none"
-            stroke="#dff2ff"
-            className="shockwave"
-            opacity="0"
-          />
-          <circle
-            cx={CX}
-            cy={CY}
-            r={R}
-            fill="none"
-            stroke="#ffffff"
-            className="shockwave shockwave--late"
-            opacity="0"
-          />
+          {SHOW_FORMATION_SHOCKWAVE && (
+            <>
+              <circle
+                cx={CX}
+                cy={CY}
+                r={R}
+                fill="none"
+                stroke="#dff2ff"
+                className="shockwave"
+                opacity="0"
+              />
+              <circle
+                cx={CX}
+                cy={CY}
+                r={R}
+                fill="none"
+                stroke="#ffffff"
+                className="shockwave shockwave--late"
+                opacity="0"
+              />
+            </>
+          )}
         </g>
 
         {/* ====================================================================

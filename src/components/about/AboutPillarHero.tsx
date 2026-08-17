@@ -41,9 +41,17 @@ export default function AboutPillarHero({
   return (
     <>
       <style>{`
+        /* A mesh rather than one wash. The single near-white radial that was
+           here left the section 95% flat white, which is the other half of why
+           it read as empty — there was nothing for the eye to land on between
+           the mark and the band. Three overlapping fields give the plate actual
+           depth while still resolving to white behind the type. */
         .apx-hero {
           position: relative; overflow: hidden; isolation: isolate;
-          background: radial-gradient(140% 100% at 50% -16%, #eaf1ff 0%, #f6f9ff 32%, #ffffff 66%);
+          background:
+            radial-gradient(52% 42% at 18% 8%, rgba(6,164,226,.10) 0%, transparent 70%),
+            radial-gradient(48% 40% at 84% 14%, rgba(19,96,238,.11) 0%, transparent 72%),
+            radial-gradient(150% 105% at 50% -18%, #e6eeff 0%, #f3f7ff 30%, #ffffff 64%);
           padding: clamp(16px,2vw,28px) 28px 0;
         }
 
@@ -90,24 +98,65 @@ export default function AboutPillarHero({
         }
         @media (prefers-reduced-motion: reduce) { .apx-arc { opacity: .5; } }
 
-        .apx-inner { position: relative; z-index: 1; max-width: 820px; margin: 0 auto; text-align: center; padding-top: clamp(24px,4.5vw,52px); }
+        /* Tighter than before. The old rhythm left the mark, the eyebrow and
+           the title floating apart with no relationship; they now read as one
+           stacked unit with the dial as its base. */
+        .apx-inner { position: relative; z-index: 1; max-width: 820px; margin: 0 auto; text-align: center; padding-top: clamp(14px,2.4vw,30px); }
 
         @keyframes apxRise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
         @media (prefers-reduced-motion: no-preference) { .apx-anim { opacity: 0; animation: apxRise .75s ${EASE} forwards; } }
 
-        /* The page mark, sitting at the origin the arcs radiate from. The
-           double ring gives it a core and a halo so it reads as the source of
-           the signal rather than as a flat sticker on top of it. */
-        .apx-icon {
+        /* ── The instrument ──────────────────────────────────────────────
+           The real reason this section read as thin was structural, not
+           decorative: an icon, one line of small caps and a title left roughly
+           500px of empty white that no amount of faint background arcs was
+           ever going to fill. It needed an actual focal object.
+
+           So the page mark now sits at the centre of a drawn instrument — a
+           graduated dial of 60 ticks with every fifth one extended, three
+           concentric rings, and a soft core glow. It is the same idea the rest
+           of the hero already carries (a signal, radiating from this page's
+           mark) but built at a size and density that can actually hold the
+           composition together.
+
+           It is drawn rather than decorative because the geometry is regular:
+           60 divisions at exactly 6 degrees, rings on a fixed rhythm, every
+           fifth tick longer. Precision instruments look designed because they
+           ARE measured, and that is what separates this from scattered lines. */
+        .apx-core {
           position: relative;
-          width: 66px; height: 66px; border-radius: 19px;
-          display: grid; place-items: center; margin: 0 auto 24px;
+          width: clamp(230px, 27vw, 330px);
+          aspect-ratio: 1;
+          margin: 0 auto;
+          display: grid; place-items: center;
+        }
+        .apx-core svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+        /* The dial turns, slowly enough to read as an instrument settling
+           rather than as something spinning. */
+        @keyframes apxDial { to { transform: rotate(360deg); } }
+        @media (prefers-reduced-motion: no-preference) {
+          .apx-dial { transform-origin: 200px 200px; animation: apxDial 90s linear infinite; }
+        }
+        /* Core glow behind the mark, so the centre reads as lit rather than as
+           a chip sitting on a diagram. */
+        .apx-core::before {
+          content: ''; position: absolute; inset: 22%;
+          border-radius: 50%;
+          background: radial-gradient(50% 50% at 50% 50%, rgba(19,96,238,.20) 0%, rgba(6,164,226,.10) 45%, transparent 72%);
+          filter: blur(14px);
+        }
+
+        .apx-icon {
+          position: relative; z-index: 1;
+          width: 74px; height: 74px; border-radius: 21px;
+          display: grid; place-items: center;
           background: linear-gradient(150deg, #1360ee 0%, #0d73e3 100%);
           color: #fff;
           box-shadow:
-            0 16px 34px -12px rgba(19,96,238,.55),
-            0 0 0 1px rgba(19,96,238,.14),
-            0 0 0 9px rgba(19,96,238,.055);
+            0 18px 38px -12px rgba(19,96,238,.55),
+            0 0 0 1px rgba(19,96,238,.16),
+            0 0 0 10px rgba(255,255,255,.72),
+            0 0 0 11px rgba(19,96,238,.10);
         }
 
         /* A true eyebrow: small, wide-tracked, flanked by rules that fade out.
@@ -115,6 +164,7 @@ export default function AboutPillarHero({
            it labels the page without competing with it. */
         .apx-eyebrow {
           display: inline-flex; align-items: center; gap: 13px;
+          margin-top: clamp(-6px, -.6vw, 0px);
           font-size: clamp(13px, 1.15vw, 18px);
           font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
           color: #1360ee;
@@ -183,8 +233,41 @@ export default function AboutPillarHero({
         <SoftwareNavbar />
 
         <div className="apx-inner">
-          <div className="apx-icon apx-anim">
-            {active.icon}
+          <div className="apx-core apx-anim">
+            <svg viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+              {/* Three rings on a fixed rhythm. The outermost carries the
+                  graduations, the inner two give the dial depth. */}
+              <g fill="none" stroke="#1360ee">
+                <circle cx="200" cy="200" r="196" strokeOpacity=".30" />
+                <circle cx="200" cy="200" r="150" strokeOpacity=".22" strokeDasharray="2 7" />
+                <circle cx="200" cy="200" r="104" strokeOpacity=".16" />
+              </g>
+
+              {/* 60 divisions at exactly 6°, every fifth extended. Generated
+                  rather than hand-placed so the spacing is genuinely uniform —
+                  eyeballed tick marks are what make a dial look fake. */}
+              <g className="apx-dial" stroke="#1360ee" strokeLinecap="round">
+                {Array.from({ length: 60 }, (_, i) => {
+                  const major = i % 5 === 0
+                  const a = (i * 6 * Math.PI) / 180
+                  const outer = 196
+                  const inner = major ? 178 : 187
+                  return (
+                    <line
+                      key={i}
+                      x1={200 + Math.sin(a) * inner}
+                      y1={200 - Math.cos(a) * inner}
+                      x2={200 + Math.sin(a) * outer}
+                      y2={200 - Math.cos(a) * outer}
+                      strokeWidth={major ? 1.8 : 1}
+                      strokeOpacity={major ? 0.55 : 0.28}
+                    />
+                  )
+                })}
+              </g>
+            </svg>
+
+            <div className="apx-icon">{active.icon}</div>
           </div>
 
           <span className="apx-eyebrow apx-anim" style={{ animationDelay: '.08s' }}>

@@ -14,7 +14,7 @@ const FEATURES = [
   {
     title: 'Enterprise CRM/ERP Integration',
     desc: 'Sync fleet and IoT asset data instantly with your existing CRM or ERP systems.',
-    accent: '#13923f',
+    accent: '#1360ee',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M8 3H5a2 2 0 0 0-2 2v3" /><path d="M21 8V5a2 2 0 0 0-2-2h-3" /><path d="M16 21h3a2 2 0 0 0 2-2v-3" /><path d="M3 16v3a2 2 0 0 0 2 2h3" />
@@ -25,7 +25,7 @@ const FEATURES = [
   {
     title: 'Geofence & POI Smart Alerts',
     desc: 'Set smart virtual zones and receive instant entry, exit, and after-hours alerts.',
-    accent: '#7c3aed',
+    accent: '#1360ee',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
@@ -35,7 +35,7 @@ const FEATURES = [
   {
     title: 'Predictive Maintenance & Service Automation',
     desc: 'Automate AI service reminders to reduce breakdowns and maximize equipment uptime.',
-    accent: '#c2740a',
+    accent: '#1360ee',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2-2 2.6-2.6z" />

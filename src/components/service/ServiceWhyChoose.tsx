@@ -17,7 +17,7 @@ const REASONS = [
   {
     title: 'Competitive Pricing',
     desc: 'As part of our mission to see every vehicle tracked in the UAE, our GPS tracker pricing is kept highly competitive.',
-    accent: '#13923f',
+    accent: '#1360ee',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="4" width="18" height="16" rx="2.5" /><path d="M8 11l2.5 2.5L16 8" />
@@ -27,7 +27,7 @@ const REASONS = [
   {
     title: 'Seamless Software Integration',
     desc: 'LOCATOR integrates with any third-party software or application of your choice — no restrictions on how you use the platform.',
-    accent: '#7c3aed',
+    accent: '#1360ee',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M5 12.5a9 9 0 0 1 14 0" /><path d="M8 15.5a5 5 0 0 1 8 0" /><circle cx="12" cy="18.5" r="1" fill="currentColor" />

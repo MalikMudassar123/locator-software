@@ -24,7 +24,7 @@ const STEPS = [
         <path d="M7 7l2.5 2.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
       </svg>
     ),
-    accent: '#13923f',
+    accent: '#1360ee',
   },
   {
     num: '03',
@@ -38,7 +38,7 @@ const STEPS = [
         <path d="M10 23h8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
       </svg>
     ),
-    accent: '#7c3aed',
+    accent: '#1360ee',
   },
   {
     num: '04',
@@ -50,7 +50,7 @@ const STEPS = [
         <circle cx="14" cy="10" r="4" stroke="currentColor" strokeWidth="1.8" />
       </svg>
     ),
-    accent: '#c2740a',
+    accent: '#1360ee',
   },
 ]
 

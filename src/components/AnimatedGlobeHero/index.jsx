@@ -65,6 +65,27 @@ const CITY_NODES = CITY_POLAR.map(({ angle, radius, name }) => {
 });
 
 /**
+ * The three elliptical orbit rings that used to encircle the globe, and the
+ * four satellite dots that rode along them.
+ *
+ * Turned OFF at the client's request. Their outer ring reached 1.48x the
+ * globe's radius, so they read less as orbits and more as loose curved lines
+ * sweeping off toward the corners of the section — which is exactly what was
+ * flagged.
+ *
+ * Kept behind a flag rather than deleted: flip this to true and the whole
+ * system comes back exactly as it was, animation and all. A flag rather than a
+ * block comment because the markup contains its own block comments, and a
+ * nested closing delimiter would terminate the outer one early and break the
+ * file.
+ *
+ * The related CSS (.orbit-ring, .satellite, ringPulse) is deliberately left in
+ * place — it is scoped and inert with nothing to match, and removing it would
+ * mean this could not simply be switched back on.
+ */
+const SHOW_ORBITAL_RINGS = false;
+
+/**
  * Connections — dense network mesh spanning the globe like flight routes.
  * 12 arcs distributed so the animation keeps a continuous flow of pulses.
  */
@@ -1101,6 +1122,7 @@ export default function AnimatedGlobeHero({
             (GPU-accelerated, no layout cost). Gives a cinematic high-end
             SaaS "global network" feel without breaking the existing layout.
             ==================================================================== */}
+        {SHOW_ORBITAL_RINGS && (
         <g className="orbital-layer">
           {/* Outer orbit — broadest, gentle tilt left */}
           <ellipse
@@ -1160,6 +1182,7 @@ export default function AnimatedGlobeHero({
             );
           })}
         </g>
+        )}
 
         {/* ====================================================================
             CITY NODES — pulsing markers anchored to the visible hemisphere

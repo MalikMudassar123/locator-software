@@ -4003,6 +4003,43 @@ h6 {
   }
 }
 
+/* On-light variant — the shutter mega-menu and the mobile drawer's own "panel
+   open" state both flip the bar to a white background (isPanelOpen in
+   Navbar.tsx). The glass skin above is built for the saturated hero: its face
+   is deliberately see-through — the fill is two stacked linear-gradients that
+   top out around 0.32 alpha, so what actually reads is however much of the
+   BACKDROP shows through blurred and tinted — and its ambient bloom is tuned
+   to look like light escaping into a dark surround.
+   Neither survives a flat white backdrop. With nothing coloured behind it to
+   blend, the face just goes pale, and the cyan bloom in the box-shadow turns
+   into a stray glow sitting on white with no source to explain it — exactly
+   what showed up behind the "Regulatory GPS Certifications" panel.
+   This swaps both for an ordinary opaque pill: a solid fill (so there is
+   nothing left for backdrop-filter to do — switched off below), and a
+   conventional drop shadow instead of the ambient bed. The sheen sweep and the
+   two rim hairlines are untouched: they are painted on the button's own box,
+   not the backdrop, so they read the same regardless of what is behind it. */
+.glass-btn--onlight {
+  background: linear-gradient(135deg, #1360ee 0%, #0d73e3 100%);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow:
+    0 10px 24px -8px rgba(19, 96, 238, 0.45),
+    0 2px 6px -2px rgba(19, 96, 238, 0.3),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.35);
+}
+.glass-btn--onlight:hover {
+  box-shadow:
+    0 14px 30px -8px rgba(19, 96, 238, 0.55),
+    0 3px 8px -2px rgba(19, 96, 238, 0.35),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+}
+.glass-btn--onlight:active {
+  box-shadow:
+    0 6px 16px -8px rgba(19, 96, 238, 0.4),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.25);
+}
+
 /* Full-width variant for the mobile drawer. Same skin, same radius, same type:
    the reference shows one button, so there is no second design for small
    screens. Only the width and the fixed padding differ, because the drawer's

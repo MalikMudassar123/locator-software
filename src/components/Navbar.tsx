@@ -462,7 +462,7 @@ export default function Navbar() {
                 The margin goes on the button rather than widening the row's
                 gap-3, which also separates the button from the hamburger. */}
             <GlassButton
-              className="glass-btn--nav"
+              className={`glass-btn--nav${isPanelOpen ? ' glass-btn--onlight' : ''}`}
               onMouseEnter={() => setCtaHover(true)}
               onMouseLeave={() => setCtaHover(false)}
               onClick={() => router.push(QUOTE_HREF)}

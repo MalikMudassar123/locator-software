@@ -11,13 +11,13 @@ const PILLARS = [
     num: '02',
     title: 'Smarter Decisions',
     desc: 'Turning complexity into clarity — actionable insight that helps businesses act faster and with more confidence.',
-    accent: '#7c3aed',
+    accent: '#1360ee',
   },
   {
     num: '03',
     title: 'More Efficient Growth',
     desc: 'Empowering businesses worldwide to run leaner operations while scaling profitably and sustainably.',
-    accent: '#13923f',
+    accent: '#1360ee',
   },
 ]
 

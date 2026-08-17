@@ -16,7 +16,7 @@ export default function WhoWeAreJourney() {
             <h2 style={{ margin: 0, fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               From GPS tracking to a connected mobility ecosystem
             </h2>
-            <div style={{ marginTop: '22px', height: '4px', width: '72px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#7c3aed)' }} />
+            <div style={{ marginTop: '22px', height: '4px', width: '72px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#06a4e2)' }} />
           </div>
 
           <div data-reveal="right" style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>

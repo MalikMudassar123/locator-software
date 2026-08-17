@@ -14,7 +14,7 @@ const VALUES = [
   {
     title: 'Purpose-Driven Innovation',
     desc: 'We build technology that solves real operational problems and creates measurable business impact.',
-    accent: '#7c3aed',
+    accent: '#1360ee',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M9 18h6M10 21h4" /><path d="M12 3a6 6 0 0 1 4 10.5c-.7.6-1 1.2-1 2H9c0-.8-.3-1.4-1-2A6 6 0 0 1 12 3z" />
@@ -24,7 +24,7 @@ const VALUES = [
   {
     title: 'Operational Excellence',
     desc: 'We simplify operations, remove chaos, and help customers run their fleet and field teams with more control, clarity, and efficiency.',
-    accent: '#13923f',
+    accent: '#1360ee',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4" />
@@ -35,7 +35,7 @@ const VALUES = [
   {
     title: 'Transparency & Trust',
     desc: 'We build systems, processes, and relationships that improve visibility, accountability, and trust between us, our customers, and their end customers.',
-    accent: '#0e9aa7',
+    accent: '#1360ee',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" /><circle cx="12" cy="12" r="3" />
@@ -45,7 +45,7 @@ const VALUES = [
   {
     title: 'Safety & Sustainability',
     desc: 'We promote safer driving, smarter fleet usage, lower fuel consumption, and a reduced carbon footprint.',
-    accent: '#c2740a',
+    accent: '#1360ee',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2.5 1.5 6.5-1.4 10.2" /><path d="M2 22c1.5-4 4-7 8-8" />
@@ -55,7 +55,7 @@ const VALUES = [
   {
     title: 'Ownership with Integrity',
     desc: 'We take responsibility, act honestly, and deliver every commitment with transparency and trust.',
-    accent: '#4f46e5',
+    accent: '#1360ee',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" /><path d="M9 12l2 2 4-4" />
@@ -118,7 +118,9 @@ export default function AboutValues() {
             <p style={{ margin: 0, maxWidth: '360px', fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 700, lineHeight: 1.4, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               Six principles behind every product we ship and every relationship we build.
             </p>
-            <div style={{ marginTop: '22px', height: '4px', width: '72px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#7c3aed)' }} />
+            {/* Blue easing into the palette's cyan end, rather than blue into
+                purple — still a gradient, no second hue. */}
+            <div style={{ marginTop: '22px', height: '4px', width: '72px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#06a4e2)' }} />
           </aside>
 
           <div>

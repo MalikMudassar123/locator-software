@@ -22,7 +22,7 @@ const SERVICES = [
     label: 'Management',
     title: 'Fleet Management',
     body: 'Improve fleet utilization, operational efficiency, maintenance planning, and overall business performance.',
-    accent: '#13923f',
+    accent: '#1360ee',
     icon: (
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="4" width="18" height="14" rx="2" /><path d="M3 9h18M8 18v3M16 18v3M7 13h4" />
@@ -34,7 +34,7 @@ const SERVICES = [
     label: 'Video',
     title: 'AI Dashcams & Video Telematics',
     body: 'Enhance driver safety and operational visibility through AI-powered cameras and intelligent event detection.',
-    accent: '#7c3aed',
+    accent: '#1360ee',
     icon: (
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2.5" y="7" width="14" height="11" rx="2" /><path d="M16.5 11l5-3v9l-5-3v-3z" />
@@ -46,7 +46,7 @@ const SERVICES = [
     label: 'Fuel',
     title: 'Fuel Monitoring',
     body: 'Track fuel consumption, identify inefficiencies, and reduce operational costs through advanced fuel analytics.',
-    accent: '#c2740a',
+    accent: '#1360ee',
     icon: (
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M4 20V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v15M3 20h12" /><path d="M14 9h3l2 2v6a2 2 0 0 1-4 0v-3h-1" /><path d="M7 8h4" />
@@ -58,7 +58,7 @@ const SERVICES = [
     label: 'Assets',
     title: 'Asset Tracking',
     body: 'Monitor valuable assets, equipment, and machinery with reliable real-time location intelligence.',
-    accent: '#0e9aa7',
+    accent: '#1360ee',
     icon: (
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M21 8l-9-5-9 5 9 5 9-5z" /><path d="M3 8v8l9 5 9-5V8" /><path d="M12 13v8" />
@@ -70,7 +70,7 @@ const SERVICES = [
     label: 'IoT',
     title: 'IoT Solutions',
     body: 'Connect vehicles, assets, sensors, and field operations through intelligent IoT technologies.',
-    accent: '#4f46e5',
+    accent: '#1360ee',
     icon: (
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="2.5" /><circle cx="5" cy="6" r="1.8" /><circle cx="19" cy="6" r="1.8" /><circle cx="5" cy="18" r="1.8" /><circle cx="19" cy="18" r="1.8" />
@@ -119,7 +119,9 @@ export default function WhoWeAreServices() {
         .wws-wrap { position: relative; max-width: var(--w-1120); margin: 0 auto; }
 
         .wws-spine { position: absolute; top: 8px; bottom: 8px; left: 50%; width: 3px; transform: translateX(-50%); background: #e2e8f4; border-radius: 3px; z-index: 0; }
-        .wws-fill { position: relative; width: 100%; height: 0; background: linear-gradient(180deg, #1360ee 0%, #7c3aed 55%, #13923f 100%); border-radius: 3px; transition: height .15s linear; }
+        /* Progress fill travels through the site's own hero blues instead of
+           blue -> purple -> green, which read as three unrelated states. */
+        .wws-fill { position: relative; width: 100%; height: 0; background: linear-gradient(180deg, #1360ee 0%, #0d73e3 55%, #06a4e2 100%); border-radius: 3px; transition: height .15s linear; }
         .wws-comet { position: absolute; left: 50%; bottom: 0; width: 15px; height: 15px; transform: translate(-50%, 50%); border-radius: 50%; background: #fff; box-shadow: 0 0 14px 3px rgba(19,96,238,.55), 0 0 0 5px rgba(19,96,238,.14); }
 
         .wws-row { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 88px 1fr; align-items: center; margin-bottom: clamp(24px,3.5vw,48px); }

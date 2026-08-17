@@ -13,7 +13,7 @@ export default function NewsroomComingSoon() {
         }
         .nrc-icon {
           width: 64px; height: 64px; border-radius: 18px; margin: 0 auto 24px;
-          display: grid; place-items: center; background: rgba(14,154,167,.12); color: #0e9aa7;
+          display: grid; place-items: center; background: rgba(19,96,238,.12); color: #1360ee;
         }
         .nrc-btn {
           display: inline-flex; align-items: center; gap: 8px;

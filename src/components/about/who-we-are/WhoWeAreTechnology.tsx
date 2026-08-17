@@ -14,7 +14,7 @@ const PILLARS = [
   {
     title: 'IoT Connectivity',
     desc: 'Connecting vehicles, assets, and sensors into one intelligent ecosystem.',
-    accent: '#13923f',
+    accent: '#1360ee',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="2.4" /><circle cx="5" cy="6" r="1.6" /><circle cx="19" cy="6" r="1.6" /><circle cx="5" cy="18" r="1.6" /><circle cx="19" cy="18" r="1.6" /><path d="M6.4 7.1 10 10.6M17.6 7.1 14 10.6M6.4 16.9 10 13.4M17.6 16.9 14 13.4" />
@@ -24,7 +24,7 @@ const PILLARS = [
   {
     title: 'Intelligent GPS Hardware',
     desc: 'Reliable, ruggedized devices built for real-world fleet conditions.',
-    accent: '#7c3aed',
+    accent: '#1360ee',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <rect x="7" y="3" width="10" height="18" rx="2" /><path d="M11 6h2" /><circle cx="12" cy="16" r="1.5" />
@@ -34,7 +34,7 @@ const PILLARS = [
   {
     title: 'Cloud Computing',
     desc: 'Scalable, secure infrastructure that grows with your operations.',
-    accent: '#c2740a',
+    accent: '#1360ee',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M17.5 19a4.5 4.5 0 0 0 .5-8.97A6 6 0 0 0 6.2 9.5 4 4 0 0 0 7 17.5" /><path d="M8 19h9.5" />
@@ -44,7 +44,7 @@ const PILLARS = [
   {
     title: 'Real-Time Intelligence',
     desc: 'Live operational visibility that powers faster, smarter decisions.',
-    accent: '#0e9aa7',
+    accent: '#1360ee',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" />
@@ -54,7 +54,7 @@ const PILLARS = [
   {
     title: 'Automated Workflows',
     desc: 'Streamlining daily operations and reducing downtime across the fleet.',
-    accent: '#4f46e5',
+    accent: '#1360ee',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 3v3M12 18v3M3 12h3M18 12h3" /><circle cx="12" cy="12" r="4" /><path d="M12 8v4l2.5 1.5" />

@@ -50,12 +50,15 @@ function useElapsed() {
 
 // Each live-update kind gets its own glyph + brand tint so the panel scans
 // like a notification feed rather than a list of identical rows.
+// `linkedin` keeps LinkedIn's own blue — that one names a platform, and stripping
+// its brand colour would make it unrecognisable. The rest are content kinds, not
+// brands, so they take the site's blues.
 const KIND_STYLE: Record<LiveUpdate['kind'], { bg: string; fg: string }> = {
   release: { bg: '#1360ee', fg: '#fff' },
-  video: { bg: '#e63946', fg: '#fff' },
+  video: { bg: '#0d73e3', fg: '#fff' },
   linkedin: { bg: '#0a66c2', fg: '#fff' },
   webinar: { bg: '#2d7ff9', fg: '#fff' },
-  event: { bg: '#22a06b', fg: '#fff' },
+  event: { bg: '#06a4e2', fg: '#fff' },
 }
 
 function KindIcon({ kind }: { kind: LiveUpdate['kind'] }) {

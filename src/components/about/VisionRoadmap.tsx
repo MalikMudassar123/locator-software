@@ -33,13 +33,19 @@ export default function VisionRoadmap() {
         }
 
         .vr-timeline { position: relative; max-width: var(--w-940); margin: clamp(48px,6vw,72px) auto 0; }
-        .vr-line { position: absolute; top: 22px; left: 6%; right: 6%; height: 2px; background: linear-gradient(90deg, #1360ee, #7c3aed, #13923f); border-radius: 2px; z-index: 0; }
+        /* Today -> 2030 -> 2035 reads as one blue travelling toward cyan, rather
+           than blue/purple/green, which looked like three unrelated states. The
+           three stops are the site's own hero-gradient blues, so nothing new is
+           introduced to the palette. */
+        .vr-line { position: absolute; top: 22px; left: 6%; right: 6%; height: 2px; background: linear-gradient(90deg, #1360ee, #0d73e3, #06a4e2); border-radius: 2px; z-index: 0; }
         .vr-track { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3,1fr); gap: clamp(20px,3vw,32px); }
         @media (max-width: 720px) { .vr-line { display: none; } .vr-track { grid-template-columns: 1fr; } }
 
         .vr-dot { width: 12px; height: 12px; border-radius: 50%; background: #1360ee; margin: 0 auto 18px; box-shadow: 0 0 0 5px rgba(19,96,238,.15); }
-        .vr-milestone:nth-child(2) .vr-dot { background: #7c3aed; box-shadow: 0 0 0 5px rgba(124,58,237,.15); }
-        .vr-milestone:nth-child(3) .vr-dot { background: #13923f; box-shadow: 0 0 0 5px rgba(19,146,63,.15); }
+        /* Dots sit on the line and take the same three stops, so each marker
+           matches the gradient underneath it at that point. */
+        .vr-milestone:nth-child(2) .vr-dot { background: #0d73e3; box-shadow: 0 0 0 5px rgba(13,115,227,.15); }
+        .vr-milestone:nth-child(3) .vr-dot { background: #06a4e2; box-shadow: 0 0 0 5px rgba(6,164,226,.15); }
       `}</style>
 
       <section style={{ padding: 'clamp(56px,7vw,88px) 28px', background: '#fff' }}>
@@ -65,7 +71,7 @@ export default function VisionRoadmap() {
               {MILESTONES.map((m, i) => (
                 <div className="vr-milestone" key={m.year} data-reveal data-reveal-delay={String(i * 90)} style={{ textAlign: 'center' }}>
                   <div className="vr-dot" />
-                  <span style={{ display: 'block', fontSize: 'var(--f-12)', fontWeight: 800, letterSpacing: '.06em', color: '#7c3aed', textTransform: 'uppercase', marginBottom: '8px' }}>{m.year}</span>
+                  <span style={{ display: 'block', fontSize: 'var(--f-12)', fontWeight: 800, letterSpacing: '.06em', color: '#1360ee', textTransform: 'uppercase', marginBottom: '8px' }}>{m.year}</span>
                   <h3 style={{ margin: '0 0 8px', fontSize: 'max(clamp(15px,1.5vw,17px), min(1.181vw, 24.65px))', fontWeight: 800, color: '#1d1d1f' }}>{m.title}</h3>
                   <p style={{ margin: 0, fontSize: 'var(--f-13-5)', lineHeight: 1.65, color: '#6e6e73' }}>{m.desc}</p>
                 </div>

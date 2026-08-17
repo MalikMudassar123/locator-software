@@ -55,15 +55,18 @@ export const CATEGORY_LABEL: Record<NewsCategory, string> = {
 
 // Chip colours per category — kept here rather than in CSS so a new category
 // only has to be added in one place.
+// All drawn from the site's own hero-gradient blues. They still differ enough to
+// tell categories apart at a glance, but the row of chips now reads as one family
+// instead of a colour chart. `media` stays slate — it is a neutral, not a hue.
 export const CATEGORY_COLOR: Record<NewsCategory, string> = {
   product: '#1360ee',
-  company: '#7c3aed',
-  events: '#0e9aa7',
-  stories: '#e8590c',
-  videos: '#d6336c',
+  company: '#0d73e3',
+  events: '#06a4e2',
+  stories: '#1157dd',
+  videos: '#0a84e3',
   social: '#2563eb',
   media: '#475569',
-  blog: '#059669',
+  blog: '#0e9ee2',
 }
 
 export const NEWS_ITEMS: NewsItem[] = [

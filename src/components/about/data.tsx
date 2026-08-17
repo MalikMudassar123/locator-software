@@ -8,6 +8,16 @@ export type AboutPage = {
   icon: ReactNode
 }
 
+// Every page carries the same accent: the site's blue, #1360ee. The field stays
+// per-page rather than being collapsed to a constant because the components read
+// `accent` off each item and other datasets (regulatory, services, industries)
+// still use their own values — but these six are deliberately identical.
+//
+// They used to be six different hues, which turned the "Explore more about" grid
+// at the foot of every About page into a colour chart and made sibling pages look
+// like unrelated products. The navbar already reached the same conclusion and
+// overrides these with one blue (MENU_ICON_ACCENT); this makes the pages agree
+// with the navigation instead of contradicting it.
 export const ABOUT_PAGES: AboutPage[] = [
   {
     slug: 'purpose',
@@ -25,7 +35,7 @@ export const ABOUT_PAGES: AboutPage[] = [
     slug: 'vision',
     name: 'Vision',
     tagline: 'Where we’re headed by 2035',
-    accent: '#7c3aed',
+    accent: '#1360ee',
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
         <path d="M2 14s4-8 12-8 12 8 12 8-4 8-12 8-12-8-12-8z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
@@ -37,7 +47,7 @@ export const ABOUT_PAGES: AboutPage[] = [
     slug: 'mission',
     name: 'Mission',
     tagline: 'How we deliver on it',
-    accent: '#13923f',
+    accent: '#1360ee',
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
         <path d="M14 3l2.8 8.1H25l-7 5.1 2.7 8.1L14 19.2l-7.7 5.1L9 16.2 2 11.1h8.2z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
@@ -48,7 +58,7 @@ export const ABOUT_PAGES: AboutPage[] = [
     slug: 'core-values',
     name: 'Core Values',
     tagline: 'What guides us every day',
-    accent: '#c2740a',
+    accent: '#1360ee',
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
         <path d="M14 4l9 3.5v6c0 6-3.8 10.4-9 12-5.2-1.6-9-6-9-12v-6z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
@@ -60,7 +70,7 @@ export const ABOUT_PAGES: AboutPage[] = [
     slug: 'newsroom',
     name: 'Newsroom',
     tagline: 'Company news & updates',
-    accent: '#0e9aa7',
+    accent: '#1360ee',
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
         <path d="M4 10v8a2 2 0 0 0 2 2h2V8H6a2 2 0 0 0-2 2z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
@@ -73,7 +83,7 @@ export const ABOUT_PAGES: AboutPage[] = [
     slug: 'career',
     name: 'Careers',
     tagline: 'Build the future with us',
-    accent: '#4f46e5',
+    accent: '#1360ee',
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
         <rect x="4" y="10" width="20" height="13" rx="2" stroke="currentColor" strokeWidth="1.8" />

@@ -6,30 +6,34 @@ import { LIVE_UPDATES, NEWS_ITEMS, formatAgo, type LiveUpdate } from './newsroom
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
-// Live Updates panel: shows ONE notification at a time, swapping to the next
-// on each tick with a soft "blink" — the card fades/scales in and its border
-// flashes blue, exactly like a fresh push notification changing on screen.
+// Live Updates panel: shows ONE notification at a time. Each tick the settled
+// card rises up and away while the next one rises up into place from below —
+// the same push-notification queue used by the phone mockup in the software
+// hero (HeroNotificationPhone.tsx), not a swap in place.
 const VISIBLE = 1
 const ROTATE_MS = 4000
 
 /**
- * Cycling start index. Decrements so the item entering at the top is a *new*
- * one each tick (newest-on-top, the way notifications arrive) rather than the
- * previous middle sliding up. Pauses while the panel is hovered/focused so a
- * link is never a moving target. Starts advancing only after mount, matching
- * the timestamp clock.
+ * Notification-queue cursor — a monotonically increasing counter, not an
+ * index into the array. Same mechanism as HeroNotificationPhone's `cursor`:
+ * each render derives a small window from it (the settled card, plus for one
+ * beat the card that just aged out), so every rotation mounts a genuinely new
+ * node — with a unique key — for both the arriving and the leaving card,
+ * which is what lets each play its own CSS animation rather than the DOM node
+ * being reused in place. Pauses while the panel is hovered/focused so a link
+ * is never a moving target.
  */
-function useRotatingStart(count: number) {
-  const [start, setStart] = useState(0)
-  const paused = useRef(false)
+function useNotificationCursor(count: number) {
+  const [cursor, setCursor] = useState(0)
+  const pausedRef = useRef(false)
   useEffect(() => {
     if (count <= VISIBLE) return
     const id = setInterval(() => {
-      if (!paused.current) setStart((s) => (s - 1 + count) % count)
+      if (!pausedRef.current) setCursor((c) => c + 1)
     }, ROTATE_MS)
     return () => clearInterval(id)
   }, [count])
-  return { start, paused }
+  return { cursor, pausedRef }
 }
 
 /**
@@ -79,15 +83,59 @@ function KindIcon({ kind }: { kind: LiveUpdate['kind'] }) {
 
 const REVIEW_VIDEOS = NEWS_ITEMS.filter((i) => i.category === 'videos').slice(0, 3)
 
+/**
+ * The card's insides. Shared by the visible queue and by the invisible sizer
+ * underneath it, so the two can never drift apart — if this markup changes,
+ * the measured height changes with it automatically.
+ *
+ * `elapsed` is only passed for the live copies. The sizer renders the raw
+ * seconds instead, because its job is to be the tallest possible box, not to
+ * be correct — and a re-rendering timestamp inside a hidden element would be
+ * wasted work every second.
+ */
+function LiveCardBody({ u, elapsed = 0 }: { u: LiveUpdate; elapsed?: number }) {
+  const s = KIND_STYLE[u.kind]
+  return (
+    <>
+      <span className="nrr-ico" style={{ background: s.bg, color: s.fg }}>
+        <KindIcon kind={u.kind} />
+      </span>
+      <div>
+        <div className="nrr-meta">
+          <span className="nrr-src">Locator</span>
+          <span className="nrr-time">{formatAgo(u.secondsAgo + elapsed)}</span>
+        </div>
+        <p className="nrr-title">{u.title}</p>
+        <p className="nrr-body">{u.body}</p>
+        <span className="nrr-cta">{u.cta} →</span>
+      </div>
+    </>
+  )
+}
+
 export default function NewsroomRail() {
   const elapsed = useElapsed()
-  const { start, paused } = useRotatingStart(LIVE_UPDATES.length)
+  const { cursor, pausedRef } = useNotificationCursor(LIVE_UPDATES.length)
+  // "View all updates" expands the panel into the full scrollable list.
+  const [expanded, setExpanded] = useState(false)
 
-  // The three currently on screen, wrapping around the end of the list.
-  const windowItems = Array.from(
-    { length: Math.min(VISIBLE, LIVE_UPDATES.length) },
-    (_, k) => LIVE_UPDATES[(start + k) % LIVE_UPDATES.length],
-  )
+  // Rotating a card nobody is looking at is wasted, and worse, it would keep
+  // re-animating behind the open list. Reuses the same pause ref the
+  // hover/focus handlers drive, so the two cannot fight each other.
+  useEffect(() => {
+    pausedRef.current = expanded
+  }, [expanded, pausedRef])
+
+  // One settled slot, plus — for one beat, starting from the first rotation —
+  // the slot that just aged out, so it has something to animate away on
+  // instead of vanishing. Skipped entirely on the very first render (cursor
+  // 0): with nothing having left yet there is no card to show leaving, and
+  // rendering one anyway would flash a stray notification on load.
+  const slots = (cursor === 0 ? [1] : [0, 1]).map((k) => {
+    const seq = cursor + k - 1
+    const idx = ((seq % LIVE_UPDATES.length) + LIVE_UPDATES.length) % LIVE_UPDATES.length
+    return { seq, item: LIVE_UPDATES[idx], leaving: k === 0 }
+  })
 
   return (
     <>
@@ -118,50 +166,103 @@ export default function NewsroomRail() {
 
         .nrr-list { padding: 0 12px 12px; display: flex; flex-direction: column; gap: 8px; }
 
-        /* ── Single notification (iOS-style) ──
-           One card at a time. Each tick it re-keys and replays a "blink"
-           arrive: the card fades in from slightly small and blurred, springs
-           to focus, its border flashes blue and its icon pops — just like a
-           push notification changing on a lock screen. Fixed min-height keeps
-           the videos card below from shifting between updates. */
-        .nrr-notif { position: relative; min-height: 152px; padding: 8px 12px 14px; }
-        .nrr-notif-track { display: block; }
-        .nrr-notif-track > * { will-change: transform, opacity, filter; }
+        /* ── Live notification queue ──
+           One card visible at a time. Each tick the settled card fades out as
+           it drifts up and away, while the next fades in drifting up into its
+           place — the same push-notification queue the software hero's phone
+           mockup runs (HeroNotificationPhone.tsx).
 
-        /* In-place arrival — a gentle spring, no big slide, so nothing spills
-           into the header or the card below. */
-        @keyframes nrrArrive {
-          0%   { opacity: 0; transform: translateY(-8px) scale(.95); filter: blur(6px); }
-          60%  { opacity: 1;                                         filter: blur(0); }
-          100% { opacity: 1; transform: translateY(0) scale(1);      filter: blur(0); }
+           THE LAYOUT RULE, which is the whole design of this block: nothing
+           here may change the panel's height, because the Customer Review
+           Videos card sits directly underneath and would be shoved by it.
+           So:
+             · both cards are position:absolute — out of flow entirely, so two
+               being mounted at once during a transition costs no height;
+             · the height comes from .nrr-notif-sizer, an invisible copy of
+               every update stacked in one grid cell, so the panel is always
+               as tall as the TALLEST card and never resizes when a short
+               update follows a long one;
+             · the animations touch ONLY opacity and transform. Both are
+               composited — no reflow, no repaint of anything around them.
+           An earlier pass animated max-height and margin-bottom to collapse
+           the outgoing row. That is what was pushing the sections below on
+           every rotation; there is deliberately no layout property left in
+           the keyframes now. */
+        .nrr-notif { position: relative; padding: 8px 12px 14px; }
+
+        .nrr-notif-sizer {
+          display: grid;
+          visibility: hidden;
+          pointer-events: none;
         }
-        /* The "blink": border + background flash blue, then settle. */
-        @keyframes nrrBlink {
-          0%   { border-color: #1360ee; background: #eef4ff; box-shadow: 0 10px 26px -12px rgba(19,96,238,.5); }
-          55%  { border-color: #8fb4f6; }
-          100% { border-color: #eef2f8; background: #fbfcfe; box-shadow: 0 1px 2px rgba(11,18,32,.03); }
-        }
-        /* The icon springs in with a tiny rotate — the finishing flourish. */
-        @keyframes nrrPop {
-          0%   { transform: scale(.4) rotate(-12deg); opacity: 0; }
-          70%  { transform: scale(1.12) rotate(2deg); opacity: 1; }
-          100% { transform: scale(1) rotate(0); opacity: 1; }
+        /* All in one cell, so the row resolves to the tallest of them. */
+        .nrr-notif-sizer > * { grid-area: 1 / 1; }
+
+        /* Overlays the sizer exactly, inset by .nrr-notif's own padding. */
+        .nrr-notif-stack { position: absolute; inset: 8px 12px 14px; }
+        .nrr-notif-stack > .nrr-item {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          /* Promoted for the duration of the move so the two cross-fading
+             cards composite on their own layers instead of forcing a paint. */
+          will-change: transform, opacity;
         }
 
-        /* fill: backwards prevents a pre-animation flash but reverts to the
-           card's base styles afterwards, so hover-lift/border still work. */
-        .nrr-notif-track > * {
-          animation:
-            nrrArrive .55s cubic-bezier(.22,1.15,.34,1) backwards,
-            nrrBlink 1.4s ${EASE} backwards;
+        /* Both directions travel the same way — upward — so the pair reads as
+           one continuous movement rather than two separate effects. The
+           distance is deliberately a real journey (34-38px, around a quarter
+           of the card's own height) so it reads as a notification being
+           replaced rather than a value blinking.
+           Opacity finishes AHEAD of the travel in both: the outgoing card is
+           fully transparent by 70%, so the last of its climb happens unseen
+           and it never visibly crosses the "Live Updates" heading above; the
+           incoming one is fully opaque by 55%, so its final approach is a
+           clean glide with no fading left to distract from it.
+           translate3d keeps both on the compositor. */
+        @keyframes nrrNotifIn {
+          0%   { opacity: 0; transform: translate3d(0, 38px, 0); }
+          55%  { opacity: 1; }
+          100% { opacity: 1; transform: translate3d(0, 0, 0); }
         }
-        .nrr-notif-track > * .nrr-ico {
-          animation: nrrPop .6s cubic-bezier(.34,1.56,.64,1) .1s backwards;
+        @keyframes nrrNotifOut {
+          0%   { opacity: 1; transform: translate3d(0, 0, 0); }
+          70%  { opacity: 0; }
+          100% { opacity: 0; transform: translate3d(0, -34px, 0); }
+        }
+
+        /* A HANDOFF, not a dissolve. Both cards occupy the same spot, so on a
+           shared clock there would be a stretch in the middle where two
+           different headlines sit on top of each other at half opacity each —
+           legible enough to read as a smudge rather than as one notification
+           replacing another.
+           So the outgoing card leaves first on an ease-IN, accelerating away
+           as it goes; the incoming one starts once that has cleared, on a long
+           ease-OUT that decelerates into place. The 300ms offset is what keeps
+           them from ever being bright at the same time.
+           Unhurried on purpose: 520ms out, 780ms in, ~1.08s end to end. That
+           is the pace that reads as considered rather than twitchy, and it
+           still finishes with most of the 4s tick to spare. */
+        .nrr-notif-stack > .nrr-item {
+          /* fill-mode backwards, NOT both: the end state is the card's own
+             resting state, so letting the animation keep hold of it after it
+             finishes would out-rank the :hover transform below and kill the
+             lift. backwards still applies the from-state through the delay,
+             which is what holds this card invisible until its turn. */
+          animation: nrrNotifIn .78s cubic-bezier(.16, 1, .3, 1) .3s backwards;
+        }
+        .nrr-notif-stack > .nrr-item.is-leaving {
+          /* fill-mode forwards here — this one must hold its faded-out state
+             until React unmounts it on the next tick, or it snaps back to
+             full opacity for a frame. */
+          animation: nrrNotifOut .52s cubic-bezier(.4, 0, .75, .45) forwards;
+          pointer-events: none;
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .nrr-notif-track > *,
-          .nrr-notif-track > * .nrr-ico { animation: none !important; }
+          .nrr-notif-stack > .nrr-item { animation: none; }
+          .nrr-notif-stack > .nrr-item.is-leaving { display: none; }
         }
 
         .nrr-item {
@@ -183,13 +284,55 @@ export default function NewsroomRail() {
         .nrr-cta { font-size: var(--f-11-5); font-weight: 700; color: #1360ee; }
         .nrr-item:hover .nrr-cta { text-decoration: underline; }
 
+        /* ── Expanded "all updates" list ──
+           0fr -> 1fr on a single grid row is the trick that makes this
+           animate to its own natural height. max-height cannot: you have to
+           guess a number, and the transition then either clips the content or
+           spends most of its time crossing empty space at the wrong speed.
+           min-height:0 on the child is required — grid items default to
+           min-content, which would refuse to shrink to 0fr. */
+        .nrr-all {
+          display: grid;
+          grid-template-rows: 0fr;
+          transition: grid-template-rows .42s ${EASE};
+        }
+        .nrr-all.is-open { grid-template-rows: 1fr; }
+        .nrr-all-clip { overflow: hidden; min-height: 0; }
+
+        .nrr-all-list {
+          list-style: none; margin: 0;
+          padding: 8px 12px 4px;
+          display: flex; flex-direction: column; gap: 8px;
+          /* The scroll itself. Capped in vh so it stays usable on short
+             viewports instead of running the sticky rail off the screen. */
+          max-height: min(46vh, 420px);
+          overflow-y: auto;
+          overscroll-behavior: contain;
+          scrollbar-width: thin;
+          scrollbar-color: #cfd8e8 transparent;
+        }
+        .nrr-all-list::-webkit-scrollbar { width: 6px; }
+        .nrr-all-list::-webkit-scrollbar-thumb { background: #cfd8e8; border-radius: 3px; }
+        .nrr-all-list::-webkit-scrollbar-track { background: transparent; }
+        /* Cards in the list must not lift on hover — inside a scroll container
+           a translate just clips against the edge. Colour change only. */
+        .nrr-all-list .nrr-item:hover { transform: none; box-shadow: 0 1px 2px rgba(11,18,32,.03); }
+
         .nrr-foot { padding: 0 12px 14px; }
-        .nrr-foot a {
-          display: block; text-align: center; padding: 11px; border-radius: 10px;
-          font-size: var(--f-12-5); font-weight: 700; color: #1360ee; text-decoration: none;
+        .nrr-foot button {
+          display: flex; align-items: center; justify-content: center; gap: 6px;
+          width: 100%; font-family: inherit; border: none; cursor: pointer;
+          text-align: center; padding: 11px; border-radius: 10px;
+          font-size: var(--f-12-5); font-weight: 700; color: #1360ee;
           background: rgba(19,96,238,.06); transition: background .18s ${EASE};
         }
-        .nrr-foot a:hover { background: rgba(19,96,238,.12); }
+        .nrr-foot button:hover { background: rgba(19,96,238,.12); }
+        .nrr-foot-chev { display: inline-flex; transition: transform .32s ${EASE}; }
+        .nrr-foot-chev.is-up { transform: rotate(180deg); }
+
+        @media (prefers-reduced-motion: reduce) {
+          .nrr-all, .nrr-foot-chev { transition: none; }
+        }
 
         /* ── Customer review videos ── */
         .nrr-vid {
@@ -222,38 +365,83 @@ export default function NewsroomRail() {
             <h3>Live Updates</h3>
             <span className="nrr-live-pill"><i />Live</span>
           </div>
+          {/* The rotating single-card view. Hidden outright while the full
+              list is open — `hidden` rather than a CSS class so the cards are
+              also out of the accessibility tree and the tab order, not merely
+              invisible. */}
           <div
             className="nrr-notif"
-            onMouseEnter={() => (paused.current = true)}
-            onMouseLeave={() => (paused.current = false)}
-            onFocusCapture={() => (paused.current = true)}
-            onBlurCapture={() => (paused.current = false)}
+            hidden={expanded}
+            onMouseEnter={() => { if (!expanded) pausedRef.current = true }}
+            onMouseLeave={() => { if (!expanded) pausedRef.current = false }}
+            onFocusCapture={() => { if (!expanded) pausedRef.current = true }}
+            onBlurCapture={() => { if (!expanded) pausedRef.current = false }}
           >
-            {/* Re-keying on `start` replays the cascade each rotation. */}
-            <div className="nrr-notif-track" key={start}>
-              {windowItems.map((u) => {
-                const s = KIND_STYLE[u.kind]
-                return (
-                  <a key={u.id} href={u.href} className="nrr-item">
-                    <span className="nrr-ico" style={{ background: s.bg, color: s.fg }}>
-                      <KindIcon kind={u.kind} />
-                    </span>
-                    <div>
-                      <div className="nrr-meta">
-                        <span className="nrr-src">Locator</span>
-                        <span className="nrr-time">{formatAgo(u.secondsAgo + elapsed)}</span>
-                      </div>
-                      <p className="nrr-title">{u.title}</p>
-                      <p className="nrr-body">{u.body}</p>
-                      <span className="nrr-cta">{u.cta} →</span>
-                    </div>
-                  </a>
-                )
-              })}
+            {/* Sizer. Every update rendered at once, all stacked into a single
+                grid cell, `visibility: hidden`. It takes up space but paints
+                nothing, so the panel's height is always the height of the
+                TALLEST card at the current width — which is what stops the
+                Customer Review Videos card below from moving when a shorter
+                update follows a taller one. Static markup, so it is correct on
+                the server's first paint with no measuring and no JS. */}
+            <div className="nrr-notif-sizer" aria-hidden="true">
+              {LIVE_UPDATES.map((u) => (
+                <div key={u.id} className="nrr-item">
+                  <LiveCardBody u={u} />
+                </div>
+              ))}
+            </div>
+
+            <div className="nrr-notif-stack">
+              {slots.map(({ seq, item: u, leaving }) => (
+                <a
+                  key={seq}
+                  href={u.href}
+                  className={`nrr-item${leaving ? ' is-leaving' : ''}`}
+                  tabIndex={leaving ? -1 : undefined}
+                  aria-hidden={leaving || undefined}
+                >
+                  <LiveCardBody u={u} elapsed={elapsed} />
+                </a>
+              ))}
             </div>
           </div>
+          {/* The full list. Always mounted so opening it is a pure CSS
+              transition with nothing to lay out first; `grid-template-rows:
+              0fr -> 1fr` is what lets it animate to its OWN height without a
+              hard-coded max-height that would either clip long content or
+              leave the panel short. The inner element carries the scroll. */}
+          <div className={`nrr-all${expanded ? ' is-open' : ''}`}>
+            <div className="nrr-all-clip">
+              <ul className="nrr-all-list">
+                {LIVE_UPDATES.map((u) => (
+                  <li key={u.id}>
+                    <a
+                      href={u.href}
+                      className="nrr-item"
+                      tabIndex={expanded ? undefined : -1}
+                    >
+                      <LiveCardBody u={u} elapsed={elapsed} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
           <div className="nrr-foot">
-            <a href="#newsroom-feed">View all updates →</a>
+            <button
+              type="button"
+              onClick={() => setExpanded((v) => !v)}
+              aria-expanded={expanded}
+            >
+              {expanded ? 'Show less' : `View all updates (${LIVE_UPDATES.length})`}
+              <span className={`nrr-foot-chev${expanded ? ' is-up' : ''}`} aria-hidden="true">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </span>
+            </button>
           </div>
         </div>
 

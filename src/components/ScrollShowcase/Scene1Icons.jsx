@@ -1244,12 +1244,16 @@ export default forwardRef(function Scene1Icons(_props, ref) {
           background:'#fff',
         }}
       >
+        {/* No `priority`: ScrollShowcase is the third section, never in the first
+            viewport, so a <link rel="preload"> for it in <head> only competed with
+            the resources that ARE. It still sits inside the pinned container, so
+            the browser starts fetching as soon as that container scrolls into
+            range — well before this scene animates in. */}
         <Image
           src="/block 1/mobile.webp"
           alt="Mobile app interface"
           fill
           sizes={`${PHONE_W}px`}
-          priority
           style={{ objectFit:'cover', objectPosition:'center top' }}
         />
       </div>

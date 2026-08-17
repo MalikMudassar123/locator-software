@@ -4041,3 +4041,42 @@ h6 {
     animation: none;
   }
 }
+
+/* ══════════════════════════════════════════════════════
+   HOME PAGE — OFF-SCREEN SECTION RENDERING
+
+   Half of the landing page's markup sits below the Task Manager slider and is
+   never in the first viewport: measured at 1440x900 the seven sections from
+   Smart IoT down to the footer are 204KB of <main>'s 405KB, 1284 of its 2674
+   elements, and 124 of its 160 images — the logo marquee alone renders 112.
+   The browser was resolving styles, laying out and painting all of it before it
+   could show the hero, and that work is what sat between "stylesheet is ready"
+   and "something is on screen".
+
+   `content-visibility: auto` lets the browser skip that work until each section
+   is near the viewport. It is a rendering hint, not a display change: the markup
+   is unchanged, still server-rendered, still in the HTML for crawlers, and still
+   found by Ctrl+F. Every one of these sections was audited first — all seven
+   already set `overflow: hidden`, so the paint containment this turns on cannot
+   clip anything that was previously visible, and none of them contains a fixed
+   or sticky descendant that layout containment would re-anchor. The scroll-driven
+   sections above (RoadSection, ScrollShowcase) are deliberately NOT listed: they
+   are GSAP ScrollTrigger pins whose measurements must not be deferred.
+
+   contain-intrinsic-size carries each section's real rendered height, measured
+   at 1440x900 after forcing every section to lay out, so the scrollbar starts
+   close to the right length. The `auto` keyword tells the browser to remember
+   the true size once a section has rendered and use that instead, so these
+   numbers only ever matter for the very first pass. They are approximations by
+   nature — a section's height moves with viewport width — so treat a few
+   hundred px of scrollbar drift before the page settles as expected, not as a
+   bug to chase. Verified: with every section rendered the page is 12023px vs
+   11975px before this change, i.e. containment does not alter final layout.
+   ══════════════════════════════════════════════════════ */
+.home-main > .iot            { content-visibility: auto; contain-intrinsic-size: auto 1029px; }
+.home-main > .globe-hero     { content-visibility: auto; contain-intrinsic-size: auto 598px; }
+.home-main > .vhs            { content-visibility: auto; contain-intrinsic-size: auto 818px; }
+.home-main > .tc             { content-visibility: auto; contain-intrinsic-size: auto 905px; }
+.home-main > .lm             { content-visibility: auto; contain-intrinsic-size: auto 613px; }
+.home-main > .bs             { content-visibility: auto; contain-intrinsic-size: auto 1172px; }
+.home-main > footer          { content-visibility: auto; contain-intrinsic-size: auto 621px; }

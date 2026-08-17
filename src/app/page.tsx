@@ -32,9 +32,13 @@ export const metadata: Metadata = {
   },
 };
 
+// `home-main` on <main> is a hook for the off-screen rendering rules at the
+// bottom of globals.css and carries no styling of its own. It scopes them to
+// this page's own sections, so the same components used on other routes are
+// unaffected.
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white relative">
+    <main className="home-main min-h-screen bg-white relative">
       <HeroSection />
 
       {/* Road needs elevated z-index to layer over hero bottom edge */}

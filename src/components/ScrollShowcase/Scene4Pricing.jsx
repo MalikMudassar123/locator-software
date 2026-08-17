@@ -1015,14 +1015,15 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
             The dev server tolerates that; Vercel's optimizer 404s, which is why
             encoding these only ever broke in production. */}
         <div style={{ position:'relative', flex:1, background:'#fff' }}>
+          {/* Neither `priority` nor loading="eager": both put a preload hint for
+              this image into <head>, and Scene 4 of a third-section scroll
+              showcase has no business competing with the first viewport. */}
           <Image
             src="/block 1/video teleframe.webp"
             alt="Video telematics dashboard"
             fill
             sizes={`${FW}px`}
             style={{ objectFit:'contain', objectPosition:'left top' }}
-            priority
-            loading="eager"
           />
         </div>
       </div>
@@ -1054,8 +1055,6 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
           fill
           sizes="250px"
           style={{ objectFit:'contain', objectPosition:'left top' }}
-          priority
-          loading="eager"
         />
       </div>
 

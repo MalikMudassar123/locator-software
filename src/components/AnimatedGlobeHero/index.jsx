@@ -357,7 +357,8 @@ function ParticleGlobe({ active }) {
                  between the landmasses instead of a floating archipelago.
          RIM     a great circle on the silhouette. This replaces the SVG ring
                  that used to sweep around the globe: it is made of the same
-                 particles, arrives from one side, and closes around the Earth.
+                 particles, scattered and converging from all around exactly
+                 like the rest of the swarm, just landing a beat later.
 
        Land is oversampled relative to its ~30% area share — roughly 60% of the
        surface budget — because dots on a sphere read much sparser than pixels
@@ -572,21 +573,28 @@ function ParticleGlobe({ active }) {
       wobSpeed[i] = 0.5 + rnd() * 0.9;
     }
 
-    /* The ring arrives as a ring. Every rim particle spawns off ONE side,
-       bunched around 9 o'clock, and they all land late and together — so it
-       reads as a band of light swinging in and closing around the Earth after
-       the surface has knitted, rather than as more of the same swarm. */
+    /* The ring is the outer layer of the SAME swarm, not a separate object
+       swept in from one side. Each rim particle gets an isotropic scattered
+       spawn direction, exactly like land/ocean/lattice above, so it converges
+       toward its place on the circle from all around rather than sweeping in
+       as a band from 9 o'clock. Delay is randomised per-particle rather than
+       tied to (i - rimIdx0) — that was the other half of the "sweep": tying
+       delay to index made particles land in angular order, i.e. progressively
+       around the ring like a clock hand. A later delay window (vs. the body's
+       0..0.55) still lands the ring shortly after the surface has knitted, so
+       it reads as the formation's last layer snapping into focus, not as
+       something arriving afterward. */
     for (let i = rimIdx0; i < rimIdx0 + N_RIM; i++) {
-      const spread = ((i - rimIdx0) / N_RIM) * 0.9 - 0.45;
-      sx[i] = -1;
-      sy[i] = spread;
-      sz[i] = 0;
-      const inv = 1 / Math.hypot(sx[i], sy[i], sz[i]);
-      sx[i] *= inv; sy[i] *= inv; sz[i] *= inv;
-      sRad[i] = 2.2 + rnd() * 0.5;
-      delay[i] = 1.05 + ((i - rimIdx0) / N_RIM) * 0.4;
-      dur[i] = 0.9 + rnd() * 0.2;
-      swirl[i] = 2.9;                   // all one direction: a sweep, not a scatter
+      const u = rnd() * 2 - 1;
+      const t2 = rnd() * Math.PI * 2;
+      const s2 = Math.sqrt(Math.max(0, 1 - u * u));
+      sx[i] = s2 * Math.cos(t2);
+      sy[i] = u;
+      sz[i] = s2 * Math.sin(t2);
+      sRad[i] = 1.6 + rnd() * 1.0;
+      delay[i] = 0.95 + rnd() * 0.5;
+      dur[i] = 0.8 + rnd() * 0.4;
+      swirl[i] = (rnd() * 2 - 1) * 2.0; // signed per-particle, matching the body
     }
 
     let dims = { w: 0, h: 0 };
@@ -1850,10 +1858,29 @@ export default function AnimatedGlobeHero({
           opacity: 0;
         }
 
+        /* Opacity ONLY — no transform, and that is the whole fix.
+
+           This rule used to carry, alongside the reveal animation:
+               transform-box: fill-box;
+               transform-origin: 640px 270px;   (i.e. CX, CY)
+           and that is what made the ring appear to fly in from the side.
+           fill-box resolves transform-origin from the group's OWN bounding-box
+           corner rather than from SVG user space. The outer halo circle is
+           r = R + 60 = 235, so this group's bbox starts near (405, 35) — which
+           put the origin at roughly user-space (1045, 305), about 405 units
+           right of the globe's actual centre. globeReveal scales 0.85 -> 1, so
+           the whole group (rings, halos and all) started ~61 units to the RIGHT
+           and slid left into place. With no transform at all there is no origin
+           to get wrong and nothing to slide.
+
+           Retimed too: 1.4s -> 2.9s, where it used to be 2.6s -> 3.9s. The rim
+           particles are in flight from ~0.95s and land between ~1.75s and
+           ~2.65s (see the rim spawn block), so the stroke now firms up
+           underneath them AS they arrive — the ring densifies out of the
+           converging particles instead of fading in after they had already
+           finished. The ease keeps it imperceptible early, so nothing pops. */
         .globe-hero.is-active :global(.globe-group) {
-          animation: globeReveal 1.3s cubic-bezier(0.16, 1, 0.3, 1) 2.6s forwards;
-          transform-box: fill-box;
-          transform-origin: ${CX}px ${CY}px;
+          animation: globeFadeIn 1.5s cubic-bezier(0.45, 0, 0.55, 1) 1.4s forwards;
         }
         .globe-hero.is-active :global(.city-nodes) {
           animation: globeFadeIn 0.9s ease-out 4.0s forwards;
@@ -1884,8 +1911,12 @@ export default function AnimatedGlobeHero({
         .globe-hero :global(.shockwave) {
           opacity: 0;
         }
+        /* Pulled from 2.75s to 1.75s. At 2.75s this burned around a ring that
+           had already fully faded up, so it read as a second, separate event
+           happening TO the ring. At 1.75s it coincides with the rim particles
+           landing and the stroke firming up, so the three are one beat. */
         .globe-hero.is-active :global(.rim-ignite) {
-          animation: rimIgnite 1.9s cubic-bezier(0.4, 0, 0.2, 1) 2.75s forwards;
+          animation: rimIgnite 1.9s cubic-bezier(0.4, 0, 0.2, 1) 1.75s forwards;
         }
         .globe-hero.is-active :global(.shockwave) {
           transform-box: fill-box;

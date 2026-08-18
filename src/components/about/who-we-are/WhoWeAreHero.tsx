@@ -1,34 +1,23 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import SoftwareNavbar from '@/components/software/SoftwareNavbar'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
-const SECTORS = ['Logistics', 'Transportation', 'Construction', 'Government', 'Education', 'Healthcare', 'Commercial']
-
 /**
  * Who We Are — hero.
  *
- * THE CONCEPT: coverage. A signal originates from a single point above the
- * headline and propagates outward as evenly-spaced arcs, passing down through
- * the copy and coming to rest on a horizon line that the sector chips sit on.
- * One origin, one platform, reaching every sector — which is exactly what the
- * copy claims. Everything is built on the same centre axis as the type, so the
- * graphic and the content share one composition rather than the art being
- * scattered around the words.
+ * A single full-bleed photo (Earth at night, lit cities across the Gulf)
+ * anchored to the right edge, fading to white on the left where the copy
+ * sits. The fade is partly baked into the source photo itself and partly a
+ * CSS scrim on top of it — the scrim is what lets the white "reading zone"
+ * grow as the viewport narrows, so the same photo works from a 1920px
+ * desktop down to a 375px phone without art-directing separate crops.
  *
- * Three rules keep it feeling drawn rather than generated:
- *
- *   1. The geometry stays true. The arc plate uses
- *      preserveAspectRatio="xMidYMin slice", so circles remain CIRCLES at every
- *      viewport instead of being stretched into ellipses. Stretched geometry is
- *      the single clearest tell of decoration-by-accident.
- *   2. Radii follow one rhythm — a constant 130-unit step — so the rings read as
- *      a measured system. Opacity falls off on the same curve.
- *   3. Nothing crosses the type. Every layer is masked so it dissolves before it
- *      reaches the headline, which is why the copy sits on near-clean white.
- *
- * All of it is CSS and inline SVG on a SERVER component — no client JS, no
- * hydration cost, and it is fully painted in the first server response.
+ * Three breakpoints (1024 / 768) shift three things together: how much of
+ * the box the scrim keeps opaque, where the photo is anchored
+ * (object-position), and how wide the copy column is allowed to get — so
+ * text and photo stay balanced instead of the photo just getting squeezed.
  */
 export default function WhoWeAreHero() {
   return (
@@ -37,270 +26,151 @@ export default function WhoWeAreHero() {
         .wwa-hero {
           position: relative;
           overflow: hidden;
-          isolation: isolate;
+          background: #ffffff;
+          display: flex;
+          flex-direction: column;
+          min-height: clamp(440px, 54vh, 580px);
+        }
+
+        .wwa-photo { position: absolute; inset: 0; z-index: 0; }
+        .wwa-photo img { object-fit: cover; object-position: 78% center; }
+
+        /* The scrim does two jobs in one background: a left-to-right white
+           fade that guarantees the copy always sits on a legible field
+           (widened at each breakpoint below), and a short bottom fade so the
+           photo's own bottom edge — which runs full-saturation blue right to
+           the crop line — blends into the section below instead of cutting
+           off hard. */
+        .wwa-scrim {
+          position: absolute; inset: 0; z-index: 1; pointer-events: none;
           background:
-            radial-gradient(140% 100% at 50% -18%, #eaf1ff 0%, #f6f9ff 34%, #ffffff 68%);
-          padding: clamp(16px,2vw,28px) 28px clamp(64px,8vw,104px);
+            linear-gradient(90deg, #fff 0%, #fff 46%, rgba(255,255,255,.72) 60%, rgba(255,255,255,0) 78%),
+            linear-gradient(0deg, #fff 0%, rgba(255,255,255,0) 14%);
         }
 
-        /* ── 1. The beam ──────────────────────────────────────────────────
-           A cone of light widening down from the signal origin. Its only job
-           is to put the brightest part of the section exactly where the
-           headline is, so the eye lands on the statement first. Sized as a
-           trapezoid via clip-path, then blurred so no edge is ever visible. */
-        /* TWO elements, and it has to be two. CSS applies filter BEFORE
-           clip-path, so blurring the cone directly does nothing to its
-           diagonals — the clip re-cuts the blurred pixels with a hard edge and
-           you get a crisp grey triangle sitting on the page. Blur has to happen
-           to something already clipped, which means the clip goes on the child
-           and the blur on the parent. */
-        .wwa-beam {
-          position: absolute; z-index: 0; pointer-events: none;
-          top: -18%; left: 50%; transform: translateX(-50%);
-          width: min(1320px, 104%); height: 96%;
-          filter: blur(76px);
-          /* Feathers the sides so even the softened boundary stays well outside
-             the readable column. */
-          -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 24%, #000 76%, transparent 100%);
-          mask-image: linear-gradient(90deg, transparent 0%, #000 24%, #000 76%, transparent 100%);
-        }
-        .wwa-beam::before {
-          content: ''; position: absolute; inset: 0;
-          clip-path: polygon(41% 0%, 59% 0%, 100% 100%, 0% 100%);
-          background: linear-gradient(180deg,
-            rgba(19,96,238,.17) 0%,
-            rgba(19,96,238,.08) 40%,
-            rgba(6,164,226,.035) 68%,
-            transparent 90%);
-        }
-        @keyframes wwaBeam { 0%,100% { opacity: .85; } 50% { opacity: 1; } }
-        @media (prefers-reduced-motion: no-preference) {
-          .wwa-beam { animation: wwaBeam 9s ease-in-out infinite; }
-        }
+        .wwa-navwrap { position: relative; z-index: 3; }
 
-        /* ── 2. The coverage arcs ────────────────────────────────────────
-           slice + xMidYMin is what preserves true circles and pins the origin
-           to the top centre at any width. The CSS mask is what turns hard
-           outlines into light: each ring is brightest directly under the
-           origin and dissolves toward the sides, so they read as propagation
-           rather than as drawn circles. */
-        .wwa-arcs {
-          position: absolute; inset: 0; z-index: 0;
-          width: 100%; height: 100%;
-          pointer-events: none;
-          -webkit-mask-image: radial-gradient(ellipse 68% 72% at 50% 2%, #000 12%, rgba(0,0,0,.55) 46%, transparent 80%);
-          mask-image: radial-gradient(ellipse 68% 72% at 50% 2%, #000 12%, rgba(0,0,0,.55) 46%, transparent 80%);
-        }
-        /* One wave, travelling. Each ring runs the same animation on the same
-           period, offset by an equal share of it, so what you see is a single
-           pulse moving outward — not five rings blinking. */
-        @keyframes wwaProp {
-          0%   { opacity: 0;   transform: scale(.94); }
-          18%  { opacity: 1; }
-          70%  { opacity: .55; }
-          100% { opacity: 0;   transform: scale(1.07); }
-        }
-        @media (prefers-reduced-motion: no-preference) {
-          .wwa-arc {
-            transform-origin: 800px 90px;
-            animation: wwaProp 12s ${EASE} infinite;
-          }
-          .wwa-arc--2 { animation-delay: -2.4s; }
-          .wwa-arc--3 { animation-delay: -4.8s; }
-          .wwa-arc--4 { animation-delay: -7.2s; }
-          .wwa-arc--5 { animation-delay: -9.6s; }
-        }
+        .wwa-body { position: relative; z-index: 2; flex: 1; display: flex; align-items: center; padding: clamp(20px,3vw,36px) 28px clamp(40px,5vw,60px); }
+        .wwa-inner { max-width: var(--w-1280); width: 100%; margin: 0 auto; }
+        .wwa-content { max-width: min(660px, 100%); }
 
-        /* ── 3. The horizon ──────────────────────────────────────────────
-           Where the signal lands. A single hairline the sector row sits on,
-           fading out well before either edge so it reads as a horizon rather
-           than a border. This is the composition's baseline — it is what stops
-           the section from just trailing off at the bottom. */
-        .wwa-horizon {
-          position: relative; z-index: 1;
-          margin: clamp(38px,5vw,56px) auto 0;
-          max-width: 760px; height: 1px;
-          background: linear-gradient(90deg,
-            transparent 0%,
-            rgba(19,96,238,.16) 18%,
-            rgba(19,96,238,.42) 50%,
-            rgba(19,96,238,.16) 82%,
-            transparent 100%);
-        }
-        /* The point the beam resolves to, sitting on the horizon dead centre.
-           Two rings so it has a core and a halo rather than being a flat dot. */
-        .wwa-horizon::after {
-          content: ''; position: absolute; left: 50%; top: 50%;
-          width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px;
-          border-radius: 50%; background: #1360ee;
-          box-shadow: 0 0 0 4px rgba(19,96,238,.12), 0 0 16px 2px rgba(19,96,238,.45);
-        }
-
-        .wwa-inner { position: relative; z-index: 1; max-width: 880px; margin: 0 auto; text-align: center; padding-top: clamp(28px,5vw,60px); }
-
-        @keyframes wwaRise { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+        @keyframes wwaRise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
         @media (prefers-reduced-motion: no-preference) { .wwa-anim { opacity: 0; animation: wwaRise .8s ${EASE} forwards; } }
 
-        /* ── Type ────────────────────────────────────────────────────────
-           The eyebrow used to resolve LARGER than the h1 at every desktop
-           width (32px vs 28px at 1440, 42.7 vs 37.3 at 1920) — the headline
-           was losing to its own kicker. It is now a true eyebrow: small, wide
-           tracking, quiet; and the h1 is given the room a hero headline should
-           have. That inversion, more than any graphic, is what made the
-           section read as unfinished. */
-        /* Sized against the headline rather than in the abstract. The first
-           pass here over-corrected: coming off an eyebrow that was LARGER than
-           the h1, 11-13px swung too far the other way and the kicker stopped
-           registering at all. 13-18px puts it at roughly a quarter of the
-           headline on desktop (16.6 against 68 at 1440), which is the range
-           where it reads as a deliberate label — present, clearly subordinate,
-           not timid. */
-        .wwa-eyebrow {
-          display: inline-flex; align-items: center; gap: 13px;
-          font-size: clamp(13px, 1.15vw, 18px);
-          font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
-          color: #1360ee;
-        }
-        .wwa-eyebrow i {
-          display: block; width: clamp(28px, 2.4vw, 40px); height: 2px; border-radius: 2px;
-          background: linear-gradient(90deg, transparent, #1360ee);
-        }
-        .wwa-eyebrow i:last-child { background: linear-gradient(90deg, #1360ee, transparent); }
-
-        /* An affine ramp, not a bare vw coefficient. clamp(33px, 5.1vw, 68px)
-           pinned to its 33px FLOOR on every phone — 5.1vw is only 20px at
-           390px wide — and 33px is too big for the column that is left after
-           the section's 28px side padding, so the headline ran into the edge.
-           3.81vw + 13.1px is solved to pass through 28px at 390 and 68px at
-           1440, so both ends are deliberate and everything between is a smooth
-           line rather than a flat floor followed by a sudden climb. */
         .wwa-title {
-          margin: clamp(18px,2vw,26px) auto 0; max-width: 17ch;
-          font-size: clamp(28px, calc(3.81vw + 13.1px), 68px);
-          font-weight: 800; line-height: 1.06; letter-spacing: -.028em;
+          margin: 0;
+          font-size: clamp(28px, calc(2.5vw + 16px), 46px);
+          font-weight: 800; line-height: 1.16; letter-spacing: -.022em;
           color: #0b1220;
-          /* Belt and braces for the narrowest phones: a long word can still
-             break rather than push the line past the viewport. */
-          overflow-wrap: break-word;
         }
-        @media (max-width: 420px) {
-          /* ch is measured on the "0" glyph; at display weights the real
-             letters run wider, so the cap needs to come in on small screens. */
-          .wwa-title { max-width: 14ch; letter-spacing: -.02em; }
-        }
-        /* Gradient on the emphasis, not a flat colour swap — it picks up the
-           same blue-to-cyan the arcs and beam are built from, which is what
-           ties the type to the graphic instead of them merely sharing a hue. */
-        .wwa-title em {
-          font-style: normal;
-          background: linear-gradient(105deg, #1360ee 0%, #0d73e3 46%, #06a4e2 100%);
-          -webkit-background-clip: text; background-clip: text;
-          -webkit-text-fill-color: transparent; color: transparent;
-        }
+        .wwa-title em { display: block; font-style: normal; color: #1360ee; }
 
         .wwa-lead {
-          margin: clamp(18px,2vw,24px) auto 0; max-width: 60ch;
-          font-size: clamp(15px, 1.18vw, 18.5px);
+          margin: clamp(14px,1.6vw,18px) 0 0; max-width: 48ch;
+          font-size: clamp(15px, 1.05vw, 17px);
           line-height: 1.72; color: #55607a;
         }
 
+        .wwa-badge { display: inline-flex; align-items: center; gap: 9px; margin-top: clamp(16px,2vw,20px); }
+        .wwa-badge-mark { position: relative; width: 17px; height: 17px; border-radius: 50%; background: #1360ee; flex-shrink: 0; overflow: hidden; }
+        .wwa-badge-mark::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,.85) 0%, transparent 55%); }
+        .wwa-badge-label { font-size: var(--f-13-5); color: #6b7280; }
+        .wwa-badge-name { font-size: var(--f-14-5); font-weight: 800; color: #0b1220; }
+
+        .wwa-cta-row { display: flex; gap: 14px; margin-top: clamp(20px,2.4vw,28px); flex-wrap: wrap; }
         .wwa-btn {
           font-family: inherit; font-size: var(--f-14); font-weight: 700; cursor: pointer;
-          padding: 14px 28px; border-radius: 999px; border: none;
+          padding: 14px 24px; border-radius: 11px; border: 1.5px solid transparent;
           transition: .18s ${EASE};
-          display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+          display: inline-flex; align-items: center; gap: 9px; text-decoration: none;
         }
-        .wwa-btn-primary { background: #1360ee; color: #fff; box-shadow: 0 10px 24px rgba(19,96,238,.3); }
-        .wwa-btn-primary:hover { background: #0d4fd4; transform: translateY(-1px); box-shadow: 0 12px 30px rgba(19,96,238,.42); }
-        .wwa-btn-ghost { background: rgba(255,255,255,.72); color: #1d1d1f; border: 1.5px solid #e3e7ef; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+        .wwa-btn svg { transition: transform .18s ${EASE}; flex-shrink: 0; }
+        .wwa-btn:hover svg { transform: translateX(3px); }
+        .wwa-btn-primary { background: #1360ee; color: #fff; box-shadow: 0 10px 24px rgba(19,96,238,.28); }
+        .wwa-btn-primary:hover { background: #0d4fd4; transform: translateY(-1px); box-shadow: 0 12px 30px rgba(19,96,238,.4); }
+        .wwa-btn-ghost { background: rgba(255,255,255,.85); color: #14181f; border-color: #dfe3ea; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
         .wwa-btn-ghost:hover { border-color: #1360ee; color: #1360ee; transform: translateY(-1px); }
 
-        .wwa-badge {
-          display: inline-flex; align-items: center; gap: 8px;
-          font-size: var(--f-12-5); font-weight: 700; color: #52525e;
-          background: rgba(255,255,255,.8); border: 1px solid #e6e9f0; border-radius: 999px;
-          padding: 7px 15px; box-shadow: 0 2px 10px rgba(20,40,90,.05);
-          -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+        /* ── Tablet: photo keeps less width, so the fade has to start sooner
+           and the copy column has to give up some of its max-width. ── */
+        @media (max-width: 1024px) {
+          .wwa-scrim { background:
+            linear-gradient(90deg, #fff 0%, #fff 56%, rgba(255,255,255,.72) 68%, rgba(255,255,255,0) 85%),
+            linear-gradient(0deg, #fff 0%, rgba(255,255,255,0) 14%);
+          }
+          .wwa-photo img { object-position: 66% center; }
+          .wwa-content { max-width: min(540px, 100%); }
         }
 
-        /* Sector row — the far end of the signal. Sits under the horizon, so
-           the chips read as the things being reached, not as loose tags. */
-        .wwa-sectors {
-          position: relative; z-index: 1;
-          display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
-          max-width: 820px; margin: clamp(22px,3vw,30px) auto 0;
+        /* ── Mobile: the section stops being a fixed-height "photo behind
+           text" composition — min-height relaxes so it hugs the content —
+           and the photo is dialled down to a soft accent glow in the corner
+           rather than a crop that fights the text for space. ── */
+        @media (max-width: 768px) {
+          .wwa-hero { min-height: 0; }
+          .wwa-body { padding-bottom: clamp(40px,9vw,56px); }
+          .wwa-scrim { background:
+            linear-gradient(90deg, #fff 0%, #fff 78%, rgba(255,255,255,.85) 88%, rgba(255,255,255,.35) 100%),
+            linear-gradient(0deg, #fff 0%, rgba(255,255,255,0) 20%);
+          }
+          .wwa-photo img { object-position: 86% center; opacity: .9; }
+          .wwa-content { max-width: 100%; }
+          .wwa-btn { padding: 13px 20px; }
         }
-        .wwa-chip {
-          font-size: var(--f-12-5); font-weight: 600; color: #46536e;
-          background: rgba(255,255,255,.78);
-          border: 1px solid rgba(19,96,238,.16);
-          border-radius: 999px; padding: 7px 15px;
-          -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-          box-shadow: 0 1px 2px rgba(20,40,90,.04);
-          transition: color .2s ${EASE}, border-color .2s ${EASE}, transform .2s ${EASE}, box-shadow .2s ${EASE};
-        }
-        .wwa-chip:hover {
-          color: #1360ee; border-color: rgba(19,96,238,.42);
-          transform: translateY(-2px);
-          box-shadow: 0 8px 18px -8px rgba(19,96,238,.4);
+
+        @media (max-width: 420px) {
+          .wwa-title { font-size: clamp(24px, 7.2vw, 29px); letter-spacing: -.016em; }
         }
       `}</style>
 
       <section className="wwa-hero">
-        <div className="wwa-beam" aria-hidden="true" />
+        <div className="wwa-photo" aria-hidden="true">
+          <Image
+            src="/About_us/who-we-are/hero_about.png"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+          />
+        </div>
+        <div className="wwa-scrim" aria-hidden="true" />
 
-        <svg
-          className="wwa-arcs"
-          viewBox="0 0 1600 1000"
-          preserveAspectRatio="xMidYMin slice"
-          aria-hidden="true"
-          focusable="false"
-        >
-          {/* Origin at the top centre, on the same axis as the headline.
-              Radii step by a constant 130 so the spacing is a system; stroke
-              opacity steps down with them so the wave visibly loses energy as
-              it travels, which is what makes it read as propagation. */}
-          <g fill="none" stroke="#1360ee" strokeWidth="1.1">
-            <circle className="wwa-arc wwa-arc--1" cx="800" cy="90" r="300" strokeOpacity=".42" />
-            <circle className="wwa-arc wwa-arc--2" cx="800" cy="90" r="430" strokeOpacity=".35" />
-            <circle className="wwa-arc wwa-arc--3" cx="800" cy="90" r="560" strokeOpacity=".28" />
-            <circle className="wwa-arc wwa-arc--4" cx="800" cy="90" r="690" strokeOpacity=".21" />
-            <circle className="wwa-arc wwa-arc--5" cx="800" cy="90" r="820" strokeOpacity=".14" />
-          </g>
-        </svg>
+        <div className="wwa-navwrap">
+          <SoftwareNavbar />
+        </div>
 
-        <SoftwareNavbar />
+        <div className="wwa-body">
+          <div className="wwa-inner">
+            <div className="wwa-content">
+              <h1 className="wwa-title wwa-anim" style={{ animationDelay: '.05s' }}>
+                Shaping the future of <em>connected mobility.</em>
+              </h1>
 
-        <div className="wwa-inner">
-          <span className="wwa-eyebrow wwa-anim" style={{ animationDelay: '.05s' }}>
-            <i /> Who We Are <i />
-          </span>
+              <p className="wwa-lead wwa-anim" style={{ animationDelay: '.14s' }}>
+                LOCATOR is more than a GPS tracking provider — we&apos;re a technology company building intelligent fleet telematics and IoT solutions that connect vehicles and assets, and turn real-time data into actionable business intelligence.
+              </p>
 
-          <h1 className="wwa-title wwa-anim" style={{ animationDelay: '.12s' }}>
-            Shaping the future of <em>connected mobility</em>
-          </h1>
+              <div className="wwa-badge wwa-anim" style={{ animationDelay: '.22s' }}>
+                <span className="wwa-badge-label">Part of</span>
+                <span className="wwa-badge-mark" aria-hidden="true" />
+                <span className="wwa-badge-name">Synosys</span>
+              </div>
 
-          <p className="wwa-lead wwa-anim" style={{ animationDelay: '.2s' }}>
-            LOCATOR is more than a GPS tracking provider — we&apos;re a technology company building intelligent fleet telematics and IoT solutions that connect vehicles and assets, and turn real-time data into actionable business intelligence.
-          </p>
-
-          <div className="wwa-anim" style={{ animationDelay: '.28s', marginTop: '24px' }}>
-            <span className="wwa-badge">
-              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#1360ee' }} />
-              Part of Synosys
-            </span>
-          </div>
-
-          <div className="wwa-anim" style={{ animationDelay: '.36s', display: 'flex', gap: '14px', justifyContent: 'center', marginTop: 'clamp(26px,3vw,34px)', flexWrap: 'wrap' }}>
-            <Link href="/contact" className="wwa-btn wwa-btn-primary">Talk to our team</Link>
-            <Link href="/software" className="wwa-btn wwa-btn-ghost">Explore the platform</Link>
-          </div>
-
-          {/* Where the signal lands, and what it reaches. */}
-          <div className="wwa-horizon wwa-anim" style={{ animationDelay: '.44s' }} aria-hidden="true" />
-
-          <div className="wwa-sectors wwa-anim" style={{ animationDelay: '.5s' }}>
-            {SECTORS.map(s => <span key={s} className="wwa-chip">{s}</span>)}
+              <div className="wwa-cta-row wwa-anim" style={{ animationDelay: '.3s' }}>
+                <Link href="/contact" className="wwa-btn wwa-btn-primary">
+                  Talk to our team
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </Link>
+                <Link href="/software" className="wwa-btn wwa-btn-ghost">
+                  Explore the platform
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>

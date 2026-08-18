@@ -5,10 +5,10 @@ import WhoWeArePurpose from '@/components/about/who-we-are/WhoWeArePurpose'
 import WhoWeAreNumbers from '@/components/about/who-we-are/WhoWeAreNumbers'
 import WhoWeAreJourney from '@/components/about/who-we-are/WhoWeAreJourney'
 import WhoWeAreServices from '@/components/about/who-we-are/WhoWeAreServices'
-import ServiceIndustries from '@/components/service/ServiceIndustries'
-import WhoWeAreTechnology from '@/components/about/who-we-are/WhoWeAreTechnology'
-import WhoWeAreWhyChoose from '@/components/about/who-we-are/WhoWeAreWhyChoose'
-import WhoWeAreVideo from '@/components/about/who-we-are/WhoWeAreVideo'
+// import ServiceIndustries from '@/components/service/ServiceIndustries' // GPS Fleet Services — disabled
+// import WhoWeAreTechnology from '@/components/about/who-we-are/WhoWeAreTechnology' // Technology & Innovation — disabled
+// import WhoWeAreWhyChoose from '@/components/about/who-we-are/WhoWeAreWhyChoose' // Why Businesses Choose LOCATOR — disabled
+// import WhoWeAreVideo from '@/components/about/who-we-are/WhoWeAreVideo' // video section — disabled
 import WhoWeAreFAQ from '@/components/about/who-we-are/WhoWeAreFAQ'
 import SoftwareBlog from '@/components/software/SoftwareBlog'
 import Footer from '@/components/layouts/Footer'
@@ -36,10 +36,10 @@ export default function WhoWeArePage() {
       <WhoWeAreNumbers />
       <WhoWeAreJourney />
       <WhoWeAreServices />
-      <ServiceIndustries />
-      <WhoWeAreTechnology />
-      <WhoWeAreWhyChoose />
-      <WhoWeAreVideo />
+      {/* <ServiceIndustries /> */}
+      {/* <WhoWeAreTechnology /> */}
+      {/* <WhoWeAreWhyChoose /> */}
+      {/* <WhoWeAreVideo /> */}
       <WhoWeAreFAQ />
       <SoftwareBlog />
       <Footer />

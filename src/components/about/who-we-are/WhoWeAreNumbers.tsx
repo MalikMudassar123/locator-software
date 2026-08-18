@@ -1,14 +1,15 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { Briefcase, Users, Truck, Database, type LucideIcon } from 'lucide-react'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
-const STATS = [
-  { target: 10, suffix: '+', label: 'Years of Industry Experience', desc: 'Delivering trusted fleet telematics and IoT solutions.' },
-  { target: 1000, suffix: '+', label: 'Businesses Empowered', desc: 'Helping organizations optimize fleet operations across the UAE.' },
-  { target: 20000, suffix: '+', label: 'Connected Vehicles & Assets', desc: 'Monitored through our intelligent GPS and IoT platform.' },
-  { target: 1, suffix: 'M+', label: 'Data Points Processed Daily', desc: 'Turning real-time operational data into actionable insights.' },
+const STATS: { target: number; suffix: string; label: string; desc: string; icon: LucideIcon }[] = [
+  { target: 10, suffix: '+', label: 'Years of Industry Experience', desc: 'Delivering trusted fleet telematics and IoT solutions.', icon: Briefcase },
+  { target: 1000, suffix: '+', label: 'Businesses Empowered', desc: 'Helping organizations optimize fleet operations across the UAE.', icon: Users },
+  { target: 20000, suffix: '+', label: 'Connected Vehicles & Assets', desc: 'Monitored through our intelligent GPS and IoT platform.', icon: Truck },
+  { target: 1, suffix: 'M+', label: 'Data Points Processed Daily', desc: 'Turning real-time operational data into actionable insights.', icon: Database },
 ]
 
 function formatValue(n: number, target: number) {
@@ -18,6 +19,7 @@ function formatValue(n: number, target: number) {
 
 function StatCard({ stat, start, index }: { stat: typeof STATS[number]; start: boolean; index: number }) {
   const [val, setVal] = useState(0)
+  const Icon = stat.icon
 
   useEffect(() => {
     if (!start) return
@@ -36,10 +38,10 @@ function StatCard({ stat, start, index }: { stat: typeof STATS[number]; start: b
   }, [start, stat.target])
 
   return (
-    <div className="wwn-item" style={{ transitionDelay: `${index * 90}ms` }}>
-      <span className="wwn-rule" aria-hidden="true" />
+    <div className="wwn-card" style={{ transitionDelay: `${index * 90}ms` }}>
+      <div className="wwn-icon" aria-hidden="true"><Icon size={20} strokeWidth={2} /></div>
       <div className="wwn-value">
-        {formatValue(val, stat.target)}<span className="wwn-suffix">{stat.suffix}</span>
+        {formatValue(val, stat.target)}{stat.suffix}
       </div>
       <div className="wwn-label">{stat.label}</div>
       <p className="wwn-desc">{stat.desc}</p>
@@ -65,90 +67,68 @@ export default function WhoWeAreNumbers() {
   return (
     <>
       <style>{`
-        /* Dark slab inside the white page — the same surface language as the
-           industry panels, so the two sections read as one system. */
-        .wwn-slab {
-          max-width: var(--w-1180); margin: 0 auto;
-          background: #0d1426;
-          border-radius: clamp(20px,2.4vw,30px);
-          padding: clamp(36px,4.6vw,68px) clamp(24px,3.4vw,56px);
-          box-shadow: 0 50px 100px -46px rgba(13,20,38,.6);
-        }
-
-        .wwn-head { text-align: center; max-width: 720px; margin: 0 auto clamp(36px,4.4vw,56px); }
+        .wwn-head { text-align: center; max-width: 720px; margin: 0 auto clamp(36px,4.4vw,52px); }
         .wwn-eyebrow {
           display: block;
           font-size: max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px)); font-weight: 800; letter-spacing: .04em;
-          color: #6ea2ff; text-transform: uppercase; margin-bottom: 16px;
+          color: #1360ee; text-transform: uppercase; margin-bottom: 20px;
         }
-        /* Single rule above the label — flanking rules break on wrap. */
-        .wwn-eyebrow::before {
-          content: ''; display: block; width: 34px; height: 3px;
-          background: rgba(110,162,255,.55); border-radius: 2px;
-          margin: 0 auto 12px;
-        }
+        .wwn-eyebrow-rule { display: block; margin-bottom: 12px; }
+        .wwn-eyebrow-rule span { display: inline-block; width: 34px; height: 3px; background: #1360ee; border-radius: 2px; }
         .wwn-h2 {
           margin: 0; font-size: max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px)); font-weight: 800;
-          line-height: 1.25; letter-spacing: -.02em; color: #fff; text-wrap: balance;
+          line-height: 1.25; letter-spacing: -.02em; color: #1d1d1f;
         }
+        .wwn-h2 em { font-style: normal; color: #1360ee; }
 
-        /* Hairline-divided columns, no cards. */
-        .wwn-grid { display: grid; grid-template-columns: repeat(4,1fr); }
-        @media (max-width: 900px) { .wwn-grid { grid-template-columns: repeat(2,1fr); row-gap: 34px; } }
-        @media (max-width: 520px) { .wwn-grid { grid-template-columns: 1fr; row-gap: 30px; } }
+        .wwn-grid { max-width: var(--w-1180); margin: 0 auto; display: grid; grid-template-columns: repeat(4,1fr); gap: clamp(16px,1.8vw,22px); }
+        @media (max-width: 900px) { .wwn-grid { grid-template-columns: repeat(2,1fr); } }
+        @media (max-width: 560px) { .wwn-grid { grid-template-columns: 1fr; } }
 
-        .wwn-item {
-          position: relative;
-          padding: 0 clamp(16px,2vw,28px);
-          border-left: 1px solid rgba(255,255,255,.1);
+        .wwn-card {
+          background: #fff; border: 1px solid #e7ebf3; border-radius: 16px;
+          padding: clamp(22px,2.4vw,28px);
+          box-shadow: 0 1px 2px rgba(20,40,90,.04), 0 14px 30px -22px rgba(20,40,90,.16);
           opacity: 0; transform: translateY(16px);
-          transition: opacity .6s ${EASE}, transform .6s ${EASE};
+          transition: opacity .6s ${EASE}, transform .6s ${EASE}, border-color .2s ${EASE}, box-shadow .2s ${EASE}, transform .2s ${EASE};
         }
-        .wwn-grid[data-in="true"] .wwn-item { opacity: 1; transform: none; }
-        .wwn-item:first-child { border-left: 0; padding-left: 0; }
-        @media (max-width: 900px) {
-          .wwn-item:nth-child(odd) { border-left: 0; padding-left: 0; }
-        }
-        @media (max-width: 520px) {
-          .wwn-item { border-left: 0; padding-left: 0; }
-        }
+        .wwn-grid[data-in="true"] .wwn-card { opacity: 1; transform: none; }
+        .wwn-card:hover { border-color: rgba(19,96,238,.28); box-shadow: 0 18px 36px -20px rgba(19,96,238,.28); transform: translateY(-2px); }
 
-        /* Accent tick that draws in above each figure. */
-        .wwn-rule {
-          display: block; width: 26px; height: 2px; border-radius: 2px;
-          background: #1360ee; margin-bottom: clamp(16px,1.8vw,22px);
-          transform: scaleX(0); transform-origin: left;
-          transition: transform .7s ${EASE} .2s;
+        .wwn-icon {
+          display: inline-flex; align-items: center; justify-content: center;
+          width: 42px; height: 42px; border-radius: 11px;
+          background: #eaf1ff; color: #1360ee;
+          margin-bottom: clamp(16px,1.8vw,20px);
         }
-        .wwn-grid[data-in="true"] .wwn-rule { transform: scaleX(1); }
 
         .wwn-value {
-          font-size: max(clamp(36px,4.4vw,58px), min(4.028vw, 84.1px)); font-weight: 800; line-height: 1;
-          letter-spacing: -.04em; font-variant-numeric: tabular-nums;
-          color: #fff; margin-bottom: 14px;
+          font-size: clamp(26px, 2.4vw + 12px, 34px); font-weight: 800; line-height: 1;
+          letter-spacing: -.03em; font-variant-numeric: tabular-nums;
+          color: #1360ee; margin-bottom: 10px;
         }
-        .wwn-suffix { color: #4d8cff; }
         .wwn-label {
-          font-size: max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px)); font-weight: 700;
-          color: #fff; letter-spacing: -.01em; line-height: 1.3; margin-bottom: 9px;
+          font-size: var(--f-15); font-weight: 700;
+          color: #14181f; letter-spacing: -.01em; line-height: 1.3; margin-bottom: 8px;
         }
-        .wwn-desc { margin: 0; font-size: var(--f-13); line-height: 1.65; color: rgba(255,255,255,.55); }
+        .wwn-desc { margin: 0; font-size: var(--f-13); line-height: 1.6; color: #6b7280; }
 
         @media (prefers-reduced-motion: reduce) {
-          .wwn-item, .wwn-rule { transition: none; opacity: 1; transform: none; }
+          .wwn-card { transition: none; opacity: 1; transform: none; }
         }
       `}</style>
 
       <section style={{ padding: 'clamp(56px,7vw,92px) 28px', background: '#fff' }}>
-        <div className="wwn-slab" data-reveal>
-          <div className="wwn-head">
-            <span className="wwn-eyebrow">LOCATOR in Numbers</span>
-            <h2 className="wwn-h2">Trusted at scale across the UAE</h2>
-          </div>
+        <div className="wwn-head" data-reveal>
+          <span className="wwn-eyebrow">
+            <span className="wwn-eyebrow-rule"><span /></span>
+            LOCATOR in Numbers
+          </span>
+          <h2 className="wwn-h2">Trusted at scale across <em>the UAE.</em></h2>
+        </div>
 
-          <div className="wwn-grid" ref={ref} data-in={start}>
-            {STATS.map((s, i) => <StatCard key={s.label} stat={s} start={start} index={i} />)}
-          </div>
+        <div className="wwn-grid" ref={ref} data-in={start}>
+          {STATS.map((s, i) => <StatCard key={s.label} stat={s} start={start} index={i} />)}
         </div>
       </section>
     </>

@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import ScrollReveal from '@/components/software/ScrollReveal'
-import AboutPillarHero from '@/components/about/AboutPillarHero'
+import VisionHero from '@/components/about/VisionHero'
 import VisionRoadmap from '@/components/about/VisionRoadmap'
-import AboutPillarNav from '@/components/about/AboutPillarNav'
-import SoftwareCTA from '@/components/software/SoftwareCTA'
+// import AboutPillarNav from '@/components/about/AboutPillarNav' // Explore more about Locator — disabled
+// import SoftwareCTA from '@/components/software/SoftwareCTA' // Get Started Today — disabled
 import Footer from '@/components/layouts/Footer'
 
 export const metadata: Metadata = {
@@ -24,14 +24,10 @@ export default function AboutVisionPage() {
   return (
     <main style={{ background: '#ffffff', minHeight: '100vh' }}>
       <ScrollReveal />
-      <AboutPillarHero
-        slug="vision"
-        title="Our Vision"
-        lead="By 2035, we envision a globally connected world where one million IoT devices enable smarter mobility, safer assets, and more intelligent operations — positioning us as a trusted global leader in AI-powered IoT innovation."
-      />
+      <VisionHero />
       <VisionRoadmap />
-      <AboutPillarNav current="vision" />
-      <SoftwareCTA />
+      {/* <AboutPillarNav current="vision" /> */}
+      {/* <SoftwareCTA /> */}
       <Footer />
     </main>
   )

@@ -25,6 +25,28 @@ export default function AboutVisionPage() {
     <main style={{ background: '#ffffff', minHeight: '100vh' }}>
       <ScrollReveal />
       <VisionHero />
+
+      {/* Vision intro paragraph */}
+      <section style={{
+        background: '#f3f5f9',
+        padding: 'clamp(48px, 6vw, 80px) 28px',
+        textAlign: 'center',
+      }}>
+        <p style={{
+          margin: '0 auto',
+          maxWidth: '820px',
+          fontSize: 'max(clamp(16px, 1.7vw, 20px), min(1.389vw, 29px))',
+          lineHeight: 1.7,
+          fontWeight: 500,
+          color: '#2b3446',
+          textAlign: 'center',
+        }}>
+          By 2035, we envision a globally connected world where one million IoT devices
+          enable smarter mobility, safer assets, and more intelligent operations —
+          positioning us as a trusted global leader in AI-powered IoT innovation.
+        </p>
+      </section>
+
       <VisionRoadmap />
       {/* <AboutPillarNav current="vision" /> */}
       {/* <SoftwareCTA /> */}

@@ -128,7 +128,8 @@ export default function VisionHero() {
               </span>
 
               <h1 className="vsh-title vsh-anim" style={{ animationDelay: '.06s' }}>
-                Our Vision
+                <span style={{ WebkitTextFillColor: '#0b1220', color: '#0b1220' }}>Our</span>{' '}
+                Vision
               </h1>
 
               <div className="vsh-divider vsh-anim" style={{ animationDelay: '.14s' }} />

@@ -135,7 +135,8 @@ export default function WhoWeAreHero() {
           <div className="wwa-inner">
             <div className="wwa-content">
               <h1 className="wwa-title wwa-anim" style={{ animationDelay: '.05s' }}>
-                Who We Are <em>The story behind LOCATOR.</em>
+                <span style={{ color: '#0b1220' }}>Who</span>{' '}
+                <span style={{ color: '#1360ee' }}>We Are</span>
               </h1>
 
               <p className="wwa-lead wwa-anim" style={{ animationDelay: '.14s' }}>

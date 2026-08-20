@@ -7,17 +7,18 @@ const EASE = 'cubic-bezier(.22,.61,.36,1)'
 /**
  * Who We Are — hero.
  *
- * A single full-bleed photo (Earth at night, lit cities across the Gulf)
- * anchored to the right edge, fading to white on the left where the copy
- * sits. The fade is partly baked into the source photo itself and partly a
- * CSS scrim on top of it — the scrim is what lets the white "reading zone"
- * grow as the viewport narrows, so the same photo works from a 1920px
- * desktop down to a 375px phone without art-directing separate crops.
+ * A single photo (Earth at night, lit cities across the Gulf) anchored to
+ * the right edge in a bounded-width box — not stretched full-bleed — so it
+ * never has to be zoom-cropped to fill an ultra-wide section. Keeping the
+ * box's aspect ratio close to the photo's own means the crop stays gentle
+ * (mostly trimming the photo's blank left margin, not its content), and the
+ * copy on the left sits on the section's plain white background rather than
+ * on a stretched, foggy edge of the image.
  *
- * Three breakpoints (1024 / 768) shift three things together: how much of
- * the box the scrim keeps opaque, where the photo is anchored
- * (object-position), and how wide the copy column is allowed to get — so
- * text and photo stay balanced instead of the photo just getting squeezed.
+ * Three breakpoints (1024 / 768) shift three things together: how wide the
+ * photo box is, where the photo is anchored (object-position), and how wide
+ * the copy column is allowed to get — so text and photo stay balanced
+ * instead of the photo just getting squeezed.
  */
 export default function WhoWeAreHero() {
   return (
@@ -29,23 +30,20 @@ export default function WhoWeAreHero() {
           background: #ffffff;
           display: flex;
           flex-direction: column;
-          min-height: clamp(440px, 54vh, 580px);
+          min-height: clamp(400px, 46vh, 520px);
         }
 
-        .wwa-photo { position: absolute; inset: 0; z-index: 0; }
-        .wwa-photo img { object-fit: cover; object-position: 78% center; }
+        .wwa-photo { position: absolute; top: 0; right: 0; bottom: 0; width: min(1180px, 62%); z-index: 0; }
+        .wwa-photo img { object-fit: cover; object-position: 100% center; }
 
-        /* The scrim does two jobs in one background: a left-to-right white
-           fade that guarantees the copy always sits on a legible field
-           (widened at each breakpoint below), and a short bottom fade so the
-           photo's own bottom edge — which runs full-saturation blue right to
-           the crop line — blends into the section below instead of cutting
-           off hard. */
+        /* Left-to-right white fade so the copy always sits on a legible
+           field, timed to meet the photo box's left edge (widened at each
+           breakpoint below as the box narrows). No bottom fade — the photo
+           box is inset from the section edges, so there's no hard seam to
+           blend. */
         .wwa-scrim {
           position: absolute; inset: 0; z-index: 1; pointer-events: none;
-          background:
-            linear-gradient(90deg, #fff 0%, #fff 46%, rgba(255,255,255,.72) 60%, rgba(255,255,255,0) 78%),
-            linear-gradient(0deg, #fff 0%, rgba(255,255,255,0) 14%);
+          background: linear-gradient(90deg, #fff 0%, #fff 34%, rgba(255,255,255,0) 60%);
         }
 
         .wwa-navwrap { position: relative; z-index: 3; }
@@ -91,14 +89,11 @@ export default function WhoWeAreHero() {
         .wwa-btn-ghost { background: rgba(255,255,255,.85); color: #14181f; border-color: #dfe3ea; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
         .wwa-btn-ghost:hover { border-color: #1360ee; color: #1360ee; transform: translateY(-1px); }
 
-        /* ── Tablet: photo keeps less width, so the fade has to start sooner
+        /* ── Tablet: photo box narrows, so the fade has to start sooner
            and the copy column has to give up some of its max-width. ── */
         @media (max-width: 1024px) {
-          .wwa-scrim { background:
-            linear-gradient(90deg, #fff 0%, #fff 56%, rgba(255,255,255,.72) 68%, rgba(255,255,255,0) 85%),
-            linear-gradient(0deg, #fff 0%, rgba(255,255,255,0) 14%);
-          }
-          .wwa-photo img { object-position: 66% center; }
+          .wwa-photo { width: min(760px, 56%); }
+          .wwa-scrim { background: linear-gradient(90deg, #fff 0%, #fff 42%, rgba(255,255,255,0) 68%); }
           .wwa-content { max-width: min(540px, 100%); }
         }
 
@@ -109,11 +104,8 @@ export default function WhoWeAreHero() {
         @media (max-width: 768px) {
           .wwa-hero { min-height: 0; }
           .wwa-body { padding-bottom: clamp(40px,9vw,56px); }
-          .wwa-scrim { background:
-            linear-gradient(90deg, #fff 0%, #fff 78%, rgba(255,255,255,.85) 88%, rgba(255,255,255,.35) 100%),
-            linear-gradient(0deg, #fff 0%, rgba(255,255,255,0) 20%);
-          }
-          .wwa-photo img { object-position: 86% center; opacity: .9; }
+          .wwa-photo { width: min(420px, 68%); opacity: .9; }
+          .wwa-scrim { background: linear-gradient(90deg, #fff 0%, #fff 58%, rgba(255,255,255,0) 88%); }
           .wwa-content { max-width: 100%; }
           .wwa-btn { padding: 13px 20px; }
         }
@@ -143,7 +135,7 @@ export default function WhoWeAreHero() {
           <div className="wwa-inner">
             <div className="wwa-content">
               <h1 className="wwa-title wwa-anim" style={{ animationDelay: '.05s' }}>
-                Shaping the future of <em>connected mobility.</em>
+                Who We Are <em>The story behind LOCATOR.</em>
               </h1>
 
               <p className="wwa-lead wwa-anim" style={{ animationDelay: '.14s' }}>

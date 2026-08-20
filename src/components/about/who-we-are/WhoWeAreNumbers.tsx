@@ -81,26 +81,29 @@ export default function WhoWeAreNumbers() {
         }
         .wwn-h2 em { font-style: normal; color: #1360ee; }
 
-        .wwn-grid { max-width: var(--w-1180); margin: 0 auto; display: grid; grid-template-columns: repeat(4,1fr); gap: clamp(16px,1.8vw,22px); }
-        @media (max-width: 900px) { .wwn-grid { grid-template-columns: repeat(2,1fr); } }
-        @media (max-width: 560px) { .wwn-grid { grid-template-columns: 1fr; } }
+        .wwn-grid {
+          max-width: var(--w-1180); margin: 0 auto; display: grid; grid-template-columns: repeat(4,1fr);
+        }
 
         .wwn-card {
-          background: #fff; border: 1px solid #e7ebf3; border-radius: 16px;
-          padding: clamp(22px,2.4vw,28px);
-          box-shadow: 0 1px 2px rgba(20,40,90,.04), 0 14px 30px -22px rgba(20,40,90,.16);
+          position: relative;
+          text-align: center;
+          padding: clamp(28px,3.2vw,44px) clamp(16px,2vw,28px);
+          border-right: 1px solid #e7ebf3;
           opacity: 0; transform: translateY(16px);
-          transition: opacity .6s ${EASE}, transform .6s ${EASE}, border-color .2s ${EASE}, box-shadow .2s ${EASE}, transform .2s ${EASE};
+          transition: opacity .6s ${EASE}, transform .6s ${EASE};
         }
+        .wwn-card:last-child { border-right: none; }
         .wwn-grid[data-in="true"] .wwn-card { opacity: 1; transform: none; }
-        .wwn-card:hover { border-color: rgba(19,96,238,.28); box-shadow: 0 18px 36px -20px rgba(19,96,238,.28); transform: translateY(-2px); }
 
         .wwn-icon {
           display: inline-flex; align-items: center; justify-content: center;
-          width: 42px; height: 42px; border-radius: 11px;
+          width: 44px; height: 44px; border-radius: 50%;
           background: #eaf1ff; color: #1360ee;
-          margin-bottom: clamp(16px,1.8vw,20px);
+          margin: 0 auto clamp(16px,1.8vw,20px);
+          transition: background .22s ${EASE}, color .22s ${EASE};
         }
+        .wwn-card:hover .wwn-icon { background: #1360ee; color: #fff; }
 
         .wwn-value {
           font-size: clamp(26px, 2.4vw + 12px, 34px); font-weight: 800; line-height: 1;
@@ -111,7 +114,16 @@ export default function WhoWeAreNumbers() {
           font-size: var(--f-15); font-weight: 700;
           color: #14181f; letter-spacing: -.01em; line-height: 1.3; margin-bottom: 8px;
         }
-        .wwn-desc { margin: 0; font-size: var(--f-13); line-height: 1.6; color: #6b7280; }
+        .wwn-desc { margin: 0 auto; max-width: 230px; font-size: var(--f-13); line-height: 1.6; color: #6b7280; }
+
+        @media (max-width: 900px) {
+          .wwn-grid { grid-template-columns: repeat(2,1fr); }
+          .wwn-card:nth-child(2n) { border-right: none; }
+        }
+        @media (max-width: 560px) {
+          .wwn-grid { grid-template-columns: 1fr; }
+          .wwn-card { border-right: none !important; padding-top: clamp(20px,4vw,28px); padding-bottom: clamp(20px,4vw,28px); }
+        }
 
         @media (prefers-reduced-motion: reduce) {
           .wwn-card { transition: none; opacity: 1; transform: none; }

@@ -32,8 +32,8 @@ export default function IndustriesGrid() {
         }
         .ig-card:hover { transform: translateY(-4px); border-color: #d6dcea; box-shadow: 0 22px 44px -22px rgba(20,40,90,.28); }
 
-        .ig-card-media { position: relative; aspect-ratio: 16 / 9.4; overflow: hidden; background: #eef3fb; }
-        .ig-card-media img { object-fit: cover; transition: transform .5s ${EASE}; }
+        .ig-card-media { position: relative; width: 100%; aspect-ratio: 1 / 1; overflow: hidden; background: #eef3fb; }
+        .ig-card-media img { object-fit: cover; object-position: center; width: 100%; height: 100%; transition: transform .5s ${EASE}; }
         .ig-card:hover .ig-card-media img { transform: scale(1.06); }
 
         .ig-card-body { padding: 20px 22px 24px; flex: 1; display: flex; flex-direction: column; }

@@ -1,14 +1,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import SoftwareNavbar from '@/components/software/SoftwareNavbar'
-import { DEVICES } from './devices-data'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
-
-// Four representative products for the hero montage.
-const MONTAGE = ['fmb120', 'ibutton-reader-tag', 'lv-can200', 'bluetooth-temperature-humidity']
-  .map((slug) => DEVICES.find((d) => d.slug === slug))
-  .filter((d): d is NonNullable<typeof d> => Boolean(d))
 
 const STATS = [
   { n: '9', l: 'Devices & accessories in the catalog' },
@@ -20,75 +14,149 @@ export default function TrackingDevicesHero() {
   return (
     <>
       <style>{`
-        .td-hero { position: relative; background: #ffffff; padding: clamp(16px,2vw,28px) 28px 0; overflow: hidden; }
+        /*
+         * Hero layout mirrors SmartIotHero exactly:
+         *   - section: position:relative, flex column, explicit min-height
+         *   - .td-photo: position:absolute; inset:0  → true full-bleed bg
+         *   - .td-scrim: inset:0 gradient → text legibility
+         *   - .td-navwrap z-index:3 / .td-body z-index:2 / .td-photo z-index:0
+         *
+         * Image is landscape (~16:5). Using object-position: left top so the
+         * important top-left of the image is never cropped. Only the far
+         * bottom-right gets trimmed on short viewports — that area is empty
+         * studio floor, so the trim is invisible.
+         */
+        .td-hero {
+          position: relative;
+          overflow: hidden;
+          /* #dde8f0 matches the image's own pale blue-grey studio background
+             so if contain leaves any edge gap it's completely invisible */
+          background: #dde8f0;
+          display: flex;
+          flex-direction: column;
+          /* Drive height from viewport width at the image's own ~3:1 ratio.
+             This means the section is always exactly as tall as the image
+             at full width — no zoom, no crop, ever. */
+          min-height: clamp(480px, 34vw, 660px);
+        }
 
+        .td-photo { position: absolute; inset: 0; z-index: 0; }
+        /* contain = zero cropping ever. Background #dde8f0 matches the image's
+           own pale blue-grey studio tone so any letterbox area is invisible. */
+        .td-photo img { object-fit: contain; object-position: center bottom; }
+
+        /* White-to-transparent scrim — image is light so we use white, not black */
+        .td-scrim {
+          position: absolute; inset: 0; z-index: 1; pointer-events: none;
+          background: linear-gradient(90deg,
+            rgba(255,255,255,.88) 0%,
+            rgba(255,255,255,.72) 26%,
+            rgba(255,255,255,.14) 54%,
+            rgba(255,255,255,0)   70%
+          );
+        }
+
+        .td-navwrap { position: relative; z-index: 3; }
+
+        .td-body {
+          position: relative; z-index: 2; flex: 1;
+          display: flex; align-items: center;
+          padding: clamp(20px,3vw,36px) 28px clamp(40px,5vw,60px);
+        }
+        .td-inner { max-width: var(--w-1280); width: 100%; margin: 0 auto; }
+        /* Content column — same width as SmartIotHero's .si-content */
+        .td-content { max-width: min(560px, 100%); }
+
+        @keyframes tdRise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+        @media (prefers-reduced-motion: no-preference) { .td-anim { opacity: 0; animation: tdRise .8s ${EASE} forwards; } }
+
+        /* Back breadcrumb */
         .td-back {
-          display: inline-flex; align-items: center; gap: 6px;
-          color: #6e6e73; font-size: var(--f-13); font-weight: 600;
-          text-decoration: none; margin-bottom: 18px;
-          transition: color .18s ease, gap .18s ease;
+          display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px;
+          color: #5a6478; font-size: var(--f-13); font-weight: 600;
+          text-decoration: none; transition: color .18s ease, gap .18s ease;
         }
         .td-back:hover { color: #1360ee; gap: 9px; }
 
-        .td-topbar { display: flex; justify-content: flex-end; padding: 0 4px 8px; max-width: var(--w-1200); margin: 0 auto; }
-        .td-phone-top { display: inline-flex; align-items: center; gap: 8px; color: #1360ee; font-size: var(--f-16); font-weight: 800; text-decoration: none; }
-
-        .td-grid {
-          position: relative; z-index: 1;
-          display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px,2.5vw,36px);
-          align-items: center; max-width: var(--w-1240); margin: 0 auto;
-          padding-bottom: clamp(40px,5vw,64px);
+        /* Eyebrow */
+        .td-eyebrow {
+          display: block;
+          font-size: max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px));
+          font-weight: 800; letter-spacing: .04em;
+          color: #1360ee; text-transform: uppercase; margin-bottom: 16px;
         }
-        @media (max-width: 940px) { .td-grid { grid-template-columns: 1fr; gap: 36px; } }
+        .td-eyebrow-bar {
+          display: block; width: 34px; height: 3px;
+          background: #1360ee; border-radius: 2px; margin-bottom: 12px;
+        }
 
+        /* Heading — dark text, image is light */
         .td-h1 {
-          margin: 0; font-size: max(clamp(30px,3.8vw,48px), min(3.333vw, 69.6px)); font-weight: 800;
-          line-height: 1.1; letter-spacing: -.03em; color: #1d1d1f;
+          margin: 0;
+          font-size: clamp(28px, calc(2.5vw + 16px), 46px);
+          font-weight: 800; line-height: 1.14; letter-spacing: -.024em;
+          color: #0b1220;
         }
+        .td-h1 em { font-style: normal; color: #1360ee; }
+
+        /* Lead */
         .td-lead {
-          margin: 18px 0 0; max-width: 46ch;
-          font-size: max(clamp(14px,1.25vw,16px), min(1.111vw, 23.2px)); line-height: 1.7; color: #52525e;
+          margin: clamp(14px,1.6vw,18px) 0 0; max-width: 48ch;
+          font-size: clamp(15px, 1.05vw, 17px);
+          line-height: 1.72; color: #3a4459;
         }
 
-        .td-cta-row { display: flex; gap: 14px; margin-top: 30px; }
+        /* CTAs */
+        .td-cta-row { display: flex; gap: 14px; margin-top: clamp(22px,2.6vw,32px); flex-wrap: wrap; }
         .td-btn {
-          font-family: inherit; font-weight: 700; cursor: pointer;
-          padding: clamp(14px,1.6vw,17px) clamp(18px,2vw,24px); border-radius: 12px; border: none;
-          transition: .18s ${EASE}; display: inline-flex; align-items: center; gap: 10px;
-          text-decoration: none; font-size: max(clamp(13.5px,1.15vw,15px), min(1.042vw, 21.75px));
+          font-family: inherit; font-size: var(--f-14); font-weight: 700; cursor: pointer;
+          padding: 14px 24px; border-radius: 11px; border: 1.5px solid transparent;
+          transition: .18s ${EASE};
+          display: inline-flex; align-items: center; gap: 9px; text-decoration: none;
         }
+        .td-btn svg { transition: transform .18s ${EASE}; flex-shrink: 0; }
+        .td-btn:hover svg { transform: translateX(3px); }
         .td-btn-primary { background: #1360ee; color: #fff; box-shadow: 0 10px 24px rgba(19,96,238,.28); }
-        .td-btn-primary:hover { background: #0d4fd4; transform: translateY(-1px); box-shadow: 0 12px 28px rgba(19,96,238,.38); }
-        .td-btn-primary svg { transition: transform .2s ${EASE}; }
-        .td-btn-primary:hover svg { transform: translateX(3px); }
-        .td-btn-secondary { background: #fff; color: #1360ee; border: 1.5px solid #dbe4fb; }
-        .td-btn-secondary:hover { border-color: #1360ee; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(19,96,238,.15); }
-        @media (max-width: 560px) { .td-cta-row { flex-direction: column; } .td-btn { justify-content: center; } }
-
-        /* ── Montage: staggered product tiles fill the right column ── */
-        /* Capped so square tiles don't blow out the hero height, pulled to the
-           left of its column to close the gap, and dropped down for offset. */
-        .td-montage {
-          display: grid; grid-template-columns: 1fr 1fr; gap: clamp(10px,1.3vw,16px);
-          width: 100%; max-width: 520px;
-          margin-right: auto; margin-left: 0;
-          margin-top: clamp(28px,4vw,64px);
+        .td-btn-primary:hover { background: #0d4fd4; transform: translateY(-1px); box-shadow: 0 12px 30px rgba(19,96,238,.4); }
+        .td-btn-ghost {
+          background: rgba(255,255,255,.78); color: #0b1220;
+          border-color: rgba(19,96,238,.25);
+          -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
         }
-        @media (max-width: 940px) { .td-montage { margin: 0 auto; max-width: 460px; } }
-        .td-tile {
-          position: relative; aspect-ratio: 1 / 1; border-radius: 22px;
-          background: #f6f8fd; border: 1px solid #e9edf6;
-          display: grid; place-items: center; padding: clamp(10px,1.3vw,18px);
-          transition: transform .4s ${EASE}, box-shadow .4s ${EASE}, border-color .4s ${EASE};
-        }
-        /* Offset the second column to break the flat grid. */
-        .td-tile:nth-child(2), .td-tile:nth-child(4) { transform: translateY(clamp(18px,2.6vw,34px)); }
-        .td-tile:hover { border-color: #c9d8f8; box-shadow: 0 26px 50px -26px rgba(20,40,90,.34); }
-        .td-tile:nth-child(2):hover, .td-tile:nth-child(4):hover { transform: translateY(clamp(14px,2.2vw,28px)); }
-        .td-tile:nth-child(1):hover, .td-tile:nth-child(3):hover { transform: translateY(-4px); }
-        .td-tile img { width: 100%; height: 100%; object-fit: contain; }
+        .td-btn-ghost:hover { border-color: #1360ee; color: #1360ee; transform: translateY(-1px); background: rgba(255,255,255,.92); }
 
-        /* ── Stat band, full width under the hero ── */
+        /* Tablet */
+        @media (max-width: 1024px) {
+          .td-scrim { background: linear-gradient(90deg,
+            rgba(255,255,255,.92) 0%,
+            rgba(255,255,255,.80) 34%,
+            rgba(255,255,255,.18) 62%,
+            rgba(255,255,255,0)   78%
+          ); }
+          .td-content { max-width: min(480px, 100%); }
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+          .td-hero { min-height: clamp(360px, 50vw, 480px); }
+          .td-body { padding-bottom: clamp(44px,9vw,60px); }
+          .td-scrim { background: linear-gradient(90deg,
+            rgba(255,255,255,.96) 0%,
+            rgba(255,255,255,.90) 48%,
+            rgba(255,255,255,.38) 80%,
+            rgba(255,255,255,0)  100%
+          ); }
+          .td-content { max-width: 100%; }
+          .td-btn { padding: 13px 20px; }
+        }
+
+        @media (max-width: 420px) {
+          .td-h1 { font-size: clamp(24px, 7.2vw, 30px); }
+          .td-cta-row { flex-direction: column; }
+          .td-btn { justify-content: center; }
+        }
+
+        /* ── Stat band — unchanged ── */
         .td-stats-band { border-top: 1px solid #e7ebf3; background: #fff; }
         .td-stats {
           display: grid; grid-template-columns: repeat(3, 1fr);
@@ -101,67 +169,76 @@ export default function TrackingDevicesHero() {
           .td-stat { border-left: none; border-top: 1px solid #e7ebf3; padding-left: 0; }
           .td-stat:first-child { border-top: none; }
         }
-        .td-stat-n { font-size: max(clamp(26px,3vw,38px), min(2.639vw, 55.1px)); font-weight: 800; letter-spacing: -.03em; color: #1d1d1f; line-height: 1; }
+        .td-stat-n { font-size: max(clamp(26px,3vw,38px), min(2.639vw,55.1px)); font-weight: 800; letter-spacing: -.03em; color: #1d1d1f; line-height: 1; }
         .td-stat-l { margin-top: 10px; font-size: var(--f-13); line-height: 1.5; color: #6e6e73; font-weight: 600; max-width: 26ch; }
       `}</style>
 
       <section className="td-hero">
-        <SoftwareNavbar />
 
-        <div className="td-topbar">
-          <a href="tel:+971508746688" className="td-phone-top">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.73 12 19.79 19.79 0 0 1 1.67 3.43 2 2 0 0 1 3.66 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8 8.09a16 16 0 0 0 5.91 5.91l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-            </svg>
-            050 874 66 88
-          </a>
+        {/* Full-bleed background — anchored left-top so nothing on the left or top is ever cropped */}
+        <div className="td-photo" aria-hidden="true">
+          <Image
+            src="/service_page/tracking decive.webp"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+          />
+        </div>
+        <div className="td-scrim" aria-hidden="true" />
+
+        {/* Navbar — on top of everything */}
+        <div className="td-navwrap">
+          <SoftwareNavbar />
         </div>
 
-        <div className="td-grid">
-          <div data-reveal="left">
-            <Link href="/service" className="td-back">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="15 18 9 12 15 6" />
-              </svg>
-              Service
-            </Link>
+        {/* Copy — left-aligned, same structure as SmartIotHero */}
+        <div className="td-body">
+          <div className="td-inner">
+            <div className="td-content">
 
-            <h1 className="td-h1">The hardware behind every Locator install.</h1>
-
-            <p className="td-lead">
-              A great platform always needs a great set of hardware to work with. Certified GPS terminals,
-              driver-ID readers, and sensors — supplied, installed, and configured by our own engineers.
-            </p>
-
-            <div className="td-cta-row">
-              <Link href="/contact" className="td-btn td-btn-primary">
-                Request device pricing
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14M13 6l6 6-6 6" />
+              <Link href="/service" className="td-back td-anim" style={{ animationDelay: '0s' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6" />
                 </svg>
+                Services
               </Link>
-              <Link href="/contact" className="td-btn td-btn-secondary">Talk to an engineer</Link>
-            </div>
-          </div>
 
-          <div className="td-montage" data-reveal="right">
-            {MONTAGE.map((d) => (
-              <div key={d.slug} className="td-tile">
-                {d.image && (
-                  <Image
-                    src={d.image}
-                    alt={d.name}
-                    width={d.imageW ?? 600}
-                    height={d.imageH ?? 600}
-                    priority
-                  />
-                )}
+              <span className="td-eyebrow td-anim" style={{ animationDelay: '.04s' }}>
+                <span className="td-eyebrow-bar" />
+                GPS Tracking Devices
+              </span>
+
+              <h1 className="td-h1 td-anim" style={{ animationDelay: '.1s' }}>
+                The hardware behind<br />
+                every <em>Locator</em> install.
+              </h1>
+
+              <p className="td-lead td-anim" style={{ animationDelay: '.18s' }}>
+                A great platform always needs great hardware. Certified GPS terminals, driver-ID readers, and sensors — supplied, installed, and configured by our own engineers.
+              </p>
+
+              <div className="td-cta-row td-anim" style={{ animationDelay: '.26s' }}>
+                <Link href="/contact" className="td-btn td-btn-primary">
+                  Request device pricing
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </Link>
+                <Link href="/contact" className="td-btn td-btn-ghost">
+                  Talk to an engineer
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </Link>
               </div>
-            ))}
+
+            </div>
           </div>
         </div>
       </section>
 
+      {/* Stat band — unchanged */}
       <div className="td-stats-band">
         <div className="td-stats">
           {STATS.map((s) => (

@@ -8,115 +8,175 @@ export default function SmartIotHero() {
   return (
     <>
       <style>{`
-        .si-hero { position: relative; background: radial-gradient(120% 90% at 50% -10%, #eef3ff 0%, #ffffff 58%); padding: clamp(16px,2vw,28px) 28px clamp(56px,7vw,80px); overflow: hidden; }
+        .si-hero {
+          position: relative;
+          overflow: hidden;
+          background: #000;
+          display: flex;
+          flex-direction: column;
+          min-height: clamp(400px, 46vh, 520px);
+        }
 
+        /* Full-bleed background — image covers the ENTIRE section */
+        .si-photo { position: absolute; inset: 0; z-index: 0; }
+        .si-photo img { object-fit: cover; object-position: right center; }
+
+        /* Left-side scrim so text stays readable over the dark image */
+        .si-scrim {
+          position: absolute; inset: 0; z-index: 1; pointer-events: none;
+          background: linear-gradient(90deg,
+            rgba(0,0,0,.72) 0%,
+            rgba(0,0,0,.55) 30%,
+            rgba(0,0,0,.10) 62%,
+            rgba(0,0,0,0) 100%
+          );
+        }
+
+        .si-navwrap { position: relative; z-index: 3; }
+
+        .si-body {
+          position: relative; z-index: 2; flex: 1;
+          display: flex; align-items: center;
+          padding: clamp(20px,3vw,36px) 28px clamp(40px,5vw,60px);
+        }
+        .si-inner { max-width: var(--w-1280); width: 100%; margin: 0 auto; }
+        .si-content { max-width: min(660px, 100%); }
+
+        @keyframes siRise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+        @media (prefers-reduced-motion: no-preference) { .si-anim { opacity: 0; animation: siRise .8s ${EASE} forwards; } }
+
+        /* Back breadcrumb */
         .si-back {
-          display: inline-flex; align-items: center; gap: 6px;
-          color: #6e6e73; font-size: var(--f-13); font-weight: 600;
-          text-decoration: none; margin-bottom: 18px;
-          transition: color .18s ease, gap .18s ease;
+          display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px;
+          color: rgba(255,255,255,.7); font-size: var(--f-13); font-weight: 600;
+          text-decoration: none; transition: color .18s ease, gap .18s ease;
         }
-        .si-back:hover { color: #1360ee; gap: 9px; }
+        .si-back:hover { color: #fff; gap: 9px; }
 
-        .si-topbar { display: flex; justify-content: flex-end; padding: 0 4px 8px; max-width: var(--w-1200); margin: 0 auto; }
-        .si-phone-top { display: inline-flex; align-items: center; gap: 8px; color: #1360ee; font-size: var(--f-16); font-weight: 800; text-decoration: none; }
-
-        .si-grid {
-          position: relative; z-index: 1;
-          display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(24px,4vw,48px);
-          align-items: center; max-width: var(--w-1280); margin: 0 auto;
+        /* Eyebrow */
+        .si-eyebrow {
+          display: block;
+          font-size: max(clamp(11px,1vw,13px), min(.9vw, 18px));
+          font-weight: 800; letter-spacing: .1em;
+          color: #5b9fff; text-transform: uppercase; margin-bottom: 16px;
         }
-        @media (max-width: 940px) {
-          .si-grid { grid-template-columns: 1fr; }
-          .si-grid > div:first-child { text-align: center; }
-          .si-hero-cta-row { justify-content: center; margin-left: auto !important; margin-right: auto !important; }
+        .si-eyebrow-bar {
+          display: block; width: 34px; height: 3px;
+          background: #1360ee; border-radius: 2px; margin-bottom: 10px;
         }
 
+        /* Heading */
+        .si-title {
+          margin: 0;
+          font-size: clamp(28px, calc(2.5vw + 16px), 46px);
+          font-weight: 800; line-height: 1.16; letter-spacing: -.022em;
+          color: #ffffff;
+        }
+        .si-title em { font-style: normal; color: #5b9fff; }
+
+        /* Lead */
+        .si-lead {
+          margin: clamp(14px,1.6vw,18px) 0 0; max-width: 48ch;
+          font-size: clamp(15px, 1.05vw, 17px);
+          line-height: 1.72; color: rgba(255,255,255,.75);
+        }
+
+        /* CTAs */
+        .si-cta-row { display: flex; gap: 14px; margin-top: clamp(20px,2.4vw,28px); flex-wrap: wrap; }
         .si-btn {
-          font-family: inherit; font-weight: 700; cursor: pointer;
-          padding: clamp(14px,1.6vw,18px) clamp(16px,2vw,22px); border-radius: 12px; border: none;
+          font-family: inherit; font-size: var(--f-14); font-weight: 700; cursor: pointer;
+          padding: 14px 24px; border-radius: 11px; border: 1.5px solid transparent;
           transition: .18s ${EASE};
-          display: flex; align-items: center; gap: 12px; text-decoration: none;
-          flex: 1 1 0; min-width: 0;
+          display: inline-flex; align-items: center; gap: 9px; text-decoration: none;
         }
-        .si-btn-primary { background: #1360ee; color: #fff; box-shadow: 0 10px 24px rgba(19,96,238,.28); }
-        .si-btn-primary:hover { background: #0d4fd4; transform: translateY(-1px); box-shadow: 0 12px 28px rgba(19,96,238,.38); }
-        .si-btn-secondary { background: #fff; color: #1360ee; border: 1.5px solid #dbe4fb; box-shadow: 0 2px 10px rgba(0,0,0,.04); }
-        .si-btn-secondary:hover { border-color: #1360ee; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(19,96,238,.15); }
-        .si-btn-icon { width: clamp(30px,3.2vw,36px); height: clamp(30px,3.2vw,36px); border-radius: 10px; flex-shrink: 0; display: grid; place-items: center; }
-        .si-btn-primary .si-btn-icon { background: rgba(255,255,255,.22); color: #fff; }
-        .si-btn-secondary .si-btn-icon { background: rgba(19,96,238,.1); color: #1360ee; }
-        .si-btn-icon svg { width: 15px; height: 15px; }
-        .si-btn-text { font-size: max(clamp(13.5px,1.15vw,15px), min(1.042vw, 21.75px)); line-height: 1.35; text-align: left; }
-        @media (max-width: 640px) {
-          .si-hero-cta-row { flex-direction: column; }
-          .si-btn { flex: none; width: 100%; }
+        .si-btn svg { transition: transform .18s ${EASE}; flex-shrink: 0; }
+        .si-btn:hover svg { transform: translateX(3px); }
+        .si-btn-primary { background: #1360ee; color: #fff; box-shadow: 0 10px 24px rgba(19,96,238,.4); }
+        .si-btn-primary:hover { background: #0d4fd4; transform: translateY(-1px); box-shadow: 0 12px 30px rgba(19,96,238,.55); }
+        .si-btn-ghost { background: rgba(255,255,255,.12); color: #fff; border-color: rgba(255,255,255,.3); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+        .si-btn-ghost:hover { border-color: rgba(255,255,255,.7); background: rgba(255,255,255,.2); transform: translateY(-1px); }
+
+        /* Tablet */
+        @media (max-width: 1024px) {
+          .si-content { max-width: min(540px, 100%); }
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+          .si-hero { min-height: 0; }
+          .si-body { padding-bottom: clamp(40px,9vw,56px); }
+          .si-content { max-width: 100%; }
+          .si-btn { padding: 13px 20px; }
+        }
+
+        @media (max-width: 420px) {
+          .si-title { font-size: clamp(24px, 7.2vw, 29px); letter-spacing: -.016em; }
+          .si-cta-row { flex-direction: column; }
         }
       `}</style>
 
       <section className="si-hero">
-        <SoftwareNavbar />
 
-        <div className="si-topbar">
-          <a href="tel:+971508746688" className="si-phone-top">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.73 12 19.79 19.79 0 0 1 1.67 3.43 2 2 0 0 1 3.66 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8 8.09a16 16 0 0 0 5.91 5.91l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-            </svg>
-            050 874 66 88
-          </a>
+        {/* Background image — spans full section height behind navbar + body */}
+        <div className="si-photo" aria-hidden="true">
+          <Image
+            src="/service_page/smart-iot.webp"
+            alt=""
+            fill
+            priority
+            sizes="(max-width: 768px) 68vw, (max-width: 1024px) 56vw, 1180px"
+          />
+        </div>
+        <div className="si-scrim" aria-hidden="true" />
+
+        {/* Navbar sits above the image */}
+        <div className="si-navwrap">
+          <SoftwareNavbar />
         </div>
 
-        <div className="si-grid">
-          <div data-reveal="left">
-            <Link href="/service" className="si-back">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="15 18 9 12 15 6" />
-              </svg>
-              Service
-            </Link>
+        {/* Copy */}
+        <div className="si-body">
+          <div className="si-inner">
+            <div className="si-content">
 
-            <span style={{ fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase' as const, display: 'block', marginBottom: '16px' }}>
-              <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
-              Smart IoT &amp; Asset Intelligence
-            </span>
-
-            <h1 style={{ margin: 0, fontSize: 'max(clamp(21px,2.5vw,28px), min(1.944vw, 40.6px))', fontWeight: 800, lineHeight: 1.14, letterSpacing: '-.015em', color: '#1d1d1f' }}>
-              Smart IoT &amp; GPS Asset Tracking Solutions UAE
-            </h1>
-
-            <p style={{ margin: '18px 0 0', maxWidth: '520px', fontSize: 'max(clamp(14px,1.3vw,16px), min(1.111vw, 23.2px))', lineHeight: 1.65, color: '#52525e' }}>
-              Real-time visibility for road teams, machines, and business assets.
-            </p>
-
-            <div className="si-hero-cta-row" style={{ display: 'flex', gap: '14px', marginTop: '28px' }}>
-              <Link href="/contact" className="si-btn si-btn-primary">
-                <span className="si-btn-icon">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="4" y="4" width="16" height="16" rx="2" /><path d="M4 10h16M10 4v16" />
-                  </svg>
-                </span>
-                <span className="si-btn-text">Get a Free Quote for IoT Tracking</span>
+              <Link href="/service" className="si-back si-anim" style={{ animationDelay: '0s' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+                Services
               </Link>
-              <Link href="/contact" className="si-btn si-btn-secondary">
-                <span className="si-btn-icon">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polygon points="5 3 19 12 5 21 5 3" />
+
+              <span className="si-eyebrow si-anim" style={{ animationDelay: '.04s' }}>
+                <span className="si-eyebrow-bar" />
+                Smart IoT &amp; Asset Intelligence
+              </span>
+
+              <h1 className="si-title si-anim" style={{ animationDelay: '.1s' }}>
+                <span style={{ color: '#ffffff' }}>Smart</span>{' '}
+                <em>IoT &amp; GPS</em>
+                <br />Asset Tracking
+              </h1>
+
+              <p className="si-lead si-anim" style={{ animationDelay: '.18s' }}>
+                Real-time visibility for road teams, machines, and business assets — GPS asset tracking, industrial telematics, and custom IoT sensor projects unified in one connected dashboard.
+              </p>
+
+              <div className="si-cta-row si-anim" style={{ animationDelay: '.26s' }}>
+                <Link href="/contact" className="si-btn si-btn-primary">
+                  Get a Free Quote
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
                   </svg>
-                </span>
-                <span className="si-btn-text">Get a Demo of Asset Intelligence</span>
-              </Link>
+                </Link>
+                <Link href="/contact" className="si-btn si-btn-ghost">
+                  Request a Demo
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </Link>
+              </div>
+
             </div>
-          </div>
-
-          <div data-reveal="right">
-            <Image
-              src="/blog/fleet tracking.png"
-              alt="LOCATOR IoT asset tracking — connected fleet and machines"
-              width={1600}
-              height={1079}
-              style={{ width: '100%', height: 'auto', display: 'block' }}
-              priority
-            />
           </div>
         </div>
       </section>

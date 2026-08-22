@@ -2,8 +2,7 @@ import type { Metadata } from 'next'
 import ScrollReveal from '@/components/software/ScrollReveal'
 import AboutPillarHero from '@/components/about/AboutPillarHero'
 import AboutValues from '@/components/about/AboutValues'
-import AboutPillarNav from '@/components/about/AboutPillarNav'
-import SoftwareCTA from '@/components/software/SoftwareCTA'
+import MissionCTA from '@/components/about/MissionCTA'
 import Footer from '@/components/layouts/Footer'
 
 export const metadata: Metadata = {
@@ -30,8 +29,8 @@ export default function AboutCoreValuesPage() {
         lead="The principles behind every product we ship and every relationship we build — guiding how we work with customers, partners, and each other every day."
       />
       <AboutValues />
-      <AboutPillarNav current="core-values" />
-      <SoftwareCTA />
+      {/* <AboutPillarNav current="core-values" /> */}
+      <MissionCTA />
       <Footer />
     </main>
   )

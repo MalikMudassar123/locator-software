@@ -145,8 +145,13 @@ export default function WhoWeAreHero() {
 
               <div className="wwa-badge wwa-anim" style={{ animationDelay: '.22s' }}>
                 <span className="wwa-badge-label">Part of</span>
-                <span className="wwa-badge-mark" aria-hidden="true" />
-                <span className="wwa-badge-name">Synosys</span>
+                {/* <span className="wwa-badge-mark" aria-hidden="true" /> */}
+                <span className="wwa-badge-name" style={{
+                  background: 'linear-gradient(90deg, #1360ee 0%, #7c3aed 50%, #ec4899 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}>Synosys</span>
               </div>
 
               <div className="wwa-cta-row wwa-anim" style={{ animationDelay: '.3s' }}>

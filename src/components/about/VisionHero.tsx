@@ -37,12 +37,8 @@ export default function VisionHero() {
            photo at the section's top:0 pushed its head under that bar and
            clipped it. Bounding it to the body keeps the whole figure below
            the navbar. */
-        .vsh-photo { position: absolute; top: 0; right: 0; bottom: 0; width: min(1200px, 62%); z-index: 0; }
-        /* contain, not cover — cover would crop the figure again as soon as
-           the box is proportionally wider than the source. The letterboxing
-           contain leaves is invisible because the section background is
-           matched to the photo's own off-white. */
-        .vsh-photo img { object-fit: contain; object-position: 100% center; }
+        .vsh-photo { position: absolute; top: 0; right: 0; bottom: 0; width: 100%; z-index: 0; }
+        .vsh-photo img { object-fit: contain; object-position: right center; }
 
         /* The photo's own background isn't pure white (it samples closer to
            #e9ebf2 in the corners) — matching the section and scrim to that
@@ -78,14 +74,14 @@ export default function VisionHero() {
 
         .vsh-tagline {
           margin: 0;
-          font-size: clamp(21px, calc(1.1vw + 12px), 32px);
-          font-weight: 700; line-height: 1.32; letter-spacing: -.012em;
-          color: #232a3b;
+          font-size: clamp(15px, 1.05vw, 17px);
+          font-weight: 400; line-height: 1.72; letter-spacing: 0;
+          color: #55607a;
         }
         .vsh-tagline em { font-style: normal; color: #1360ee; }
 
         @media (max-width: 1024px) {
-          .vsh-photo { width: min(760px, 56%); }
+          .vsh-photo { width: min(760px, 62%); }
           .vsh-scrim { background: linear-gradient(90deg, #f8f9fb 0%, #f8f9fb 44%, rgba(248,249,251,0) 70%); }
           .vsh-content { max-width: min(560px, 100%); }
         }
@@ -112,7 +108,7 @@ export default function VisionHero() {
         <div className="vsh-body">
           <div className="vsh-photo" aria-hidden="true">
             <Image
-              src="/About_us/vision/vision-hero.png"
+              src="/About_us/vision/vision second hero.webp"
               alt=""
               fill
               priority
@@ -135,8 +131,7 @@ export default function VisionHero() {
               <div className="vsh-divider vsh-anim" style={{ animationDelay: '.14s' }} />
 
               <p className="vsh-tagline vsh-anim" style={{ animationDelay: '.2s' }}>
-                One Million IoT Devices<br />
-                <em>One Connected World.</em>
+                LOCATOR envisions a <em>smarter, more connected future</em> where intelligent IoT technology brings vehicles, assets, and operations together, transforming real-time data into meaningful insights, safer mobility, and more efficient businesses.
               </p>
             </div>
           </div>

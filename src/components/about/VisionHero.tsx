@@ -84,23 +84,39 @@ export default function VisionHero() {
           .vsh-content { max-width: min(520px, 100%); }
         }
 
-        /* Mobile */
+        /* Mobile — eye visible at top, text pushed to bottom with scrim behind it */
         @media (max-width: 768px) {
-          .vsh-hero { min-height: clamp(420px, 80vw, 560px); }
-          .vsh-body { padding-bottom: clamp(40px,9vw,56px); }
+          .vsh-hero {
+            min-height: 0;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            background-image: url('/About_us/vision/vision second hero.webp');
+            background-size: cover;
+            background-position: 80% center;
+            background-repeat: no-repeat;
+            padding-top: 52vw;
+          }
+          .vsh-photo { display: none; }
+          /* Scrim at BOTTOM only — top stays clear so the eye is fully visible */
           .vsh-scrim {
+            display: block;
             background: linear-gradient(
-              90deg,
-              rgba(248,249,251,.98) 0%,
-              rgba(248,249,251,.92) 52%,
-              rgba(248,249,251,.40) 78%,
-              rgba(248,249,251,0)  100%
+              180deg,
+              rgba(248,249,251,0)   0%,
+              rgba(248,249,251,0)   28%,
+              rgba(248,249,251,.72) 62%,
+              rgba(248,249,251,.94) 100%
             );
           }
+          .vsh-navwrap { position: absolute; top: 0; left: 0; right: 0; }
+          .vsh-body { padding: 12px 22px 36px; }
           .vsh-content { max-width: 100%; }
         }
 
         @media (max-width: 420px) {
+          .vsh-hero { padding-top: 60vw; background-position: 85% center; }
           .vsh-title { font-size: clamp(30px, 9.6vw, 36px); }
         }
       `}</style>

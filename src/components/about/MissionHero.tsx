@@ -44,8 +44,16 @@ export default function MissionHero() {
           padding: clamp(20px,2.5vw,32px) 28px clamp(48px,6vw,72px);
         }
         .msh-inner { max-width: var(--w-1280); width: 100%; margin: 0 auto; }
-        /* Content column — left-aligned, never wider than ~half the section */
-        .msh-content { max-width: min(560px, 100%); }
+        /* Content column — left-aligned, never wider than ~half the section.
+           Subtle backdrop behind the text only — no visible box, just enough
+           white underneath to lift the text off the image naturally. */
+        .msh-content {
+          max-width: min(560px, 100%);
+          background: linear-gradient(135deg, rgba(248,249,251,.72) 0%, rgba(248,249,251,0) 100%);
+          border-radius: 16px;
+          padding: clamp(20px,2.4vw,28px);
+          margin: -clamp(20px,2.4vw,28px);
+        }
 
         /* Animations */
         @keyframes mshRise {

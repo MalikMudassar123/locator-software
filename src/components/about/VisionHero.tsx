@@ -18,7 +18,7 @@ export default function VisionHero() {
         }
 
         .vsh-photo { position: absolute; inset: -60px 0 0 0; z-index: 0; }
-        .vsh-photo img { object-fit: contain; object-position: 45% center; }
+        .vsh-photo img { object-fit: contain; object-position: 35% center; }
 
         /* Left-to-right scrim — solid section colour over the copy zone only,
            fades fully transparent well before the right edge so there is no

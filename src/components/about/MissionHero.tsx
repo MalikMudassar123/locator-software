@@ -13,15 +13,15 @@ export default function MissionHero() {
           width: 100vw;
           margin-left: calc(50% - 50vw);
           background-image: url('/About_us/mission/mision.png');
-          /* cover = fills every edge, no colour gaps, no seam */
-          background-size: cover;
-          background-position: center top;
+          /* contain = show full image without cropping */
+          background-size: contain;
+          background-position: right center;
           background-repeat: no-repeat;
           background-color: #f8f9fb;
           display: flex;
           flex-direction: column;
           /* Taller section gives the image room — top cropping disappears */
-          min-height: clamp(500px, 56vh, 660px);
+          min-height: clamp(600px, 68vh, 780px);
         }
 
         /* Left-to-right scrim so dark text stays legible over the image */
@@ -132,18 +132,30 @@ export default function MissionHero() {
 
         /* Mobile */
         @media (max-width: 768px) {
-          .msh-hero { background-position: center top; min-height: clamp(400px, 55vw, 520px); }
+          .msh-hero { 
+            background-size: cover;
+            background-position: 75% center; 
+            min-height: clamp(520px, 75vh, 680px); 
+          }
           .msh-scrim {
             background: linear-gradient(
-              90deg,
-              rgba(248,249,251,.98) 0%,
-              rgba(248,249,251,.92) 52%,
-              rgba(248,249,251,.45) 78%,
-              rgba(248,249,251,0)  100%
+              180deg,
+              rgba(248,249,251,0)   0%,
+              rgba(248,249,251,0)   35%,
+              rgba(248,249,251,.85) 68%,
+              rgba(248,249,251,.96) 100%
             );
           }
-          .msh-content { max-width: 100%; }
-          .msh-body { padding-bottom: clamp(48px,9vw,64px); }
+          .msh-body {
+            align-items: flex-end;
+            padding-top: 0;
+            padding-bottom: clamp(32px,6vw,48px);
+          }
+          .msh-content { 
+            max-width: 100%; 
+            background: transparent;
+            padding: clamp(16px,4vw,24px);
+          }
           .msh-btn { padding: 13px 20px; }
         }
 

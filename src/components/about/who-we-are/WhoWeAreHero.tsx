@@ -35,6 +35,7 @@ export default function WhoWeAreHero() {
 
         .wwa-photo { position: absolute; top: 0; right: 0; bottom: 0; width: min(1180px, 62%); z-index: 0; }
         .wwa-photo img { object-fit: cover; object-position: 100% center; }
+        .wwa-photo-mobile { display: none; }
 
         /* Left-to-right white fade so the copy always sits on a legible
            field, timed to meet the photo box's left edge (widened at each
@@ -97,31 +98,52 @@ export default function WhoWeAreHero() {
           .wwa-content { max-width: min(540px, 100%); }
         }
 
-        /* ── Mobile: dedicated img tag for natural aspect ratio, no gaps ── */
+        /* ── Mobile: full-width background with content overlaid ── */
         @media (max-width: 768px) {
           .wwa-hero {
-            min-height: 0;
-            background: none;
-            padding-top: 0;
-            display: block;
+            position: relative;
+            min-height: clamp(600px, 95vh, 750px);
+            padding-top: 80px;
+            background-image: url('/About_us/who-we-are/our vision mobile.webp');
+            background-size: contain;
+            background-position: center calc(15% + 40px);
+            background-repeat: no-repeat;
+            background-color: #f0f4ff;
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            margin-left: calc(50% - 50vw);
           }
           .wwa-photo {
+            display: none;
+          }
+          .wwa-photo-desktop {
+            display: none;
+          }
+          .wwa-photo-mobile {
+            display: none;
+          }
+          /* Subtle gradient behind text for readability */
+          .wwa-scrim { 
+            display: block;
+            background: linear-gradient(
+              180deg, 
+              rgba(255,255,255,0) 0%, 
+              rgba(255,255,255,0) 45%,
+              rgba(255,255,255,.88) 70%,
+              rgba(255,255,255,.96) 100%
+            );
+          }
+          .wwa-navwrap { position: relative; z-index: 10; }
+          .wwa-body { 
             position: relative;
-            inset: auto;
-            width: 100%;
-            height: 60vw;
-            min-height: 240px;
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            padding: clamp(140px,28vw,220px) 22px clamp(36px,8vw,52px); 
+            z-index: 5;
+            background: none;
           }
-          .wwa-photo img {
-            object-fit: cover;
-            object-position: right center;
-            position: absolute !important;
-            width: 100% !important;
-            height: 100% !important;
-          }
-          .wwa-scrim { display: none; }
-          .wwa-navwrap { position: absolute; top: 0; left: 0; right: 0; }
-          .wwa-body { padding: 20px 22px clamp(36px,8vw,52px); background: #ffffff; }
           .wwa-content { max-width: 100%; }
           .wwa-btn { padding: 13px 20px; }
         }
@@ -139,7 +161,17 @@ export default function WhoWeAreHero() {
             fill
             priority
             sizes="100vw"
+            className="wwa-photo-desktop"
           />
+          <div className="wwa-photo-mobile">
+            <Image
+              src="/About_us/who-we-are/our vision mobile.webp"
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+            />
+          </div>
         </div>
         <div className="wwa-scrim" aria-hidden="true" />
 

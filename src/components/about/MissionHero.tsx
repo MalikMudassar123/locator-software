@@ -12,16 +12,16 @@ export default function MissionHero() {
           /* Force true full viewport width regardless of any parent constraints */
           width: 100vw;
           margin-left: calc(50% - 50vw);
-          background-image: url('/About_us/mission/mision.png');
-          /* contain = show full image without cropping */
+          background-image: url('/About_us/mission/mision.webp');
+          /* contain = shows full image without cropping */
           background-size: contain;
-          background-position: right center;
+          background-position: right calc(50% + 30px);
           background-repeat: no-repeat;
           background-color: #f8f9fb;
           display: flex;
           flex-direction: column;
-          /* Taller section gives the image room — top cropping disappears */
-          min-height: clamp(600px, 68vh, 780px);
+          /* Increased height to show full image including windmills at top */
+          min-height: clamp(480px, 54vh, 620px);
         }
 
         /* Left-to-right scrim so dark text stays legible over the image */

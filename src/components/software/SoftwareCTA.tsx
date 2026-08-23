@@ -4,103 +4,75 @@ export default function SoftwareCTA() {
   return (
     <>
       <style>{`
-        .cta-wrap {
-          position: relative;
-          border-radius: 34px;
-          overflow: hidden;
-          isolation: isolate;
-          background: #0f1117;
-          padding: clamp(56px,7vw,88px) 32px;
-          text-align: center;
-          color: #fff;
-        }
-        .cta-wrap::before { content: none; }
-        .cta-wrap::after { content: none; }
-
-        /* Orbital ring decorations */
-        @keyframes ctaRing {
-          0%,100% { opacity:.07; transform:scale(1) rotate(0deg); }
-          50%      { opacity:.13; transform:scale(1.05) rotate(180deg); }
-        }
-        .cta-ring {
-          position: absolute; border-radius: 50%;
-          border: 1px solid rgba(255,255,255,.12);
-          pointer-events: none;
-          animation: ctaRing 12s linear infinite;
-        }
-
-        /* Buttons */
         .cta-btn {
           display: inline-flex; align-items: center; justify-content: center;
           font-family: inherit; font-size: var(--f-14); font-weight: 700;
-          padding: 13px 26px; border-radius: 999px;
+          padding: 13px 26px; border-radius: 11px;
           text-decoration: none;
           transition: .18s cubic-bezier(.22,.61,.36,1);
           white-space: nowrap;
         }
         .cta-btn-primary {
-          background: #fff; color: #1360ee;
+          background: #1360ee; color: #fff;
+          box-shadow: 0 10px 24px rgba(19,96,238,.26);
         }
-        .cta-btn-primary:hover { background: #f0f4ff; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+        .cta-btn-primary:hover { 
+          background: #0d4fd4; 
+          transform: translateY(-1px); 
+          box-shadow: 0 12px 30px rgba(19,96,238,.4); 
+        }
         .cta-btn-ghost {
-          background: rgba(255,255,255,.08);
-          color: #fff;
-          border: 1px solid rgba(255,255,255,.2);
+          background: #fff;
+          color: #1360ee;
+          border: 1.5px solid #e8ecf4;
         }
-        .cta-btn-ghost:hover { background: rgba(255,255,255,.14); transform: translateY(-1px); }
+        .cta-btn-ghost:hover { 
+          border-color: #1360ee; 
+          transform: translateY(-1px);
+          box-shadow: 0 4px 16px rgba(19,96,238,.12);
+        }
       `}</style>
 
-      <section style={{ padding: 'clamp(40px,5vw,56px) 28px clamp(56px,7vw,80px)' }}>
-        <div style={{ maxWidth: 'var(--w-1120)', margin: '0 auto' }}>
-          <div className="cta-wrap">
+      <section style={{ position: 'relative', overflow: 'hidden', padding: 'clamp(56px,7vw,92px) 28px', background: '#f7f9fc' }}>
+        {/* Radial gradient decoration */}
+        <div aria-hidden="true" style={{ position: 'absolute', width: 460, height: 460, top: -160, left: '50%', transform: 'translateX(-50%)', borderRadius: '50%', background: 'radial-gradient(50% 50% at 50% 50%, rgba(19,96,238,.07), transparent 70%)', pointerEvents: 'none' }} />
 
-            {/* Decorative rings */}
-            <div className="cta-ring" style={{ width: '480px', height: '480px', left: '-160px', top: '-160px', animationDelay: '0s' }} />
-            <div className="cta-ring" style={{ width: '320px', height: '320px', left: '-80px', top: '-80px', animationDuration: '9s', animationDelay: '-4s' }} />
-            <div className="cta-ring" style={{ width: '420px', height: '420px', right: '-120px', bottom: '-140px', animationDelay: '-6s' }} />
-            <div className="cta-ring" style={{ width: '260px', height: '260px', right: '-60px', bottom: '-60px', animationDuration: '8s', animationDelay: '-2s' }} />
+        <div data-reveal style={{ position: 'relative', maxWidth: '820px', margin: '0 auto', textAlign: 'center' }}>
+          <span style={{ display: 'block', fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', marginBottom: '20px' }}>
+            <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
+            Get Started Today
+          </span>
+          <h2 style={{ margin: 0, fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, lineHeight: 1.12, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+            Put your whole fleet on{' '}
+            <span style={{ color: '#1360ee' }}>one platform.</span>
+          </h2>
+          <div style={{ margin: '24px auto', height: '4px', width: '80px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#06a4e2)' }} />
+          <p style={{ margin: '0 0 32px', fontSize: 'max(clamp(15px,1.5vw,17px), min(1.181vw, 24.65px))', lineHeight: 1.8, color: '#52525e' }}>
+            Get a quote, book a live demo, and see Locator running on your own vehicles within days.
+          </p>
 
-            <div data-reveal="zoom" style={{ position: 'relative', zIndex: 1 }}>
-              {/* Tag */}
-              <span style={{ display: 'block', fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: 'rgba(255,255,255,.85)', marginBottom: '16px', textTransform: 'uppercase' }}>
-                <span style={{ display: 'block', marginBottom: '12px' }}>
-                  <span style={{ display: 'inline-block', width: '34px', height: '3px', background: 'rgba(255,255,255,.5)', borderRadius: '2px' }} />
-                </span>
-                Get Started Today
-              </span>
+          {/* Buttons */}
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/contact" className="cta-btn cta-btn-primary">
+              Get a quote
+            </Link>
+            <Link href="/contact" className="cta-btn cta-btn-ghost">
+              Book a live demo →
+            </Link>
+          </div>
 
-              <h2 style={{ fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, letterSpacing: '-.015em', color: '#fff', lineHeight: 1.25, maxWidth: '26ch', margin: '0 auto 16px' }}>
-                Put your whole fleet on one platform.
-              </h2>
-
-              <p style={{ margin: '0 auto', maxWidth: '480px', fontSize: 'max(clamp(14px,1.45vw,16px), min(1.111vw, 23.2px))', color: 'rgba(255,255,255,.76)', lineHeight: 1.65 }}>
-                Get a quote, book a live demo, and see Locator running on your own vehicles within days.
-              </p>
-
-              {/* Buttons */}
-              <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '32px', flexWrap: 'wrap' }}>
-                <Link href="/contact" className="cta-btn cta-btn-primary">
-                  Get a quote
-                </Link>
-                <Link href="/contact" className="cta-btn cta-btn-ghost">
-                  Book a live demo →
-                </Link>
+          {/* Trust row */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '28px', marginTop: '36px', flexWrap: 'wrap' }}>
+            {[
+              { icon: '✓', text: 'No long-term contract' },
+              { icon: '✓', text: 'Setup within 48 hours' },
+              { icon: '✓', text: 'Dedicated support team' },
+            ].map((t, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '7px', fontSize: 'var(--f-12-5)', color: '#6e6e73', fontWeight: 500 }}>
+                <span style={{ width: '18px', height: '18px', borderRadius: '50%', background: '#e8f3ff', display: 'grid', placeItems: 'center', fontSize: 'var(--f-10)', fontWeight: 800, flexShrink: 0, color: '#1360ee' }}>{t.icon}</span>
+                {t.text}
               </div>
-
-              {/* Trust row */}
-              <div style={{ display: 'flex', justifyContent: 'center', gap: '28px', marginTop: '36px', flexWrap: 'wrap' }}>
-                {[
-                  { icon: '✓', text: 'No long-term contract' },
-                  { icon: '✓', text: 'Setup within 48 hours' },
-                  { icon: '✓', text: 'Dedicated support team' },
-                ].map((t, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '7px', fontSize: 'var(--f-12-5)', color: 'rgba(255,255,255,.72)', fontWeight: 500 }}>
-                    <span style={{ width: '18px', height: '18px', borderRadius: '50%', background: 'rgba(255,255,255,.2)', display: 'grid', placeItems: 'center', fontSize: 'var(--f-10)', fontWeight: 800, flexShrink: 0, color: '#fff' }}>{t.icon}</span>
-                    {t.text}
-                  </div>
-                ))}
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>

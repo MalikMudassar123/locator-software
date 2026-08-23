@@ -9,15 +9,19 @@ export default function MissionHero() {
       <style>{`
         .msh-hero {
           position: relative;
-          /* Full-cover background — image touches all four edges, no crop gaps */
+          /* Force true full viewport width regardless of any parent constraints */
+          width: 100vw;
+          margin-left: calc(50% - 50vw);
           background-image: url('/About_us/mission/mision.png');
-          background-size: contain;
-          background-position: right center;
+          /* cover = fills every edge, no colour gaps, no seam */
+          background-size: cover;
+          background-position: center top;
           background-repeat: no-repeat;
           background-color: #f8f9fb;
           display: flex;
           flex-direction: column;
-          min-height: clamp(560px, 62vh, 720px);
+          /* Taller section gives the image room — top cropping disappears */
+          min-height: clamp(500px, 56vh, 660px);
         }
 
         /* Left-to-right scrim so dark text stays legible over the image */
@@ -36,11 +40,8 @@ export default function MissionHero() {
 
         .msh-body {
           position: relative; z-index: 1;
-          flex: 1;
-          display: flex; align-items: center;
-          /* Top padding lets content breathe below the navbar;
-             bottom padding ensures buttons never touch the section edge */
-          padding: clamp(28px,3.5vw,48px) 28px clamp(48px,6vw,72px);
+          display: flex; align-items: flex-start;
+          padding: clamp(20px,2.5vw,32px) 28px clamp(48px,6vw,72px);
         }
         .msh-inner { max-width: var(--w-1280); width: 100%; margin: 0 auto; }
         /* Content column — left-aligned, never wider than ~half the section */
@@ -108,7 +109,7 @@ export default function MissionHero() {
 
         /* Tablet */
         @media (max-width: 1024px) {
-          .msh-hero { background-position: right center; }
+          .msh-hero { background-position: center top; }
           .msh-scrim {
             background: linear-gradient(
               90deg,
@@ -121,9 +122,9 @@ export default function MissionHero() {
           .msh-content { max-width: min(500px, 100%); }
         }
 
-        /* Mobile — image stays as bg, scrim extends further for readability */
+        /* Mobile */
         @media (max-width: 768px) {
-          .msh-hero { background-position: right center; }
+          .msh-hero { background-position: center top; min-height: clamp(400px, 55vw, 520px); }
           .msh-scrim {
             background: linear-gradient(
               90deg,
@@ -139,7 +140,7 @@ export default function MissionHero() {
         }
 
         @media (max-width: 420px) {
-          .msh-hero { background-position: right center; }
+          .msh-hero { background-position: center top; }
           .msh-h1 { font-size: clamp(24px, 7.2vw, 29px); letter-spacing: -.016em; }
           .msh-cta-row { flex-direction: column; }
           .msh-btn { justify-content: center; width: 100%; }

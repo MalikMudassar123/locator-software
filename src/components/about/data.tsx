@@ -57,7 +57,7 @@ export const ABOUT_PAGES: AboutPage[] = [
   {
     slug: 'core-values',
     name: 'Core Values',
-    tagline: 'What guides us every day',
+    tagline: 'CORE VALUE',
     accent: '#1360ee',
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">

@@ -4,12 +4,6 @@ import SoftwareNavbar from '@/components/software/SoftwareNavbar'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
-const STATS = [
-  { n: '9', l: 'Devices & accessories in the catalog' },
-  { n: 'IP67', l: 'Waterproof options for exposed assets' },
-  { n: '1-Wire', l: 'Driver ID & temperature sensor support' },
-]
-
 export default function TrackingDevicesHero() {
   return (
     <>
@@ -41,18 +35,20 @@ export default function TrackingDevicesHero() {
         }
 
         .td-photo { position: absolute; inset: 0; z-index: 0; }
-        /* contain = zero cropping ever. Background #dde8f0 matches the image's
-           own pale blue-grey studio tone so any letterbox area is invisible. */
-        .td-photo img { object-fit: contain; object-position: center bottom; }
+        .td-photo img {
+          object-fit: contain;
+          object-position: center;
+          filter: saturate(0.95) contrast(1.02);
+        }
 
-        /* White-to-transparent scrim — image is light so we use white, not black */
+        /* Subtle glass/whitening scrim so the background stays visible without overpowering text */
         .td-scrim {
           position: absolute; inset: 0; z-index: 1; pointer-events: none;
           background: linear-gradient(90deg,
-            rgba(255,255,255,.88) 0%,
-            rgba(255,255,255,.72) 26%,
-            rgba(255,255,255,.14) 54%,
-            rgba(255,255,255,0)   70%
+            rgba(255,255,255,.72) 0%,
+            rgba(255,255,255,.48) 28%,
+            rgba(255,255,255,.18) 52%,
+            rgba(255,255,255,0)   72%
           );
         }
 
@@ -156,17 +152,25 @@ export default function TrackingDevicesHero() {
           .td-btn { justify-content: center; }
         }
 
-        /* ── Stat band — unchanged ── */
-        .td-stats-band { border-top: 1px solid #e7ebf3; background: #fff; }
+        /* Keep the stat row visually part of the hero image instead of a detached gray block */
+        .td-stats-band {
+          background: transparent;
+          border-top: none;
+        }
         .td-stats {
           display: grid; grid-template-columns: repeat(3, 1fr);
-          max-width: var(--w-1280); margin: 0 auto; padding: 0 28px;
+          max-width: var(--w-1280); margin: 0 auto; padding: 0 28px 18px;
+          background: transparent;
         }
         @media (max-width: 700px) { .td-stats { grid-template-columns: 1fr; } }
-        .td-stat { padding: clamp(24px,3vw,34px) clamp(20px,2.4vw,32px); border-left: 1px solid #e7ebf3; }
+        .td-stat {
+          padding: clamp(24px,3vw,34px) clamp(20px,2.4vw,32px);
+          border-left: 1px solid rgba(18, 35, 58, 0.06);
+          background: rgba(255,255,255,0.08);
+        }
         .td-stat:first-child { border-left: none; padding-left: 0; }
         @media (max-width: 700px) {
-          .td-stat { border-left: none; border-top: 1px solid #e7ebf3; padding-left: 0; }
+          .td-stat { border-left: none; border-top: 1px solid rgba(18, 35, 58, 0.06); padding-left: 0; }
           .td-stat:first-child { border-top: none; }
         }
         .td-stat-n { font-size: max(clamp(26px,3vw,38px), min(2.639vw,55.1px)); font-weight: 800; letter-spacing: -.03em; color: #1d1d1f; line-height: 1; }
@@ -175,10 +179,10 @@ export default function TrackingDevicesHero() {
 
       <section className="td-hero">
 
-        {/* Full-bleed background — anchored left-top so nothing on the left or top is ever cropped */}
+        {/* Full-bleed background — positioned to show complete view */}
         <div className="td-photo" aria-hidden="true">
           <Image
-            src="/service_page/tracking decive.webp"
+            src="/service_page/devices second banner.webp"
             alt=""
             fill
             priority
@@ -238,17 +242,6 @@ export default function TrackingDevicesHero() {
         </div>
       </section>
 
-      {/* Stat band — unchanged */}
-      <div className="td-stats-band">
-        <div className="td-stats">
-          {STATS.map((s) => (
-            <div key={s.n} className="td-stat" data-reveal>
-              <div className="td-stat-n">{s.n}</div>
-              <div className="td-stat-l">{s.l}</div>
-            </div>
-          ))}
-        </div>
-      </div>
     </>
   )
 }

@@ -107,8 +107,8 @@ export default function DeviceCarousel() {
   return (
     <>
       <style>{`
-        /* Tinted stage — white cards need a non-white ground or they dissolve into it. */
-        .dv-wrap { position: relative; padding: clamp(44px,5.5vw,80px) 0 clamp(40px,5vw,64px); background: #f4f7fc; overflow: hidden; }
+        /* Keep the carousel visually attached to the hero image background instead of a gray divider. */
+        .dv-wrap { position: relative; padding: clamp(44px,5.5vw,80px) 0 clamp(40px,5vw,64px); background: transparent; overflow: hidden; }
 
         .dv-head { max-width: var(--w-1240); margin: 0 auto clamp(24px,3vw,40px); padding: 0 28px; text-align: center; }
         .dv-eyebrow {

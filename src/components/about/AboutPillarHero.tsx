@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import SoftwareNavbar from '@/components/software/SoftwareNavbar'
 import { ABOUT_PAGES } from '@/components/about/data'
 
@@ -37,6 +38,256 @@ export default function AboutPillarHero({
   lead: string
 }) {
   const active = ABOUT_PAGES.find(p => p.slug === slug)!
+
+  if (slug === 'core-values') {
+    return (
+      <>
+        <style>{`
+          .cv-hero {
+            position: relative;
+            overflow: hidden;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: clamp(440px, 46vh, 620px);
+          }
+
+          .cv-photo {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: min(1180px, 62%);
+            z-index: 0;
+          }
+          .cv-photo img {
+            object-fit: cover;
+            object-position: 100% 14%;
+          }
+
+          .cv-scrim {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: linear-gradient(90deg, #fff 0%, #fff 38%, rgba(255,255,255,0) 66%);
+          }
+
+          .cv-navwrap { position: relative; z-index: 3; }
+
+          .cv-body {
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding: clamp(20px, 3vw, 36px) 28px clamp(40px, 5vw, 60px);
+          }
+
+          .cv-inner { max-width: var(--w-1280); width: 100%; margin: 0 auto; }
+          .cv-content { max-width: min(700px, 100%); }
+
+          .cv-kicker {
+            display: block;
+            margin-bottom: 18px;
+            font-size: clamp(13px, 1.1vw, 16px);
+            font-weight: 800;
+            letter-spacing: .08em;
+            line-height: 1.2;
+            color: #1360ee;
+            text-transform: uppercase;
+          }
+          .cv-kicker::before {
+            content: '';
+            display: block;
+            width: 34px;
+            height: 3px;
+            background: #1360ee;
+            border-radius: 2px;
+            margin-bottom: 12px;
+          }
+
+          .cv-title {
+            margin: 0;
+            max-width: 42ch;
+            font-size: clamp(28px, calc(2.5vw + 16px), 46px);
+            font-weight: 800;
+            line-height: 1.16;
+            letter-spacing: -.022em;
+            color: #0b1220;
+          }
+          .cv-title .cv-accent {
+            color: #1360ee;
+          }
+
+          .cv-desc {
+            margin: 20px 0 0;
+            max-width: 760px;
+            font-size: clamp(17px, 1.35vw, 28px);
+            line-height: 1.55;
+            color: #48556a;
+          }
+
+          .cv-cta-row {
+            display: flex;
+            gap: 14px;
+            margin-top: clamp(20px, 2.4vw, 28px);
+            flex-wrap: wrap;
+          }
+
+          .cv-btn {
+            font-family: inherit;
+            font-size: var(--f-14);
+            font-weight: 700;
+            cursor: pointer;
+            padding: 16px 26px;
+            border-radius: 11px;
+            border: 1.5px solid transparent;
+            transition: .18s ${EASE};
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            text-decoration: none;
+          }
+
+          .cv-btn svg { transition: transform .18s ${EASE}; flex-shrink: 0; }
+          .cv-btn:hover svg { transform: translateX(3px); }
+
+          .cv-btn-primary {
+            background: #1360ee;
+            color: #fff;
+            box-shadow: 0 10px 24px rgba(19,96,238,.28);
+          }
+          .cv-btn-primary:hover {
+            background: #0d4fd4;
+            transform: translateY(-1px);
+            box-shadow: 0 12px 30px rgba(19,96,238,.4);
+          }
+
+          .cv-btn-ghost {
+            background: rgba(255,255,255,.82);
+            color: #14181f;
+            border-color: #dfe3ea;
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+          }
+          .cv-btn-ghost:hover {
+            border-color: #1360ee;
+            color: #1360ee;
+            transform: translateY(-1px);
+          }
+
+          .cv-float {
+            position: absolute;
+            right: 18px;
+            top: 120px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+          }
+          .cv-float a {
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            text-decoration: none;
+            box-shadow: 0 14px 34px rgba(19,96,238,.18);
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(180deg, #1ed48d 0%, #24bf7a 100%);
+          }
+
+          @media (max-width: 1024px) {
+            .cv-photo { width: min(860px, 56%); }
+            .cv-scrim { background: linear-gradient(90deg, #fff 0%, #fff 42%, rgba(255,255,255,0) 68%); }
+            .cv-content { max-width: min(540px, 100%); }
+          }
+
+          @media (max-width: 768px) {
+            .cv-hero {
+              min-height: clamp(620px, 95vh, 760px);
+              background-image: url('/About_us/core_values/core values.webp');
+              background-size: cover;
+              background-position: center top;
+              background-repeat: no-repeat;
+            }
+            .cv-photo { display: none; }
+            .cv-scrim {
+              background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 48%, rgba(255,255,255,.92) 78%, rgba(255,255,255,.98) 100%);
+            }
+            .cv-body {
+              display: flex;
+              align-items: flex-end;
+              padding: clamp(140px, 26vw, 220px) 22px clamp(36px, 8vw, 52px);
+            }
+            .cv-content { max-width: 100%; }
+            .cv-kicker { font-size: clamp(24px, 7vw, 38px); }
+            .cv-title { font-size: clamp(30px, 8vw, 54px); line-height: 1.02; }
+            .cv-btn { padding: 14px 20px; }
+            .cv-float { display: none; }
+          }
+
+          @media (max-width: 420px) {
+            .cv-title { letter-spacing: -.022em; }
+          }
+        `}</style>
+
+        <section className="cv-hero">
+          <div className="cv-photo" aria-hidden="true">
+            <Image
+              src="/About_us/core_values/core values.webp"
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+            />
+          </div>
+          <div className="cv-scrim" aria-hidden="true" />
+
+          <div className="cv-navwrap">
+            <SoftwareNavbar />
+          </div>
+
+          <div className="cv-body">
+            <div className="cv-inner">
+              <div className="cv-content">
+                <h1 className="cv-title">
+                  CORE <span className="cv-accent">VALUE</span>
+                </h1>
+                <p className="cv-desc">
+                  The principles that guide how we innovate, work, and grow together.
+                </p>
+                {/* A shared system of values shapes how we build, collaborate, and deliver better outcomes for every customer, partner, and team member. */}
+
+                <div className="cv-cta-row">
+                  <a href="/contact" className="cv-btn cv-btn-primary">
+                    Talk to our team
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 12h14M13 6l6 6-6 6" />
+                    </svg>
+                  </a>
+                  <a href="/software" className="cv-btn cv-btn-ghost">
+                    Explore the platform
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 12h14M13 6l6 6-6 6" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="cv-float" aria-label="Quick contact">
+            <a href="https://wa.me/971000000000" target="_blank" rel="noreferrer" aria-label="WhatsApp">◌</a>
+            <a href="https://wa.me/971000000000" target="_blank" rel="noreferrer" aria-label="WhatsApp">◌</a>
+          </div>
+        </section>
+      </>
+    )
+  }
 
   return (
     <>
@@ -98,31 +349,11 @@ export default function AboutPillarHero({
         }
         @media (prefers-reduced-motion: reduce) { .apx-arc { opacity: .5; } }
 
-        /* Tighter than before. The old rhythm left the mark, the eyebrow and
-           the title floating apart with no relationship; they now read as one
-           stacked unit with the dial as its base. */
         .apx-inner { position: relative; z-index: 1; max-width: 820px; margin: 0 auto; text-align: center; padding-top: clamp(14px,2.4vw,30px); }
 
         @keyframes apxRise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
         @media (prefers-reduced-motion: no-preference) { .apx-anim { opacity: 0; animation: apxRise .75s ${EASE} forwards; } }
 
-        /* ── The instrument ──────────────────────────────────────────────
-           The real reason this section read as thin was structural, not
-           decorative: an icon, one line of small caps and a title left roughly
-           500px of empty white that no amount of faint background arcs was
-           ever going to fill. It needed an actual focal object.
-
-           So the page mark now sits at the centre of a drawn instrument — a
-           graduated dial of 60 ticks with every fifth one extended, three
-           concentric rings, and a soft core glow. It is the same idea the rest
-           of the hero already carries (a signal, radiating from this page's
-           mark) but built at a size and density that can actually hold the
-           composition together.
-
-           It is drawn rather than decorative because the geometry is regular:
-           60 divisions at exactly 6 degrees, rings on a fixed rhythm, every
-           fifth tick longer. Precision instruments look designed because they
-           ARE measured, and that is what separates this from scattered lines. */
         .apx-core {
           position: relative;
           width: clamp(230px, 27vw, 330px);
@@ -131,14 +362,10 @@ export default function AboutPillarHero({
           display: grid; place-items: center;
         }
         .apx-core svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-        /* The dial turns, slowly enough to read as an instrument settling
-           rather than as something spinning. */
         @keyframes apxDial { to { transform: rotate(360deg); } }
         @media (prefers-reduced-motion: no-preference) {
           .apx-dial { transform-origin: 200px 200px; animation: apxDial 90s linear infinite; }
         }
-        /* Core glow behind the mark, so the centre reads as lit rather than as
-           a chip sitting on a diagram. */
         .apx-core::before {
           content: ''; position: absolute; inset: 22%;
           border-radius: 50%;
@@ -159,9 +386,6 @@ export default function AboutPillarHero({
             0 0 0 11px rgba(19,96,238,.10);
         }
 
-        /* A true eyebrow: small, wide-tracked, flanked by rules that fade out.
-           Sized against the headline — roughly a quarter of it on desktop — so
-           it labels the page without competing with it. */
         .apx-eyebrow {
           display: inline-flex; align-items: center; gap: 13px;
           margin-top: clamp(-6px, -.6vw, 0px);
@@ -175,10 +399,6 @@ export default function AboutPillarHero({
         }
         .apx-eyebrow i:last-child { background: linear-gradient(90deg, #1360ee, transparent); }
 
-        /* Affine ramp rather than a bare vw coefficient, solved to pass through
-           30px at 390 and 72px at 1440 — so the small end fits the column left
-           after the section's 28px padding instead of sitting on a floor that
-           overflows it. */
         .apx-title {
           margin: clamp(16px,1.8vw,22px) auto 0; max-width: 16ch;
           font-size: clamp(30px, calc(4vw + 14.4px), 72px);
@@ -190,9 +410,6 @@ export default function AboutPillarHero({
         }
         @media (max-width: 420px) { .apx-title { max-width: 13ch; letter-spacing: -.022em; } }
 
-        /* Where the signal lands. Full-bleed band, unchanged in role — it is
-           this layout's anchor, the counterpart to the sector horizon on the
-           Who We Are hero. */
         .apx-lead-band {
           position: relative; z-index: 1;
           margin-top: clamp(30px,3.8vw,48px);
@@ -219,8 +436,6 @@ export default function AboutPillarHero({
           aria-hidden="true"
           focusable="false"
         >
-          {/* Radii step by a constant 130; stroke opacity steps down with them,
-              so the wave visibly loses energy as it travels outward. */}
           <g fill="none" stroke="#1360ee" strokeWidth="1.1">
             <circle className="apx-arc apx-arc--1" cx="800" cy="90" r="300" strokeOpacity=".42" />
             <circle className="apx-arc apx-arc--2" cx="800" cy="90" r="430" strokeOpacity=".35" />
@@ -235,17 +450,12 @@ export default function AboutPillarHero({
         <div className="apx-inner">
           <div className="apx-core apx-anim">
             <svg viewBox="0 0 400 400" aria-hidden="true" focusable="false">
-              {/* Three rings on a fixed rhythm. The outermost carries the
-                  graduations, the inner two give the dial depth. */}
               <g fill="none" stroke="#1360ee">
                 <circle cx="200" cy="200" r="196" strokeOpacity=".30" />
                 <circle cx="200" cy="200" r="150" strokeOpacity=".22" strokeDasharray="2 7" />
                 <circle cx="200" cy="200" r="104" strokeOpacity=".16" />
               </g>
 
-              {/* 60 divisions at exactly 6°, every fifth extended. Generated
-                  rather than hand-placed so the spacing is genuinely uniform —
-                  eyeballed tick marks are what make a dial look fake. */}
               <g className="apx-dial" stroke="#1360ee" strokeLinecap="round">
                 {Array.from({ length: 60 }, (_, i) => {
                   const major = i % 5 === 0
@@ -278,9 +488,11 @@ export default function AboutPillarHero({
             {title}
           </h1>
 
-          <div className="apx-anim apx-lead-band" style={{ animationDelay: '.22s' }}>
-            <p className="apx-lead">{lead}</p>
-          </div>
+          {lead ? (
+            <div className="apx-anim apx-lead-band" style={{ animationDelay: '.22s' }}>
+              <p className="apx-lead">{lead}</p>
+            </div>
+          ) : null}
         </div>
       </section>
     </>

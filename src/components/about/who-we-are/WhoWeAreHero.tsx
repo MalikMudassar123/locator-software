@@ -97,15 +97,31 @@ export default function WhoWeAreHero() {
           .wwa-content { max-width: min(540px, 100%); }
         }
 
-        /* ── Mobile: the section stops being a fixed-height "photo behind
-           text" composition — min-height relaxes so it hugs the content —
-           and the photo is dialled down to a soft accent glow in the corner
-           rather than a crop that fights the text for space. ── */
+        /* ── Mobile: dedicated img tag for natural aspect ratio, no gaps ── */
         @media (max-width: 768px) {
-          .wwa-hero { min-height: 0; }
-          .wwa-body { padding-bottom: clamp(40px,9vw,56px); }
-          .wwa-photo { width: min(420px, 68%); opacity: .9; }
-          .wwa-scrim { background: linear-gradient(90deg, #fff 0%, #fff 58%, rgba(255,255,255,0) 88%); }
+          .wwa-hero {
+            min-height: 0;
+            background: none;
+            padding-top: 0;
+            display: block;
+          }
+          .wwa-photo {
+            position: relative;
+            inset: auto;
+            width: 100%;
+            height: 60vw;
+            min-height: 240px;
+          }
+          .wwa-photo img {
+            object-fit: cover;
+            object-position: right center;
+            position: absolute !important;
+            width: 100% !important;
+            height: 100% !important;
+          }
+          .wwa-scrim { display: none; }
+          .wwa-navwrap { position: absolute; top: 0; left: 0; right: 0; }
+          .wwa-body { padding: 20px 22px clamp(36px,8vw,52px); background: #ffffff; }
           .wwa-content { max-width: 100%; }
           .wwa-btn { padding: 13px 20px; }
         }

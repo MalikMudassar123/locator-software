@@ -13,13 +13,12 @@ export default function VisionHero() {
           background: #f8f9fb;
           display: flex;
           flex-direction: column;
-          min-height: clamp(520px, 60vw, 780px);
+          min-height: clamp(420px, 48vw, 640px);
+          margin-top: -1px;
         }
 
-        /* Full-bleed image anchored to the section root — covers ALL four edges,
-           no bounded box, no seam, no split-panel appearance */
-        .vsh-photo { position: absolute; inset: 0; z-index: 0; }
-        .vsh-photo img { object-fit: cover; object-position: center top; }
+        .vsh-photo { position: absolute; inset: -60px 0 0 0; z-index: 0; }
+        .vsh-photo img { object-fit: contain; object-position: 45% center; }
 
         /* Left-to-right scrim — solid section colour over the copy zone only,
            fades fully transparent well before the right edge so there is no
@@ -29,9 +28,9 @@ export default function VisionHero() {
           background: linear-gradient(
             90deg,
             rgba(248,249,251,.96) 0%,
-            rgba(248,249,251,.80) 28%,
-            rgba(248,249,251,.20) 52%,
-            rgba(248,249,251,0)   66%
+            rgba(248,249,251,.80) 24%,
+            rgba(248,249,251,.20) 42%,
+            rgba(248,249,251,0)   54%
           );
         }
 
@@ -40,7 +39,7 @@ export default function VisionHero() {
         .vsh-body {
           position: relative; z-index: 2;
           display: flex; align-items: flex-start;
-          padding: clamp(20px,2.5vw,32px) 28px clamp(40px,5vw,60px);
+          padding: clamp(40px,5.5vw,70px) 28px clamp(40px,5vw,60px);
         }
         .vsh-inner { max-width: var(--w-1280); width: 100%; margin: 0 auto; }
         .vsh-content { max-width: min(580px, 100%); }
@@ -76,9 +75,9 @@ export default function VisionHero() {
             background: linear-gradient(
               90deg,
               rgba(248,249,251,.97) 0%,
-              rgba(248,249,251,.84) 34%,
-              rgba(248,249,251,.20) 60%,
-              rgba(248,249,251,0)   74%
+              rgba(248,249,251,.84) 28%,
+              rgba(248,249,251,.20) 48%,
+              rgba(248,249,251,0)   62%
             );
           }
           .vsh-content { max-width: min(520px, 100%); }

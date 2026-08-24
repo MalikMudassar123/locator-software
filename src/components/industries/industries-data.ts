@@ -110,6 +110,7 @@ export const INDUSTRIES: Industry[] = [
         'Estimated arrival and delivery visibility',
         'Multi-branch and multi-fleet monitoring',
       ],
+      image: '/industries/Transport/ChatGPT Image Aug 25, 2026, 12_47_29 AM.webp',
     },
     block2: {
       title: 'Improve Safety, Efficiency, and Profitability',
@@ -126,6 +127,7 @@ export const INDUSTRIES: Industry[] = [
         'Improve vehicle utilization and delivery efficiency',
         'Integrate with ERP, CRM, dispatch, and logistics systems',
       ],
+      image: '/industries/Transport/ChatGPT Image Aug 25, 2026, 12_46_36 AM.webp',
     },
   },
   {

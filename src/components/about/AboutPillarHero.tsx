@@ -49,7 +49,8 @@ export default function AboutPillarHero({
             background: #ffffff;
             display: flex;
             flex-direction: column;
-            min-height: clamp(440px, 46vh, 620px);
+            min-height: clamp(480px, 52vh, 680px);
+            margin-top: -1px;
           }
 
           .cv-photo {
@@ -61,8 +62,8 @@ export default function AboutPillarHero({
             z-index: 0;
           }
           .cv-photo img {
-            object-fit: cover;
-            object-position: 100% 14%;
+            object-fit: contain;
+            object-position: right 35%;
           }
 
           .cv-scrim {
@@ -81,7 +82,7 @@ export default function AboutPillarHero({
             flex: 1;
             display: flex;
             align-items: center;
-            padding: clamp(20px, 3vw, 36px) 28px clamp(40px, 5vw, 60px);
+            padding: 0 28px clamp(40px, 5vw, 60px);
           }
 
           .cv-inner { max-width: var(--w-1280); width: 100%; margin: 0 auto; }
@@ -208,20 +209,34 @@ export default function AboutPillarHero({
 
           @media (max-width: 768px) {
             .cv-hero {
-              min-height: clamp(620px, 95vh, 760px);
+              min-height: clamp(580px, 90vh, 720px);
               background-image: url('/About_us/core_values/core values.webp');
               background-size: cover;
-              background-position: center top;
+              background-position: center 25%;
               background-repeat: no-repeat;
+              background-color: #e8eef5;
+              width: 100vw;
+              margin-left: calc(50% - 50vw);
+              padding-top: 0;
             }
             .cv-photo { display: none; }
             .cv-scrim {
-              background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 48%, rgba(255,255,255,.92) 78%, rgba(255,255,255,.98) 100%);
+              background: linear-gradient(
+                180deg, 
+                rgba(255,255,255,0) 0%, 
+                rgba(255,255,255,0) 35%,
+                rgba(255,255,255,.85) 65%,
+                rgba(255,255,255,.96) 100%
+              );
+            }
+            .cv-navwrap {
+              position: relative;
+              z-index: 10;
             }
             .cv-body {
               display: flex;
               align-items: flex-end;
-              padding: clamp(140px, 26vw, 220px) 22px clamp(36px, 8vw, 52px);
+              padding: clamp(180px, 35vw, 280px) 22px clamp(40px, 9vw, 60px);
             }
             .cv-content { max-width: 100%; }
             .cv-kicker { font-size: clamp(24px, 7vw, 38px); }

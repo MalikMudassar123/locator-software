@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import ScrollReveal from '@/components/software/ScrollReveal'
 import AboutPillarHero from '@/components/about/AboutPillarHero'
+import CoreValuesIntro from '@/components/about/CoreValuesIntro'
 import AboutValues from '@/components/about/AboutValues'
 import MissionCTA from '@/components/about/MissionCTA'
 import Footer from '@/components/layouts/Footer'
@@ -28,6 +29,7 @@ export default function AboutCoreValuesPage() {
         title="# The principles that guide how we innovate, work, and grow together."
         lead="The principles that guide how we innovate, work, and grow together."
       />
+      <CoreValuesIntro />
       <AboutValues />
       {/* <AboutPillarNav current="core-values" /> */}
       <MissionCTA />

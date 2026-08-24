@@ -130,37 +130,52 @@ export default function MissionHero() {
           .msh-content { max-width: min(500px, 100%); }
         }
 
-        /* Mobile */
+        /* Mobile — full-width background with content overlaid, matching WhoWeAreHero pattern */
         @media (max-width: 768px) {
-          .msh-hero { 
-            background-size: cover;
-            background-position: 75% center; 
-            min-height: clamp(520px, 75vh, 680px); 
+          .msh-hero {
+            position: relative;
+            min-height: clamp(600px, 95vh, 750px);
+            padding-top: 80px;
+            background-image: url('/service_page/smar-iot.webp');
+            background-size: contain;
+            background-position: center calc(15% + 40px);
+            background-repeat: no-repeat;
+            background-color: #f0f4ff;
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            margin-left: calc(50% - 50vw);
           }
+          /* Subtle gradient behind text for readability */
           .msh-scrim {
+            display: block;
             background: linear-gradient(
               180deg,
-              rgba(248,249,251,0)   0%,
-              rgba(248,249,251,0)   35%,
-              rgba(248,249,251,.85) 68%,
+              rgba(248,249,251,0) 0%,
+              rgba(248,249,251,0) 45%,
+              rgba(248,249,251,.88) 70%,
               rgba(248,249,251,.96) 100%
             );
           }
+          .msh-navwrap { position: relative; z-index: 10; }
           .msh-body {
+            position: relative;
+            flex: 1;
+            display: flex;
             align-items: flex-end;
-            padding-top: 0;
-            padding-bottom: clamp(32px,6vw,48px);
+            padding: clamp(140px,28vw,220px) 22px clamp(36px,8vw,52px);
+            z-index: 5;
           }
-          .msh-content { 
-            max-width: 100%; 
+          .msh-content {
+            max-width: 100%;
             background: transparent;
             padding: clamp(16px,4vw,24px);
+            margin: 0;
           }
           .msh-btn { padding: 13px 20px; }
         }
 
         @media (max-width: 420px) {
-          .msh-hero { background-position: center top; }
           .msh-h1 { font-size: clamp(24px, 7.2vw, 29px); letter-spacing: -.016em; }
           .msh-cta-row { flex-direction: column; }
           .msh-btn { justify-content: center; width: 100%; }

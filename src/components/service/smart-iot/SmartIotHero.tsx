@@ -101,10 +101,43 @@ export default function SmartIotHero() {
           .si-content { max-width: min(540px, 100%); }
         }
 
-        /* Mobile */
+        /* Mobile — full-width background with content overlaid, matching WhoWeAreHero pattern */
         @media (max-width: 768px) {
-          .si-hero { min-height: 0; }
-          .si-body { padding-bottom: clamp(40px,9vw,56px); }
+          .si-hero {
+            position: relative;
+            min-height: clamp(600px, 95vh, 750px);
+            padding-top: 80px;
+            background-image: url('/service_page/smart-iot mobile.webp');
+            background-size: contain;
+            background-position: center calc(15% + 40px);
+            background-repeat: no-repeat;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            margin-left: calc(50% - 50vw);
+          }
+          .si-photo { display: none; }
+          /* Dark gradient for smart-iot to maintain text contrast */
+          .si-scrim {
+            display: block;
+            background: linear-gradient(
+              180deg,
+              rgba(0,0,0,0) 0%,
+              rgba(0,0,0,0) 40%,
+              rgba(0,0,0,.85) 68%,
+              rgba(0,0,0,.96) 100%
+            );
+          }
+          .si-navwrap { position: relative; z-index: 10; }
+          .si-body {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            padding: clamp(140px,28vw,220px) 22px clamp(36px,8vw,52px);
+            z-index: 5;
+          }
           .si-content { max-width: 100%; }
           .si-btn { padding: 13px 20px; }
         }

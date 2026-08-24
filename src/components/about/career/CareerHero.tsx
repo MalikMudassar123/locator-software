@@ -8,6 +8,7 @@ export default function CareerHero() {
         .ch-hero { position: relative; overflow: hidden; min-height: clamp(520px,68vh,740px); display: flex; flex-direction: column; }
         .ch-bg { position: absolute; inset: 0; z-index: 0; }
         .ch-bg img { object-fit: cover; object-position: center 55%; transform: scale(1.04); }
+        
         /* Layered scrim: a directional wash for text legibility, plus a
            bottom-up fade so the photo still reads clearly on the right. */
         .ch-scrim {
@@ -16,6 +17,7 @@ export default function CareerHero() {
             linear-gradient(100deg, rgba(5,9,18,.96) 0%, rgba(5,9,18,.86) 30%, rgba(5,9,18,.42) 62%, rgba(5,9,18,.12) 100%),
             linear-gradient(0deg, rgba(5,9,18,.55) 0%, transparent 32%);
         }
+        
         /* Faint blue brand glow bottom-left, tying the photo back to the site. */
         .ch-glow {
           position: absolute; z-index: 1; left: -10%; bottom: -20%; width: 60%; aspect-ratio: 1;
@@ -25,6 +27,7 @@ export default function CareerHero() {
 
         .ch-body { position: relative; z-index: 2; flex: 1; display: flex; align-items: center; padding: clamp(28px,5vw,60px) 28px clamp(48px,6vw,72px); }
         .ch-inner { max-width: var(--w-1180); width: 100%; margin: 0 auto; }
+        
         /* Wide enough that the headline wraps on its own words instead of
            being squeezed into a narrow column. */
         .ch-content { max-width: min(900px, 92vw); }
@@ -62,6 +65,57 @@ export default function CareerHero() {
         .ch-cta-ghost:hover { background: rgba(255,255,255,.14); border-color: #fff; transform: translateY(-2px); }
         .ch-cta svg { transition: transform .2s ease; }
         .ch-cta:hover svg { transform: translateY(3px); }
+
+        /* Mobile — full-width background with content overlaid, matching WhoWeAreHero pattern */
+        @media (max-width: 768px) {
+          .ch-hero {
+            position: relative;
+            min-height: clamp(600px, 95vh, 750px);
+            padding-top: 80px;
+            background-image: url('/Career/career mobile banner.webp');
+            background-size: contain;
+            background-position: center calc(15% + 40px);
+            background-repeat: no-repeat;
+            background-color: #0a0f1a;
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            margin-left: calc(50% - 50vw);
+          }
+          .ch-bg { display: none; }
+          /* Darker gradient for career page to maintain text contrast */
+          .ch-scrim {
+            display: block;
+            background: linear-gradient(
+              180deg,
+              rgba(5,9,18,0) 0%,
+              rgba(5,9,18,0) 40%,
+              rgba(5,9,18,.85) 68%,
+              rgba(5,9,18,.96) 100%
+            );
+          }
+          .ch-glow {
+            left: -20%;
+            bottom: -25%;
+            width: 70%;
+          }
+          .ch-body {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            padding: clamp(140px,28vw,220px) 22px clamp(36px,8vw,52px);
+            z-index: 5;
+          }
+          .ch-content { max-width: 100%; }
+          .ch-cta { padding: 14px 22px; }
+        }
+
+        @media (max-width: 420px) {
+          .ch-title { font-size: clamp(28px, 8vw, 36px); }
+          .ch-cta-row { flex-direction: column; }
+          .ch-cta { justify-content: center; width: 100%; }
+        }
       `}</style>
 
       <section className="ch-hero">

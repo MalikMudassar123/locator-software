@@ -132,16 +132,44 @@ export default function TrackingDevicesHero() {
           .td-content { max-width: min(480px, 100%); }
         }
 
-        /* Mobile */
+        /* Mobile — full-width background with content overlaid, matching WhoWeAreHero pattern */
         @media (max-width: 768px) {
-          .td-hero { min-height: clamp(360px, 50vw, 480px); }
-          .td-body { padding-bottom: clamp(44px,9vw,60px); }
-          .td-scrim { background: linear-gradient(90deg,
-            rgba(255,255,255,.96) 0%,
-            rgba(255,255,255,.90) 48%,
-            rgba(255,255,255,.38) 80%,
-            rgba(255,255,255,0)  100%
-          ); }
+          .td-hero {
+            position: relative;
+            min-height: clamp(600px, 95vh, 750px);
+            padding-top: 80px;
+            background-image: url('/service_page/tracking device mobile.webp');
+            background-size: contain;
+            background-position: center calc(15% + 40px);
+            background-repeat: no-repeat;
+            background-color: #dde8f0;
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            margin-left: calc(50% - 50vw);
+          }
+          .td-photo { display: none; }
+          /* Subtle gradient behind text for readability */
+          .td-scrim {
+            display: block;
+            background: linear-gradient(
+              180deg,
+              rgba(255,255,255,0) 0%,
+              rgba(255,255,255,0) 45%,
+              rgba(255,255,255,.88) 70%,
+              rgba(255,255,255,.96) 100%
+            );
+          }
+          .td-navwrap { position: relative; z-index: 10; }
+          .td-body {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            padding: clamp(140px,28vw,220px) 22px clamp(36px,8vw,52px);
+            z-index: 5;
+            background: none;
+          }
           .td-content { max-width: 100%; }
           .td-btn { padding: 13px 20px; }
         }

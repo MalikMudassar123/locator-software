@@ -25,7 +25,7 @@ function Block({ block, image, flip, shaded }: { block: IndustryBlock; image: st
         </div>
         <div className="ixb-viz" data-reveal={flip ? 'left' : 'right'}>
           <div className="ixb-frame">
-            <Image src={image} alt="" fill sizes="(max-width: 1080px) 90vw, 480px" style={{ objectFit: 'cover' }} />
+            <Image src={image} alt="" fill sizes="(max-width: 1080px) 90vw, 480px" style={{ objectFit: 'contain', objectPosition: 'center' }} />
           </div>
         </div>
       </div>
@@ -63,9 +63,6 @@ export default function IndustryBlocks({ industry }: { industry: Industry }) {
         .ixb-grid.flip .ixb-viz { justify-self: start; }
         .ixb-frame {
           position: relative; aspect-ratio: 4 / 3; width: 100%;
-          border-radius: 18px; overflow: hidden; border: 1px solid #e4e4e8;
-          box-shadow: 0 24px 54px -26px rgba(20,40,90,.24), 0 4px 14px rgba(20,40,90,.06);
-          background: #eef3fb;
         }
 
         @media (max-width: 1080px) {
@@ -81,8 +78,8 @@ export default function IndustryBlocks({ industry }: { industry: Industry }) {
         }
       `}</style>
 
-      <Block block={industry.block1} image={industry.image} flip={false} shaded={false} />
-      <Block block={industry.block2} image={industry.image} flip={true} shaded={true} />
+      <Block block={industry.block1} image={industry.block1.image || industry.image} flip={false} shaded={false} />
+      <Block block={industry.block2} image={industry.block2.image || industry.image} flip={true} shaded={true} />
     </>
   )
 }

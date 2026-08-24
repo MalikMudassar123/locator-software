@@ -30,8 +30,8 @@ export type Industry = {
   tagline: string
   /** Hero banner sub-paragraph. */
   lead: string
-  block1: IndustryBlock
-  block2: IndustryBlock
+  block1: IndustryBlock & { image?: string }
+  block2: IndustryBlock & { image?: string }
 }
 
 export const INDUSTRIES: Industry[] = [
@@ -63,6 +63,7 @@ export const INDUSTRIES: Industry[] = [
         'Multi-branch and multi-site fleet visibility',
         'Remote immobilization for compatible assets',
       ],
+      image: '/industries/leasing/ChatGPT Image Aug 24, 2026, 10_31_21 PM.webp',
     },
     block2: {
       title: 'Reduce Theft, Misuse and Rental Risk',
@@ -79,6 +80,7 @@ export const INDUSTRIES: Industry[] = [
         'Improved driver and operator accountability',
         'Reliable activity records for disputes and investigations',
       ],
+      image: '/industries/leasing/ChatGPT Image Aug 24, 2026, 10_41_37 PM.webp',
     },
   },
   {

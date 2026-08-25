@@ -287,7 +287,7 @@ export const INDUSTRIES: Industry[] = [
         'Route, stop, and idle-time visibility',
         'Geofence and delivery alerts',
       ],
-      image: '/ChatGPT Image Aug 25, 2026, 03_21_53 PM.webp',
+      image: '/ChatGPT Image Aug 25, 2026, 06_08_18 PM.webp',
     },
     block2: {
       title: 'Smarter Food Distribution Operations',
@@ -303,7 +303,7 @@ export const INDUSTRIES: Industry[] = [
         'Digital proof of delivery',
         'ERP and order-management integration',
       ],
-      image: '/ChatGPT Image Aug 25, 2026, 06_08_18 PM.webp',
+      image: '/ChatGPT Image Aug 25, 2026, 03_21_53 PM.webp',
     },
   },
 ]

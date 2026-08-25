@@ -12,11 +12,15 @@ export default function FilterSelect({
   value,
   options,
   onChange,
+  renderIcon,
 }: {
   label: string
   value: string
   options: string[]
   onChange: (v: string) => void
+  /** Optional mark shown before each option and the current value — used by
+   *  the location filter to put a country flag against every row. */
+  renderIcon?: (option: string) => React.ReactNode
 }) {
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
@@ -40,11 +44,15 @@ export default function FilterSelect({
       <style>{`
         .fsl-root { position: relative; }
         .fsl-trigger {
-          width: 100%; display: block; text-align: left; cursor: pointer;
+          width: 100%; display: flex; align-items: center; gap: 11px;
+          text-align: left; cursor: pointer;
           padding: 7px 40px 9px 16px; border-radius: 12px;
           border: 1.5px solid #e4e8f0; background: #fbfcfe;
           font-family: inherit; transition: border-color .18s ${EASE}, box-shadow .18s ${EASE};
         }
+        /* min-width:0 so a long country name ellipsises instead of shoving
+           the flag out of the trigger. */
+        .fsl-trigger-text { flex: 1; min-width: 0; }
         .fsl-trigger:hover { border-color: #c9d8f8; }
         .fsl-root[data-open="true"] .fsl-trigger,
         .fsl-trigger:focus-visible {
@@ -77,6 +85,8 @@ export default function FilterSelect({
         }
         .fsl-opt:hover { background: #f4f8ff; color: #1360ee; }
         .fsl-opt[aria-selected="true"] { color: #1360ee; font-weight: 700; background: #eef3ff; }
+        .fsl-opt-main { display: flex; align-items: center; gap: 11px; min-width: 0; }
+        .fsl-opt-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .fsl-opt svg { flex-shrink: 0; opacity: 0; transition: opacity .14s ${EASE}; }
         .fsl-opt[aria-selected="true"] svg { opacity: 1; }
 
@@ -90,8 +100,11 @@ export default function FilterSelect({
         aria-haspopup="listbox"
         aria-expanded={open}
       >
-        <span className="fsl-label">{label}</span>
-        <span className="fsl-value">{value}</span>
+        {renderIcon ? renderIcon(value) : null}
+        <span className="fsl-trigger-text">
+          <span className="fsl-label">{label}</span>
+          <span className="fsl-value">{value}</span>
+        </span>
       </button>
       <svg className="fsl-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M6 9l6 6 6-6" />
@@ -108,7 +121,10 @@ export default function FilterSelect({
                 aria-selected={opt === value}
                 onClick={() => { onChange(opt); setOpen(false) }}
               >
-                {opt}
+                <span className="fsl-opt-main">
+                  {renderIcon ? renderIcon(opt) : null}
+                  <span className="fsl-opt-label">{opt}</span>
+                </span>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M20 6L9 17l-5-5" />
                 </svg>

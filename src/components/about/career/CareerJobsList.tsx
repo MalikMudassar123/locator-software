@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { JOBS } from './jobs-data'
 import FilterSelect from './FilterSelect'
+import CountryFlag from './CountryFlag'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
@@ -82,7 +83,8 @@ export default function CareerJobsList() {
         .cjl-row:hover { background: #f7f9fd; padding-left: 14px; }
         .cjl-row-title { margin: 0 0 4px; font-size: max(clamp(15px,1.5vw,17px), min(1.181vw, 24.65px)); font-weight: 800; letter-spacing: -.01em; color: #1d1d1f; text-transform: uppercase; }
         .cjl-row-dept { margin: 0; font-size: var(--f-13); color: #8b93a3; }
-        .cjl-row-loc { flex-shrink: 0; text-align: right; font-size: var(--f-13-5); color: #52525e; }
+        .cjl-row-loc { flex-shrink: 0; display: flex; align-items: center; gap: 9px; font-size: var(--f-13-5); color: #52525e; }
+        @media (max-width: 560px) { .cjl-row-loc { gap: 7px; } }
         .cjl-row-arrow { flex-shrink: 0; color: #c3cbd9; transition: transform .2s ${EASE}, color .2s ${EASE}; }
         .cjl-row:hover .cjl-row-arrow { color: #1360ee; transform: translateX(4px); }
 
@@ -105,7 +107,13 @@ export default function CareerJobsList() {
               aria-label="Search open positions"
             />
           </div>
-          <FilterSelect label="Location" value={location} options={LOCATIONS} onChange={setLocation} />
+          <FilterSelect
+            label="Location"
+            value={location}
+            options={LOCATIONS}
+            onChange={setLocation}
+            renderIcon={(opt) => <CountryFlag country={opt} size={20} />}
+          />
           <FilterSelect label="Job area" value={jobArea} options={JOB_AREAS} onChange={setJobArea} />
         </div>
 
@@ -122,7 +130,10 @@ export default function CareerJobsList() {
                   <p className="cjl-row-dept">{job.department}</p>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
-                  <span className="cjl-row-loc">{job.location}</span>
+                  <span className="cjl-row-loc">
+                    <CountryFlag country={job.country} size={18} />
+                    {job.location}
+                  </span>
                   <svg className="cjl-row-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M9 18l6-6-6-6" />
                   </svg>

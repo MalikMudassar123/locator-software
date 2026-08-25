@@ -152,9 +152,9 @@ const INDUSTRIES: Industry[] = [
     desc: 'Fleet telematics tracks school buses, vans, cars, bikes, boats and campus machines like generators and forklifts. It monitors student pickup trips, stop-arm violations, driver behavior, and geofence campuses, helping UAE schools improve safety, reduce road incidents, enforce compliance, and retrieve video or trip evidence quickly.',
     vehicles: ['School buses', 'Vans', 'Cars', 'Bikes', 'Boats', 'Generators'],
     count: 6,
-    image: '/service_page/Industries we serve/School Districtse.webp',
-    imageW: 1536,
-    imageH: 1024,
+    image: '/service_page/School & Educational Fleet Monitoring.webp',
+    imageW: 1790,
+    imageH: 879,
   },
 ]
 

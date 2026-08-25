@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef } from 'react'
-import Link from 'next/link'
+import Image from 'next/image'
 import SoftwareNavbar from '@/components/software/SoftwareNavbar'
 
 const clamp = (v: number, a = 0, b = 1) => Math.min(Math.max(v, a), b)
@@ -274,22 +274,71 @@ export default function ServiceHero() {
           50%      { opacity: .9; }
         }
 
-        /* Cards disabled → no extra scroll distance needed; hero is one screen. */
-        .srv-pin-wrap { position: relative; min-height: 100svh; background: #ffffff; }
+        /* Truck banner is the section's own full-width, edge-to-edge
+           background (cover, never letterboxed) rather than a floating
+           card. The box is tall enough that cover's height-matched scale
+           keeps the truck's own reflection/floor clear of the copy above
+           it — bottom-anchored so the truck stays low and the copy block
+           at the top never overlaps it. */
+        .srv-pin-wrap { position: relative; background: #ffffff; }
         .srv-pin {
-          position: relative; min-height: 100svh;
+          position: relative;
+          min-height: clamp(800px, 102vh, 1000px);
           display: flex; flex-direction: column;
           overflow: hidden; isolation: isolate; background: #ffffff;
         }
-        .srv-hero-body {
-          flex: 1 1 auto; min-height: 0;
-          display: flex; flex-direction: column; align-items: center; justify-content: center;
-          gap: clamp(10px, 1.6vh, 24px);
-          padding: clamp(24px, 5vh, 56px) 24px clamp(40px, 8vh, 80px);
+        .srv-hero-bg {
+          position: absolute; inset: 0; z-index: 0;
         }
-        .srv-copy { text-align: center; max-width: var(--w-1120); width: 100%; }
+        /* The artwork is a wide ~2:1 studio shot. On desktop the banner box is
+           wide enough that a cover-fit only trims a little off the sides.
+           Below ~900px the box turns portrait-ish, where cover would scale
+           the photo ~4x and crop away most of its width — the truck balloons
+           and gets sliced. A contain-fit there keeps the whole truck in
+           frame; the photo's own near-white backdrop blends into the section,
+           so the spare space above it doesn't read as a letterbox bar. */
+        /* Desktop's cover-fit stays an inline style so it is exactly what it
+           was; !important is what lets the narrow-screen override beat it. */
+        @media (max-width: 900px) {
+          .srv-hero-img { object-fit: contain !important; }
+        }
+        .srv-hero-scrim {
+          position: absolute; inset: 0; z-index: 1; pointer-events: none;
+          background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,.9) 20%, rgba(255,255,255,0) 42%);
+        }
+        .srv-hero-body {
+          position: relative; z-index: 2;
+          flex: 1 1 auto; min-height: 0;
+          display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+          gap: clamp(8px, 1.2vh, 18px);
+          padding: 0 24px clamp(40px, 8vh, 80px);
+        }
+        /* Once the image switches to a contain-fit it only occupies a short
+           band at the bottom, so the tall desktop box would leave a big empty
+           gap between the copy and the truck. These heights keep the two
+           tight together. */
+        @media (max-width: 900px) {
+          .srv-pin { min-height: clamp(540px, 74vh, 680px); }
+        }
+        @media (max-width: 640px) {
+          .srv-pin { min-height: clamp(480px, 66vh, 600px); }
+        }
+        .srv-copy { text-align: center; max-width: var(--w-1120); width: 100%; margin-top: clamp(-24px, -2.4vh, -10px); }
+        /* The negative pull-up above is tuned for desktop's taller banner —
+           on a short, narrow viewport it's enough to tuck the heading under
+           the fixed navbar, so mobile gets its own clear (positive) offset. */
+        @media (max-width: 640px) {
+          .srv-copy { margin-top: clamp(18px, 4vh, 32px); }
+        }
         @media (prefers-reduced-motion: no-preference) {
           .srv-copy { animation: srvHeroRise .9s cubic-bezier(.22,.61,.36,1) .05s both; }
+        }
+        .srv-cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+        /* Side-by-side buttons on a narrow phone reach far enough right to sit
+           under the fixed WhatsApp/call widget — stacking removes the overlap. */
+        @media (max-width: 480px) {
+          .srv-cta-row { flex-direction: column; align-items: stretch; }
+          .srv-cta-row .srv-btn { justify-content: center; }
         }
         .srv-btn {
           font-family: inherit; font-size: var(--f-14); font-weight: 700; cursor: pointer;
@@ -300,8 +349,8 @@ export default function ServiceHero() {
         }
         .srv-btn-primary { background: #1360ee; color: #fff; }
         .srv-btn-primary:hover { background: #0d4fd4; transform: translateY(-1px); }
-        .srv-btn-ghost   { background: transparent; color: #1360ee; padding: 12px 6px; }
-        .srv-btn-ghost:hover { color: #0d4fd4; transform: translateY(-1px); }
+        .srv-btn-outline { background: #fff; color: #1360ee; border: 1.5px solid #1360ee; }
+        .srv-btn-outline:hover { background: #f0f5ff; transform: translateY(-1px); }
 
         .srv-stage {
           position: relative; flex: 1 1 auto; min-height: 0;
@@ -326,29 +375,37 @@ export default function ServiceHero() {
 
       <div className="srv-pin-wrap" ref={wrapRef}>
         <div className="srv-pin">
+          <div className="srv-hero-bg" aria-hidden="true">
+            <Image
+              src="/ChatGPT Image Aug 25, 2026, 10_25_07 PM.webp"
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              className="srv-hero-img"
+              style={{ objectFit: 'cover', objectPosition: 'center bottom' }}
+            />
+          </div>
+          <div className="srv-hero-scrim" aria-hidden="true" />
+
           <SoftwareNavbar />
 
           <div className="srv-hero-body">
             <div className="srv-copy">
-              <p style={{ display: 'block', fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', color: '#1360ee', marginBottom: 'clamp(8px,1.4vh,14px)' }}>
-                <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
-                Locator Fleet Services
+              <p style={{ display: 'block', fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase', color: '#1360ee', marginBottom: 'clamp(6px,1vh,10px)' }}>
+                <span style={{ display: 'block', marginBottom: '6px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
+                Fleet Services
               </p>
               <h1 style={{ fontSize: 'max(clamp(21px,2.5vw,28px), min(1.944vw, 40.6px))', fontWeight: 800, lineHeight: 1.18, letterSpacing: '-.015em', color: '#1d1d1f', maxWidth: '30ch', margin: '0 auto' }}>
                 Improve Fleet Operations with GPS Tracking &amp; Telematics
               </h1>
-              <p style={{ maxWidth: '560px', margin: 'clamp(8px,1.4vh,14px) auto 0', fontSize: 'max(clamp(13px,1.35vw,16px), min(1.111vw, 23.2px))', lineHeight: 1.5, color: '#3a3a3c' }}>
+              <p style={{ maxWidth: '560px', margin: 'clamp(6px,1vh,10px) auto 0', fontSize: 'max(clamp(13px,1.35vw,16px), min(1.111vw, 23.2px))', lineHeight: 1.5, color: '#3a3a3c' }}>
                 Real-time GPS tracking to manage drivers, routes, and road operations with ease.
               </p>
-              <div style={{ display: 'flex', gap: '14px', justifyContent: 'center', marginTop: 'clamp(14px,2.2vh,24px)', flexWrap: 'wrap' }}>
+              <div className="srv-cta-row" style={{ marginTop: 'clamp(10px,1.6vh,18px)' }}>
                 <button className="srv-btn srv-btn-primary">Get a quote</button>
-                <button className="srv-btn srv-btn-ghost">Get a demo →</button>
+                <button className="srv-btn srv-btn-outline">Explore solutions</button>
               </div>
-              <p style={{ marginTop: 'clamp(8px,1.4vh,14px)' }}>
-                <Link href="#benefits" style={{ color: '#1360ee', fontWeight: 700, fontSize: 'var(--f-15)', textDecoration: 'none' }}>
-                  See all features ›
-                </Link>
-              </p>
             </div>
 
             {/* Dashboard visuals temporarily disabled. Flip SHOW_CARDS to true to

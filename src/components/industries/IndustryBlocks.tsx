@@ -25,7 +25,7 @@ function Block({ block, image, flip, shaded }: { block: IndustryBlock; image: st
         </div>
         <div className="ixb-viz" data-reveal={flip ? 'left' : 'right'}>
           <div className="ixb-frame">
-            <Image src={image} alt="" fill sizes="(max-width: 1080px) 90vw, 480px" style={{ objectFit: 'contain', objectPosition: 'center' }} />
+            <Image src={image} alt="" fill sizes="(max-width: 768px) 90vw, (max-width: 1080px) 85vw, (max-width: 1400px) 45vw, 50vw" style={{ objectFit: 'cover', objectPosition: 'center' }} />
           </div>
         </div>
       </div>
@@ -41,10 +41,10 @@ export default function IndustryBlocks({ industry }: { industry: Industry }) {
 
         .ixb-grid {
           max-width: var(--w-1280); margin: 0 auto;
-          display: grid; grid-template-columns: minmax(280px,1fr) minmax(280px,1fr);
+          display: grid; grid-template-columns: 1.1fr 1fr;
           gap: clamp(28px,3.4vw,56px); align-items: center;
         }
-        .ixb-grid.flip { grid-template-columns: minmax(280px,1fr) minmax(280px,1fr); }
+        .ixb-grid.flip { grid-template-columns: 1fr 1.1fr; }
         .ixb-grid.flip .ixb-text { order: 2; }
         .ixb-grid.flip .ixb-viz { order: 1; }
 
@@ -58,7 +58,7 @@ export default function IndustryBlocks({ industry }: { industry: Industry }) {
         .ixb-features li { display: flex; align-items: flex-start; gap: 10px; font-size: var(--f-14); line-height: 1.5; color: #3a3a3c; }
         .ixb-features svg { flex-shrink: 0; margin-top: 2px; color: #1360ee; }
 
-        .ixb-viz { min-width: 0; max-width: 480px; width: 100%; }
+        .ixb-viz { min-width: 0; max-width: min(650px, 50vw); width: 100%; }
         .ixb-grid .ixb-viz { justify-self: end; }
         .ixb-grid.flip .ixb-viz { justify-self: start; }
         .ixb-frame {
@@ -74,7 +74,15 @@ export default function IndustryBlocks({ industry }: { industry: Industry }) {
           .ixb-desc { margin-left: auto; margin-right: auto; }
           .ixb-features { align-items: center; }
           .ixb-features li { max-width: 52ch; }
-          .ixb-viz, .ixb-grid.flip .ixb-viz { justify-self: center; max-width: 480px; margin: 0 auto; }
+          .ixb-viz, .ixb-grid.flip .ixb-viz { justify-self: center; max-width: min(650px, 85vw); margin: 0 auto; }
+        }
+
+        @media (min-width: 1081px) and (max-width: 1400px) {
+          .ixb-viz { max-width: min(550px, 45vw); }
+        }
+
+        @media (max-width: 768px) {
+          .ixb-viz, .ixb-grid.flip .ixb-viz { max-width: 90vw; }
         }
       `}</style>
 

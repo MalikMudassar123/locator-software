@@ -80,7 +80,7 @@ export const INDUSTRIES: Industry[] = [
         'Improved driver and operator accountability',
         'Reliable activity records for disputes and investigations',
       ],
-      image: '/industries/leasing/ChatGPT Image Aug 24, 2026, 10_41_37 PM.webp',
+      image: '/ChatGPT Image Aug 25, 2026, 01_44_52 PM.webp',
     },
   },
   {
@@ -127,7 +127,7 @@ export const INDUSTRIES: Industry[] = [
         'Improve vehicle utilization and delivery efficiency',
         'Integrate with ERP, CRM, dispatch, and logistics systems',
       ],
-      image: '/industries/Transport/ChatGPT Image Aug 25, 2026, 12_46_36 AM.webp',
+      image: '/ChatGPT Image Aug 25, 2026, 05_57_28 PM.webp',
     },
   },
   {
@@ -155,6 +155,7 @@ export const INDUSTRIES: Industry[] = [
         'Geofence and movement alerts',
         'Accurate customer delivery updates',
       ],
+      image: '/ChatGPT Image Aug 25, 2026, 06_27_15 PM.png',
     },
     block2: {
       title: 'Faster and More Efficient Last-Mile Operations',
@@ -170,6 +171,7 @@ export const INDUSTRIES: Industry[] = [
         'ERP, CRM, and delivery-system integration',
         'Improved fleet productivity and customer satisfaction',
       ],
+      image: '/ChatGPT Image Aug 25, 2026, 06_26_56 PM.png',
     },
   },
   {
@@ -239,6 +241,7 @@ export const INDUSTRIES: Industry[] = [
         'Route, stop, and working-time monitoring',
         'Accurate ETA and customer updates',
       ],
+      image: '/ChatGPT Image Aug 25, 2026, 02_32_48 PM.webp',
     },
     block2: {
       title: 'Smarter Field Service Operations',
@@ -254,6 +257,7 @@ export const INDUSTRIES: Industry[] = [
         'Driver behaviour and expense monitoring',
         'CRM, ERP, and field-service integration',
       ],
+      image: '/ChatGPT Image Aug 25, 2026, 02_44_15 PM.webp',
     },
   },
   {
@@ -281,6 +285,7 @@ export const INDUSTRIES: Industry[] = [
         'Route, stop, and idle-time visibility',
         'Geofence and delivery alerts',
       ],
+      image: '/ChatGPT Image Aug 25, 2026, 03_21_53 PM.webp',
     },
     block2: {
       title: 'Smarter Food Distribution Operations',
@@ -296,6 +301,7 @@ export const INDUSTRIES: Industry[] = [
         'Digital proof of delivery',
         'ERP and order-management integration',
       ],
+      image: '/ChatGPT Image Aug 25, 2026, 06_08_18 PM.webp',
     },
   },
 ]

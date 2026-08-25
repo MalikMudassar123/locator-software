@@ -81,13 +81,21 @@ export default function ServiceWhyChoose() {
 
           {/* Right: LOCATOR dashboard illustration */}
           <div data-reveal="right" style={{ position: 'relative' }}>
-            <Image
-              src="/service_page/Best-GPS-Tracker for-Vehicle.webp"
-              alt="LOCATOR GPS tracking dashboard — the best GPS tracker for vehicles"
-              width={1198}
-              height={1078}
-              style={{ width: '100%', maxWidth: '540px', height: 'auto', display: 'block', margin: '0 auto' }}
-            />
+            <div
+              style={{
+                position: 'relative', width: '100%', maxWidth: '540px', aspectRatio: '6 / 5', margin: '0 auto',
+                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, #000 16%)',
+                maskImage: 'linear-gradient(to right, transparent 0%, #000 16%)',
+              }}
+            >
+              <Image
+                src="/ChatGPT Image Aug 25, 2026, 06_20_30 PM.webp"
+                alt="LOCATOR GPS tracking dashboard — live vehicle map and fleet overview"
+                fill
+                sizes="(max-width: 940px) 90vw, 540px"
+                style={{ objectFit: 'cover', objectPosition: '78% center' }}
+              />
+            </div>
           </div>
         </div>
       </section>

@@ -12,11 +12,6 @@ export default function MissionHero() {
           /* Force true full viewport width regardless of any parent constraints */
           width: 100vw;
           margin-left: calc(50% - 50vw);
-          background-image: url('/About_us/mission/mision.webp');
-          /* contain = shows full image without cropping */
-          background-size: contain;
-          background-position: right calc(50% + 30px);
-          background-repeat: no-repeat;
           background-color: #f8f9fb;
           display: flex;
           flex-direction: column;
@@ -24,9 +19,27 @@ export default function MissionHero() {
           min-height: clamp(480px, 54vh, 620px);
         }
 
+        /* The artwork lives on its own layer inset below the fixed 64px navbar.
+           Painting it as the section's own background instead sizes it against
+           a box that starts at y=0 — so on wide screens the image fills the
+           full height and its top (the windmills) ends up underneath the
+           translucent nav bar, reading as cropped. Insetting the layer means
+           the contain-fit is computed against the visible area only, so the
+           whole image is always in the clear at every screen size. */
+        .msh-photo {
+          position: absolute;
+          top: 64px; right: 0; bottom: 0; left: 0;
+          z-index: 0;
+          pointer-events: none;
+          background-image: url('/About_us/mission/mision.webp');
+          background-size: contain;
+          background-position: right bottom;
+          background-repeat: no-repeat;
+        }
+
         /* Left-to-right scrim so dark text stays legible over the image */
         .msh-scrim {
-          position: absolute; inset: 0; pointer-events: none;
+          position: absolute; inset: 0; z-index: 1; pointer-events: none;
           background: linear-gradient(
             90deg,
             rgba(248,249,251,.96) 0%,
@@ -117,7 +130,7 @@ export default function MissionHero() {
 
         /* Tablet */
         @media (max-width: 1024px) {
-          .msh-hero { background-position: center top; }
+          .msh-photo { background-position: right bottom; }
           .msh-scrim {
             background: linear-gradient(
               90deg,
@@ -136,15 +149,14 @@ export default function MissionHero() {
             position: relative;
             min-height: clamp(600px, 95vh, 750px);
             padding-top: 80px;
-            background-image: url('/service_page/smar-iot.webp');
-            background-size: contain;
-            background-position: center calc(15% + 40px);
-            background-repeat: no-repeat;
-            background-color: #f0f4ff;
+            background-color: #f8f9fb;
             display: flex;
             flex-direction: column;
             width: 100vw;
             margin-left: calc(50% - 50vw);
+          }
+          .msh-photo {
+            background-position: center top;
           }
           /* Subtle gradient behind text for readability */
           .msh-scrim {
@@ -183,6 +195,8 @@ export default function MissionHero() {
       `}</style>
 
       <section className="msh-hero">
+        {/* Artwork layer — inset below the fixed navbar so it is never clipped */}
+        <div className="msh-photo" aria-hidden="true" />
         {/* Scrim over the background image for text legibility */}
         <div className="msh-scrim" aria-hidden="true" />
 

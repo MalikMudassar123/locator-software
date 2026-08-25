@@ -55,15 +55,15 @@ export default function AboutPillarHero({
 
           .cv-photo {
             position: absolute;
-            top: 0;
+            top: 64px;
             right: 0;
             bottom: 0;
             width: min(1180px, 62%);
             z-index: 0;
           }
           .cv-photo img {
-            object-fit: contain;
-            object-position: right 35%;
+            object-fit: cover;
+            object-position: right center;
           }
 
           .cv-scrim {
@@ -122,11 +122,11 @@ export default function AboutPillarHero({
           }
 
           .cv-desc {
-            margin: 20px 0 0;
-            max-width: 760px;
-            font-size: clamp(17px, 1.35vw, 28px);
-            line-height: 1.55;
-            color: #48556a;
+            margin: clamp(14px, 1.6vw, 18px) 0 0;
+            max-width: 48ch;
+            font-size: clamp(15px, 1.05vw, 17px);
+            line-height: 1.72;
+            color: #55607a;
           }
 
           .cv-cta-row {
@@ -211,8 +211,8 @@ export default function AboutPillarHero({
             .cv-hero {
               min-height: clamp(580px, 90vh, 720px);
               background-image: url('/About_us/core_values/core values.webp');
-              background-size: cover;
-              background-position: center 25%;
+              background-size: auto calc(100% - 64px);
+              background-position: right bottom;
               background-repeat: no-repeat;
               background-color: #e8eef5;
               width: 100vw;

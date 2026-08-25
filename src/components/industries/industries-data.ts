@@ -199,6 +199,7 @@ export const INDUSTRIES: Industry[] = [
         'Engine-hour and idle-time monitoring',
         'Theft and unauthorized-movement alerts',
       ],
+      image: '/ChatGPT Image Aug 25, 2026, 02_01_53 PM.webp',
     },
     block2: {
       title: 'Improve Construction Fleet Efficiency',
@@ -214,6 +215,7 @@ export const INDUSTRIES: Industry[] = [
         'Multi-site fleet and asset management',
         'ERP and project-system integration',
       ],
+      image: '/ChatGPT Image Aug 25, 2026, 06_24_36 PM.webp',
     },
   },
   {

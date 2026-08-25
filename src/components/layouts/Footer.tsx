@@ -4,8 +4,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
 
+// "About" is the section label for this column (rendered as a heading by
+// FooterCol's `lead`), not one of its links.
 const companyLinks = [
-  { href: '/about', label: 'About' },
   { href: '/about/purpose', label: 'Who We Are' },
   { href: '/about/vision', label: 'Vision' },
   { href: '/about/career', label: 'Careers' },
@@ -164,13 +165,13 @@ export default function Footer() {
           </div>
 
           {/* ── Company ── */}
-          <FooterCol title="Company" links={companyLinks} />
+          <FooterCol title="Company" lead="About" links={companyLinks} />
 
           {/* ── Services ── */}
-          <FooterCol title="Services" links={serviceLinks} split />
+          <FooterCol title="Services" lead="Services" links={serviceLinks} split />
 
           {/* ── Support ── */}
-          <FooterCol title="Support" links={supportLinks} />
+          <FooterCol title="Support" lead="Support" links={supportLinks} />
 
           {/* ── Connect ── */}
           <div>
@@ -337,6 +338,17 @@ export default function Footer() {
         }
 
         /* Nav links — color glide + sliding underline */
+        /* Non-link sub-heading that names the section a column's links sit
+           under — sits between the kicker and the list, so it reads as a
+           label rather than as the first item of the list. */
+        .footer-col-lead {
+          margin: 0 0 12px;
+          font-size: var(--f-14);
+          font-weight: 700;
+          letter-spacing: -.01em;
+          color: #1d1d1f;
+        }
+
         .footer-link {
           position: relative;
           color: #5a6472;
@@ -611,10 +623,11 @@ function ColHeading({ children }: { children: React.ReactNode }) {
  * `break-inside: avoid` keeps a link from being torn across the column boundary,
  * and the gap moves to margin-bottom because multi-column ignores flex gap.
  */
-function FooterCol({ title, links, split = false }: { title: string; links: { href: string; label: string }[]; split?: boolean }) {
+function FooterCol({ title, links, split = false, lead }: { title: string; links: { href: string; label: string }[]; split?: boolean; lead?: string }) {
   return (
     <div>
       <ColHeading>{title}</ColHeading>
+      {lead ? <p className="footer-col-lead">{lead}</p> : null}
       <ul
         className={split ? 'footer-col-split' : undefined}
         style={

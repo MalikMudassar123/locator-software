@@ -83,7 +83,7 @@ export default function ServiceWhyChoose() {
           <div data-reveal="right" style={{ position: 'relative' }}>
             <div
               style={{
-                position: 'relative', width: '100%', maxWidth: '540px', aspectRatio: '6 / 5', margin: '0 auto',
+                position: 'relative', width: '100%', maxWidth: '540px', aspectRatio: '3 / 2', margin: '0 auto',
                 WebkitMaskImage: 'linear-gradient(to right, transparent 0%, #000 16%)',
                 maskImage: 'linear-gradient(to right, transparent 0%, #000 16%)',
               }}
@@ -93,7 +93,7 @@ export default function ServiceWhyChoose() {
                 alt="LOCATOR GPS tracking dashboard — live vehicle map and fleet overview"
                 fill
                 sizes="(max-width: 940px) 90vw, 540px"
-                style={{ objectFit: 'cover', objectPosition: '78% center' }}
+                style={{ objectFit: 'cover', objectPosition: 'right center' }}
               />
             </div>
           </div>

@@ -68,6 +68,19 @@ export default function NewsroomHero() {
         .nrh-btn-primary:hover { background: #0d4fd4; transform: translateY(-2px); box-shadow: 0 16px 32px -10px rgba(19,96,238,.8); }
         .nrh-btn-ghost { background: rgba(255,255,255,.08); color: #fff; border: 1.5px solid rgba(255,255,255,.4); backdrop-filter: blur(6px); }
         .nrh-btn-ghost:hover { background: rgba(255,255,255,.16); border-color: #fff; transform: translateY(-2px); }
+
+        /* The band's fixed height plus overflow:hidden clips the copy on a
+           phone, where the stacked title/lead/buttons are taller than the
+           300px floor and are anchored to the bottom. Letting the band grow
+           to its content keeps the whole block visible. */
+        @media (max-width: 768px) {
+          .nrh-photo { height: auto; min-height: clamp(300px, 38vw, 460px); }
+          .nrh-photo-body {
+            height: auto;
+            padding-top: clamp(28px, 7vw, 44px);
+            padding-bottom: clamp(28px, 7vw, 44px);
+          }
+        }
       `}</style>
 
       <section className="nrh">

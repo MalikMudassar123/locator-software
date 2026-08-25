@@ -30,8 +30,8 @@ export type Industry = {
   tagline: string
   /** Hero banner sub-paragraph. */
   lead: string
-  block1: IndustryBlock & { image?: string }
-  block2: IndustryBlock & { image?: string }
+  block1: IndustryBlock & { image?: string; imagePosition?: string }
+  block2: IndustryBlock & { image?: string; imagePosition?: string }
 }
 
 export const INDUSTRIES: Industry[] = [
@@ -172,6 +172,10 @@ export const INDUSTRIES: Industry[] = [
         'Improved fleet productivity and customer satisfaction',
       ],
       image: '/ChatGPT Image Aug 25, 2026, 06_26_56 PM.png',
+      // Loading dock, van and gate all sit close to the photo's right edge —
+      // a centered crop was clipping into them. Anchoring right instead
+      // trims the crop entirely from the (mostly empty) left side.
+      imagePosition: 'right center',
     },
   },
   {

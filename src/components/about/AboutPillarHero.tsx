@@ -210,9 +210,17 @@ export default function AboutPillarHero({
           @media (max-width: 768px) {
             .cv-hero {
               min-height: clamp(580px, 90vh, 720px);
-              background-image: url('/About_us/core_values/core values.webp');
-              background-size: auto calc(100% - 64px);
-              background-position: right bottom;
+              /* Dedicated mobile crop (portrait, content already framed
+                 toward the top) instead of stretching the desktop landscape
+                 shot — same swap MissionHero/SmartIotHero do for mobile. */
+              background-image: url('/About_us/core_values/ChatGPT Image Aug 26, 2026, 03_06_26 AM.webp');
+              /* Bottom-anchored, not top: the hand sits right at this crop's
+                 own top edge, and this section's fixed navbar sits over the
+                 section's top 64px — a top anchor would put the hand right
+                 behind it (the exact bug fixed earlier on this same page).
+                 The crop's blank lower half gives enough clearance instead. */
+              background-size: contain;
+              background-position: center bottom;
               background-repeat: no-repeat;
               background-color: #e8eef5;
               width: 100vw;

@@ -155,7 +155,11 @@ export default function MissionHero() {
             width: 100vw;
             margin-left: calc(50% - 50vw);
           }
+          /* Dedicated mobile crop (portrait, content already framed toward
+             the top) instead of stretching the desktop landscape shot —
+             same swap SmartIotHero does for its own mobile background. */
           .msh-photo {
+            background-image: url('/About_us/mission/ChatGPT Image Aug 25, 2026, 12_45_27 AM.webp');
             background-position: center top;
           }
           /* Subtle gradient behind text for readability */

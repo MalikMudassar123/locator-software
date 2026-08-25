@@ -20,12 +20,22 @@ type Market = {
 
 const MARKETS: Market[] = [
   {
-    country: 'United Arab Emirates',
+    country: 'Dubai',
     flag: '/uae-flag.svg',
     live: true,
-    place: 'Dubai · Abu Dhabi',
+    place: 'Sheikh Zayed Road, Trade Centre,\nTrade Centre 1, Dubai, United Arab Emirates',
     phone: '+971 4 354 7766',
     phoneHref: 'tel:+97143547766',
+    cta: 'View offices',
+    href: '#offices',
+  },
+  {
+    country: 'Abu Dhabi',
+    flag: '/uae-flag.svg',
+    live: true,
+    place: 'Capital Mall, Mohammed Bin Zayed City,\nAbu Dhabi, United Arab Emirates',
+    phone: '+971 52 675 1880',
+    phoneHref: 'tel:+971526751880',
     cta: 'View offices',
     href: '#offices',
   },

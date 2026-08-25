@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import type { Industry, IndustryBlock } from './industries-data'
 
-function Block({ block, image, flip, shaded }: { block: IndustryBlock; image: string; flip: boolean; shaded: boolean }) {
+function Block({ block, image, imagePosition, flip, shaded }: { block: IndustryBlock; image: string; imagePosition?: string; flip: boolean; shaded: boolean }) {
   return (
     <section className="ixb-sec" style={shaded ? { background: '#f7f9fc' } : undefined}>
       <div className={`ixb-grid${flip ? ' flip' : ''}`}>
@@ -25,7 +25,7 @@ function Block({ block, image, flip, shaded }: { block: IndustryBlock; image: st
         </div>
         <div className="ixb-viz" data-reveal={flip ? 'left' : 'right'}>
           <div className="ixb-frame">
-            <Image src={image} alt="" fill sizes="(max-width: 768px) 90vw, (max-width: 1080px) 85vw, (max-width: 1400px) 45vw, 50vw" style={{ objectFit: 'cover', objectPosition: 'center' }} />
+            <Image src={image} alt="" fill sizes="(max-width: 768px) 90vw, (max-width: 1080px) 85vw, (max-width: 1400px) 45vw, 50vw" style={{ objectFit: 'cover', objectPosition: imagePosition || 'center' }} />
           </div>
         </div>
       </div>
@@ -86,8 +86,8 @@ export default function IndustryBlocks({ industry }: { industry: Industry }) {
         }
       `}</style>
 
-      <Block block={industry.block1} image={industry.block1.image || industry.image} flip={false} shaded={false} />
-      <Block block={industry.block2} image={industry.block2.image || industry.image} flip={true} shaded={true} />
+      <Block block={industry.block1} image={industry.block1.image || industry.image} imagePosition={industry.block1.imagePosition} flip={false} shaded={false} />
+      <Block block={industry.block2} image={industry.block2.image || industry.image} imagePosition={industry.block2.imagePosition} flip={true} shaded={true} />
     </>
   )
 }

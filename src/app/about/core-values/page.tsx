@@ -26,7 +26,7 @@ export default function AboutCoreValuesPage() {
       <ScrollReveal />
       <AboutPillarHero
         slug="core-values"
-        title="# The principles that guide how we innovate, work, and grow together."
+        title="# The principles that guide how we innovate, work, and grow togetherrrr."
         lead="The principles that guide how we innovate, work, and grow together."
       />
       <CoreValuesIntro />

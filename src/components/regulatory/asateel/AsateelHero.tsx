@@ -11,7 +11,7 @@ export default function AsateelHero() {
         .asa-hero {
           position: relative; overflow: hidden;
           background: linear-gradient(135deg, #1360ee 0%, #1a5ff0 60%, #0d4fd4 100%);
-          padding: clamp(16px,2vw,28px) 28px clamp(72px,9vw,110px);
+          padding: clamp(16px,2vw,28px) 28px clamp(72px,6vw,80px);
         }
         .asa-hero-wave { position: absolute; left: 0; right: 0; bottom: -1px; line-height: 0; }
 
@@ -25,7 +25,7 @@ export default function AsateelHero() {
         .asa-grid {
           position: relative; z-index: 1;
           display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(24px,4vw,48px);
-          align-items: center; max-width: var(--w-1280); margin: 0 auto;
+          align-items: start; max-width: var(--w-1280); margin: 0 auto;
         }
         @media (max-width: 940px) {
           .asa-grid { grid-template-columns: 1fr; }
@@ -41,24 +41,33 @@ export default function AsateelHero() {
         }
         .asa-back:hover { color: #fff; gap: 9px; }
 
+        .asa-title {
+          margin: 0; max-width: 560px;
+          font-size: clamp(24px, calc(1.5vw + 15px), 34px);
+          font-weight: 700; line-height: 1.22; letter-spacing: -.02em;
+          color: #fff;
+        }
+        @media (max-width: 940px) { .asa-title { max-width: 560px; margin: 0 auto; } }
+        @media (max-width: 420px) { .asa-title { font-size: clamp(22px, 6.4vw, 26px); letter-spacing: -.014em; } }
+
         .asa-btn {
           font-family: inherit; font-weight: 700; cursor: pointer;
-          padding: clamp(14px,1.6vw,18px) clamp(16px,2vw,22px); border-radius: 12px; border: none;
+          padding: 13px clamp(16px,1.8vw,20px); border-radius: 11px; border: none;
           transition: .18s ${EASE};
-          display: flex; align-items: center; gap: 12px;
+          display: inline-flex; align-items: center; gap: 10px;
           text-decoration: none; background: #fff; color: #1d1d1f;
-          flex: 1 1 0; min-width: 0;
+          white-space: nowrap;
         }
-        .asa-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0,0,0,.18); }
+        .asa-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,.16); }
         .asa-btn-icon {
-          width: clamp(30px,3.2vw,36px); height: clamp(30px,3.2vw,36px); border-radius: 10px; flex-shrink: 0;
+          width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
           display: grid; place-items: center; background: rgba(19,96,238,.12); color: #1360ee;
         }
-        .asa-btn-icon svg { width: 15px; height: 15px; }
-        .asa-btn-text { font-size: max(clamp(13.5px,1.15vw,15px), min(1.042vw, 21.75px)); line-height: 1.35; text-align: left; }
+        .asa-btn-icon svg { width: 14px; height: 14px; }
+        .asa-btn-text { font-size: var(--f-14); line-height: 1.2; }
         @media (max-width: 640px) {
-          .asa-hero-cta-row { flex-direction: column; }
-          .asa-btn { flex: none; width: 100%; }
+          .asa-hero-cta-row { flex-direction: column; align-items: stretch; }
+          .asa-btn { justify-content: center; }
         }
       `}</style>
 
@@ -83,18 +92,18 @@ export default function AsateelHero() {
               Regulatory GPS Certifications
             </Link>
 
-            <h1 style={{ margin: 0, fontSize: 'max(clamp(28px,3.8vw,44px), min(3.056vw, 63.8px))', fontWeight: 700, lineHeight: 1.14, color: '#fff' }}>
+            <h1 className="asa-title">
               A Reliable <span style={{ color: '#fff', fontWeight: 800 }}>ASATEEL</span> Certified OBU Installation Company
             </h1>
 
-            <div className="asa-hero-cta-row" style={{ display: 'flex', gap: '14px', marginTop: '32px', maxWidth: '620px' }}>
+            <div className="asa-hero-cta-row" style={{ display: 'flex', gap: '14px', marginTop: '32px', maxWidth: '600px' }}>
               <Link href="/contact" className="asa-btn">
                 <span className="asa-btn-icon">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="4" y="4" width="16" height="16" rx="2" /><path d="M4 10h16M10 4v16" />
                   </svg>
                 </span>
-                <span className="asa-btn-text">Get a Free Quote for ASATEEL Certified OBU</span>
+                <span className="asa-btn-text">Get a Free Quote</span>
               </Link>
               <Link href="/contact" className="asa-btn">
                 <span className="asa-btn-icon">
@@ -102,7 +111,7 @@ export default function AsateelHero() {
                     <polygon points="5 3 19 12 5 21 5 3" />
                   </svg>
                 </span>
-                <span className="asa-btn-text">Get an Advice on ASATEEL Account Creation</span>
+                <span className="asa-btn-text">Get Expert Advice</span>
               </Link>
             </div>
           </div>

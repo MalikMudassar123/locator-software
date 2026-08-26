@@ -1,6 +1,6 @@
 export default function SecurepathPremiumExplainer() {
   return (
-    <section style={{ padding: 'clamp(56px,7vw,80px) 28px 0', background: '#fff' }}>
+    <section style={{ padding: '0 28px 0', background: '#fff' }}>
       <div style={{ maxWidth: 'var(--w-1180)', margin: '0 auto' }}>
         <div data-reveal style={{
           width: 40, height: 40, borderRadius: 10,

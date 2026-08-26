@@ -303,10 +303,10 @@ export default function AboutPillarHero({
             </div>
           </div>
 
-          <div className="cv-float" aria-label="Quick contact">
+          {/* <div className="cv-float" aria-label="Quick contact">
             <a href="https://wa.me/971000000000" target="_blank" rel="noreferrer" aria-label="WhatsApp">◌</a>
             <a href="https://wa.me/971000000000" target="_blank" rel="noreferrer" aria-label="WhatsApp">◌</a>
-          </div>
+          </div> */}
         </section>
       </>
     )

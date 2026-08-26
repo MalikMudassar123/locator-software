@@ -27,8 +27,8 @@ export default function ShahinHero() {
 
         .shn-grid {
           position: relative; z-index: 1;
-          display: grid; grid-template-columns: 1.25fr 1fr; gap: clamp(24px,4vw,48px);
-          align-items: center; max-width: var(--w-1280); margin: 0 auto;
+          display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(24px,4vw,48px);
+          align-items: start; max-width: var(--w-1280); margin: 0 auto;
         }
         @media (max-width: 940px) {
           .shn-grid { grid-template-columns: 1fr; }
@@ -36,28 +36,37 @@ export default function ShahinHero() {
           .shn-hero-cta-row { justify-content: center; margin-left: auto !important; margin-right: auto !important; }
         }
 
+        .shn-title {
+          margin: 0; max-width: 560px;
+          font-size: clamp(24px, calc(1.5vw + 15px), 34px);
+          font-weight: 800; line-height: 1.22; letter-spacing: -.02em;
+          color: #1d1d1f;
+        }
+        @media (max-width: 940px) { .shn-title { max-width: 560px; margin: 0 auto; } }
+        @media (max-width: 420px) { .shn-title { font-size: clamp(22px, 6.4vw, 26px); letter-spacing: -.014em; } }
+
         .shn-btn {
           font-family: inherit; font-weight: 700; cursor: pointer;
-          padding: clamp(14px,1.6vw,18px) clamp(16px,2vw,22px); border-radius: 12px; border: none;
+          padding: 13px clamp(16px,1.8vw,20px); border-radius: 11px; border: none;
           transition: .18s ${EASE};
-          display: flex; align-items: center; gap: 12px; text-decoration: none;
-          flex: 1 1 0; min-width: 0;
+          display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+          white-space: nowrap;
         }
-        .shn-btn-primary { background: #1360ee; color: #fff; box-shadow: 0 10px 24px rgba(19,96,238,.28); }
-        .shn-btn-primary:hover { background: #0d4fd4; transform: translateY(-1px); box-shadow: 0 12px 28px rgba(19,96,238,.38); }
+        .shn-btn-primary { background: #1360ee; color: #fff; box-shadow: 0 6px 16px rgba(19,96,238,.24); }
+        .shn-btn-primary:hover { background: #0d4fd4; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(19,96,238,.32); }
         .shn-btn-secondary { background: #fff; color: #1360ee; border: 1.5px solid #dbe4fb; box-shadow: 0 2px 10px rgba(0,0,0,.04); }
         .shn-btn-secondary:hover { border-color: #1360ee; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(19,96,238,.15); }
         .shn-btn-icon {
-          width: clamp(30px,3.2vw,36px); height: clamp(30px,3.2vw,36px); border-radius: 10px; flex-shrink: 0;
+          width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
           display: grid; place-items: center;
         }
         .shn-btn-primary .shn-btn-icon { background: rgba(255,255,255,.22); color: #fff; }
         .shn-btn-secondary .shn-btn-icon { background: rgba(19,96,238,.1); color: #1360ee; }
-        .shn-btn-icon svg { width: 15px; height: 15px; }
-        .shn-btn-text { font-size: max(clamp(13.5px,1.15vw,15px), min(1.042vw, 21.75px)); line-height: 1.35; text-align: left; }
+        .shn-btn-icon svg { width: 14px; height: 14px; }
+        .shn-btn-text { font-size: var(--f-14); line-height: 1.2; }
         @media (max-width: 640px) {
-          .shn-hero-cta-row { flex-direction: column; }
-          .shn-btn { flex: none; width: 100%; }
+          .shn-hero-cta-row { flex-direction: column; align-items: stretch; }
+          .shn-btn { justify-content: center; }
         }
       `}</style>
 
@@ -83,18 +92,18 @@ export default function ShahinHero() {
               Regulatory GPS Certifications
             </Link>
 
-            <h1 style={{ margin: 0, maxWidth: '620px', fontSize: 'max(clamp(32px,4.4vw,58px), min(4.028vw, 84.1px))', fontWeight: 800, lineHeight: 1.14, letterSpacing: '-.025em', color: '#1d1d1f' }}>
+            <h1 className="shn-title">
               <span style={{ color: '#1360ee' }}>SHAHIN:</span> Your Reliable and Effective GPS Provider for Seamless Registration
             </h1>
 
-            <div className="shn-hero-cta-row" style={{ display: 'flex', gap: '14px', marginTop: '32px', maxWidth: '620px' }}>
+            <div className="shn-hero-cta-row" style={{ display: 'flex', gap: '14px', marginTop: '32px', maxWidth: '600px' }}>
               <Link href="/contact" className="shn-btn shn-btn-primary">
                 <span className="shn-btn-icon">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="4" y="4" width="16" height="16" rx="2" /><path d="M4 10h16M10 4v16" />
                   </svg>
                 </span>
-                <span className="shn-btn-text">Get a Free Quote for SHAHIN Implementation</span>
+                <span className="shn-btn-text">Get a Free Quote</span>
               </Link>
               <Link href="/contact" className="shn-btn shn-btn-secondary">
                 <span className="shn-btn-icon">
@@ -102,7 +111,7 @@ export default function ShahinHero() {
                     <polygon points="5 3 19 12 5 21 5 3" />
                   </svg>
                 </span>
-                <span className="shn-btn-text">Get an Advice on SHAHIN Registration</span>
+                <span className="shn-btn-text">Get Expert Advice</span>
               </Link>
             </div>
           </div>

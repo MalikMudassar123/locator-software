@@ -11,7 +11,7 @@ export default function SecurepathHero() {
         .sph-hero {
           position: relative; overflow: hidden;
           background: linear-gradient(135deg, #1360ee 0%, #1a5ff0 60%, #0d4fd4 100%);
-          padding: clamp(16px,2vw,28px) 28px clamp(72px,9vw,110px);
+          padding: clamp(16px,2vw,28px) 28px clamp(72px,6vw,80px);
         }
         .sph-hero-wave { position: absolute; left: 0; right: 0; bottom: -1px; line-height: 0; }
 
@@ -25,7 +25,7 @@ export default function SecurepathHero() {
         .sph-grid {
           position: relative; z-index: 1;
           display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(24px,4vw,48px);
-          align-items: center; max-width: var(--w-1280); margin: 0 auto;
+          align-items: start; max-width: var(--w-1280); margin: 0 auto;
         }
         @media (max-width: 940px) {
           .sph-grid { grid-template-columns: 1fr; }
@@ -40,6 +40,15 @@ export default function SecurepathHero() {
           transition: color .18s ease, gap .18s ease;
         }
         .sph-back:hover { color: #fff; gap: 9px; }
+
+        .sph-title {
+          margin: 0; max-width: 560px;
+          font-size: clamp(24px, calc(1.5vw + 15px), 34px);
+          font-weight: 700; line-height: 1.22; letter-spacing: -.02em;
+          color: #fff;
+        }
+        @media (max-width: 940px) { .sph-title { max-width: 560px; margin: 0 auto; } }
+        @media (max-width: 420px) { .sph-title { font-size: clamp(22px, 6.4vw, 26px); letter-spacing: -.014em; } }
 
         .sph-btn {
           font-family: inherit; font-weight: 700; cursor: pointer;
@@ -82,11 +91,11 @@ export default function SecurepathHero() {
               Regulatory GPS Certifications
             </Link>
 
-            <h1 style={{ margin: 0, maxWidth: '620px', fontSize: 'max(clamp(32px,4.4vw,58px), min(4.028vw, 84.1px))', fontWeight: 700, lineHeight: 1.14, color: '#fff' }}>
+            <h1 className="sph-title">
               <span style={{ color: '#fff', fontWeight: 800 }}>SecurePath:</span> Your Trusted and Approved Vendor for Reliable GPS Solutions
             </h1>
 
-            <p style={{ margin: '20px 0 0', maxWidth: '460px', fontSize: 'max(clamp(14px,1.3vw,16px), min(1.111vw, 23.2px))', lineHeight: 1.6, color: 'rgba(255,255,255,.82)' }}>
+            <p style={{ margin: '16px 0 0', maxWidth: '460px', fontSize: 'max(clamp(14px,1.3vw,16px), min(1.111vw, 23.2px))', lineHeight: 1.6, color: 'rgba(255,255,255,.82)' }}>
               Try Out SecurePath GPS System from LOCATOR Today
             </p>
 

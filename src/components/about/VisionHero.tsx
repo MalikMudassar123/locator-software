@@ -13,7 +13,7 @@ export default function VisionHero() {
           background: #f8f9fb;
           display: flex;
           flex-direction: column;
-          min-height: clamp(420px, 48vw, 640px);
+          min-height: clamp(340px, 24vw, 420px);
           margin-top: -1px;
         }
 

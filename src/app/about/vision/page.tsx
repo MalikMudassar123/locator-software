@@ -27,7 +27,7 @@ export default function AboutVisionPage() {
       <VisionHero />
 
       {/* Vision intro — matches WhoWeArePurpose design */}
-      <section style={{ position: 'relative', overflow: 'hidden', padding: 'clamp(56px,7vw,92px) 28px', background: '#f7f9fc' }}>
+      <section style={{ position: 'relative', overflow: 'hidden', paddingTop: 0, paddingBottom: 'clamp(56px,7vw,92px)', paddingLeft: 28, paddingRight: 28, background: '#f7f9fc' }}>
         <div aria-hidden="true" style={{ position: 'absolute', width: 460, height: 460, top: -160, left: '50%', transform: 'translateX(-50%)', borderRadius: '50%', background: 'radial-gradient(50% 50% at 50% 50%, rgba(19,96,238,.07), transparent 70%)', pointerEvents: 'none' }} />
 
         <div data-reveal style={{ position: 'relative', maxWidth: '820px', margin: '0 auto', textAlign: 'center' }}>
@@ -40,7 +40,7 @@ export default function AboutVisionPage() {
           </h2>
           <div style={{ margin: '24px auto', height: '4px', width: '80px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#06a4e2)' }} />
           <p style={{ margin: 0, fontSize: 'max(clamp(15px,1.5vw,17px), min(1.181vw, 24.65px))', lineHeight: 1.8, color: '#52525e' }}>
-            Towards 2035, we envision a globally connected world where one million IoT devices enable smarter mobility, safer assets, and more intelligent operations — positioning us as a trusted global leader in AI-powered IoT innovation.
+            By 2035, we envision a globally connected world where one million IoT devices enable smarter mobility, safer assets, and more intelligent operations — positioning us as a trusted global leader in AI-powered IoT innovation.
           </p>
         </div>
       </section>

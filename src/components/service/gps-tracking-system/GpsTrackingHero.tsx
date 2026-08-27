@@ -34,7 +34,7 @@ export default function GpsTrackingHero() {
         .gts-hero-grid {
           position: relative; z-index: 1; max-width: 1200px; margin: 0 auto;
           padding: clamp(32px,6vh,64px) 28px clamp(64px,9vh,96px);
-          display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px,5vw,56px); align-items: center;
+          display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(28px,5vw,56px); align-items: start;
         }
         @media (max-width: 900px) {
           .gts-hero-grid { grid-template-columns: 1fr; text-align: center; }
@@ -63,15 +63,15 @@ export default function GpsTrackingHero() {
         <div className="gts-hero-grid">
           {/* Copy */}
           <div className="gts-copy gts-copy-align" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-            <h1 style={{ margin: 0, fontSize: 'clamp(28px,3.8vw,42px)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-.02em', color: '#1d1d1f', maxWidth: '16ch' }}>
+            <h1 style={{ margin: 0, fontSize: 'clamp(24px, calc(1.5vw + 15px), 34px)', fontWeight: 800, lineHeight: 1.22, letterSpacing: '-.02em', color: '#1d1d1f', maxWidth: '480px' }}>
               GPS Tracking System for Vehicles | UAE &mdash; <span style={{ color: '#1360ee' }}>Locator</span>
             </h1>
-            <p style={{ margin: '18px 0 0', fontSize: 'clamp(14px,1.35vw,16.5px)', lineHeight: 1.65, color: '#5a6472', maxWidth: '42ch' }}>
+            <p style={{ margin: '14px 0 0', fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.7, color: '#5a6472', maxWidth: '42ch' }}>
               Our GPS tracker software makes your life easier when it comes to managing your vehicles and team &mdash;
               live, accurate, and always within reach.
             </p>
 
-            <div className="gts-store-row" style={{ display: 'flex', gap: '12px', marginTop: '30px', flexWrap: 'wrap' }}>
+            <div className="gts-store-row" style={{ display: 'flex', gap: '12px', marginTop: '22px', flexWrap: 'wrap' }}>
               <StoreBadge kind="ios" />
               <StoreBadge kind="android" />
             </div>

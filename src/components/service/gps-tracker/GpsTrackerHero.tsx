@@ -42,8 +42,8 @@ export default function GpsTrackerHero() {
           position: relative; z-index: 1;
           max-width: 1200px; margin: 0 auto;
           padding: clamp(32px,6vh,64px) 28px clamp(64px,9vh,100px);
-          display: grid; grid-template-columns: 1.05fr 0.95fr;
-          gap: clamp(28px,5vw,56px); align-items: center;
+          display: grid; grid-template-columns: 1.1fr 1fr;
+          gap: clamp(28px,5vw,56px); align-items: start;
         }
         @media (max-width: 900px) {
           .gt-hero-grid { grid-template-columns: 1fr; text-align: center; }
@@ -112,16 +112,16 @@ export default function GpsTrackerHero() {
               Certified Teltonika GPS Hardware
             </span>
 
-            <h1 style={{ margin: 0, fontSize: 'clamp(30px,4.4vw,52px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-.02em', color: '#1d1d1f', maxWidth: '15ch' }}>
+            <h1 style={{ margin: 0, fontSize: 'clamp(24px, calc(1.5vw + 15px), 34px)', fontWeight: 800, lineHeight: 1.22, letterSpacing: '-.02em', color: '#1d1d1f', maxWidth: '480px' }}>
               The ultimate <span style={{ color: '#1360ee' }}>GPS tracker</span> device for your fleet
             </h1>
 
-            <p style={{ margin: '20px 0 0', fontSize: 'clamp(15px,1.4vw,17px)', lineHeight: 1.65, color: '#5a6472', maxWidth: '46ch' }}>
+            <p style={{ margin: '14px 0 0', fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.7, color: '#5a6472', maxWidth: '46ch' }}>
               A rugged, plug-and-play tracking device that feeds live location, driver behaviour, and vehicle
               health straight into the LOCATOR platform &mdash; installed, configured, and supported across the UAE.
             </p>
 
-            <div className="gt-hero-btns" style={{ display: 'flex', gap: '14px', marginTop: '32px', flexWrap: 'wrap' }}>
+            <div className="gt-hero-btns" style={{ display: 'flex', gap: '14px', marginTop: '24px', flexWrap: 'wrap' }}>
               <Link href="/get-a-quote" className="gt-btn gt-btn-primary">Get a free quote</Link>
               <Link href="/contact" className="gt-btn gt-btn-ghost">Get a free demo →</Link>
             </div>

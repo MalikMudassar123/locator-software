@@ -39,9 +39,9 @@ export default function CarTrackingHero() {
         .cts-hero-inner {
           position: relative; z-index: 1;
           max-width: var(--w-1180); margin: 0 auto;
-          padding-top: clamp(24px,4vw,48px);
-          display: grid; grid-template-columns: 1.02fr .98fr;
-          gap: clamp(32px,5vw,72px); align-items: center;
+          padding-top: clamp(8px,1.5vw,16px);
+          display: grid; grid-template-columns: 1.1fr 1fr;
+          gap: clamp(32px,5vw,72px); align-items: start;
         }
         @media (max-width: 940px) {
           .cts-hero-inner { grid-template-columns: 1fr; gap: clamp(38px,6vw,52px); }
@@ -69,18 +69,19 @@ export default function CarTrackingHero() {
         .cts-eyebrow::before { content: ''; width: 30px; height: 2px; background: #0a89dd; border-radius: 2px; }
 
         .cts-title {
-          margin: 0; max-width: 17ch;
-          font-size: max(clamp(34px,5vw,60px), min(4.167vw, 87px)); font-weight: 800;
-          line-height: 1.05; letter-spacing: -.034em; color: #1d1d1f;
+          margin: 0; max-width: 560px;
+          font-size: clamp(24px, calc(1.5vw + 15px), 34px); font-weight: 800;
+          line-height: 1.22; letter-spacing: -.02em; color: #1d1d1f;
         }
         .cts-title em { font-style: normal; color: #1360ee; }
+        @media (max-width: 420px) { .cts-title { font-size: clamp(22px, 6.4vw, 26px); letter-spacing: -.014em; } }
 
         .cts-lead {
-          margin: clamp(20px,2.6vw,26px) 0 0; max-width: 52ch;
-          font-size: max(clamp(15.5px,1.5vw,18px), min(1.250vw, 26.1px)); line-height: 1.7; color: #6e6e73;
+          margin: clamp(14px,1.8vw,18px) 0 0; max-width: 46ch;
+          font-size: max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px)); line-height: 1.7; color: #6e6e73;
         }
 
-        .cts-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: clamp(28px,3.6vw,38px); }
+        .cts-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: clamp(22px,2.8vw,30px); }
         .cts-btn {
           display: inline-flex; align-items: center; gap: 9px;
           padding: 14px 26px; border-radius: 999px; text-decoration: none;

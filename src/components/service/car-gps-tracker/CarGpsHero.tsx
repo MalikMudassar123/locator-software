@@ -15,7 +15,7 @@ export default function CarGpsHero() {
         .cgh-grid {
           position: relative; z-index: 1; max-width: 1200px; margin: 0 auto;
           padding: clamp(32px,6vh,64px) 28px clamp(64px,9vh,96px);
-          display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(28px,5vw,56px); align-items: center;
+          display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(28px,5vw,56px); align-items: start;
         }
         @media (max-width: 900px) {
           .cgh-grid { grid-template-columns: 1fr; text-align: center; }
@@ -43,15 +43,15 @@ export default function CarGpsHero() {
 
         <div className="cgh-grid">
           {/* Copy */}
-          <div className="cgh-copy cgh-copy-align" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-            <h1 style={{ margin: 0, fontSize: 'clamp(28px,3.8vw,42px)', fontWeight: 800, lineHeight: 1.22, letterSpacing: '-.02em', color: '#1d1d1f', maxWidth: '16ch' }}>
+          <div className="cgh-copy cgh-copy-align" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', paddingTop: 'clamp(20px,3vw,40px)' }}>
+            <h1 style={{ margin: 0, fontSize: 'clamp(24px, calc(1.5vw + 15px), 34px)', fontWeight: 800, lineHeight: 1.22, letterSpacing: '-.02em', color: '#1d1d1f', maxWidth: '480px' }}>
               The best <span style={{ color: '#1360ee' }}>Car GPS Tracker</span> for maximum visibility
             </h1>
-            <p style={{ margin: '18px 0 0', fontSize: 'clamp(14px,1.35vw,16.5px)', color: '#8a93a2', fontWeight: 600 }}>
+            <p style={{ margin: '14px 0 0', fontSize: 'clamp(14px,1.35vw,16.5px)', color: '#8a93a2', fontWeight: 600 }}>
               A perfect solution to monitor your vehicles
             </p>
 
-            <div className="cgh-btns" style={{ display: 'flex', gap: '14px', marginTop: '28px', flexWrap: 'wrap' }}>
+            <div className="cgh-btns" style={{ display: 'flex', gap: '14px', marginTop: '22px', flexWrap: 'wrap' }}>
               <Link href="/get-a-quote" className="cgh-btn cgh-btn-primary">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5" /><path d="M8 11l2.5 2.5L16 8" /></svg>
                 Get a free quote

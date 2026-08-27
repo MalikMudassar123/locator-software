@@ -22,7 +22,7 @@ export default function CarTrackerHero() {
           position: relative; z-index: 1;
           max-width: 1200px; margin: 0 auto;
           padding: clamp(28px,5vh,56px) 28px clamp(88px,11vh,120px);
-          display: grid; grid-template-columns: 1fr 1.05fr;
+          display: grid; grid-template-columns: 1.1fr 1fr;
           gap: clamp(28px,5vw,56px); align-items: center;
         }
         @media (max-width: 900px) {

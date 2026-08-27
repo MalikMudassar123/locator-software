@@ -14,7 +14,7 @@ export default function VehicleTrackingFeatures() {
   return (
     <>
       <style>{`
-        .vtf { background: #fff; padding: clamp(56px,7vw,96px) 28px; }
+        .vtf { background: #fff; padding: 0 28px clamp(56px,7vw,96px); }
         .vtf-inner { max-width: var(--w-1180); margin: 0 auto; }
 
         .vtf-head { max-width: 700px; margin: 0 auto clamp(40px,5vw,58px); text-align: center; }

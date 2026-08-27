@@ -4117,3 +4117,91 @@ h6 {
 .home-main > .lm             { content-visibility: auto; contain-intrinsic-size: auto 613px; }
 .home-main > .bs             { content-visibility: auto; contain-intrinsic-size: auto 1172px; }
 .home-main > footer          { content-visibility: auto; contain-intrinsic-size: auto 621px; }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Decorative accent rules — globally hidden.
+
+   The short blue/black dashes drawn above section eyebrows and kickers, and
+   the little gradient underlines beneath headings. They appear in ~80 files in
+   two forms, both handled here:
+
+     1. styled-jsx rules — `.xx-eyebrow::before`, `.xx-eyebrow i`,
+        `.xx-eyebrow span`. Listed explicitly below. `!important` beats
+        styled-jsx's own `.cls.jsx-hash` specificity.
+
+     2. React inline styles — `<span style={{ width: '34px', height: '3px',
+        background: '#1360ee', borderRadius: '2px' }} />`. React serialises the
+        style attribute with NO space after the colon (`height:3px`), so the
+        attribute selectors below must match that exact form. Both spellings are
+        listed so hand-written HTML is covered too.
+
+   Each inline rule is paired with its border-radius so it stays off the
+   scroll-progress tracks that share the same 3px height but have no radius
+   (ServiceIndustries, VideoTelematicsAlertsScroll) and off the full-bleed 1px
+   section hairlines in the footer.
+
+   Deliberately NOT hidden: `.vr-line` / `.ds-line` (timeline connectors),
+   `.swn-link::after` (nav hover underline), `.nyw-bar-track` / `.dv-track`
+   (progress tracks), and card top-edge accents.
+
+   One reversible switch instead of 100+ scattered edits — delete this block to
+   bring them all back.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* 1. styled-jsx eyebrow / kicker dashes */
+.apx-eyebrow i,
+.bgc-mark,
+.bgt-eyebrow::before,
+.bgx-eyebrow::before,
+.ch-eyebrow-rule span,
+.ctb-eyebrow::before,
+.ctc-eyebrow i,
+.ctf-eyebrow i,
+.cto-eyebrow::after,
+.cto-eyebrow::before,
+.ctp-eyebrow i,
+.cts-eyebrow i,
+.cts-eyebrow::before,
+.ctv-eyebrow::after,
+.ctv-eyebrow::before,
+.ctw-eyebrow::before,
+.cv-kicker::before,
+.db-eyebrow span,
+.dd-eyebrow::before,
+.dv-eyebrow::before,
+.fc__divider,
+.ig-eyebrow span,
+.ixh-eyebrow i,
+.mc-tag-bar,
+.nrh-eyebrow i,
+.pm-tag span,
+.qf-eyebrow span,
+.si-eyebrow-bar,
+.td-eyebrow-bar,
+.vsh-kicker span,
+.vtb-eyebrow::before,
+.vtf-eyebrow::after,
+.vtf-eyebrow::before,
+.vth-eyebrow::before,
+.vtw-eyebrow::before,
+.wwn-eyebrow-rule span,
+.wws-card::after,
+.vsh-divider,
+
+/* 2. React inline-styled dashes and heading underlines */
+span[style*="height:3px"][style*="border-radius:2px"],
+span[style*="height: 3px"][style*="border-radius: 2px"],
+div[style*="height:3px"][style*="border-radius:2px"],
+div[style*="height: 3px"][style*="border-radius: 2px"],
+span[style*="height:2px"][style*="border-radius:2px"],
+span[style*="height: 2px"][style*="border-radius: 2px"],
+div[style*="height:2px"][style*="border-radius:2px"],
+div[style*="height: 2px"][style*="border-radius: 2px"],
+span[style*="height:1.5px"],
+span[style*="height: 1.5px"],
+div[style*="height:4px"][style*="border-radius:999px"],
+div[style*="height: 4px"][style*="border-radius: 999px"],
+span[style*="height:4px"][style*="border-radius:999px"],
+span[style*="height: 4px"][style*="border-radius: 999px"] {
+  display: none !important;
+}

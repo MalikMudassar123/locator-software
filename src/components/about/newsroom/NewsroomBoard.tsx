@@ -202,7 +202,8 @@ export default function NewsroomBoard() {
 
         /* ── Featured (dark treatment, text over the photo) ── */
         .nrb-hero-card {
-          position: relative; display: block; text-decoration: none; overflow: hidden;
+          position: relative; display: flex; flex-direction: column; justify-content: flex-end;
+          text-decoration: none; overflow: hidden;
           border-radius: 18px; border: 1px solid #e7ecf6; background: #0b1220;
           min-height: clamp(320px,38vw,420px);
           transition: transform .22s ${EASE}, box-shadow .22s ${EASE};
@@ -212,10 +213,9 @@ export default function NewsroomBoard() {
         .nrb-hero-card:hover img { transform: scale(1.04); }
         .nrb-hero-scrim {
           position: absolute; inset: 0; z-index: 1;
-          /* Plain full-coverage fade, heaviest where the text sits (left) and
-             clear by the right edge, so the photo on that side stays fully
-             visible. No floating panel, no blur — just a wash under the type. */
-          background: linear-gradient(75deg, rgba(6,11,22,.86) 0%, rgba(6,11,22,.66) 36%, rgba(6,11,22,.22) 68%, rgba(6,11,22,.04) 100%);
+          /* Bottom-up fade now that the text sits at the bottom — dark under
+             the type, clear by the top so the photo reads fully above it. */
+          background: linear-gradient(0deg, rgba(6,11,22,.88) 0%, rgba(6,11,22,.62) 32%, rgba(6,11,22,.18) 62%, rgba(6,11,22,.02) 85%);
         }
         .nrb-hero-content { position: relative; z-index: 2; padding: clamp(18px,2.6vw,32px); max-width: 600px; }
         .nrb-hero-chip {

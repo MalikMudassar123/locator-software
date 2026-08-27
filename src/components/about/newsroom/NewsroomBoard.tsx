@@ -60,11 +60,12 @@ function Card({ item, size = 'md' }: { item: NewsItem; size?: 'md' | 'lg' }) {
   const color = CATEGORY_COLOR[item.category]
   return (
     <a href={item.href} className={`nrb-card nrb-card--${size}`}>
-      <div className="nrb-card-media">
+      <div className="nrb-card-media" style={item.fit === 'contain' && item.imageAspect ? { aspectRatio: item.imageAspect } : undefined}>
         <Image
           src={item.image}
           alt=""
           fill
+          style={{ objectFit: item.fit ?? 'cover' }}
           sizes={size === 'lg' ? '(max-width: 1040px) 100vw, 700px' : '(max-width: 700px) 100vw, 340px'}
         />
         <span className="nrb-chip" style={{ background: color }}>
@@ -211,17 +212,24 @@ export default function NewsroomBoard() {
         .nrb-hero-card:hover img { transform: scale(1.04); }
         .nrb-hero-scrim {
           position: absolute; inset: 0; z-index: 1;
-          background: linear-gradient(75deg, rgba(6,11,22,.95) 0%, rgba(6,11,22,.8) 42%, rgba(6,11,22,.25) 78%, rgba(6,11,22,.1) 100%);
+          /* Plain full-coverage fade, heaviest where the text sits (left) and
+             clear by the right edge, so the photo on that side stays fully
+             visible. No floating panel, no blur — just a wash under the type. */
+          background: linear-gradient(75deg, rgba(6,11,22,.86) 0%, rgba(6,11,22,.66) 36%, rgba(6,11,22,.22) 68%, rgba(6,11,22,.04) 100%);
         }
-        .nrb-hero-content { position: relative; z-index: 2; padding: clamp(22px,3.2vw,40px); max-width: 640px; }
+        .nrb-hero-content { position: relative; z-index: 2; padding: clamp(18px,2.6vw,32px); max-width: 600px; }
         .nrb-hero-chip {
           display: inline-block; font-size: var(--f-9-5); font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
-          color: #fff; background: #1360ee; padding: 5px 10px; border-radius: 6px; margin-bottom: 16px;
+          color: #fff; background: #1360ee; padding: 5px 10px; border-radius: 6px; margin-bottom: 14px;
         }
-        .nrb-hero-date { display: block; font-size: var(--f-11-5); color: rgba(255,255,255,.6); margin-bottom: 10px; }
-        .nrb-hero-title { margin: 0 0 12px; font-size: max(clamp(22px,3vw,38px), min(2.639vw, 55.1px)); font-weight: 800; line-height: 1.14; letter-spacing: -.028em; color: #fff; }
-        .nrb-hero-excerpt { margin: 0 0 20px; font-size: max(clamp(13px,1.2vw,15px), min(1.042vw, 21.75px)); line-height: 1.7; color: rgba(255,255,255,.74); max-width: 52ch; }
-        .nrb-hero-more { font-size: var(--f-13); font-weight: 700; color: #7fb0ff; }
+        .nrb-hero-date { display: block; font-size: var(--f-11-5); color: rgba(255,255,255,.7); margin-bottom: 8px; }
+        .nrb-hero-title {
+          margin: 0 0 10px; font-size: clamp(19px, 1.9vw, 27px); font-weight: 800; line-height: 1.2; letter-spacing: -.02em; color: #fff;
+        }
+        .nrb-hero-excerpt {
+          margin: 0 0 16px; font-size: clamp(13px, 1vw, 14.5px); line-height: 1.65; color: rgba(255,255,255,.84); max-width: 52ch;
+        }
+        .nrb-hero-more { font-size: var(--f-13); font-weight: 700; color: #9cc2ff; }
         .nrb-hero-card:hover .nrb-hero-more { text-decoration: underline; }
 
         /* ── Grids ── */
@@ -355,8 +363,19 @@ export default function NewsroomBoard() {
             <div className="nrb-swap" key={tab}>
             {tab === 'all' && (
               <>
-                <a href={featured.href} className="nrb-hero-card">
-                  <Image src={featured.image} alt="" fill priority sizes="(max-width: 1040px) 100vw, 880px" />
+                <a
+                  href={featured.href}
+                  className="nrb-hero-card"
+                  style={featured.fit === 'contain' && featured.imageAspect ? { aspectRatio: featured.imageAspect } : undefined}
+                >
+                  <Image
+                    src={featured.image}
+                    alt=""
+                    fill
+                    priority
+                    style={{ objectFit: featured.fit ?? 'cover' }}
+                    sizes="(max-width: 1040px) 100vw, 880px"
+                  />
                   <div className="nrb-hero-scrim" />
                   <div className="nrb-hero-content">
                     <span className="nrb-hero-chip">Featured Story</span>

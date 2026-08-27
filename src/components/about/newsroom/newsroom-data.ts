@@ -19,6 +19,15 @@ export type NewsItem = {
   title: string
   excerpt: string
   image: string
+  /** How the image fills its frame. Defaults to 'cover' (crops to fill). Use
+   *  'contain' when the source shouldn't be cropped — the frame letterboxes
+   *  against its own dark background instead. */
+  fit?: 'cover' | 'contain'
+  /** Only meaningful with fit:'contain'. The image's own width/height ratio
+   *  (e.g. '1280 / 805'), applied as the card's aspect-ratio so a 'contain'
+   *  image fills its frame edge-to-edge instead of pillarboxing inside a
+   *  frame shaped for something else. */
+  imageAspect?: string
   date: string
   /** Shown on video cards only. */
   duration?: string
@@ -77,7 +86,9 @@ export const NEWS_ITEMS: NewsItem[] = [
     title: 'AI Driver Behaviour Now Powered by Predictive Intelligence',
     excerpt:
       'Our latest update uses advanced AI models to predict risky behaviour and prevent incidents before they happen — scoring every trip in real time and coaching drivers automatically.',
-    image: '/block 1/video teleframe.webp',
+    image: '/1766153393233.jpg',
+    fit: 'contain',
+    imageAspect: '1280 / 805',
     date: 'May 30, 2026',
     href: '#',
     featured: true,
@@ -100,7 +111,9 @@ export const NEWS_ITEMS: NewsItem[] = [
     title: 'Locator at GITEX Global 2026',
     excerpt:
       'Meet the team at Hall 3, D120 for live demos of AI Fleet Intelligence and the new driver-coaching suite.',
-    image: '/live-showcase.png',
+    image: '/ChatGPT Image Aug 27, 2026, 02_43_48 PM.png',
+    fit: 'contain',
+    imageAspect: '1536 / 1024',
     date: 'May 28, 2026',
     href: '#',
   },

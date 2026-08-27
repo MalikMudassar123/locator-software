@@ -10,9 +10,33 @@ const CLIENT_LOGO_NUMBERS = [
   42, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 55, 57, 58, 59, 60,
 ];
 
+// Each file's real pixel dimensions (logo mounted on its own white card, baked
+// into the PNG). Cards come in two shapes — roughly square, or ~2.2x wider for
+// wordmark logos — never a uniform box. Declaring the true size here (rather
+// than one fake number for all 56) lets next/image report the correct aspect
+// ratio immediately, so a fixed display height with width:auto never has to
+// wait for the real file to decode before it knows how wide to render.
+const LOGO_DIMS = {
+  "01": [1423, 1480], "02": [1422, 1480], "03": [3128, 1481], "04": [3051, 1387],
+  "06": [1422, 1481], "07": [1423, 1480], "08": [1423, 1481], "09": [1422, 1480],
+  10: [1422, 1480], 11: [3128, 1481], 12: [3127, 1481], 13: [3127, 1481],
+  14: [3127, 1481], 15: [1423, 1480], 16: [1422, 1481], 17: [1422, 1480],
+  18: [1422, 1481], 19: [1422, 1481], 20: [1422, 1480], 21: [1422, 1481],
+  22: [1422, 1481], 23: [1422, 1480], 24: [1423, 1480], 25: [1422, 1481],
+  26: [1422, 1480], 27: [1422, 1480], 28: [1423, 1481], 29: [1422, 1481],
+  30: [1422, 1481], 31: [1422, 1480], 32: [1423, 1481], 33: [3127, 1480],
+  34: [3127, 1480], 35: [3127, 1480], 36: [3127, 1480], 37: [3127, 1481],
+  38: [1422, 1481], 39: [1422, 1480], 40: [1423, 1480], 41: [1422, 1480],
+  42: [1422, 1480], 44: [1423, 1480], 45: [1422, 1481], 46: [1422, 1480],
+  47: [1422, 1481], 48: [1423, 1480], 49: [1423, 1481], 50: [1422, 1481],
+  51: [1422, 1480], 52: [1601, 1481], 53: [1422, 1480], 55: [1423, 1480],
+  57: [1422, 1480], 58: [1422, 1480], 59: [1423, 1481], 60: [3127, 1480],
+};
+
 const ALL_LOGOS = CLIENT_LOGO_NUMBERS.map((n) => {
   const padded = String(n).padStart(2, "0");
-  return { name: `Client ${padded}`, src: `/client logos/client-${padded}.png` };
+  const [width, height] = LOGO_DIMS[padded];
+  return { name: `Client ${padded}`, src: `/client logos/client-${padded}.png`, width, height };
 });
 
 /* Split into three rows of roughly equal length */
@@ -74,9 +98,8 @@ export default function LogoMarquee({ speed1 = 92, speed2 = 102, speed3 = 112 })
 
       <style jsx>{`
         .lm {
-          --gap: clamp(50px, 6vw, 90px);
-          --logo-h: clamp(80px, 9vw, 120px);
-          --logo-w: clamp(150px, 17vw, 230px);
+          --gap: clamp(32px, 3.6vw, 60px);
+          --logo-h: clamp(118px, 11.8vw, 171px);
 
           position: relative;
           width: 100%;
@@ -174,12 +197,13 @@ function LogoItem({ logo }) {
       <Image
         src={logo.src}
         alt={logo.name}
-        width={260}
-        height={88}
+        width={logo.width}
+        height={logo.height}
         className="lmi__img"
         style={{
-          width: "var(--logo-w)",
+          width: "auto",
           height: "var(--logo-h)",
+          maxWidth: "clamp(266px, 26.6vw, 378px)",
           objectFit: "contain",
           objectPosition: "center",
           userSelect: "none",

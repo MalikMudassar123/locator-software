@@ -21,9 +21,9 @@ const INIT_EXPENSES: any[] = [
   { id: 4, date: '20/05/2026 18:07', employee: 'anshad', category: 'ACCESSORIES PURCHASE', description: 'Cycle Puncture', billAmount: 20.0, paidAmount: null, balance: -310.0, type: 'expense' },
   { id: 5, date: '20/05/2026 16:31', employee: 'anshad', category: 'PARKING', description: '-', billAmount: 100.0, paidAmount: null, balance: -290.0, type: 'expense' },
   { id: 6, date: '20/05/2026 16:26', employee: 'anshad', category: 'R&M- CARS', description: 'Petrol -115', billAmount: 115.0, paidAmount: null, balance: -190.0, type: 'expense' },
-  { id: 7, date: '16/05/2026 12:43', employee: 'anshad', category: 'R&M- CARS', description: 'VH No - 84759 - Date : 14-...', billAmount: 110.0, paidAmount: null, balance: -75.0, type: 'expense' },
-  { id: 8, date: '12/05/2026 19:34', employee: 'anshad', category: 'R&M- CARS', description: 'Fuel Expenses Date : 10 - ...', billAmount: 115.0, paidAmount: null, balance: 35.0, type: 'expense' },
-  { id: 9, date: '12/05/2026 19:07', employee: 'anshad', category: 'PARKING', description: 'I got a payment failed m...', billAmount: 50.0, paidAmount: null, balance: 150.0, type: 'expense' },
+  { id: 7, date: '16/05/2026 12:43', employee: 'anshad', category: 'R&M- CARS', description: 'VH No - 84759 - Date : 14-05-2026', billAmount: 110.0, paidAmount: null, balance: -75.0, type: 'expense' },
+  { id: 8, date: '12/05/2026 19:34', employee: 'anshad', category: 'R&M- CARS', description: 'Fuel Expenses Date : 10-05-2026', billAmount: 115.0, paidAmount: null, balance: 35.0, type: 'expense' },
+  { id: 9, date: '12/05/2026 19:07', employee: 'anshad', category: 'PARKING', description: 'I got a payment failed message', billAmount: 50.0, paidAmount: null, balance: 150.0, type: 'expense' },
 ]
 const EM_TOTAL_BALANCE = -1478.0
 
@@ -240,18 +240,30 @@ function EMMobileCard({ exp, onClick }: { exp: any; onClick: () => void }) {
   const dateParts = exp.date.split(' ')
   return (
     <div onClick={onClick} style={{ background: '#fff', borderRadius: 14, padding: '12px 14px', marginBottom: 10, boxShadow: '0 1px 3px rgba(0,0,0,.04)', cursor: 'pointer', border: '1px solid #f0f0f0' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div style={{ width: 40, height: 40, borderRadius: 12, background: '#f1f5f9', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
+      {/* Row 1 — icon + date + description.
+          The description spans the card's full width here instead of sharing a
+          row with the amount column. In a ~300px phone frame that left it about
+          130px, which forced either a truncating ellipsis or a ragged three-line
+          wrap. Given the whole width, short labels sit on one line and longer
+          ones wrap to a clean second line with the text still complete. */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+        <div style={{ width: 36, height: 36, borderRadius: 10, background: '#f1f5f9', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={cat.color} strokeWidth="1.8"><circle cx="12" cy="12" r="9" /><path d="M12 8v4l2 2" /></svg>
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 'var(--f-11)', color: '#94a3b8', fontWeight: 500 }}>{dateParts[0]} {dateParts[1]} PM</div>
-          <div style={{ fontSize: 'var(--f-13-5)', fontWeight: 600, color: '#1e293b', marginTop: 1 }}>{exp.description === '-' ? cat.label : exp.description}</div>
-          <div style={{ fontSize: 'var(--f-12)', fontWeight: 600, color: '#2563eb', marginTop: 1 }}>{exp.category !== '--' ? exp.category : 'PAYMENT'}</div>
+          <div style={{ fontSize: 'var(--f-11)', color: '#94a3b8', fontWeight: 500, whiteSpace: 'nowrap' }}>{dateParts[0]} {dateParts[1]} PM</div>
+          <div style={{ fontSize: 'var(--f-13-5)', fontWeight: 600, color: '#1e293b', marginTop: 3, lineHeight: 1.35, overflowWrap: 'break-word' }}>{exp.description === '-' ? cat.label : exp.description}</div>
         </div>
-        <div style={{ flexShrink: 0, textAlign: 'right' }}>
-          <div style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: isPay ? '#16a34a' : '#dc2626' }}>{isPay ? '+' : '−'} AED {amt?.toFixed(1)}</div>
-          <div style={{ fontSize: 'var(--f-10-5)', fontWeight: 600, color: isPay ? '#16a34a' : '#dc2626' }}>{isPay ? 'Approved' : 'Pending'}</div>
+      </div>
+
+      {/* Row 2 — category left, amount + status right. Bottom-aligned so the
+          category label sits level with the amount however the row above wraps,
+          which keeps the cards reading as an even sequence down the list. */}
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 10, marginTop: 8 }}>
+        <div style={{ fontSize: 'var(--f-12)', fontWeight: 600, color: '#2563eb', lineHeight: 1.3, minWidth: 0, overflowWrap: 'break-word' }}>{exp.category !== '--' ? exp.category : 'PAYMENT'}</div>
+        <div style={{ flexShrink: 0, textAlign: 'right', whiteSpace: 'nowrap' }}>
+          <div style={{ fontSize: 'var(--f-13)', fontWeight: 600, color: isPay ? '#16a34a' : '#dc2626', fontVariantNumeric: 'tabular-nums' }}>{isPay ? '+' : '−'} AED {amt?.toFixed(1)}</div>
+          <div style={{ fontSize: 'var(--f-10-5)', fontWeight: 600, color: isPay ? '#16a34a' : '#dc2626', marginTop: 1 }}>{isPay ? 'Approved' : 'Pending'}</div>
         </div>
       </div>
     </div>

@@ -63,7 +63,7 @@ export default function IndustriesHero() {
 
         <div className="ih-photo" data-reveal>
           <Image
-            src="/Rental & Leasing,Transportation & Logistics -1,Transportation & Logistics/cover image indutries.webp"
+            src="/industries/cover.webp"
             alt="Connected fleets across UAE industries"
             fill
             priority

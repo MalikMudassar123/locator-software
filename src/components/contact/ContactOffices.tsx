@@ -37,7 +37,7 @@ const OFFICES: Office[] = [
     city: 'Abu Dhabi',
     emirate: 'Emirate of Abu Dhabi',
     badge: 'Regional Office',
-    img: '/Rental & Leasing,Transportation & Logistics -1,Transportation & Logistics/cover image indutries.webp',
+    img: '/industries/cover.webp',
     imgAlt: 'Locator Abu Dhabi — industrial and logistics corridor',
     address: 'Capital Mall, Mohammed Bin Zayed City,\nAbu Dhabi, United Arab Emirates',
     phone: '+971 52 675 1880',

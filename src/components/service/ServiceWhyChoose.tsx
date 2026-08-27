@@ -40,8 +40,24 @@ export default function ServiceWhyChoose() {
   return (
     <>
       <style>{`
-        .swc-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(36px,5vw,72px); align-items: center; max-width: var(--w-1200); margin: 0 auto; }
+        .swc-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(28px,3.4vw,52px); align-items: stretch; max-width: var(--w-1200); margin: 0 auto; }
         @media (max-width: 940px) { .swc-grid { grid-template-columns: 1fr; gap: 40px; } .swc-grid > div:last-child { order: -1; } }
+
+        /* Photo fills the row's full height (matching the text column exactly)
+           and bleeds past the centred container to the viewport's right edge.
+           object-position:right means the slight overflow is trimmed off the
+           left — which is where this shot's empty white desk area sits — so
+           the laptop stays whole and no blank margin is left inside the frame.
+           min(0px,…) keeps the bleed pulling outward only, never inward. */
+        .swc-photo-wrap {
+          height: 100%;
+          margin-right: min(0px, calc((var(--w-1200) - 100vw) / 2 + 28px));
+        }
+        .swc-photo { position: relative; width: 100%; height: 100%; min-height: 340px; }
+        @media (max-width: 940px) {
+          .swc-photo-wrap { margin-right: 0; }
+          .swc-photo { height: auto; aspect-ratio: 1672 / 941; min-height: 0; }
+        }
 
         .swc-row { display: flex; gap: 16px; align-items: flex-start; }
         .swc-ic {
@@ -81,20 +97,16 @@ export default function ServiceWhyChoose() {
 
           {/* Right: LOCATOR dashboard illustration */}
           <div data-reveal="right" style={{ position: 'relative' }}>
-            <div
-              style={{
-                position: 'relative', width: '100%', maxWidth: '540px', aspectRatio: '3 / 2', margin: '0 auto',
-                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, #000 16%)',
-                maskImage: 'linear-gradient(to right, transparent 0%, #000 16%)',
-              }}
-            >
-              <Image
-                src="/ChatGPT Image Aug 25, 2026, 06_20_30 PM.webp"
-                alt="LOCATOR GPS tracking dashboard — live vehicle map and fleet overview"
-                fill
-                sizes="(max-width: 940px) 90vw, 540px"
-                style={{ objectFit: 'cover', objectPosition: 'right center' }}
-              />
+            <div className="swc-photo-wrap">
+              <div className="swc-photo">
+                <Image
+                  src="/ChatGPT Image Aug 25, 2026, 06_20_30 PM.webp"
+                  alt="LOCATOR GPS tracking dashboard — live vehicle map and fleet overview"
+                  fill
+                  sizes="(max-width: 940px) 90vw, 60vw"
+                  style={{ objectFit: 'cover', objectPosition: 'right center' }}
+                />
+              </div>
             </div>
           </div>
         </div>

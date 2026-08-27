@@ -76,7 +76,7 @@ export default function LogoMarquee({ speed1 = 92, speed2 = 102, speed3 = 112 })
         .lm {
           --gap: clamp(50px, 6vw, 90px);
           --logo-h: clamp(80px, 9vw, 120px);
-          --logo-max-w: clamp(220px, 26vw, 350px);
+          --logo-w: clamp(150px, 17vw, 230px);
 
           position: relative;
           width: 100%;
@@ -166,7 +166,7 @@ function LogoItem({ logo }) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div 
+    <div
       className="lmi"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -178,9 +178,8 @@ function LogoItem({ logo }) {
         height={88}
         className="lmi__img"
         style={{
-          width: "auto",
+          width: "var(--logo-w)",
           height: "var(--logo-h)",
-          maxWidth: "var(--logo-max-w)",
           objectFit: "contain",
           objectPosition: "center",
           userSelect: "none",

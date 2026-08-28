@@ -60,7 +60,7 @@ function Card({ item, size = 'md' }: { item: NewsItem; size?: 'md' | 'lg' }) {
   const color = CATEGORY_COLOR[item.category]
   return (
     <a href={item.href} className={`nrb-card nrb-card--${size}`}>
-      <div className="nrb-card-media" style={item.fit === 'contain' && item.imageAspect ? { aspectRatio: item.imageAspect } : undefined}>
+      <div className="nrb-card-media" data-fit={item.fit ?? 'cover'} style={item.fit === 'contain' && item.imageAspect ? { aspectRatio: item.imageAspect } : undefined}>
         <Image
           src={item.image}
           alt=""
@@ -154,6 +154,10 @@ export default function NewsroomBoard() {
         .nrb-card-media { position: relative; aspect-ratio: 16 / 10; background: #0b1220; overflow: hidden; }
         .nrb-card-media img { object-fit: cover; transition: transform .4s ${EASE}; }
         .nrb-card:hover .nrb-card-media img { transform: scale(1.05); }
+        /* A contain image is set that way precisely so nothing is cropped — the
+           hover zoom would push its edges past the frame and crop it after all,
+           so contained cards lift without scaling. */
+        .nrb-card:hover .nrb-card-media[data-fit="contain"] img { transform: none; }
         .nrb-card--lg .nrb-card-media { aspect-ratio: 16 / 8.2; }
 
         .nrb-chip {

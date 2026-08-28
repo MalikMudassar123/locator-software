@@ -168,10 +168,10 @@ export default function Footer() {
           <FooterCol title="Company" lead="About" links={companyLinks} />
 
           {/* ── Services ── */}
-          <FooterCol title="Services" lead="Services" links={serviceLinks} split />
+          <FooterCol title="Services" links={serviceLinks} split />
 
           {/* ── Support ── */}
-          <FooterCol title="Support" lead="Support" links={supportLinks} />
+          <FooterCol title="Support" links={supportLinks} />
 
           {/* ── Connect ── */}
           <div>
@@ -342,11 +342,17 @@ export default function Footer() {
            under — sits between the kicker and the list, so it reads as a
            label rather than as the first item of the list. */
         .footer-col-lead {
-          margin: 0 0 12px;
-          font-size: var(--f-14);
-          font-weight: 700;
-          letter-spacing: -.01em;
-          color: #1d1d1f;
+          /* Matches .footer-link exactly (dot, size, colour, gap) so it reads as
+             the first entry of the list rather than a heavier heading above it.
+             The 10px bottom margin is the same gap the <ul> puts between items,
+             which keeps the whole column on one rhythm. */
+          margin: 0 0 10px;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          color: #5a6472;
+          font-size: var(--f-13);
+          font-weight: 400;
         }
 
         .footer-link {
@@ -627,7 +633,12 @@ function FooterCol({ title, links, split = false, lead }: { title: string; links
   return (
     <div>
       <ColHeading>{title}</ColHeading>
-      {lead ? <p className="footer-col-lead">{lead}</p> : null}
+      {lead ? (
+        <p className="footer-col-lead">
+          <span className="footer-link-dot" />
+          <span>{lead}</span>
+        </p>
+      ) : null}
       <ul
         className={split ? 'footer-col-split' : undefined}
         style={

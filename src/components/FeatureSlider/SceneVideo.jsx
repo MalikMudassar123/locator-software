@@ -54,15 +54,15 @@ function GlobalDefs() {
   return (
     <svg width="0" height="0" style={{ position: 'absolute', overflow: 'hidden' }}>
       <defs>
-        <linearGradient id="fsvid_cam"    x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#0891b2"/><stop offset="100%" stopColor="#06b6d4"/></linearGradient>
-        <linearGradient id="fsvid_radar"  x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#0369a1"/><stop offset="100%" stopColor="#0ea5e9"/></linearGradient>
-        <linearGradient id="fsvid_ai"     x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#06b6d4"/><stop offset="100%" stopColor="#67e8f9"/></linearGradient>
-        <linearGradient id="fsvid_play"   x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#0891b2"/><stop offset="100%" stopColor="#06b6d4"/></linearGradient>
+        <linearGradient id="fsvid_cam"    x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#0b40b8"/><stop offset="100%" stopColor="#0d4fd4"/></linearGradient>
+        <linearGradient id="fsvid_radar"  x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#0a3aa0"/><stop offset="100%" stopColor="#1360ee"/></linearGradient>
+        <linearGradient id="fsvid_ai"     x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#0d4fd4"/><stop offset="100%" stopColor="#6ea2ff"/></linearGradient>
+        <linearGradient id="fsvid_play"   x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#0b40b8"/><stop offset="100%" stopColor="#0d4fd4"/></linearGradient>
         <linearGradient id="fsvid_detect" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#f59e0b"/><stop offset="100%" stopColor="#fbbf24"/></linearGradient>
-        <linearGradient id="fsvid_l0" x1="34" y1="62" x2="498" y2="84" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#06b6d4"/><stop offset="100%" stopColor="#67e8f9"/></linearGradient>
-        <linearGradient id="fsvid_l1" x1="34" y1="130" x2="34" y2="280" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#0891b2"/><stop offset="100%" stopColor="#0ea5e9"/></linearGradient>
-        <linearGradient id="fsvid_l2" x1="68" y1="314" x2="321" y2="299" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#0369a1"/><stop offset="100%" stopColor="#f59e0b"/></linearGradient>
-        <linearGradient id="fsvid_ph" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#06b6d4"/><stop offset="100%" stopColor="#0891b2"/></linearGradient>
+        <linearGradient id="fsvid_l0" x1="34" y1="62" x2="498" y2="84" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#0d4fd4"/><stop offset="100%" stopColor="#6ea2ff"/></linearGradient>
+        <linearGradient id="fsvid_l1" x1="34" y1="130" x2="34" y2="280" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#0b40b8"/><stop offset="100%" stopColor="#1360ee"/></linearGradient>
+        <linearGradient id="fsvid_l2" x1="68" y1="314" x2="321" y2="299" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#0a3aa0"/><stop offset="100%" stopColor="#f59e0b"/></linearGradient>
+        <linearGradient id="fsvid_ph" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#0d4fd4"/><stop offset="100%" stopColor="#0b40b8"/></linearGradient>
       </defs>
     </svg>
   );
@@ -103,7 +103,7 @@ function ActiveCard({ id, size }) {
   );
 }
 
-function RoadCam({ sky = '#7ba8c8' }) {
+function RoadCam({ sky = '#4d94ff' }) {
   return (
     <svg width="100%" height="100%" viewBox="0 0 140 90" style={{ display: 'block' }}>
       <rect width="140" height="90" fill={sky}/>
@@ -149,8 +149,8 @@ const drivers = [
 ];
 
 const cameras = [
-  { label: 'Channel 1 — Road',   type: 'road',  sky: '#7ba8c8' },
-  { label: 'Channel 2 — Road',   type: 'road',  sky: '#8ab4d0' },
+  { label: 'Channel 1 — Road',   type: 'road',  sky: '#4d94ff' },
+  { label: 'Channel 2 — Road',   type: 'road',  sky: '#6ea2ff' },
   { label: 'Channel 3 — Cabin',  type: 'cabin', drowsy: true   },
   { label: 'Channel 4 — Cabin',  type: 'cabin', drowsy: false  },
 ];
@@ -411,9 +411,9 @@ export default forwardRef(function SceneVideo(_props, ref) {
           <div style={{ width: SBW, borderRight: '1px solid #1e3a5f', display: 'flex', flexDirection: 'column', background: '#0f172a' }}>
             <div style={{ display: 'flex', borderBottom: '1px solid #1e3a5f', padding: '5px 4px 0', gap: 1 }}>
               {[{l:'5',s:'All',a:true},{l:'3',s:'Live'},{l:'1',s:'Alert'}].map(tab => (
-                <div key={tab.l} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '3px 1px 5px', borderBottom: tab.a ? '2px solid #06b6d4' : '2px solid transparent' }}>
-                  <span style={{ fontSize: 9, fontWeight: 700, color: tab.a ? '#06b6d4' : '#64748b' }}>{tab.l}</span>
-                  <span style={{ fontSize: 5.5, color: tab.a ? '#67e8f9' : '#475569' }}>{tab.s}</span>
+                <div key={tab.l} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '3px 1px 5px', borderBottom: tab.a ? '2px solid #0d4fd4' : '2px solid transparent' }}>
+                  <span style={{ fontSize: 9, fontWeight: 700, color: tab.a ? '#0d4fd4' : '#64748b' }}>{tab.l}</span>
+                  <span style={{ fontSize: 5.5, color: tab.a ? '#6ea2ff' : '#475569' }}>{tab.s}</span>
                 </div>
               ))}
             </div>

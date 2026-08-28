@@ -834,7 +834,7 @@ h6 {
     radial-gradient(closest-side at 50% 50%, rgba(8, 178, 224, 0.92) 0%, rgba(8, 178, 224, 0) 66%),
     radial-gradient(closest-side at 50% 50%, rgba(193, 235, 247, 0.95) 0%, rgba(193, 235, 247, 0) 68%),
     radial-gradient(closest-side at 50% 50%, rgba(58, 190, 222, 0.9) 0%, rgba(58, 190, 222, 0) 70%),
-    linear-gradient(180deg, #1360ee 0%, #0a84e3 45%, #3abede 75%, #97def1 100%);
+    linear-gradient(180deg, #1360ee 0%, #0d4fd4 45%, #2f6fed 75%, #93c5fd 100%);
   background-repeat: no-repeat;
   background-size:
     60% 65%,
@@ -2957,7 +2957,7 @@ h6 {
      hero and the white panel bar, light enough that the hand still reads as part
      of the same wash rather than as a sticker laid over it. Literal fallback, so
      an unresolved property can never drop through to SVG's default black. */
-  --cta-hand-line: #0d73e3;
+  --cta-hand-line: #0d4fd4;
 
   position: absolute;
   /* Level with .nav-cta-ring rather than below everything on a negative layer:
@@ -3005,8 +3005,8 @@ h6 {
    Only the stroke colour is themeable — the fills are gradients, which cannot
    come from a custom property, so they live in the SVG's own <defs>. */
 .cta-hand__outline {
-  fill: var(--cta-hand-line, #0d73e3);
-  stroke: var(--cta-hand-line, #0d73e3);
+  fill: var(--cta-hand-line, #0d4fd4);
+  stroke: var(--cta-hand-line, #0d4fd4);
   /* Fine, and load-bearing: the finger gaps are 3.4 units, so this is the widest
      stroke that still leaves ~1.6 units of gap after the outline pass grows each
      finger by half a stroke on both sides. Go heavier and the four fingers fuse
@@ -3017,7 +3017,7 @@ h6 {
 }
 /* The cuff has nothing to seam against, so one stroked shape is enough. */
 .cta-hand__cuff {
-  stroke: var(--cta-hand-line, #0d73e3);
+  stroke: var(--cta-hand-line, #0d4fd4);
   stroke-width: 1.8;
 }
 
@@ -3275,15 +3275,15 @@ h6 {
    or alter any existing spacing. Nothing in this block targets an element that
    existed before it — every selector is under .skip-btn.
 
-   Colour is the page's own accent, #0a89dd — the same blue as the FLEET
+   Colour is the page's own accent, #1360ee — the same blue as the FLEET
    TELEMATICS / VIDEO TELEMATICS eyebrows the button sits beneath, so it belongs
    to the section rather than floating above it. At rest it is a white glass pill
    with blue type and a blue-tinted shadow; hover fills it with the accent. */
 .skip-btn {
   position: absolute;
   z-index: 120;
-  --skip-accent: #0a89dd;
-  --skip-accent-deep: #0b6cc0;
+  --skip-accent: #1360ee;
+  --skip-accent-deep: #0b40b8;
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -4020,7 +4020,7 @@ h6 {
    two rim hairlines are untouched: they are painted on the button's own box,
    not the backdrop, so they read the same regardless of what is behind it. */
 .glass-btn--onlight {
-  background: linear-gradient(135deg, #1360ee 0%, #0d73e3 100%);
+  background: linear-gradient(135deg, #1360ee 0%, #0d4fd4 100%);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   box-shadow:
@@ -4186,6 +4186,9 @@ h6 {
 .vtw-eyebrow::before,
 .wwn-eyebrow-rule span,
 .wws-card::after,
+/* Colour comes from an inline style prop, so this rule carries no background
+   and the original sweep — which keyed on background — skipped it. */
+.wws-kicker-line,
 .vsh-divider,
 
 /* 2. React inline-styled dashes and heading underlines */

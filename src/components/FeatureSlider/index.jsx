@@ -425,11 +425,11 @@ const TM_CONNECTIONS = [
 // Gradient colours per connection
 const TM_GRADS = [
   { id:'tg0', c1:'#f472b6', c2:'#818cf8', x1:'112', y1:'70',  x2:'408', y2:'70'  },
-  { id:'tg1', c1:'#818cf8', c2:'#06b6d4', x1:'440', y1:'102', x2:'336', y2:'192' },
+  { id:'tg1', c1:'#818cf8', c2:'#0d4fd4', x1:'440', y1:'102', x2:'336', y2:'192' },
   { id:'tg2', c1:'#8b5cf6', c2:'#4c1d95', x1:'80',  y1:'102', x2:'80',  y2:'298' },
   { id:'tg3', c1:'#4c1d95', c2:'#6366f1', x1:'110', y1:'328', x2:'186', y2:'328' },
   { id:'tg4', c1:'#6366f1', c2:'#60a5fa', x1:'246', y1:'328', x2:'340', y2:'328' },
-  { id:'tg5', c1:'#06b6d4', c2:'#10b981', x1:'304', y1:'224', x2:'340', y2:'328' },
+  { id:'tg5', c1:'#0d4fd4', c2:'#10b981', x1:'304', y1:'224', x2:'340', y2:'328' },
 ];
 
 // Desktop wireframe overlay
@@ -568,7 +568,7 @@ function TmActive({ id, size }) {
   const rr = Math.round(size * 0.24);
   const gmap = {
     task:   ['#f59e0b','#ef4444'],
-    crm:    ['#06b6d4','#6366f1'],
+    crm:    ['#0d4fd4','#6366f1'],
     mobile: ['#3b82f6','#8b5cf6'],
     team:   ['#4c1d95','#8b5cf6'],
     clock:  ['#6366f1','#3b82f6'],
@@ -783,7 +783,7 @@ const SceneTaskManager = forwardRef(function SceneTaskManager(_, ref) {
             ))}
             <linearGradient id="tmdwg" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%"   stopColor="#6366f1"/>
-              <stop offset="100%" stopColor="#06b6d4"/>
+              <stop offset="100%" stopColor="#0d4fd4"/>
             </linearGradient>
             <filter id="tmglow" x="-20%" y="-20%" width="140%" height="140%">
               <feGaussianBlur stdDeviation="1.2" result="b"/>
@@ -1281,7 +1281,7 @@ export default function FeatureSlider() {
               ScrollShowcase rows directly above so the two sections' copy columns
               stay the same size as each other. Each resolves to exactly the flat
               pixel value it replaces up to ~1550px. */}
-          <div style={{ fontSize:'var(--sc-13)', fontWeight:700, color:'#0a89dd', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:'var(--sc-24)' }}>
+          <div style={{ fontSize:'var(--sc-13)', fontWeight:700, color:'#1360ee', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:'var(--sc-24)' }}>
             {slide.eyebrow}
           </div>
           <h2 style={{ fontSize:'var(--t-h2)', fontWeight:800, lineHeight:1.2, color:'#484b4c', margin:'0 0 var(--sc-16)', maxWidth:'100%', width:'100%' }}>

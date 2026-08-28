@@ -11,8 +11,9 @@ const EASE = 'cubic-bezier(.22,.61,.36,1)'
  * left copy column, two-tone headline, staggered rise), but inverted: that hero
  * lays dark text over a white fade on a bright photo, and this banner is a dark
  * sunset. Light-on-dark is the only treatment that survives it, so the scrim
- * runs dark and the accent blue is lifted to a tint that reads against it — the
- * brand #1360ee is a dark-on-light colour and disappears into this photograph.
+ * runs dark and the copy is white. The accent on the product name is the exact
+ * brand #1360ee, chosen for consistency with the rest of the site over a lighter
+ * tint — it sits around 3.2:1 on the scrim, which the display-size title carries.
  *
  * The photo is 3:1 (2172x724), far wider than any hero box, so it is full-bleed
  * rather than boxed to one side. Its left third is dark, empty causeway — that
@@ -100,7 +101,7 @@ export default function ShahinHero() {
         }
         /* The Who We Are hero breaks its second half onto its own line in the
            accent colour; here the product name leads instead of trailing. */
-        .shh-title em { display: block; font-style: normal; color: #9cc2ff; }
+        .shh-title em { display: block; font-style: normal; color: #1360ee; }
 
         /* Margin, measure and leading all match .wwa-lead on /about/purpose so
            the two heroes set type identically; only the colour differs, since
@@ -260,7 +261,7 @@ export default function ShahinHero() {
                 {/* Sits in the CTA row rather than on its own line below it —
                     one less stacked block to fit inside the shortened hero. */}
                 <a href="tel:+971508746688" className="shh-phone">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9cc2ff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1360ee" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.73 12 19.79 19.79 0 0 1 1.67 3.43 2 2 0 0 1 3.66 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8 8.09a16 16 0 0 0 5.91 5.91l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
                   </svg>
                   Or call <b>050 874 66 88</b>

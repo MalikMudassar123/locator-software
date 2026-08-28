@@ -37,7 +37,7 @@ const CHANNELS: Channel[] = [
     action: 'Start a chat',
     href: 'https://wa.me/971508746688',
     external: true,
-    from: '#5BF675', to: '#128C7E',
+    from: '#5BF675', to: '#0a3aa0',
     // Official WhatsApp glyph.
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -100,23 +100,35 @@ export default function ContactChannels() {
         @media (max-width: 1000px) { .ctc-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
         @media (max-width: 560px) { .ctc-grid { grid-template-columns: 1fr; } }
 
+        /* Registering the two colour variables is what lets them TRANSITION.
+           Custom properties are plain strings to the engine by default, so a
+           :hover swap would snap; typed as <color> they interpolate, and the
+           whole card — tile gradient, pill, link, glow — eases from the theme
+           blue into the channel's own brand colour in one motion. Browsers
+           without @property still get the swap, just instantly. */
+        @property --ctc-from { syntax: '<color>'; inherits: true; initial-value: #1360ee; }
+        @property --ctc-to   { syntax: '<color>'; inherits: true; initial-value: #0d4fd4; }
+
         .ctc-card {
-          --from: #3d8bff; --to: #0b40b8;
+          /* At rest every card is the site blue; --bf/--bt hold the channel's
+             real brand pair until the card is hovered or focused. */
+          --ctc-from: #1360ee; --ctc-to: #0d4fd4;
           position: relative; overflow: hidden;
           display: flex; flex-direction: column; height: 100%;
           padding: clamp(22px,2.2vw,28px); border-radius: 22px;
           background: #fff; border: 1px solid #e7ebf3; text-decoration: none;
           box-shadow: 0 20px 44px -34px rgba(20,40,90,.55);
-          transition: transform .26s ${EASE}, box-shadow .26s ${EASE}, border-color .26s ${EASE};
+          transition: transform .26s ${EASE}, box-shadow .26s ${EASE}, border-color .26s ${EASE},
+                      --ctc-from .32s ${EASE}, --ctc-to .32s ${EASE};
         }
         .ctc-card:hover {
           transform: translateY(-6px); border-color: transparent;
-          box-shadow: 0 34px 60px -30px color-mix(in srgb, var(--to) 55%, transparent);
+          box-shadow: 0 34px 60px -30px color-mix(in srgb, var(--ctc-to) 55%, transparent);
         }
         /* Brand-coloured cap that draws across the top edge on hover. */
         .ctc-card::before {
           content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
-          background: linear-gradient(90deg, var(--from), var(--to));
+          background: linear-gradient(90deg, var(--ctc-from), var(--ctc-to));
           transform: scaleX(0); transform-origin: left;
           transition: transform .38s ${EASE};
         }
@@ -124,7 +136,7 @@ export default function ContactChannels() {
         /* Brand wash bleeding up from the bottom-right. */
         .ctc-card::after {
           content: ''; position: absolute; right: -30%; bottom: -40%; width: 78%; aspect-ratio: 1; border-radius: 50%;
-          background: radial-gradient(closest-side, color-mix(in srgb, var(--from) 26%, transparent), transparent 72%);
+          background: radial-gradient(closest-side, color-mix(in srgb, var(--ctc-from) 26%, transparent), transparent 72%);
           opacity: 0; transition: opacity .3s ${EASE}, transform .5s ${EASE}; pointer-events: none;
         }
         .ctc-card:hover::after { opacity: 1; transform: scale(1.15); }
@@ -134,15 +146,15 @@ export default function ContactChannels() {
         .ctc-ic {
           width: 52px; height: 52px; border-radius: 16px; flex-shrink: 0;
           display: grid; place-items: center; margin-bottom: 18px; color: #fff;
-          background: linear-gradient(140deg, var(--from), var(--to));
+          background: linear-gradient(140deg, var(--ctc-from), var(--ctc-to));
           box-shadow:
-            0 12px 24px -10px color-mix(in srgb, var(--to) 70%, transparent),
+            0 12px 24px -10px color-mix(in srgb, var(--ctc-to) 70%, transparent),
             inset 0 1px 0 rgba(255,255,255,.45);
           transition: transform .3s ${EASE}, box-shadow .3s ${EASE};
         }
         .ctc-card:hover .ctc-ic {
           transform: translateY(-2px) rotate(-6deg) scale(1.07);
-          box-shadow: 0 18px 32px -10px color-mix(in srgb, var(--to) 85%, transparent), inset 0 1px 0 rgba(255,255,255,.55);
+          box-shadow: 0 18px 32px -10px color-mix(in srgb, var(--ctc-to) 85%, transparent), inset 0 1px 0 rgba(255,255,255,.55);
         }
         .ctc-ic svg { width: 24px; height: 24px; }
 
@@ -154,8 +166,8 @@ export default function ContactChannels() {
         .ctc-meta {
           display: inline-flex; align-items: center; gap: 7px; align-self: flex-start;
           margin-bottom: 18px; padding: 5px 11px; border-radius: 999px;
-          background: color-mix(in srgb, var(--from) 11%, transparent);
-          color: color-mix(in srgb, var(--to) 88%, #000);
+          background: color-mix(in srgb, var(--ctc-from) 11%, transparent);
+          color: color-mix(in srgb, var(--ctc-to) 88%, #000);
           font-size: var(--f-11); font-weight: 700; letter-spacing: .01em;
         }
         .ctc-meta i { width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
@@ -163,13 +175,42 @@ export default function ContactChannels() {
         .ctc-action {
           margin-top: auto; display: inline-flex; align-items: center; gap: 7px;
           font-size: var(--f-14); font-weight: 800; letter-spacing: -.01em;
-          color: color-mix(in srgb, var(--to) 90%, #000); word-break: break-word;
+          color: color-mix(in srgb, var(--ctc-to) 90%, #000); word-break: break-word;
         }
         .ctc-action svg { flex-shrink: 0; transition: transform .22s ${EASE}; }
         .ctc-card:hover .ctc-action svg { transform: translateX(5px); }
 
+        /* ── Colour on demand ──────────────────────────────────────────────
+           At rest the four cards read as one calm, neutral row; the brand
+           colour arrives only on the card you are actually pointing at, which
+           is what makes the hover feel like a response rather than decoration.
+
+           The filter is scoped to the three elements that actually carry brand
+           colour rather than being dropped on .ctc-card as a whole: a filter on
+           the card would also rasterise its text, which costs subpixel
+           antialiasing and visibly changes how the copy renders. The card's own
+           ::before cap and ::after wash need no rule here — both are already
+           hover-only, so they are never seen in grey.
+
+           :focus-visible mirrors :hover so keyboard users get the same reveal —
+           these cards are links, and colour is the only affordance marking the
+           active one. */
+        /* The reveal itself: one swap of two variables, and every brand-coloured
+           surface follows, because they all paint from --ctc-from/--ctc-to.
+
+           :focus-visible mirrors :hover so keyboard users get the same reveal —
+           these cards are links, and colour is the only affordance marking the
+           active one. */
+        .ctc-card:hover,
+        .ctc-card:focus-visible {
+          --ctc-from: var(--bf);
+          --ctc-to: var(--bt);
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .ctc-card, .ctc-card::before, .ctc-card::after, .ctc-ic, .ctc-action svg { transition: none; }
+          /* The colour still arrives, it just arrives instantly. */
+          .ctc-ic, .ctc-meta, .ctc-action { transition: none; }
         }
       `}</style>
 
@@ -190,7 +231,11 @@ export default function ContactChannels() {
               className="ctc-card"
               data-reveal
               data-reveal-delay={i * 90}
-              style={{ '--from': c.from, '--to': c.to } as React.CSSProperties}
+              // The card's own brand pair. It is deliberately NOT --ctc-from/--ctc-to:
+              // those are what everything paints with, and an inline value would
+              // outrank the :hover rule that swaps them, making the reveal
+              // impossible. The stylesheet owns --ctc-from/--ctc-to and reads these.
+              style={{ '--bf': c.from, '--bt': c.to } as React.CSSProperties}
               {...(c.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
             >
               <span className="ctc-ic">{c.icon}</span>

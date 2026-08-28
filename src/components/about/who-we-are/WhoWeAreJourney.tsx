@@ -61,7 +61,7 @@ export default function WhoWeAreJourney() {
               From GPS tracking to a<br />
               <span style={{ color: '#1360ee' }}>connected mobility ecosystem</span>
             </h2>
-            <div style={{ margin: '14px 0 16px', height: '4px', width: '64px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#06a4e2)' }} />
+            <div style={{ margin: '14px 0 16px', height: '4px', width: '64px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#0d4fd4)' }} />
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <p style={{ margin: 0, fontSize: 'max(clamp(13px,1.1vw,14.5px), min(1.007vw, 21.02px))', lineHeight: 1.55, color: '#52525e' }}>

@@ -8,7 +8,7 @@ const SOCIAL = SOCIAL_POSTS.slice(0, 3)
 const MEDIA = MEDIA_MENTIONS.slice(0, 3)
 
 const NET_COLOR: Record<string, string> = {
-  linkedin: '#0a66c2',
+  linkedin: '#0b40b8',
   instagram: '#d6336c',
   facebook: '#1877f2',
   x: '#0b1220',

@@ -226,7 +226,7 @@ export default function VideoHeroSection({
           --block-color: rgba(210, 220, 240, 0.72);
           --block-border: rgba(200, 212, 235, 0.5);
           --block-shadow: rgba(180, 200, 230, 0.3);
-          --headline: #2196c4;
+          --headline: #1360ee;
           --subline: #6b7a8d;
           --video-radius: 14px;
           --enter-dur: 0.95s;

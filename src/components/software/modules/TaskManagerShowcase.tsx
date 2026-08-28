@@ -55,13 +55,13 @@ const INIT_STAFF: any[] = [
       { id: 52, desc: 'Pharmacy restock — cold chain', personnel: 'Ravi PR', window: '09:00-10:30', loc: 'Aster Pharmacy, Karama', code: 'KARAMA (DXB-044)', status: 'In Progress', assigned: '19/06/2026 07:20', started: '19/06/2026 09:05', completed: null, by: 'Dispatch - Omar A.', est: '1h 30m', type: 'Pharmacy restock' },
       { id: 53, desc: 'Lab sample pickup', personnel: 'Anjal', window: '11:00-12:00', loc: 'Al Noor Hospital', code: 'AL NOOR (AUH-008)', status: 'Assigned', assigned: '19/06/2026 07:25', started: null, completed: null, by: 'Admin - Fleet Ops', est: '1h', type: 'Sample pickup' },
     ] },
-  { id: 6, name: 'Omar Ali', vehicle: 'Corolla-66982', initials: 'OA', color: '#00b4d8', shift: '08:30 - 18:30',
+  { id: 6, name: 'Omar Ali', vehicle: 'Corolla-66982', initials: 'OA', color: '#0d4fd4', shift: '08:30 - 18:30',
     tasks: [
       { id: 61, desc: 'Client visit — product demo setup', personnel: 'Priya S.', window: '09:00-11:00', loc: 'DIFC, Gate Village', code: 'DIFC GATE (DXB-091)', status: 'Assigned', assigned: '19/06/2026 08:30', started: null, completed: null, by: 'Admin - Fleet Ops', est: '2h', type: 'Client visit' },
       { id: 62, desc: 'Contract document collection', personnel: 'Anjal', window: '11:30-12:30', loc: 'JLT, Cluster D', code: 'JLT (DXB-078)', status: 'Assigned', assigned: '19/06/2026 08:35', started: null, completed: null, by: 'Dispatch - Sarah M.', est: '1h', type: 'Document collection' },
     ] },
   { id: 7, name: 'Faruk Driver', vehicle: 'Isuzu-49262', initials: 'FD', color: '#94a3b8', shift: '08:00 - 18:00', tasks: [] },
-  { id: 8, name: 'Prashanth', vehicle: 'Toyota-62387', initials: 'PR', color: '#2dd4bf', shift: '07:00 - 17:00',
+  { id: 8, name: 'Prashanth', vehicle: 'Toyota-62387', initials: 'PR', color: '#1360ee', shift: '07:00 - 17:00',
     tasks: [
       { id: 81, desc: 'FMCG bulk delivery — 15 outlets', personnel: 'Anjal', window: '07:00-12:00', loc: 'Multiple locations', code: 'ROUTE A (DXB-MULTI)', status: 'Completed', assigned: '19/06/2026 06:45', started: '19/06/2026 07:02', completed: '19/06/2026 11:48', by: 'Admin - Fleet Ops', est: '5h', type: 'Bulk delivery' },
       { id: 82, desc: 'Empty van return to depot', personnel: 'Ravi PR', window: '12:30-13:00', loc: 'Central Depot, Al Quoz', code: 'DEPOT (DXB-001)', status: 'Completed', assigned: '19/06/2026 06:50', started: '19/06/2026 12:32', completed: '19/06/2026 12:55', by: 'Admin - Fleet Ops', est: '30m', type: 'Van return' },

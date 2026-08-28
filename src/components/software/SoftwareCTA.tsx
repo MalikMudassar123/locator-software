@@ -46,7 +46,7 @@ export default function SoftwareCTA() {
             Put your whole fleet on{' '}
             <span style={{ color: '#1360ee' }}>one platform.</span>
           </h2>
-          <div style={{ margin: '24px auto', height: '4px', width: '80px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#06a4e2)' }} />
+          <div style={{ margin: '24px auto', height: '4px', width: '80px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#0d4fd4)' }} />
           <p style={{ margin: '0 0 32px', fontSize: 'max(clamp(15px,1.5vw,17px), min(1.181vw, 24.65px))', lineHeight: 1.8, color: '#52525e' }}>
             Get a quote, book a live demo, and see Locator running on your own vehicles within days.
           </p>

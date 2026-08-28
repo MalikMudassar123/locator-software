@@ -11,7 +11,7 @@ export default function CoreValuesIntro() {
           The principles behind every product we ship and{' '}
           <span style={{ color: '#1360ee' }}>every relationship we build</span>
         </h2>
-        <div style={{ margin: '24px auto', height: '4px', width: '80px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#06a4e2)' }} />
+        <div style={{ margin: '24px auto', height: '4px', width: '80px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#0d4fd4)' }} />
         <p style={{ margin: 0, fontSize: 'max(clamp(15px,1.5vw,17px), min(1.181vw, 24.65px))', lineHeight: 1.8, color: '#52525e' }}>
           The principles behind every product we ship and every relationship we build — guiding how we work with customers, partners, and each other every day.
         </p>

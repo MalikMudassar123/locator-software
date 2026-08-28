@@ -59,10 +59,10 @@ export default function TrackingVoices() {
         .ctv-eyebrow {
           display: inline-flex; align-items: center; gap: 10px;
           font-size: var(--f-12); font-weight: 700; letter-spacing: .14em;
-          text-transform: uppercase; color: #0a89dd; margin: 0 0 18px;
+          text-transform: uppercase; color: #1360ee; margin: 0 0 18px;
         }
         .ctv-eyebrow::before, .ctv-eyebrow::after {
-          content: ''; width: 24px; height: 2px; background: #0a89dd; border-radius: 2px;
+          content: ''; width: 24px; height: 2px; background: #1360ee; border-radius: 2px;
         }
         .ctv-title {
           margin: 0; font-size: max(clamp(26px,3.4vw,40px), min(2.778vw, 58px));
@@ -92,7 +92,7 @@ export default function TrackingVoices() {
            this card as the featured one. */
         .ctv-lead-card::before {
           content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-          background: linear-gradient(90deg,#1360ee,#0a89dd,transparent);
+          background: linear-gradient(90deg,#1360ee,#0d4fd4,transparent);
         }
         /* Oversized glyph as a watermark. Pinned bottom-right and clipped by the
            card, so it reads as texture rather than as a second quote mark. */
@@ -141,7 +141,7 @@ export default function TrackingVoices() {
         }
         .ctv-card::before {
           content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-          background: linear-gradient(90deg,#1360ee,#0a89dd);
+          background: linear-gradient(90deg,#1360ee,#0d4fd4);
           transform: scaleX(0); transform-origin: left center;
           transition: transform .45s ${EASE};
         }

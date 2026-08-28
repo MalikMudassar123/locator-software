@@ -593,7 +593,7 @@ export default function SupportChat() {
              the closed state of the thing it opens. */
           background:
             linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, transparent 48%),
-            linear-gradient(140deg, #14a2ee 0%, #0a6fc4 100%);
+            linear-gradient(140deg, #1360ee 0%, #0b40b8 100%);
           box-shadow:
             0 10px 26px -8px rgba(10, 137, 221, 0.5),
             0 4px 12px -4px rgba(15, 23, 42, 0.28),
@@ -655,7 +655,7 @@ export default function SupportChat() {
           position: absolute;
           inset: 0;
           border-radius: inherit;
-          border: 2px solid #0a89dd;
+          border: 2px solid #1360ee;
           animation: scPulse 2.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
           pointer-events: none;
         }
@@ -739,7 +739,7 @@ export default function SupportChat() {
           letter-spacing: -0.005em;
           color: #64748b;
         }
-        .sc-nudge__body:hover strong { color: #0a6fc4; }
+        .sc-nudge__body:hover strong { color: #0b40b8; }
         /* Floated onto the corner rather than given a column of its own — a
            dismiss affordance should cost the message no width at all. */
         .sc-nudge__x {
@@ -835,7 +835,7 @@ export default function SupportChat() {
           padding: 15px 13px 15px 16px;
           background:
             radial-gradient(120% 160% at 12% -20%, rgba(125, 232, 255, 0.5) 0%, transparent 58%),
-            linear-gradient(135deg, #0f95e8 0%, #0a6fc4 52%, #0b5aa8 100%);
+            linear-gradient(135deg, #1360ee 0%, #0b40b8 52%, #0a3aa0 100%);
           color: #fff;
           flex-shrink: 0;
           overflow: hidden;
@@ -975,7 +975,7 @@ export default function SupportChat() {
           margin-bottom: 2px;
           border-radius: 9px;
           color: #fff;
-          background: linear-gradient(150deg, #12a0f0 0%, #0b6cc0 100%);
+          background: linear-gradient(150deg, #1360ee 0%, #0b40b8 100%);
           box-shadow:
             0 4px 10px -4px rgba(10, 137, 221, 0.7),
             inset 0 1px 0 rgba(255, 255, 255, 0.4);
@@ -1012,7 +1012,7 @@ export default function SupportChat() {
           position: relative;
           background:
             linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, transparent 46%),
-            linear-gradient(140deg, #14a2ee 0%, #0a6fc4 100%);
+            linear-gradient(140deg, #1360ee 0%, #0b40b8 100%);
           color: #fff;
           border: 1px solid rgba(255, 255, 255, 0.18);
           border-bottom-right-radius: 7px;
@@ -1054,7 +1054,7 @@ export default function SupportChat() {
           border-radius: 12px;
           background:
             linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, transparent 48%),
-            linear-gradient(140deg, #14a2ee 0%, #0a6fc4 100%);
+            linear-gradient(140deg, #1360ee 0%, #0b40b8 100%);
           color: #fff;
           font: inherit;
           font-size: 12.5px;
@@ -1097,7 +1097,7 @@ export default function SupportChat() {
           border: 1px solid rgba(10, 137, 221, 0.26);
           border-radius: 999px;
           background: rgba(255, 255, 255, 0.9);
-          color: #0a6fb4;
+          color: #0b40b8;
           font: inherit;
           font-size: 12.5px;
           font-weight: 550;
@@ -1112,7 +1112,7 @@ export default function SupportChat() {
             box-shadow 0.24s ease;
         }
         .sc-chip:hover {
-          background: linear-gradient(140deg, #14a2ee 0%, #0a6fc4 100%);
+          background: linear-gradient(140deg, #1360ee 0%, #0b40b8 100%);
           border-color: transparent;
           color: #fff;
           transform: translateY(-2px);
@@ -1174,7 +1174,7 @@ export default function SupportChat() {
           border-radius: 50%;
           background:
             linear-gradient(180deg, rgba(255, 255, 255, 0.24) 0%, transparent 50%),
-            linear-gradient(140deg, #14a2ee 0%, #0a6fc4 100%);
+            linear-gradient(140deg, #1360ee 0%, #0b40b8 100%);
           color: #fff;
           cursor: pointer;
           box-shadow:
@@ -1222,13 +1222,13 @@ export default function SupportChat() {
           flex-shrink: 0;
         }
         .sc-note a {
-          color: #0a89dd;
+          color: #1360ee;
           text-decoration: none;
           font-weight: 650;
           border-bottom: 1px solid rgba(10, 137, 221, 0.28);
           transition: border-color 0.2s ease;
         }
-        .sc-note a:hover { border-color: #0a89dd; }
+        .sc-note a:hover { border-color: #1360ee; }
 
         /* ── Small screens ───────────────────────────────────────────────────
            Near-fullscreen sheet. Anchoring a 374px panel beside a 44px button on

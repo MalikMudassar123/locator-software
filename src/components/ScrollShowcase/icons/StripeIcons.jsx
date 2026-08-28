@@ -25,8 +25,8 @@ export function ConnectIcon({ muted = false }) {
     <svg {...iconProps} style={{ opacity: muted ? 0.35 : 1 }}>
       <defs>
         <linearGradient id="grad-connect" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#06b6d4" />
-          <stop offset="1" stopColor="#0ea5e9" />
+          <stop offset="0" stopColor="#0d4fd4" />
+          <stop offset="1" stopColor="#1360ee" />
         </linearGradient>
       </defs>
       <rect x="6" y="6" width="14" height="14" rx="3" fill={muted ? '#9ca3af' : 'url(#grad-connect)'} opacity="0.85" />
@@ -56,7 +56,7 @@ export function TreasuryIcon({ muted = false }) {
     <svg {...iconProps} style={{ opacity: muted ? 0.35 : 1 }}>
       <defs>
         <linearGradient id="grad-treasury" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#14b8a6" />
+          <stop offset="0" stopColor="#0b40b8" />
           <stop offset="1" stopColor="#22c55e" />
         </linearGradient>
       </defs>

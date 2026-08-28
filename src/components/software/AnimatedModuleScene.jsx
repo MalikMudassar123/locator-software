@@ -174,7 +174,7 @@ export default function AnimatedModuleScene({ type, children }) {
           <defs>
             <linearGradient id={`amw_${type}`} x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" stopColor="#6366f1" />
-              <stop offset="100%" stopColor="#06b6d4" />
+              <stop offset="100%" stopColor="#0d4fd4" />
             </linearGradient>
             <filter id={`amg_${type}`} x="-8%" y="-8%" width="116%" height="116%">
               <feGaussianBlur stdDeviation="0.9" result="b" />

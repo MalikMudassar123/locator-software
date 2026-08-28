@@ -75,41 +75,41 @@ function GlobalDefs() {
           <stop offset="0%" stopColor="#1d4ed8"/><stop offset="100%" stopColor="#2563eb"/>
         </linearGradient>
         <linearGradient id="fsgps_signal" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#0ea5e9"/><stop offset="100%" stopColor="#2563eb"/>
+          <stop offset="0%" stopColor="#1360ee"/><stop offset="100%" stopColor="#2563eb"/>
         </linearGradient>
         <linearGradient id="fsgps_car" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#2563eb"/><stop offset="100%" stopColor="#06b6d4"/>
+          <stop offset="0%" stopColor="#2563eb"/><stop offset="100%" stopColor="#0d4fd4"/>
         </linearGradient>
         <linearGradient id="fsgps_night" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#1e40af"/><stop offset="100%" stopColor="#3730a3"/>
         </linearGradient>
         <linearGradient id="fsgps_chart" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#0369a1"/><stop offset="100%" stopColor="#0891b2"/>
+          <stop offset="0%" stopColor="#0a3aa0"/><stop offset="100%" stopColor="#0b40b8"/>
         </linearGradient>
         <linearGradient id="fsgps_speed" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#2563eb"/><stop offset="100%" stopColor="#0ea5e9"/>
+          <stop offset="0%" stopColor="#2563eb"/><stop offset="100%" stopColor="#1360ee"/>
         </linearGradient>
         {/* Line gradients */}
         <linearGradient id="fsgps_l0" x1="57" y1="68" x2="444" y2="76" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#2563eb"/><stop offset="100%" stopColor="#06b6d4"/>
+          <stop offset="0%" stopColor="#2563eb"/><stop offset="100%" stopColor="#0d4fd4"/>
         </linearGradient>
         <linearGradient id="fsgps_l1" x1="57" y1="138" x2="215" y2="175" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#1d4ed8"/><stop offset="100%" stopColor="#0ea5e9"/>
+          <stop offset="0%" stopColor="#1d4ed8"/><stop offset="100%" stopColor="#1360ee"/>
         </linearGradient>
         <linearGradient id="fsgps_l2" x1="86" y1="310" x2="332" y2="280" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#1e3a8a"/><stop offset="100%" stopColor="#3b82f6"/>
         </linearGradient>
         <linearGradient id="fsgps_l3" x1="364" y1="280" x2="332" y2="414" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#3b82f6"/><stop offset="100%" stopColor="#0ea5e9"/>
+          <stop offset="0%" stopColor="#3b82f6"/><stop offset="100%" stopColor="#1360ee"/>
         </linearGradient>
         <linearGradient id="fsgps_l4" x1="412" y1="76" x2="215" y2="143" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#06b6d4"/><stop offset="100%" stopColor="#2563eb"/>
+          <stop offset="0%" stopColor="#0d4fd4"/><stop offset="100%" stopColor="#2563eb"/>
         </linearGradient>
         <linearGradient id="fsgps_l5" x1="54" y1="342" x2="300" y2="414" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#1e40af"/><stop offset="100%" stopColor="#0891b2"/>
+          <stop offset="0%" stopColor="#1e40af"/><stop offset="100%" stopColor="#0b40b8"/>
         </linearGradient>
         <linearGradient id="fsgps_ph" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#2563eb"/><stop offset="100%" stopColor="#06b6d4"/>
+          <stop offset="0%" stopColor="#2563eb"/><stop offset="100%" stopColor="#0d4fd4"/>
         </linearGradient>
       </defs>
     </svg>

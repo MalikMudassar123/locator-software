@@ -12,7 +12,7 @@ const CLAMP_AT = 210
 const NETWORK: Record<SocialPost['network'], { label: string; color: string; icon: ReactNode }> = {
   linkedin: {
     label: 'LinkedIn',
-    color: '#0a66c2',
+    color: '#0b40b8',
     icon: <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.05c.53-.95 1.83-1.95 3.76-1.95C21.6 8.75 22 11.1 22 14.2V21h-4v-6c0-1.44-.03-3.3-2-3.3-2 0-2.3 1.56-2.3 3.2V21h-4V9Z" />,
   },
   instagram: {

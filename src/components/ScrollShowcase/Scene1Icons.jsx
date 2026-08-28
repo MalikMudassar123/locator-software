@@ -229,7 +229,7 @@ const link = (from, to, a, b, shape, c1, c2) => ({
 // bell's TOP edge instead, which keeps it clear of everything else on the board.
 const FLOW = [
   link('pin',  'bell',   [E.pin.r,   E.pin.cy],  [E.bell.cx,  E.bell.t],    hv,       '#8b5cf6', '#3b82f6'),
-  link('bell', 'route',  [E.bell.r,  E.bell.cy], [E.route.l,  E.route.cy],  straight, '#3b82f6', '#06b6d4'),
+  link('bell', 'route',  [E.bell.r,  E.bell.cy], [E.route.l,  E.route.cy],  straight, '#3b82f6', '#0d4fd4'),
   link('bell', 'moon',   [E.bell.l,  E.bell.cy], [E.moon.cx,  E.moon.t],    hv,       '#3b82f6', '#6d28d9'),
   link('moon', 'grid',   [E.moon.r,  E.moon.cy], [E.grid.l,   E.grid.cy],   hvh,      '#4c1d95', '#6366f1'),
   link('grid', 'wrench', [E.grid.cx, E.grid.b],  [E.wrench.cx, E.wrench.t], straight, '#6366f1', '#60a5fa'),
@@ -248,7 +248,7 @@ function GlobalDefs() {
       <defs>
         <linearGradient id="ig_pin"    x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#f472b6"/><stop offset="100%" stopColor="#8b5cf6"/></linearGradient>
         <linearGradient id="ig_bell"   x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#60a5fa"/><stop offset="100%" stopColor="#2563eb"/></linearGradient>
-        <linearGradient id="ig_route"  x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#818cf8"/><stop offset="100%" stopColor="#06b6d4"/></linearGradient>
+        <linearGradient id="ig_route"  x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#818cf8"/><stop offset="100%" stopColor="#0d4fd4"/></linearGradient>
         <linearGradient id="ig_moon"   x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#3730a3"/><stop offset="100%" stopColor="#6d28d9"/></linearGradient>
         <linearGradient id="ig_wrench" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#60a5fa"/><stop offset="100%" stopColor="#2563eb"/></linearGradient>
         {/* One gradient per link, generated FROM FLOW rather than hand-written beside
@@ -263,7 +263,7 @@ function GlobalDefs() {
           </linearGradient>
         ))}
         <linearGradient id="s1pg_w" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#06b6d4"/>
+          <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#0d4fd4"/>
         </linearGradient>
         {/* Shared by BOTH wireframes (phone + browser), so it lives here rather than
             in either one's local defs — deleting the owner SVG would strip the other. */}
@@ -303,7 +303,7 @@ function ActiveCard({ id, size }) {
     bell:   <svg width={s} height={s} viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" fill="url(#ig_bell)"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke="url(#ig_bell)" strokeWidth="1.8" strokeLinecap="round" fill="none"/></svg>,
     route:  <svg width={s} height={s} viewBox="0 0 24 24" fill="none"><circle cx="17" cy="5" r="2.8" fill="url(#ig_route)"/><circle cx="7" cy="19" r="2.8" fill="url(#ig_route)"/><path d="M7 16.5c0-3 3-3.5 5-5.5s5-2.5 5-6" stroke="url(#ig_route)" strokeWidth="2.1" strokeLinecap="round" fill="none"/></svg>,
     moon:   <svg width={s} height={s} viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" fill="url(#ig_moon)"/></svg>,
-    grid:   <svg width={s} height={s} viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8.5" height="8.5" rx="1.5" fill="#f87171"/><rect x="12.5" y="3" width="8.5" height="8.5" rx="1.5" fill="#2dd4bf"/><rect x="3" y="12.5" width="8.5" height="8.5" rx="1.5" fill="#fb923c"/><rect x="12.5" y="12.5" width="8.5" height="8.5" rx="1.5" fill="#a78bfa"/></svg>,
+    grid:   <svg width={s} height={s} viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8.5" height="8.5" rx="1.5" fill="#f87171"/><rect x="12.5" y="3" width="8.5" height="8.5" rx="1.5" fill="#1360ee"/><rect x="3" y="12.5" width="8.5" height="8.5" rx="1.5" fill="#fb923c"/><rect x="12.5" y="12.5" width="8.5" height="8.5" rx="1.5" fill="#a78bfa"/></svg>,
     wrench: <svg width={s} height={s} viewBox="0 0 24 24" fill="none"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" fill="url(#ig_wrench)"/></svg>,
   };
   return (

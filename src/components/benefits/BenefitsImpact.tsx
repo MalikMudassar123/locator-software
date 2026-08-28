@@ -90,7 +90,7 @@ export default function BenefitsImpact() {
              counter runs and the whole row jitters sideways while it counts. */
           font-variant-numeric: tabular-nums;
         }
-        .bgi-suffix { color: #0a89dd; margin-left: 2px; }
+        .bgi-suffix { color: #1360ee; margin-left: 2px; }
 
         .bgi-label {
           margin: 16px 0 0; max-width: 26ch;

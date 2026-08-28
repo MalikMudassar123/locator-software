@@ -310,7 +310,7 @@ export default function RoadSection() {
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            background: 'linear-gradient(135deg, #1f6ff0 0%, #0a84e3 100%)',
+            background: 'linear-gradient(135deg, #1f6ff0 0%, #0d4fd4 100%)',
             color: '#ffffff',
             border: 'none',
             borderRadius: '8px',
@@ -340,8 +340,8 @@ export default function RoadSection() {
             alignItems: 'center',
             gap: '8px',
             background: '#ffffff',
-            color: '#0a89dd',
-            border: '1.5px solid #c8e4f5',
+            color: '#1360ee',
+            border: '1.5px solid #c7dcff',
             borderRadius: '8px',
             padding: '10px 20px',
             fontSize: '13px',
@@ -352,10 +352,10 @@ export default function RoadSection() {
           }}
         >
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-            <rect x="1" y="1" width="6" height="6" rx="1" fill="#1a84b8" />
-            <rect x="9" y="1" width="6" height="6" rx="1" fill="#1a84b8" />
-            <rect x="1" y="9" width="6" height="6" rx="1" fill="#1a84b8" />
-            <rect x="9" y="9" width="6" height="6" rx="1" fill="#1a84b8" />
+            <rect x="1" y="1" width="6" height="6" rx="1" fill="#0b40b8" />
+            <rect x="9" y="1" width="6" height="6" rx="1" fill="#0b40b8" />
+            <rect x="1" y="9" width="6" height="6" rx="1" fill="#0b40b8" />
+            <rect x="9" y="9" width="6" height="6" rx="1" fill="#0b40b8" />
           </svg>
           Get a Free Demo
         </button>

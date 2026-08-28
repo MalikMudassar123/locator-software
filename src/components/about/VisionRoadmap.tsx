@@ -33,7 +33,7 @@ export default function VisionRoadmap() {
           position: relative; z-index: 1;
           font-size: clamp(56px,9vw,112px); font-weight: 800; line-height: 1;
           letter-spacing: -.03em;
-          background: linear-gradient(105deg, #1360ee 0%, #0d73e3 46%, #06a4e2 100%);
+          background: linear-gradient(105deg, #1360ee 0%, #0d4fd4 46%, #0a3aa0 100%);
           -webkit-background-clip: text; background-clip: text;
           -webkit-text-fill-color: transparent; color: transparent;
         }
@@ -43,15 +43,15 @@ export default function VisionRoadmap() {
            than blue/purple/green, which looked like three unrelated states. The
            three stops are the site's own hero-gradient blues, so nothing new is
            introduced to the palette. */
-        .vr-line { position: absolute; top: 22px; left: 6%; right: 6%; height: 2px; background: linear-gradient(90deg, #1360ee, #0d73e3, #06a4e2); border-radius: 2px; z-index: 0; }
+        .vr-line { position: absolute; top: 22px; left: 6%; right: 6%; height: 2px; background: linear-gradient(90deg, #1360ee, #0d4fd4, #0a3aa0); border-radius: 2px; z-index: 0; }
         .vr-track { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3,1fr); gap: clamp(20px,3vw,32px); }
         @media (max-width: 720px) { .vr-line { display: none; } .vr-track { grid-template-columns: 1fr; } }
 
         .vr-dot { width: 12px; height: 12px; border-radius: 50%; background: #1360ee; margin: 0 auto 18px; box-shadow: 0 0 0 5px rgba(19,96,238,.15); }
         /* Dots sit on the line and take the same three stops, so each marker
            matches the gradient underneath it at that point. */
-        .vr-milestone:nth-child(2) .vr-dot { background: #0d73e3; box-shadow: 0 0 0 5px rgba(13,115,227,.15); }
-        .vr-milestone:nth-child(3) .vr-dot { background: #06a4e2; box-shadow: 0 0 0 5px rgba(6,164,226,.15); }
+        .vr-milestone:nth-child(2) .vr-dot { background: #0d4fd4; box-shadow: 0 0 0 5px rgba(13,115,227,.15); }
+        .vr-milestone:nth-child(3) .vr-dot { background: #0d4fd4; box-shadow: 0 0 0 5px rgba(6,164,226,.15); }
       `}</style>
 
       <section style={{ padding: 'clamp(56px,7vw,88px) 28px', background: '#fff' }}>

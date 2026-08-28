@@ -7,19 +7,19 @@ import { MapPin, Bell, LayoutDashboard, Clock, Calendar, Wrench } from 'lucide-r
 /* ─── Feature data ─────────────────────────────────────── */
 const leftFeatures = [
   {
-    icon: <MapPin className="w-[17px] h-[17px] text-[#00BCD4]" strokeWidth={2} />,
+    icon: <MapPin className="w-[17px] h-[17px] text-[#0d4fd4]" strokeWidth={2} />,
     title: 'Live GPS Tracking',
     desc: 'Track vehicles live, monitor drivers, improve road team',
     delay: 0.10,
   },
   {
-    icon: <LayoutDashboard className="w-[17px] h-[17px] text-[#00BCD4]" strokeWidth={2} />,
+    icon: <LayoutDashboard className="w-[17px] h-[17px] text-[#0d4fd4]" strokeWidth={2} />,
     title: 'Dynamic Fleet Dashboard',
     desc: 'Control dashboard for trip insights, vehicle status, performance',
     delay: 0.20,
   },
   {
-    icon: <Calendar className="w-[17px] h-[17px] text-[#00BCD4]" strokeWidth={2} />,
+    icon: <Calendar className="w-[17px] h-[17px] text-[#0d4fd4]" strokeWidth={2} />,
     title: 'Daily Route History',
     desc: 'Track vehicles live, monitor drivers, improve road team control',
     delay: 0.30,
@@ -28,19 +28,19 @@ const leftFeatures = [
 
 const rightFeatures = [
   {
-    icon: <Bell className="w-[17px] h-[17px] text-[#00BCD4]" strokeWidth={2} />,
+    icon: <Bell className="w-[17px] h-[17px] text-[#0d4fd4]" strokeWidth={2} />,
     title: 'Instant Idle Alerts',
     desc: 'Detect long idle vehicles, reduce fuel waste, improve productivity',
     delay: 0.15,
   },
   {
-    icon: <Clock className="w-[17px] h-[17px] text-[#00BCD4]" strokeWidth={2} />,
+    icon: <Clock className="w-[17px] h-[17px] text-[#0d4fd4]" strokeWidth={2} />,
     title: 'After-Hours Vehicle Alerts',
     desc: 'Get unauthorized movement alerts. Secure your fleet after hours.',
     delay: 0.25,
   },
   {
-    icon: <Wrench className="w-[17px] h-[17px] text-[#00BCD4]" strokeWidth={2} />,
+    icon: <Wrench className="w-[17px] h-[17px] text-[#0d4fd4]" strokeWidth={2} />,
     title: 'Fleet Service Reminders',
     desc: 'Automated maintenance alerts for oil, tires, and service schedules',
     delay: 0.35,
@@ -92,7 +92,7 @@ const badges = [
     pos: 'absolute -left-[58px] top-[13%]',
     dur: 3.4, delay: 0.0, dir: -1,
     icon: (
-      <svg className="w-5 h-5 text-[#00BCD4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-5 h-5 text-[#0d4fd4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <circle cx="11" cy="11" r="8" strokeWidth="2" />
         <path d="m21 21-4.35-4.35" strokeWidth="2" strokeLinecap="round" />
       </svg>
@@ -101,13 +101,13 @@ const badges = [
   {
     pos: 'absolute -right-[58px] top-[22%]',
     dur: 4.0, delay: 0.6, dir: -1,
-    icon: <MapPin className="w-5 h-5 text-[#00BCD4]" strokeWidth={2} />,
+    icon: <MapPin className="w-5 h-5 text-[#0d4fd4]" strokeWidth={2} />,
   },
   {
     pos: 'absolute -left-[58px] top-[48%]',
     dur: 3.8, delay: 1.0, dir: 1,
     icon: (
-      <svg className="w-5 h-5 text-[#4A90E2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-5 h-5 text-[#2f6fed]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
           strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
@@ -116,13 +116,13 @@ const badges = [
   {
     pos: 'absolute -right-[58px] top-[54%]',
     dur: 4.2, delay: 1.5, dir: 1,
-    icon: <Bell className="w-5 h-5 text-[#4A90E2]" strokeWidth={2} />,
+    icon: <Bell className="w-5 h-5 text-[#2f6fed]" strokeWidth={2} />,
   },
   {
     pos: 'absolute -right-[58px] top-[74%]',
     dur: 3.6, delay: 2.0, dir: -1,
     icon: (
-      <svg className="w-5 h-5 text-[#00BCD4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-5 h-5 text-[#0d4fd4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="3" strokeWidth="2" />
         <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"
           strokeWidth="2" strokeLinecap="round" />
@@ -148,7 +148,7 @@ export default function RoadAnimationSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4 }}
-              className="text-[13px] font-semibold text-[#0a89dd] mb-5"
+              className="text-[13px] font-semibold text-[#1360ee] mb-5"
             >
               Fleet Telematics
             </motion.p>

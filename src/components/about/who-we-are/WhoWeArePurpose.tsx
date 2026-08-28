@@ -12,7 +12,7 @@ export default function WhoWeArePurpose() {
           We exist to transform movement into{' '}
           <span style={{ color: '#1360ee' }}>intelligent growth</span>
         </h2>
-        <div style={{ margin: '24px auto', height: '4px', width: '80px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#06a4e2)' }} />
+        <div style={{ margin: '24px auto', height: '4px', width: '80px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#0d4fd4)' }} />
         <p style={{ margin: 0, fontSize: 'max(clamp(15px,1.5vw,17px), min(1.181vw, 24.65px))', lineHeight: 1.8, color: '#52525e' }}>
           At LOCATOR, we exist to help businesses unlock the full potential of their vehicles, assets, and field teams. Through AI-powered IoT, intelligent telematics, and connected mobility technologies, we transform underutilized resources into drivers of operational excellence. By delivering real-time visibility, greater control, improved efficiency, enhanced safety, and complete transparency, we empower organizations to reduce costs, increase profitability, and achieve sustainable growth with purpose.
         </p>

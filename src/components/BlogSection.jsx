@@ -60,7 +60,7 @@ export default function BlogSection() {
         <div className="bs__head">
           <div className="bs__pill">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-              <path d="M7 1C4.79 1 3 2.79 3 5c0 3.19 4 8 4 8s4-4.81 4-8c0-2.21-1.79-4-4-4zm0 5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" fill="#0a89dd"/>
+              <path d="M7 1C4.79 1 3 2.79 3 5c0 3.19 4 8 4 8s4-4.81 4-8c0-2.21-1.79-4-4-4zm0 5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" fill="#1360ee"/>
             </svg>
             Latest Articles
           </div>
@@ -183,7 +183,7 @@ export default function BlogSection() {
           border: 1px solid rgba(10,137,221,0.15);
           font-size: 11.5px;
           font-weight: 700;
-          color: #0a89dd;
+          color: #1360ee;
           letter-spacing: 0.06em;
           text-transform: uppercase;
           margin-bottom: 20px;
@@ -200,7 +200,7 @@ export default function BlogSection() {
         }
         .bs__h2-em {
           font-style: normal;
-          background: linear-gradient(110deg, #0a89dd 10%, #5cc8ff 90%);
+          background: linear-gradient(110deg, #1360ee 10%, #5b9fff 90%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
@@ -243,7 +243,7 @@ export default function BlogSection() {
           gap: 9px;
           padding: 13px 30px;
           border-radius: 50px;
-          background: linear-gradient(130deg, #0a89dd 0%, #38b6ff 100%);
+          background: linear-gradient(130deg, #1360ee 0%, #5b9fff 100%);
           color: #fff;
           font-size: 14px;
           font-weight: 700;
@@ -311,8 +311,8 @@ function BlogCard({ post, delay, visible }) {
         {/* Read time */}
         <div className="bc__meta">
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-            <circle cx="6.5" cy="6.5" r="5.5" stroke="#0a89dd" strokeWidth="1.3"/>
-            <path d="M6.5 4v2.5l1.8 1.3" stroke="#0a89dd" strokeWidth="1.2" strokeLinecap="round"/>
+            <circle cx="6.5" cy="6.5" r="5.5" stroke="#1360ee" strokeWidth="1.3"/>
+            <path d="M6.5 4v2.5l1.8 1.3" stroke="#1360ee" strokeWidth="1.2" strokeLinecap="round"/>
           </svg>
           <span>{post.readTime}</span>
         </div>
@@ -376,7 +376,7 @@ function BlogCard({ post, delay, visible }) {
            styled-jsx hydrates — prevents the fill image from escaping
            its container on hard refresh. */
         .bc__img-wrap {
-          background: #cce5f7;
+          background: #c7dcff;
           flex-shrink: 0;
         }
         .bc__img-wrap :global(.bc__img) {
@@ -425,7 +425,7 @@ function BlogCard({ post, delay, visible }) {
           display: block;
           font-size: 9.5px;
           font-weight: 700;
-          color: #0a89dd;
+          color: #1360ee;
           text-transform: uppercase;
           letter-spacing: 0.1em;
           margin-top: 3px;
@@ -478,7 +478,7 @@ function BlogCard({ post, delay, visible }) {
           margin: 0;
           transition: color .2s;
         }
-        .bc:hover .bc__title { color: #0a89dd; }
+        .bc:hover .bc__title { color: #1360ee; }
 
         /* Excerpt */
         .bc__excerpt {
@@ -508,7 +508,7 @@ function BlogCard({ post, delay, visible }) {
           gap: 8px;
           font-size: 13px;
           font-weight: 700;
-          color: #0a89dd;
+          color: #1360ee;
           text-decoration: none;
           transition: gap .25s cubic-bezier(.16,1,.3,1), color .2s;
           width: fit-content;
@@ -522,7 +522,7 @@ function BlogCard({ post, delay, visible }) {
           background: rgba(10,137,221,0.09);
           transition: background .25s, transform .3s cubic-bezier(.16,1,.3,1);
         }
-        .bc__link:hover { gap: 13px; color: #0072c6; }
+        .bc__link:hover { gap: 13px; color: #0b40b8; }
         .bc__link:hover .bc__arrow {
           background: rgba(10,137,221,0.18);
           transform: translateX(3px);

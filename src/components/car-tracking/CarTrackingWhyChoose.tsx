@@ -29,9 +29,9 @@ export default function CarTrackingWhyChoose() {
         .ctw-eyebrow {
           display: inline-flex; align-items: center; gap: 10px;
           font-size: var(--f-12); font-weight: 700; letter-spacing: .14em;
-          text-transform: uppercase; color: #0a89dd; margin: 0 0 18px;
+          text-transform: uppercase; color: #1360ee; margin: 0 0 18px;
         }
-        .ctw-eyebrow::before { content: ''; width: 30px; height: 2px; background: #0a89dd; border-radius: 2px; }
+        .ctw-eyebrow::before { content: ''; width: 30px; height: 2px; background: #1360ee; border-radius: 2px; }
 
         .ctw-title {
           margin: 0; max-width: 16ch;
@@ -64,7 +64,7 @@ export default function CarTrackingWhyChoose() {
            signal that the card is live, and it costs no layout. */
         .ctw-card::after {
           content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-          background: linear-gradient(90deg,#1360ee,#0a89dd);
+          background: linear-gradient(90deg,#1360ee,#0d4fd4);
           transform: scaleX(0); transform-origin: left center;
           transition: transform .45s ${EASE};
         }

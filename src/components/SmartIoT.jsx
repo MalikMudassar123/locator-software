@@ -234,7 +234,7 @@ export default function IoTFeaturesSection({
           color: #4b5560;
         }
         .iot__accent {
-          color: #2196f3;
+          color: #1360ee;
           font-weight: 500;
         }
         .iot__br {
@@ -452,7 +452,7 @@ function FeatureCard({ feature, delay }) {
         .fc__divider {
           width: 50px;
           height: 1.5px;
-          background: #2196f3;
+          background: #1360ee;
           margin-bottom: clamp(16px, 2vw, 24px);
           border-radius: 1px;
         }
@@ -475,7 +475,7 @@ function FeatureCard({ feature, delay }) {
 /* ─────────────────────────────────────────────────────────────────────────── */
 function FeatureIcon({ name }) {
   const common = { width: 20, height: 20, viewBox: "0 0 20 20", fill: "none" };
-  const color = "#2196f3";
+  const color = "#1360ee";
 
   switch (name) {
     case "pin":
@@ -571,9 +571,9 @@ function MapPreview() {
         <ellipse cx="230" cy="190" rx="55" ry="35" fill="#c8d8b8" opacity="0.45" />
         {/* Route line (blue) */}
         <path d="M40,180 Q80,150 120,140 Q170,135 200,120 Q230,108 260,95"
-              stroke="#2196f3" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+              stroke="#1360ee" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
         <path d="M40,180 Q80,150 120,140 Q170,135 200,120 Q230,108 260,95"
-              stroke="#2196f3" strokeWidth="6" fill="none" strokeLinecap="round" opacity="0.25"/>
+              stroke="#1360ee" strokeWidth="6" fill="none" strokeLinecap="round" opacity="0.25"/>
       </svg>
 
       {/* Asset card overlay */}
@@ -586,7 +586,7 @@ function MapPreview() {
       }}>
         <div style={{
           width: "30px", height: "30px", borderRadius: "50%",
-          background: "linear-gradient(135deg, #2196f3, #1976d2)",
+          background: "linear-gradient(135deg, #1360ee, #0d4fd4)",
           display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
         }}>
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
@@ -597,10 +597,10 @@ function MapPreview() {
         <div>
           <div style={{ fontSize: "10px", fontWeight: 700, color: "#3a4456", lineHeight: 1.2 }}>ASSET AST-21</div>
           <div style={{ fontSize: "8.5px", color: "#7a8aa0", marginTop: "2px", display: "flex", gap: "3px", alignItems: "center" }}>
-            <span style={{ color: "#2196f3" }}>📍</span> Dubai - Al Quoz
+            <span style={{ color: "#1360ee" }}>📍</span> Dubai - Al Quoz
           </div>
           <div style={{ fontSize: "8.5px", color: "#7a8aa0", marginTop: "1px" }}>
-            🔋 Battery: <strong style={{ color: "#2196f3" }}>78%</strong> | 12V
+            🔋 Battery: <strong style={{ color: "#1360ee" }}>78%</strong> | 12V
           </div>
         </div>
       </div>
@@ -638,14 +638,14 @@ function TelemetryPreview() {
       <div style={{ display: "flex", gap: "8px", marginBottom: "8px" }}>
         {/* Sensor device */}
         <div style={{ flex: "0 0 26%", display: "flex", flexDirection: "column", alignItems: "center", paddingTop: "4px" }}>
-          <div style={{ fontSize: "14px", color: "#2196f3" }}>📶</div>
+          <div style={{ fontSize: "14px", color: "#1360ee" }}>📶</div>
           <div style={{
             width: "32px", height: "44px", borderRadius: "6px 6px 4px 4px",
             background: "linear-gradient(180deg, #ffffff 0%, #e8ecf2 100%)",
             border: "1px solid #d8dde6", boxShadow: "0 3px 8px rgba(0,0,0,0.08)",
             position: "relative", marginTop: "4px",
           }}>
-            <div style={{ position: "absolute", top: "8px", left: "50%", transform: "translateX(-50%)", width: "4px", height: "4px", borderRadius: "50%", background: "#2196f3" }} />
+            <div style={{ position: "absolute", top: "8px", left: "50%", transform: "translateX(-50%)", width: "4px", height: "4px", borderRadius: "50%", background: "#1360ee" }} />
             <div style={{ position: "absolute", bottom: "-6px", left: "50%", transform: "translateX(-50%)", width: "10px", height: "8px", background: "#3a4456", borderRadius: "0 0 3px 3px" }} />
           </div>
         </div>
@@ -659,7 +659,7 @@ function TelemetryPreview() {
           <div style={{ fontSize: "13px", fontWeight: 700, color: "#3a4456", marginTop: "2px" }}>69°C</div>
           <div style={{ fontSize: "7px", color: "#9aa5b8" }}>Coolant Temp.</div>
           <svg viewBox="0 0 100 24" style={{ width: "100%", height: "20px", marginTop: "3px" }}>
-            <polyline points="0,16 15,12 30,14 45,8 60,11 75,5 90,9 100,4" fill="none" stroke="#2196f3" strokeWidth="1.2"/>
+            <polyline points="0,16 15,12 30,14 45,8 60,11 75,5 90,9 100,4" fill="none" stroke="#1360ee" strokeWidth="1.2"/>
           </svg>
         </div>
 
@@ -674,7 +674,7 @@ function TelemetryPreview() {
           </div>
           <div style={{ fontSize: "7px", color: "#9aa5b8" }}>Avg.(1h)</div>
           <div style={{ marginTop: "3px", height: "5px", background: "#e8ecf2", borderRadius: "3px", overflow: "hidden" }}>
-            <div style={{ width: "72%", height: "100%", background: "linear-gradient(90deg, #2196f3, #4dabf5)" }} />
+            <div style={{ width: "72%", height: "100%", background: "linear-gradient(90deg, #1360ee, #4d94ff)" }} />
           </div>
         </div>
       </div>
@@ -692,12 +692,12 @@ function TelemetryPreview() {
           <svg viewBox="0 0 100 36" style={{ flex: 1, height: "36px" }}>
             <defs>
               <linearGradient id="engineG" x1="0%" y1="100%" x2="0%" y2="0%">
-                <stop offset="0%" stopColor="#2196f3" stopOpacity="0"/>
-                <stop offset="100%" stopColor="#2196f3" stopOpacity="0.3"/>
+                <stop offset="0%" stopColor="#1360ee" stopOpacity="0"/>
+                <stop offset="100%" stopColor="#1360ee" stopOpacity="0.3"/>
               </linearGradient>
             </defs>
             <path d="M0,30 L15,25 L30,22 L45,18 L60,12 L75,8 L90,4 L100,2 L100,36 L0,36 Z" fill="url(#engineG)"/>
-            <polyline points="0,30 15,25 30,22 45,18 60,12 75,8 90,4 100,2" fill="none" stroke="#2196f3" strokeWidth="1.5"/>
+            <polyline points="0,30 15,25 30,22 45,18 60,12 75,8 90,4 100,2" fill="none" stroke="#1360ee" strokeWidth="1.5"/>
           </svg>
         </div>
         <div style={{ fontSize: "7px", color: "#3ec46d", marginTop: "2px" }}>↑ 12% vs last 7 days</div>
@@ -774,7 +774,7 @@ function ExcavatorPreview() {
           <div style={{ position: "relative", width: "34px", height: "34px" }}>
             <svg viewBox="0 0 36 36" style={{ width: "100%", height: "100%", transform: "rotate(-90deg)" }}>
               <circle cx="18" cy="18" r="14" stroke="#e8ecf2" strokeWidth="3" fill="none"/>
-              <circle cx="18" cy="18" r="14" stroke="#2196f3" strokeWidth="3" fill="none"
+              <circle cx="18" cy="18" r="14" stroke="#1360ee" strokeWidth="3" fill="none"
                       strokeDasharray={`${78 * 0.88} 200`} strokeLinecap="round"/>
             </svg>
             <div style={{

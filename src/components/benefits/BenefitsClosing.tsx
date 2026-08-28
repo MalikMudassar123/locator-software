@@ -15,7 +15,7 @@ export default function BenefitsClosing() {
            is a large piece of grey furniture; a 2px line says the same thing and
            keeps the block clean. */
         .bgc-mark {
-          width: 44px; height: 2px; background: #0a89dd;
+          width: 44px; height: 2px; background: #1360ee;
           border-radius: 2px; margin: 0 auto clamp(26px,3.4vw,38px);
           transform-origin: center;
         }

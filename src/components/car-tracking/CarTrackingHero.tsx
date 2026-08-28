@@ -58,15 +58,15 @@ export default function CarTrackingHero() {
           margin-bottom: clamp(20px,3vw,30px);
         }
         .cts-crumb a { color: #6e6e73; text-decoration: none; transition: color .2s ${EASE}; }
-        .cts-crumb a:hover { color: #0a89dd; }
+        .cts-crumb a:hover { color: #1360ee; }
         .cts-crumb span[aria-current] { color: #1d1d1f; font-weight: 600; }
 
         .cts-eyebrow {
           display: inline-flex; align-items: center; gap: 10px;
           font-size: var(--f-12); font-weight: 700; letter-spacing: .14em;
-          text-transform: uppercase; color: #0a89dd; margin-bottom: 20px;
+          text-transform: uppercase; color: #1360ee; margin-bottom: 20px;
         }
-        .cts-eyebrow::before { content: ''; width: 30px; height: 2px; background: #0a89dd; border-radius: 2px; }
+        .cts-eyebrow::before { content: ''; width: 30px; height: 2px; background: #1360ee; border-radius: 2px; }
 
         .cts-title {
           margin: 0; max-width: 560px;

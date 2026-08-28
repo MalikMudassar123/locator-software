@@ -27,7 +27,7 @@ type Tab = NewsCategory | 'all'
 // Social networks share the standard card shell; only the chip colour/label
 // and the byline change, so posts sit in the same 3-up grid as every other tab.
 const NET_META: Record<SocialPost['network'], { label: string; color: string }> = {
-  linkedin: { label: 'LinkedIn', color: '#0a66c2' },
+  linkedin: { label: 'LinkedIn', color: '#0b40b8' },
   instagram: { label: 'Instagram', color: '#d6336c' },
   facebook: { label: 'Facebook', color: '#1877f2' },
   x: { label: 'X', color: '#0b1220' },
@@ -247,15 +247,15 @@ export default function NewsroomBoard() {
         .nrb-hero-title {
           margin: 0 0 10px; font-size: clamp(19px, 1.9vw, 27px); font-weight: 800; line-height: 1.2; letter-spacing: -.02em; color: #fff;
         }
-        /* The site blue lifted to the tint this card already uses for "Read Full
-           Story" (#9cc2ff). The primary #1360ee is a dark-on-light brand colour
-           and sits far too close to the dark photo scrim behind this headline to
-           stay readable. */
-        .nrb-hero-title-accent { color: #9cc2ff; }
+        /* The exact brand blue, matching every other accent on the site. Note it
+           lands around 3.2:1 against the dark photo scrim behind it — carried by
+           a headline at this size, tight for the smaller "Read Full Story" link
+           below. Chosen deliberately over a lighter tint for brand consistency. */
+        .nrb-hero-title-accent { color: #1360ee; }
         .nrb-hero-excerpt {
           margin: 0 0 16px; font-size: clamp(13px, 1vw, 14.5px); line-height: 1.65; color: rgba(255,255,255,.84); max-width: 52ch;
         }
-        .nrb-hero-more { font-size: var(--f-13); font-weight: 700; color: #9cc2ff; }
+        .nrb-hero-more { font-size: var(--f-13); font-weight: 700; color: #1360ee; }
         .nrb-hero-card:hover .nrb-hero-more { text-decoration: underline; }
 
         /* ── Grids ── */

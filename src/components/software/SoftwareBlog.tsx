@@ -21,7 +21,7 @@ const POSTS = [
   },
   {
     category: 'Cost Control',
-    catColor: '#0d73e3',
+    catColor: '#0d4fd4',
     catBg: 'rgba(13,115,227,.1)',
     title: 'Reducing idle fuel waste across a growing fleet',
     excerpt: 'Using instant idle alerts and route history to claw back fuel spend before it becomes a costly habit.',
@@ -30,11 +30,11 @@ const POSTS = [
     readTime: '4 min read',
     date: 'Mar 8, 2025',
     author: 'RM',
-    authorBg: '#0d73e3',
+    authorBg: '#0d4fd4',
   },
   {
     category: 'Operations',
-    catColor: '#06a4e2',
+    catColor: '#2f6fed',
     catBg: 'rgba(6,164,226,.1)',
     title: 'A practical guide to geofencing for UAE businesses',
     excerpt: 'Setting virtual zones and POI alerts for offices, depots, and customer sites without overcomplicating the setup.',
@@ -43,7 +43,7 @@ const POSTS = [
     readTime: '6 min read',
     date: 'Mar 4, 2025',
     author: 'OA',
-    authorBg: '#06a4e2',
+    authorBg: '#2f6fed',
   },
 ]
 

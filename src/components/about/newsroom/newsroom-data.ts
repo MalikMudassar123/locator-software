@@ -69,13 +69,13 @@ export const CATEGORY_LABEL: Record<NewsCategory, string> = {
 // instead of a colour chart. `media` stays slate — it is a neutral, not a hue.
 export const CATEGORY_COLOR: Record<NewsCategory, string> = {
   product: '#1360ee',
-  company: '#0d73e3',
-  events: '#06a4e2',
+  company: '#0d4fd4',
+  events: '#2f6fed',
   stories: '#1157dd',
-  videos: '#0a84e3',
+  videos: '#0b40b8',
   social: '#2563eb',
   media: '#475569',
-  blog: '#0e9ee2',
+  blog: '#4d94ff',
 }
 
 export const NEWS_ITEMS: NewsItem[] = [

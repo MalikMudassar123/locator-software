@@ -122,11 +122,11 @@ function Hand({ uid }: { uid: string }) {
         <linearGradient id={skin} x1="0" y1="8" x2="0" y2="56" gradientUnits="userSpaceOnUse">
           <stop offset="0" stopColor="#f7fcff" />
           <stop offset="0.45" stopColor="#d3e9fa" />
-          <stop offset="1" stopColor="#9fcdf0" />
+          <stop offset="1" stopColor="#93c5fd" />
         </linearGradient>
         {/* Sleeve, straight off the hero's deep end. */}
         <linearGradient id={cuff} x1="0" y1="48" x2="0" y2="64" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#0a84e3" />
+          <stop offset="0" stopColor="#0d4fd4" />
           <stop offset="1" stopColor="#1360ee" />
         </linearGradient>
       </defs>

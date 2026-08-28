@@ -49,7 +49,7 @@ export default function MissionPillars() {
               <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
               Built for smarter operations
             </span>
-            <div style={{ margin: '24px auto', height: '4px', width: '80px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#06a4e2)' }} />
+            <div style={{ margin: '24px auto', height: '4px', width: '80px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#0d4fd4)' }} />
             <p style={{ margin: '0 auto', fontSize: 'max(clamp(15.5px,1.65vw,18px), min(1.25vw, 26px))', lineHeight: 1.72, color: '#52525e', maxWidth: '780px' }}>
               Our mission is to empower businesses worldwide with AI-powered IoT solutions that create safer, smarter, and more efficient operations — turning complexity into clarity and growth.
             </p>

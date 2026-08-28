@@ -121,7 +121,7 @@ export default function WhoWeAreServices() {
         .wws-spine { position: absolute; top: 8px; bottom: 8px; left: 50%; width: 3px; transform: translateX(-50%); background: #e2e8f4; border-radius: 3px; z-index: 0; }
         /* Progress fill travels through the site's own hero blues instead of
            blue -> purple -> green, which read as three unrelated states. */
-        .wws-fill { position: relative; width: 100%; height: 0; background: linear-gradient(180deg, #1360ee 0%, #0d73e3 55%, #06a4e2 100%); border-radius: 3px; transition: height .15s linear; }
+        .wws-fill { position: relative; width: 100%; height: 0; background: linear-gradient(180deg, #1360ee 0%, #0d4fd4 55%, #0a3aa0 100%); border-radius: 3px; transition: height .15s linear; }
         .wws-comet { position: absolute; left: 50%; bottom: 0; width: 15px; height: 15px; transform: translate(-50%, 50%); border-radius: 50%; background: #fff; box-shadow: 0 0 14px 3px rgba(19,96,238,.55), 0 0 0 5px rgba(19,96,238,.14); }
 
         .wws-row { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 88px 1fr; align-items: center; margin-bottom: clamp(24px,3.5vw,48px); }

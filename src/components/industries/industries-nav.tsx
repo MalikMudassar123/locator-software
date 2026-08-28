@@ -30,7 +30,7 @@ const NAV_META: Record<string, { accent: string; icon: ReactNode }> = {
     </>),
   },
   'transportation-logistics': {
-    accent: '#0e9aa7',
+    accent: '#0a3aa0',
     icon: sv(<>
       <path d="M3 6h11v10H3z" />
       <path d="M14 9h3.6l2.4 3v4H14z" />

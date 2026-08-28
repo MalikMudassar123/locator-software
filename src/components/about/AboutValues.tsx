@@ -120,7 +120,7 @@ export default function AboutValues() {
             </p>
             {/* Blue easing into the palette's cyan end, rather than blue into
                 purple — still a gradient, no second hue. */}
-            <div style={{ marginTop: '22px', height: '4px', width: '72px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#06a4e2)' }} />
+            <div style={{ marginTop: '22px', height: '4px', width: '72px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#0d4fd4)' }} />
           </aside>
 
           <div>

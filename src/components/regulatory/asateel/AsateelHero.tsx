@@ -9,8 +9,8 @@ const EASE = 'cubic-bezier(.22,.61,.36,1)'
  *
  * The same treatment as the SHAHIN hero, and for the same reasons: a wide dark
  * banner behind full-bleed, a left-to-right dark scrim carrying light copy, and
- * the accent blue lifted to a tint because the brand #1360ee is a dark-on-light
- * colour that disappears into a photograph like this one.
+ * the product name accented in the exact brand #1360ee to match the rest of the
+ * site.
  *
  * The banner is 1600x533 — 3:1, the same ratio as SHAHIN's. The photo fills its
  * box with object-fit: cover, so there is never dead space beneath it.
@@ -110,7 +110,7 @@ export default function AsateelHero() {
           color: #ffffff;
           text-shadow: 0 2px 24px rgba(0,0,0,.4);
         }
-        .asa-title em { display: block; font-style: normal; color: #9cc2ff; }
+        .asa-title em { display: block; font-style: normal; color: #1360ee; }
 
         .asa-lead {
           margin: clamp(14px,1.6vw,18px) 0 0; max-width: 48ch;
@@ -262,7 +262,7 @@ export default function AsateelHero() {
                 {/* In the CTA row rather than on its own line below it — one less
                     stacked block to fit inside the ratio-pinned hero. */}
                 <a href="tel:+971508746688" className="asa-phone">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9cc2ff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1360ee" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.73 12 19.79 19.79 0 0 1 1.67 3.43 2 2 0 0 1 3.66 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8 8.09a16 16 0 0 0 5.91 5.91l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
                   </svg>
                   Or call <b>050 874 66 88</b>

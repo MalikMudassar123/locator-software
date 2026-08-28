@@ -10,7 +10,7 @@ import { PHONE_TITLE, PHONE_BAR_ICON } from './ModuleShowcaseStyles'
 const EM_CATEGORIES: Record<string, { icon: string; color: string; label: string }> = {
   '--': { icon: '💰', color: '#22c55e', label: 'Payment' },
   'ACCESSORIES PURCHASE': { icon: '🛒', color: '#7a5ae0', label: 'Accessories Purchase' },
-  PARKING: { icon: '🅿️', color: '#0ea5e9', label: 'Parking' },
+  PARKING: { icon: '🅿️', color: '#1360ee', label: 'Parking' },
   'R&M- CARS': { icon: '🔧', color: '#f59e0b', label: 'R&M - Cars' },
 }
 

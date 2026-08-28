@@ -26,9 +26,9 @@ export default function VehicleTrackingBenefits() {
         .vtb-eyebrow {
           display: inline-flex; align-items: center; gap: 10px;
           font-size: var(--f-12); font-weight: 700; letter-spacing: .14em;
-          text-transform: uppercase; color: #0a89dd; margin: 0 0 18px;
+          text-transform: uppercase; color: #1360ee; margin: 0 0 18px;
         }
-        .vtb-eyebrow::before { content: ''; width: 30px; height: 2px; background: #0a89dd; border-radius: 2px; }
+        .vtb-eyebrow::before { content: ''; width: 30px; height: 2px; background: #1360ee; border-radius: 2px; }
 
         .vtb-title {
           margin: 0; max-width: 18ch;

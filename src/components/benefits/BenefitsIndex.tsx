@@ -64,9 +64,9 @@ export default function BenefitsIndex() {
         .bgx-eyebrow {
           display: flex; align-items: center; gap: 12px; margin: 0 0 18px;
           font-size: var(--f-12); font-weight: 700; letter-spacing: .14em;
-          text-transform: uppercase; color: #0a89dd;
+          text-transform: uppercase; color: #1360ee;
         }
-        .bgx-eyebrow::before { content: ''; width: 30px; height: 2px; background: #0a89dd; border-radius: 2px; }
+        .bgx-eyebrow::before { content: ''; width: 30px; height: 2px; background: #1360ee; border-radius: 2px; }
         .bgx-h2 {
           margin: 0; font-size: max(clamp(27px,3.6vw,44px), min(3.056vw, 63.8px)); font-weight: 800;
           line-height: 1.12; letter-spacing: -.03em; color: #1d1d1f;
@@ -88,7 +88,7 @@ export default function BenefitsIndex() {
         }
         .bgx-rail span {
           position: absolute; inset: 0; display: block;
-          background: #0a89dd;
+          background: #1360ee;
           transform: scaleY(0); transform-origin: top center;
         }
 
@@ -110,7 +110,7 @@ export default function BenefitsIndex() {
           content: ''; position: absolute;
           left: calc(-1 * clamp(20px,3vw,42px)); top: 50%;
           width: 3px; height: 0; border-radius: 3px;
-          background: #0a89dd; transform: translateY(-50%);
+          background: #1360ee; transform: translateY(-50%);
           transition: height .3s ${EASE};
         }
         .bgx-row:hover { transform: translateX(6px); }
@@ -123,7 +123,7 @@ export default function BenefitsIndex() {
           color: #dfe4ec; font-variant-numeric: tabular-nums;
           transition: color .3s ${EASE};
         }
-        .bgx-row:hover .bgx-num { color: #0a89dd; }
+        .bgx-row:hover .bgx-num { color: #1360ee; }
 
         .bgx-title {
           margin: 0; padding-top: 2px;

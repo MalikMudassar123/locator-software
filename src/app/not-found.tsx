@@ -43,7 +43,7 @@ export default function NotFound() {
 
         /* floating particles */
         .nf-dot { position: absolute; width: 5px; height: 5px; border-radius: 50%;
-          background: #7cc6ff; box-shadow: 0 0 10px 2px rgba(124,198,255,.7); opacity: .5; }
+          background: #6ea2ff; box-shadow: 0 0 10px 2px rgba(124,198,255,.7); opacity: .5; }
         .nf-dot.d1 { top: 22%; left: 16%; animation: nfDot 7s ease-in-out infinite; }
         .nf-dot.d2 { top: 70%; left: 24%; animation: nfDot 9s ease-in-out infinite .8s; }
         .nf-dot.d3 { top: 30%; right: 18%; animation: nfDot 8s ease-in-out infinite .4s; }
@@ -58,7 +58,7 @@ export default function NotFound() {
         .nf-pill {
           display: inline-flex; align-items: center; gap: 8px;
           font-size: 11.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
-          color: #bfe0ff; background: rgba(255,255,255,.08);
+          color: #c7dcff; background: rgba(255,255,255,.08);
           border: 1px solid rgba(255,255,255,.18); border-radius: 999px;
           padding: 7px 16px; margin-bottom: 26px; backdrop-filter: blur(6px);
         }
@@ -101,7 +101,7 @@ export default function NotFound() {
         /* heading + copy */
         .nf-title { margin: 30px 0 12px; font-size: clamp(24px,4vw,38px); font-weight: 800;
           letter-spacing: -.02em; line-height: 1.1; }
-        .nf-title .accent { color: #6cb6ff; }
+        .nf-title .accent { color: #6ea2ff; }
         .nf-sub { margin: 0 0 32px; max-width: 440px; font-size: clamp(14px,1.4vw,16px);
           line-height: 1.65; color: rgba(255,255,255,.66); }
 
@@ -150,7 +150,7 @@ export default function NotFound() {
           <svg className="nf-svg" viewBox="0 0 600 220" aria-hidden="true">
             <defs>
               <linearGradient id="nfWire" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#7cc6ff" />
+                <stop offset="0%" stopColor="#6ea2ff" />
                 <stop offset="100%" stopColor="#6366f1" />
               </linearGradient>
               <linearGradient id="nfFill" x1="0" y1="0" x2="0" y2="1">

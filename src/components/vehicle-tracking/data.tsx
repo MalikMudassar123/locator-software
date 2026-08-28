@@ -46,7 +46,7 @@ export const FEATURES: Feature[] = [
     desc:
       'This is where LOCATOR separates itself from other vehicle tracking systems. Tank level, refills, drain events and consumption per trip — so fuel becomes a number you manage, not one you absorb.',
     href: '/benefits-of-gps-tracking',
-    accent: '#0a89dd',
+    accent: '#1360ee',
     tint: 'rgba(10,137,221,.1)',
     icon: (
       <svg viewBox="0 0 24 24" {...s} aria-hidden="true">

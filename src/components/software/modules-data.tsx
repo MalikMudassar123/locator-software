@@ -52,7 +52,7 @@ export const SOFTWARE_MODULES: SoftwareModule[] = [
     slug: 'dashcam',
     name: 'AI Dashcams',
     tagline: 'Video telematics & safety',
-    accent: '#0e9aa7',
+    accent: '#0a3aa0',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <rect x="2.5" y="7" width="14" height="11" rx="2" /><path d="M16.5 11l5-3v9l-5-3v-3z" />

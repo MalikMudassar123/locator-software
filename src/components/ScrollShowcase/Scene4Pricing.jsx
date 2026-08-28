@@ -135,9 +135,9 @@ const link = (from, to, a, b, shape, c1, c2) => ({
 
 const FLOW = [
   link('cam',   'play',   [E.cam.r,   E.cam.cy],   [E.play.cx,   E.play.t],   hv,  '#6366f1', '#3b82f6'),
-  link('play',  'ai',     [E.play.r,  E.play.cy],  [E.ai.cx,     E.ai.b],     hv,  '#3b82f6', '#06b6d4'),
-  link('ai',    'alert',  [E.ai.l,    E.ai.cy],    [E.alert.cx,  E.alert.t],  hv,  '#06b6d4', '#f59e0b'),
-  link('alert', 'shield', [E.alert.l, E.alert.cy], [E.shield.r,  E.shield.cy], hvh, '#ef4444', '#06b6d4'),
+  link('play',  'ai',     [E.play.r,  E.play.cy],  [E.ai.cx,     E.ai.b],     hv,  '#3b82f6', '#0d4fd4'),
+  link('ai',    'alert',  [E.ai.l,    E.ai.cy],    [E.alert.cx,  E.alert.t],  hv,  '#0d4fd4', '#f59e0b'),
+  link('alert', 'shield', [E.alert.l, E.alert.cy], [E.shield.r,  E.shield.cy], hvh, '#ef4444', '#0d4fd4'),
 ];
 
 // id → index into ICONS, which is the same index activeRefs/iconRefs use.
@@ -148,8 +148,8 @@ function GlobalDefs() {
     <svg width="0" height="0" style={{ position:'absolute' }}>
       <defs>
         <linearGradient id="s4ig_cam"    x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#3b82f6"/></linearGradient>
-        <linearGradient id="s4ig_shield" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#3b82f6"/><stop offset="100%" stopColor="#06b6d4"/></linearGradient>
-        <linearGradient id="s4ig_ai"     x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#06b6d4"/></linearGradient>
+        <linearGradient id="s4ig_shield" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#3b82f6"/><stop offset="100%" stopColor="#0d4fd4"/></linearGradient>
+        <linearGradient id="s4ig_ai"     x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#0d4fd4"/></linearGradient>
         <linearGradient id="s4ig_play"   x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#3b82f6"/></linearGradient>
         <linearGradient id="s4ig_alert"  x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#f59e0b"/><stop offset="100%" stopColor="#ef4444"/></linearGradient>
         {/* One gradient per link, generated FROM FLOW rather than hand-written beside
@@ -164,7 +164,7 @@ function GlobalDefs() {
           </linearGradient>
         ))}
         <linearGradient id="s4pg_w" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#06b6d4"/>
+          <stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#0d4fd4"/>
         </linearGradient>
       </defs>
     </svg>

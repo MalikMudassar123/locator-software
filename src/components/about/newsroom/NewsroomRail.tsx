@@ -59,10 +59,10 @@ function useElapsed() {
 // brands, so they take the site's blues.
 const KIND_STYLE: Record<LiveUpdate['kind'], { bg: string; fg: string }> = {
   release: { bg: '#1360ee', fg: '#fff' },
-  video: { bg: '#0d73e3', fg: '#fff' },
-  linkedin: { bg: '#0a66c2', fg: '#fff' },
+  video: { bg: '#0d4fd4', fg: '#fff' },
+  linkedin: { bg: '#0b40b8', fg: '#fff' },
   webinar: { bg: '#2d7ff9', fg: '#fff' },
-  event: { bg: '#06a4e2', fg: '#fff' },
+  event: { bg: '#4d94ff', fg: '#fff' },
 }
 
 function KindIcon({ kind }: { kind: LiveUpdate['kind'] }) {

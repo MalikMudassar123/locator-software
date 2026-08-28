@@ -21,7 +21,7 @@ export default function CarTrackingQuote() {
         .ctq { position: relative; background: #f7f9fc; }
         .ctq-band {
           position: relative; overflow: hidden;
-          background: linear-gradient(160deg,#1360ee 0%,#0a6fe8 46%,#0a89dd 100%);
+          background: linear-gradient(160deg,#1360ee 0%,#0a6fe8 46%,#0d4fd4 100%);
           color: #fff;
           padding: clamp(56px,7vw,90px) 28px calc(clamp(56px,7vw,90px) + clamp(70px,9vw,120px));
         }

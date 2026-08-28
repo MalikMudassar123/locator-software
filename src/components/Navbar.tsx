@@ -566,7 +566,7 @@ export default function Navbar() {
             display: 'flex',
             flexDirection: 'column',
             background:
-              'linear-gradient(165deg, #1360ee 0%, #0a84e3 38%, #08b2e0 72%, #3abede 100%)',
+              'linear-gradient(165deg, #1360ee 0%, #0d4fd4 38%, #0b40b8 72%, #2f6fed 100%)',
             overflow: 'hidden',
           }}
         >
@@ -619,7 +619,7 @@ export default function Navbar() {
                 borderRadius: '50%',
                 background: '#ffffff',
                 border: 'none',
-                color: '#0a89dd',
+                color: '#1360ee',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',

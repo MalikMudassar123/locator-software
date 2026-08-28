@@ -834,7 +834,12 @@ h6 {
     radial-gradient(closest-side at 50% 50%, rgba(8, 178, 224, 0.92) 0%, rgba(8, 178, 224, 0) 66%),
     radial-gradient(closest-side at 50% 50%, rgba(193, 235, 247, 0.95) 0%, rgba(193, 235, 247, 0) 68%),
     radial-gradient(closest-side at 50% 50%, rgba(58, 190, 222, 0.9) 0%, rgba(58, 190, 222, 0) 70%),
-    linear-gradient(180deg, #1360ee 0%, #0d4fd4 45%, #2f6fed 75%, #93c5fd 100%);
+    /* Home hero sky — deliberately NOT remapped to the theme-blue family. The
+       radial cloud layers stacked above it are rgba() cyans (170,225,245 /
+       8,178,224 / 193,235,247 / 58,190,222); recolouring only this base to blue
+       left them clashing over a flat blue sky. Blue -> azure -> cyan -> pale is
+       the sky ramp those layers are built against. */
+    linear-gradient(180deg, #1360ee 0%, #0a84e3 45%, #3abede 75%, #97def1 100%);
   background-repeat: no-repeat;
   background-size:
     60% 65%,

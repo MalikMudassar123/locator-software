@@ -4,6 +4,7 @@ import AboutPillarHero from '@/components/about/AboutPillarHero'
 import CoreValuesIntro from '@/components/about/CoreValuesIntro'
 import AboutValues from '@/components/about/AboutValues'
 import MissionCTA from '@/components/about/MissionCTA'
+import AboutPillarNav from '@/components/about/AboutPillarNav'
 import Footer from '@/components/layouts/Footer'
 
 export const metadata: Metadata = {
@@ -31,7 +32,7 @@ export default function AboutCoreValuesPage() {
       />
       <CoreValuesIntro />
       <AboutValues />
-      {/* <AboutPillarNav current="core-values" /> */}
+      <AboutPillarNav current="core-values" />
       <MissionCTA />
       <Footer />
     </main>

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import ScrollReveal from '@/components/software/ScrollReveal'
 import VisionHero from '@/components/about/VisionHero'
 import VisionRoadmap from '@/components/about/VisionRoadmap'
-// import AboutPillarNav from '@/components/about/AboutPillarNav' // Explore more about Locator — disabled
+import AboutPillarNav from '@/components/about/AboutPillarNav'
 // import SoftwareCTA from '@/components/software/SoftwareCTA' // Get Started Today — disabled
 import Footer from '@/components/layouts/Footer'
 
@@ -46,7 +46,7 @@ export default function AboutVisionPage() {
       </section>
 
       <VisionRoadmap />
-      {/* <AboutPillarNav current="vision" /> */}
+      <AboutPillarNav current="vision" />
       {/* <SoftwareCTA /> */}
       <Footer />
     </main>

@@ -3,6 +3,7 @@ import ScrollReveal from '@/components/software/ScrollReveal'
 import MissionHero from '@/components/about/MissionHero'
 import MissionPillars from '@/components/about/MissionPillars'
 import MissionCTA from '@/components/about/MissionCTA'
+import AboutPillarNav from '@/components/about/AboutPillarNav'
 import Footer from '@/components/layouts/Footer'
 
 export const metadata: Metadata = {
@@ -25,7 +26,7 @@ export default function AboutMissionPage() {
       <ScrollReveal />
       <MissionHero />
       <MissionPillars />
-      {/* <AboutPillarNav current="mission" /> */}
+      <AboutPillarNav current="mission" />
       <MissionCTA />
       <Footer />
     </main>

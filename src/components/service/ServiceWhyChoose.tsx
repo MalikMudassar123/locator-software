@@ -68,7 +68,10 @@ export default function ServiceWhyChoose() {
         .swc-row:hover .swc-ic { transform: scale(1.06) rotate(-3deg); }
       `}</style>
 
-      <section style={{ position: 'relative', overflow: 'hidden', padding: 'clamp(56px,7vw,92px) 28px', background: '#f7f9fc' }}>
+      {/* A whisper of cool grey rather than pure white — enough to separate the
+          section from the white blocks above and below it, well short of the
+          #f7f9fc it used to be, which read as a distinct grey band. */}
+      <section style={{ position: 'relative', overflow: 'hidden', padding: 'clamp(56px,7vw,92px) 28px', background: '#fcfdfe' }}>
         <div aria-hidden="true" style={{ position: 'absolute', width: 520, height: 420, top: -80, right: '-4%', borderRadius: '50%', background: 'radial-gradient(50% 50% at 50% 50%, rgba(19,96,238,.10), transparent 72%)', filter: 'blur(20px)', pointerEvents: 'none' }} />
 
         <div className="swc-grid">

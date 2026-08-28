@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import ScrollReveal from '@/components/software/ScrollReveal'
 import SoftwareNavbar from '@/components/software/SoftwareNavbar'
 import JobDetail from '@/components/about/career/JobDetail'
+import AboutPillarNav from '@/components/about/AboutPillarNav'
 import Footer from '@/components/layouts/Footer'
 import { JOBS, getJob } from '@/components/about/career/jobs-data'
 
@@ -46,6 +47,9 @@ export default async function JobDetailPage({
       <ScrollReveal />
       <SoftwareNavbar />
       <JobDetail job={job} />
+      {/* current="career" so a job page offers the other five pillars rather
+          than a link back to the careers index the reader just came from. */}
+      <AboutPillarNav current="career" />
       <Footer />
     </main>
   )

@@ -10,6 +10,7 @@ import WhoWeAreServices from '@/components/about/who-we-are/WhoWeAreServices'
 // import WhoWeAreWhyChoose from '@/components/about/who-we-are/WhoWeAreWhyChoose' // Why Businesses Choose LOCATOR — disabled
 // import WhoWeAreVideo from '@/components/about/who-we-are/WhoWeAreVideo' // video section — disabled
 import WhoWeAreFAQ from '@/components/about/who-we-are/WhoWeAreFAQ'
+import AboutPillarNav from '@/components/about/AboutPillarNav'
 import SoftwareBlog from '@/components/software/SoftwareBlog'
 import Footer from '@/components/layouts/Footer'
 
@@ -41,6 +42,7 @@ export default function WhoWeArePage() {
       {/* <WhoWeAreWhyChoose /> */}
       {/* <WhoWeAreVideo /> */}
       <WhoWeAreFAQ />
+      <AboutPillarNav current="purpose" />
       <SoftwareBlog />
       <Footer />
     </main>

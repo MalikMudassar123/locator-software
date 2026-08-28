@@ -1,8 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-
-const YOUTUBE_ID = 'hwqB52vVUig' // "LOCATOR - Effective Vehicle Tracking System." — LOCATOR Media
+import {
+  LOCATOR_VIDEO_ALLOW,
+  LOCATOR_VIDEO_POSTER,
+  LOCATOR_VIDEO_TITLE,
+  locatorVideoEmbed,
+} from '@/components/locator-video'
 
 /**
  * The same film runs on every service page; only the framing copy differs. The
@@ -46,20 +50,20 @@ export default function ServiceVideo({
         }}>
           {playing ? (
             <iframe
-              src={`https://www.youtube.com/embed/${YOUTUBE_ID}?autoplay=1`}
-              title="LOCATOR - Effective Vehicle Tracking System"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              src={locatorVideoEmbed()}
+              title={LOCATOR_VIDEO_TITLE}
+              allow={LOCATOR_VIDEO_ALLOW}
               allowFullScreen
               style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0 }}
             />
           ) : (
             <button
               onClick={() => setPlaying(true)}
-              aria-label="Play video: LOCATOR - Effective Vehicle Tracking System"
+              aria-label={`Play video: ${LOCATOR_VIDEO_TITLE}`}
               style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none', cursor: 'pointer', background: 'none', padding: 0 }}
             >
               <img
-                src={`https://i.ytimg.com/vi/${YOUTUBE_ID}/maxresdefault.jpg`}
+                src={LOCATOR_VIDEO_POSTER}
                 alt=""
                 style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
               />

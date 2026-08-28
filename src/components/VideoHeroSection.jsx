@@ -1,6 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import {
+  LOCATOR_VIDEO_ALLOW,
+  LOCATOR_VIDEO_POSTER,
+  LOCATOR_VIDEO_TITLE,
+  locatorVideoEmbed,
+} from "@/components/locator-video";
 
 /**
  * VideoHeroSection
@@ -8,7 +14,8 @@ import { useEffect, useRef, useState } from "react";
  * Pixel-perfect recreation of the reference design:
  *  • Floating lavender-blue decorative blocks with soft glow and depth
  *  • Layered 3-D composition (blocks go both behind AND in front of video)
- *  • Large centered video player with dark overlay
+ *  • Large centered video player with dark overlay (YouTube embed, mounted
+ *    on click — see src/components/locator-video.ts for the shared source)
  *  • Frosted-glass play button with hover states
  *  • Sparkle / star detail at bottom-right of video
  *  • Light blue section background with subtle radial center highlight
@@ -16,18 +23,17 @@ import { useEffect, useRef, useState } from "react";
  *
  * Usage:
  *   import VideoHeroSection from "@/components/VideoHeroSection";
- *   <VideoHeroSection videoSrc="https://..." poster="https://..." />
+ *   <VideoHeroSection />                      // the LOCATOR brand film
+ *   <VideoHeroSection poster="https://..." />  // override the still only
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
 export default function VideoHeroSection({
   headline = "Real-Time Visibility. Total Control.",
   subline = "Track. Manage. Optimize Grow faster with better efficiency and lower costs.",
-  videoSrc = "https://www.w3schools.com/html/mov_bbb.mp4",
-  poster = "",
+  poster = LOCATOR_VIDEO_POSTER,
 }) {
   const sectionRef = useRef(null);
-  const videoRef = useRef(null);
   const [active, setActive] = useState(false);
   const [playing, setPlaying] = useState(false);
 
@@ -50,31 +56,10 @@ export default function VideoHeroSection({
     return () => obs.disconnect();
   }, []);
 
-  const handlePlay = () => {
-    if (!videoRef.current) return;
-    
-    try {
-      if (playing) {
-        videoRef.current.pause();
-        setPlaying(false);
-      } else {
-        const playPromise = videoRef.current.play();
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => {
-              setPlaying(true);
-            })
-            .catch((error) => {
-              console.error("Video play failed:", error);
-              setPlaying(false);
-            });
-        }
-      }
-    } catch (error) {
-      console.error("Video playback error:", error);
-      setPlaying(false);
-    }
-  };
+  // Mounting the iframe IS starting playback — the embed autoplays, and from
+  // then on YouTube owns transport, so there is no pause branch to mirror and
+  // no play() promise to catch. This is a one-way switch by design.
+  const handlePlay = () => setPlaying(true);
 
   return (
     <section ref={sectionRef} className={`vhs ${active ? "vhs--active" : ""}`}>
@@ -107,110 +92,47 @@ export default function VideoHeroSection({
           {/* Subtle glow behind the video card */}
           <div className="vhs__video-glow" />
 
-          <div className="vhs__video-card" onClick={handlePlay}>
-            {/* The video element */}
-            <video
-              ref={videoRef}
-              className="vhs__video"
-              src={videoSrc}
-              poster={poster}
-              loop
-              playsInline
-              preload="metadata"
-              onEnded={() => setPlaying(false)}
-              onError={(e) => {
-                console.error("Video loading error:", e);
-                setPlaying(false);
-              }}
-            />
+          <div className="vhs__video-card" onClick={playing ? undefined : handlePlay}>
+            {/* Before play: the film's own still, framed by this section's
+                overlay and frosted button. After the click the YouTube player
+                takes the frame and brings its own controls, so the overlay and
+                button below unmount rather than sitting on top of it. */}
+            {playing ? (
+              <iframe
+                className="vhs__video"
+                src={locatorVideoEmbed()}
+                title={LOCATOR_VIDEO_TITLE}
+                allow={LOCATOR_VIDEO_ALLOW}
+                allowFullScreen
+                style={{ border: 0 }}
+              />
+            ) : (
+              <img className="vhs__video" src={poster} alt="" />
+            )}
 
-            {/* Dark cinematic overlay */}
-            <div
-              className={`vhs__overlay ${
-                playing ? "vhs__overlay--hidden" : ""
-              }`}
-            />
+            {/* Overlay and button belong to the poster state only. Once the
+                embed is mounted they would sit over YouTube's own controls and
+                swallow clicks meant for it, so both leave the tree entirely
+                rather than being hidden with a class. The pause icon went with
+                them — transport is YouTube's job now. */}
+            {!playing && (
+              <>
+                {/* Dark cinematic overlay */}
+                <div className="vhs__overlay" />
 
-            {/* Frosted-glass play/pause button */}
-            <button
-              className={`vhs__play-btn ${
-                playing ? "vhs__play-btn--playing" : ""
-              }`}
-              aria-label={playing ? "Pause video" : "Play video"}
-              onClick={handlePlay}
-            >
-              {playing ? (
-                /* Pause icon */
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <rect
-                    x="4"
-                    y="3"
-                    width="4"
-                    height="14"
-                    rx="1.5"
-                    fill="white"
-                  />
-                  <rect
-                    x="12"
-                    y="3"
-                    width="4"
-                    height="14"
-                    rx="1.5"
-                    fill="white"
-                  />
-                </svg>
-              ) : (
-                /* Play icon */
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M5 3.5L16.5 10 5 16.5V3.5Z" fill="white" />
-                </svg>
-              )}
-            </button>
+                {/* Frosted-glass play button */}
+                <button
+                  className="vhs__play-btn"
+                  aria-label={`Play video: ${LOCATOR_VIDEO_TITLE}`}
+                  onClick={handlePlay}
+                >
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M5 3.5L16.5 10 5 16.5V3.5Z" fill="white" />
+                  </svg>
+                </button>
+              </>
+            )}
 
-            {/* Sparkle decoration (bottom-right of video) */}
-            <span className="vhs__sparkle" aria-hidden="true">
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                <line
-                  x1="11"
-                  y1="1"
-                  x2="11"
-                  y2="21"
-                  stroke="white"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                />
-                <line
-                  x1="1"
-                  y1="11"
-                  x2="21"
-                  y2="11"
-                  stroke="white"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                />
-                <line
-                  x1="4"
-                  y1="4"
-                  x2="18"
-                  y2="18"
-                  stroke="white"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                  opacity="0.55"
-                />
-                <line
-                  x1="18"
-                  y1="4"
-                  x2="4"
-                  y2="18"
-                  stroke="white"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                  opacity="0.55"
-                />
-                <circle cx="11" cy="11" r="2.5" fill="white" opacity="0.9" />
-              </svg>
-            </span>
           </div>
         </div>
 
@@ -527,9 +449,6 @@ export default function VideoHeroSection({
           transition: opacity 0.5s ease;
           border-radius: var(--video-radius);
         }
-        .vhs__overlay--hidden {
-          opacity: 0;
-        }
 
         /* ── Play / Pause button ─────────────────────────────────────── */
         .vhs__play-btn {
@@ -564,33 +483,6 @@ export default function VideoHeroSection({
         }
         .vhs__play-btn:active {
           transform: translate(-50%, -50%) scale(0.96);
-        }
-        .vhs__play-btn--playing {
-          background: rgba(255, 255, 255, 0.14);
-        }
-
-        /* ── Sparkle decoration ─────────────────────────────────────── */
-        .vhs__sparkle {
-          position: absolute;
-          bottom: clamp(12px, 2vw, 20px);
-          right: clamp(14px, 2.5vw, 24px);
-          z-index: 6;
-          opacity: 0.85;
-          animation: sparkleGlow 3s ease-in-out infinite;
-          display: block;
-          filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
-        }
-
-        @keyframes sparkleGlow {
-          0%,
-          100% {
-            opacity: 0.7;
-            transform: scale(1) rotate(0deg);
-          }
-          50% {
-            opacity: 1;
-            transform: scale(1.15) rotate(12deg);
-          }
         }
 
         /* ── Floating micro-animation on blocks (subtle drift) ──────── */
@@ -700,9 +592,6 @@ export default function VideoHeroSection({
           .vhs__block {
             opacity: 1 !important;
             transform: none !important;
-          }
-          .vhs__sparkle {
-            animation: none;
           }
         }
       `}</style>

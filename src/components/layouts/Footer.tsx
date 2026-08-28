@@ -282,7 +282,10 @@ export default function Footer() {
               ))}
             </div>
 
-            <span className="footer-sep" aria-hidden="true" />
+            {/* Credit temporarily hidden. The separator goes with it — on its own
+                it would trail after the social icons with nothing to divide.
+                Uncomment both together to restore. */}
+            {/* <span className="footer-sep" aria-hidden="true" />
 
             <span>
               Crafted by{' '}
@@ -297,7 +300,7 @@ export default function Footer() {
                   <path d="M4.98 3.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM2.4 21h5.16V9.5H2.4zM9.9 9.5V21h5.16v-6.06c0-1.6.3-3.15 2.29-3.15 1.95 0 1.98 1.83 1.98 3.25V21h5.16v-7c0-4.24-.92-7.5-5.88-7.5-2.38 0-3.98 1.31-4.64 2.55h-.07V9.5z" />
                 </svg>
               </a>
-            </span>
+            </span> */}
           </div>
         </div>
       </div>

@@ -56,6 +56,23 @@ function SocialGridCard({ post }: { post: SocialPost }) {
   )
 }
 
+/**
+ * Splits a featured title on its em dash and tints the trailing half — the event
+ * name — in the site blue, so the headline reads as "lead-in, then the thing".
+ * Titles without an em dash are returned untouched, so this stays a no-op for
+ * every other item that might be promoted into the featured slot.
+ */
+function renderHeroTitle(title: string) {
+  const i = title.indexOf('—')
+  if (i === -1) return title
+  return (
+    <>
+      {title.slice(0, i + 1)}
+      <span className="nrb-hero-title-accent">{title.slice(i + 1)}</span>
+    </>
+  )
+}
+
 function Card({ item, size = 'md' }: { item: NewsItem; size?: 'md' | 'lg' }) {
   const color = CATEGORY_COLOR[item.category]
   return (
@@ -230,6 +247,11 @@ export default function NewsroomBoard() {
         .nrb-hero-title {
           margin: 0 0 10px; font-size: clamp(19px, 1.9vw, 27px); font-weight: 800; line-height: 1.2; letter-spacing: -.02em; color: #fff;
         }
+        /* The site blue lifted to the tint this card already uses for "Read Full
+           Story" (#9cc2ff). The primary #1360ee is a dark-on-light brand colour
+           and sits far too close to the dark photo scrim behind this headline to
+           stay readable. */
+        .nrb-hero-title-accent { color: #9cc2ff; }
         .nrb-hero-excerpt {
           margin: 0 0 16px; font-size: clamp(13px, 1vw, 14.5px); line-height: 1.65; color: rgba(255,255,255,.84); max-width: 52ch;
         }
@@ -384,7 +406,7 @@ export default function NewsroomBoard() {
                   <div className="nrb-hero-content">
                     <span className="nrb-hero-chip">Featured Story</span>
                     <span className="nrb-hero-date">{featured.date}</span>
-                    <h2 className="nrb-hero-title">{featured.title}</h2>
+                    <h2 className="nrb-hero-title">{renderHeroTitle(featured.title)}</h2>
                     <p className="nrb-hero-excerpt">{featured.excerpt}</p>
                     <span className="nrb-hero-more">Read Full Story →</span>
                   </div>

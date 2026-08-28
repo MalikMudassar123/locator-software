@@ -80,13 +80,15 @@ export const CATEGORY_COLOR: Record<NewsCategory, string> = {
 
 export const NEWS_ITEMS: NewsItem[] = [
   {
-    id: 'ai-driver-behaviour',
-    category: 'product',
+    id: 'visionx-2035-summit',
+    category: 'events',
     tag: 'Featured Story',
-    title: 'AI Driver Behaviour Now Powered by Predictive Intelligence',
+    // NBSP between VisionX and 2035: as one unbreakable token it no longer fits
+    // after the em dash, so the line breaks there and the event name starts line 2.
+    title: 'Our Journey to the Future Begins — VisionX 2035 Summit',
     excerpt:
-      'Our latest update uses advanced AI models to predict risky behaviour and prevent incidents before they happen — scoring every trip in real time and coaching drivers automatically.',
-    image: '/newsroom/ai-driver-behaviour.jpg',
+      'Highlights from our first-ever Synosys & Beyond – VisionX 2035 Summit. A milestone event shaping the next decade of innovation, growth and global impact.',
+    image: '/newsroom/visionx-2035-summit.jpg',
     fit: 'contain',
     imageAspect: '2048 / 1288',
     date: 'May 30, 2026',

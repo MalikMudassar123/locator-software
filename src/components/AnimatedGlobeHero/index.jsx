@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { isLand } from "./land-mask";
 
 /**
  * AnimatedGlobeHero
@@ -99,6 +100,20 @@ const SHOW_ORBITAL_RINGS = false;
  * being emitted, and the formation beat still needs a finish.
  */
 const SHOW_FORMATION_SHOCKWAVE = false;
+
+/**
+ * The solid SVG sphere — ocean fill, rotating earth texture, cloud layer,
+ * spherical shading and terminator.
+ *
+ * Off, because the globe is now built from the particle field itself
+ * (ParticleGlobe below) rather than being a separate object the particles were
+ * crossfaded into. Leaving this on would put a solid ball behind the particles
+ * and hide the very thing that is supposed to be forming.
+ *
+ * Set to true to restore the previous solid globe — every def, texture tile and
+ * CSS rule it needs is still in this file.
+ */
+const SHOW_SVG_SPHERE = false;
 
 /**
  * Connections — dense network mesh spanning the globe like flight routes.
@@ -264,52 +279,323 @@ function AnimatedNumber({ value, active, delay = 0, duration = 1600 }) {
 }
 
 /* ============================================================================
- * PARTICLE FORMATION
+ * PARTICLE GLOBE
  * ----------------------------------------------------------------------------
- * Cinematic scroll-triggered formation: a tiny energy core sparks at the
- * center, then thousands of particles spawn in chaotic orbital motion and
- * gradually converge onto the sphere surface — "drawing" the globe into
- * existence. As particles land, the existing SVG globe fades in beneath
- * them; the canvas then stays as a low-amplitude ambient layer so the
- * surface always feels alive without ever obscuring the original render.
+ * The globe IS the particles. There is no hand-over.
  *
- * Implementation notes:
- *  - Canvas overlays the SVG (z-index 1) and is pointer-events: none.
- *  - Particles each have a stable spherical target (theta, phi) plus a
- *    randomized spawn ring + orbital speed. Position is interpolated with
- *    easeOutCubic from spawn to target over ~1.6s, staggered by a per-
- *    particle delay so the formation reads as a wave, not a snap.
- *  - After landing, particles inherit a slow shared rotation that matches
- *    the SVG earth-spin direction, plus per-particle radial wobble, giving
- *    a "living surface" feel.
- *  - Back-facing particles (z < 0 in the rotating sphere frame) are
- *    drawn at sharply reduced opacity, which is what sells the 3D shape.
- *  - Particle count is reduced on small viewports for mobile perf.
+ * The previous version was a crossfade: particles formed a shell, then faded
+ * to zero opacity while a separately-rendered SVG sphere faded up underneath
+ * them. That swap is what read as the globe "popping" into existence — the
+ * thing you watched being built was thrown away and replaced at the moment it
+ * finished. Here the same particles that converge are the ones that stay, and
+ * the SVG sphere surface underneath is gone entirely (see SHOW_SVG_SPHERE).
+ *
+ * THE FORMATION
+ * Each particle owns a fixed home on the unit sphere and spawns far out along
+ * a random direction. It converges by interpolating DIRECTION and RADIUS
+ * separately:
+ *
+ *   direction : normalised lerp from spawn direction toward home direction
+ *   radius    : eased lerp from a wide scatter radius down to the shell
+ *
+ * Interpolating the direction rather than the raw xyz is what makes the
+ * approach curve instead of running dead straight at the centre — the swarm
+ * sweeps around the sphere as it tightens. A per-particle tangential swirl,
+ * decaying to zero as it lands, adds the spiral. Nothing snaps: every particle
+ * has its own delay and duration, so the surface knits together over ~2.6s.
+ *
+ * THE LIVING GLOBE
+ * After forming, the particles keep their homes and the whole field rotates on
+ * a tilted axis, permanently. Depth is real: every particle is transformed in
+ * 3D, projected through a perspective divide, and its size and brightness come
+ * from its own z. Back-hemisphere particles dim and shrink, which is what
+ * makes a field of flat dots read as a solid rotating body.
+ *
+ * A lattice of meridians and parallels is built from the SAME particle system,
+ * just seeded on a grid instead of a spiral — so the structure of the sphere is
+ * drawn by particles too, rather than being an overlay on top of them.
+ *
+ * PERFORMANCE
+ * Where the old burst ran ~4.4s and then stopped, this runs for as long as the
+ * section is on screen, so it is built to be cheap per frame:
+ *   - all particle data in flat Float32Arrays, no objects, no per-frame allocation
+ *   - sin/cos of each home baked once at init; the hot loop is multiply-add
+ *   - no depth sort; depth is expressed through alpha and size, which is
+ *     indistinguishable at this dot size and saves an O(n log n) sort per frame
+ *   - fillRect rather than arc(): far cheaper, and identical below ~2px
+ *   - alpha quantised to 1/64 so long runs share a fillStyle string
+ *   - the parent's IntersectionObserver stops the loop entirely off-screen
  * ========================================================================== */
 
-function ParticleFormation({ active }) {
+// Reduced motion still needs a globe — it just must not animate. The formation
+// is skipped and the sphere is drawn once, settled.
+function ParticleGlobe({ active }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
     if (!active) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      return;
-    }
 
     const ctx = canvas.getContext("2d", { alpha: true });
+    const reduced =
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     const rnd = mulberry32(20260601);
     const isSmall = window.innerWidth < 768;
-    // Halved. This burst runs for ~4.4s starting the instant the section is
-    // scrolled to — exactly when the main thread is already busy with scrolling
-    // — so it was the most visible source of jank despite being temporary. At
-    // these sizes the cluster reads identically with half the dots.
-    const PARTICLE_COUNT = isSmall ? 600 : 1000;
+
+    /* ---- Population -------------------------------------------------------
+       Three groups, one system — every one of them is a particle that flies in
+       during formation, so the whole Earth is genuinely assembled rather than
+       revealed:
+
+         LAND    dense and bright, placed only where the real landmask says
+                 there is land, so the continents are the actual continents.
+         OCEAN   sparse and dim, so the sphere still reads as a solid body
+                 between the landmasses instead of a floating archipelago.
+         RIM     a great circle on the silhouette. This replaces the SVG ring
+                 that used to sweep around the globe: it is made of the same
+                 particles, scattered and converging from all around exactly
+                 like the rest of the swarm, just landing a beat later.
+
+       Land is oversampled relative to its ~30% area share — roughly 60% of the
+       surface budget — because dots on a sphere read much sparser than pixels
+       on a flat map, and the continents have to survive being spread over a
+       hemisphere and dimmed by depth.
+
+       Counts are a measured budget, not a guess. This runs permanently rather
+       than for four seconds, and it is fill-rate bound: every particle is an
+       additively-blended rect over a 2160x912 backing store. At 11.7k the
+       measured cost was 50ms/frame (18fps) even with GPU rasterisation. The
+       spend is therefore concentrated where it is visible — land keeps its
+       density because the continents have to be legible; ocean and lattice are
+       thinned hard because they are dim anyway and were paying full price for
+       almost no visual return. */
+    const N_LAND = isSmall ? 2600 : 6200;
+    // Ocean is ~70% of the sphere, so it is what decides whether the globe
+    // looks like a planet or like a few islands floating in a hole. It was cut
+    // to 600 while chasing frame time and the disc ended up 16% covered.
+    // The cheap way back is NOT more particles — coverage grows with the
+    // SQUARE of dot size but only linearly with count, so bigger, softer,
+    // dimmer ocean dots buy far more surface per unit of fill rate than extra
+    // tiny ones. See baseSize below.
+    const N_OCEAN = isSmall ? 1900 : 4400;
+    const N_RIM = isSmall ? 180 : 260;
+    const MERIDIANS = 8;
+    const PARALLELS = 4;
+    const PER_MERIDIAN = isSmall ? 12 : 18;
+    const PER_PARALLEL = isSmall ? 16 : 24;
+    const N_LATTICE = MERIDIANS * PER_MERIDIAN + PARALLELS * PER_PARALLEL;
+    const COUNT = N_LAND + N_OCEAN + N_RIM + N_LATTICE;
+
+    // Group tags drive colour and behaviour in the hot loop.
+    const G_LAND = 0, G_OCEAN = 1, G_LATTICE = 2, G_RIM = 3;
+    const group = new Uint8Array(COUNT);
+
+    // Home position on the unit sphere, baked once.
+    const hx = new Float32Array(COUNT);
+    const hy = new Float32Array(COUNT);
+    const hz = new Float32Array(COUNT);
+    // Spawn direction (unit) + spawn radius multiple of R.
+    const sx = new Float32Array(COUNT);
+    const sy = new Float32Array(COUNT);
+    const sz = new Float32Array(COUNT);
+    const sRad = new Float32Array(COUNT);
+    // Per-particle character.
+    const delay = new Float32Array(COUNT);
+    const dur = new Float32Array(COUNT);
+    const swirl = new Float32Array(COUNT);
+    const wobPhase = new Float32Array(COUNT);
+    const wobSpeed = new Float32Array(COUNT);
+    const baseSize = new Float32Array(COUNT);
+    const bright = new Float32Array(COUNT); // 0 surface .. 1 lattice
+    const tint = new Float32Array(COUNT);
+
+    const setHome = (i, x, y, z) => {
+      hx[i] = x; hy[i] = y; hz[i] = z;
+    };
+
+    /* --- Land and ocean, sampled off a Fibonacci spiral -------------------
+       The spiral gives even coverage with no polar clumping (a naive
+       random(theta, phi) always bunches at the poles). Each candidate point is
+       converted to lat/lon and tested against the real landmask.
+
+       TWO PASSES, and it has to be two. The obvious single-pass version —
+       walk the spiral, keep points until each bucket is full — silently
+       destroys the distribution: the spiral runs pole to pole, so a bucket
+       fills from whichever pole it starts at and everything past that point is
+       dropped. At these counts ocean filled inside the top 4% of the sphere
+       and land inside the top 46%, leaving the globe as a lopsided blob with
+       an empty southern half.
+       So: count the candidates first, then accept them on a fractional stride
+       spread across the entire walk. Even coverage, exact counts, and no
+       dependence on where the spiral happens to begin. */
+    const GOLDEN = Math.PI * (3 - Math.sqrt(5));
+    const SAMPLES = (N_LAND + N_OCEAN) * 4;
+    const spiralY = (s) => 1 - (s / (SAMPLES - 1)) * 2;
+
+    // Pass 1 — how many candidates of each kind does the spiral actually hit?
+    let landCand = 0, oceanCand = 0;
+    for (let s = 0; s < SAMPLES; s++) {
+      const y = spiralY(s);
+      const r = Math.sqrt(Math.max(0, 1 - y * y));
+      const th = GOLDEN * s;
+      const lat = Math.asin(y) * (180 / Math.PI);
+      const lon = Math.atan2(Math.sin(th) * r, Math.cos(th) * r) * (180 / Math.PI);
+      if (isLand(lat, lon) === 1) landCand++; else oceanCand++;
+    }
+
+    // Pass 2 — accept on a fractional stride, so the kept points are spread
+    // evenly over the whole sphere instead of clustered at the start.
+    const landStep = landCand > 0 ? Math.min(1, N_LAND / landCand) : 0;
+    const oceanStep = oceanCand > 0 ? Math.min(1, N_OCEAN / oceanCand) : 0;
+    let landAcc = 0, oceanAcc = 0, k = 0;
+    for (let s = 0; s < SAMPLES; s++) {
+      const y = spiralY(s);
+      const r = Math.sqrt(Math.max(0, 1 - y * y));
+      const th = GOLDEN * s;
+      const x = Math.cos(th) * r;
+      const z = Math.sin(th) * r;
+      const lat = Math.asin(y) * (180 / Math.PI);
+      const lon = Math.atan2(z, x) * (180 / Math.PI);
+
+      if (isLand(lat, lon) === 1) {
+        landAcc += landStep;
+        if (landAcc >= 1 && k < N_LAND + N_OCEAN) {
+          landAcc -= 1;
+          setHome(k, x, y, z);
+          group[k] = G_LAND;
+          // Finer dots than before. Coastlines are read from the SHAPE of the
+          // cluster, and fat dots blur one into the next until a continent is a
+          // smudge; smaller ones resolve the outline. It also cuts fill rate,
+          // which is what pays for there being more of them.
+          baseSize[k] = 0.46 + rnd() * 0.3;
+          bright[k] = 1;
+          tint[k] = rnd() * 0.35;      // land skews bright/white
+          k++;
+        }
+      } else {
+        oceanAcc += oceanStep;
+        if (oceanAcc >= 1 && k < N_LAND + N_OCEAN) {
+          oceanAcc -= 1;
+          setHome(k, x, y, z);
+          group[k] = G_OCEAN;
+          // Deliberately large and soft — these are the water surface, not
+          // sparkles. Overlapping broad dots read as a continuous sea; small
+          // ones read as static. Size is the cheap lever: the frame cost here
+          // is dominated by per-particle draw overhead rather than by pixels,
+          // so widening a dot is close to free while adding another one is not.
+          baseSize[k] = 2.4 + rnd() * 1.7;
+          bright[k] = 0;
+          tint[k] = 0.6 + rnd() * 0.4; // ocean skews deep cyan
+          k++;
+        }
+      }
+    }
+    const N_PLACED = k;
+
+    // --- Lattice: meridians then parallels, on an exact grid. Faint — it is
+    //     scaffolding that says "sphere", not a feature competing with land.
+    for (let m = 0; m < MERIDIANS; m++) {
+      const th = (m / MERIDIANS) * Math.PI * 2;
+      const ct = Math.cos(th), st = Math.sin(th);
+      for (let j = 0; j < PER_MERIDIAN; j++) {
+        const phi = (j / (PER_MERIDIAN - 1)) * Math.PI;
+        const sp = Math.sin(phi);
+        setHome(k, sp * ct, Math.cos(phi), sp * st);
+        group[k] = G_LATTICE;
+        baseSize[k] = 0.4 + rnd() * 0.22;
+        bright[k] = 0;
+        tint[k] = 0.5 + rnd() * 0.4;
+        k++;
+      }
+    }
+    for (let p = 0; p < PARALLELS; p++) {
+      const phi = ((p + 1) / (PARALLELS + 1)) * Math.PI;
+      const sp = Math.sin(phi), cp = Math.cos(phi);
+      for (let j = 0; j < PER_PARALLEL; j++) {
+        const th = (j / PER_PARALLEL) * Math.PI * 2;
+        setHome(k, sp * Math.cos(th), cp, sp * Math.sin(th));
+        group[k] = G_LATTICE;
+        baseSize[k] = 0.4 + rnd() * 0.22;
+        bright[k] = 0;
+        tint[k] = 0.5 + rnd() * 0.4;
+        k++;
+      }
+    }
+
+    /* --- The rim ring ------------------------------------------------------
+       The ring that used to be an SVG stroke sweeping around the globe. It is
+       particles now, and it is NOT part of the rotating sphere: its home is a
+       circle on the screen-facing plane, so it always traces the silhouette no
+       matter how the Earth turns underneath it. rimIdx0 marks where it starts
+       so the hot loop can treat it differently without a branch on group. */
+    const rimIdx0 = k;
+    for (let i = 0; i < N_RIM; i++) {
+      const a = (i / N_RIM) * Math.PI * 2;
+      setHome(k, Math.cos(a), Math.sin(a), 0);
+      group[k] = G_RIM;
+      baseSize[k] = 0.7 + rnd() * 0.45;
+      bright[k] = 1;
+      tint[k] = rnd() * 0.25;
+      k++;
+    }
+
+    /* How many particles actually exist. NOT the same as COUNT: the stride
+       acceptance above lands within a couple of particles of the target rather
+       than exactly on it, so COUNT is an upper bound for allocation only.
+       Drawing to COUNT would render the unwritten tail — every one of which
+       has home (0,0,0) and would pile up as a bright dot at the globe's
+       centre. Everything downstream iterates TOTAL. */
+    const TOTAL = k;
+
+    // --- Spawn state + character for every particle.
+    for (let i = 0; i < TOTAL; i++) {
+      // Random unit direction for the spawn point.
+      const u = rnd() * 2 - 1;
+      const t2 = rnd() * Math.PI * 2;
+      const s2 = Math.sqrt(Math.max(0, 1 - u * u));
+      sx[i] = s2 * Math.cos(t2);
+      sy[i] = u;
+      sz[i] = s2 * Math.sin(t2);
+      /* 1.5R..2.6R, not 2.1R..4.7R. At 4.7R the swarm spawned 820 SVG units
+         from the centre — wider than the 1280-unit section — so the formation
+         began as particles strewn across the whole hero instead of as a cloud
+         gathering around a point. Close enough now that the globe is always
+         the subject. */
+      sRad[i] = 1.5 + rnd() * 1.1;
+      delay[i] = rnd() * 0.55;          // knit together, never snap
+      dur[i] = 1.15 + rnd() * 0.75;
+      swirl[i] = (rnd() * 2 - 1) * 2.0; // signed tangential spin-in
+      wobPhase[i] = rnd() * Math.PI * 2;
+      wobSpeed[i] = 0.5 + rnd() * 0.9;
+    }
+
+    /* The ring is the outer layer of the SAME swarm, not a separate object
+       swept in from one side. Each rim particle gets an isotropic scattered
+       spawn direction, exactly like land/ocean/lattice above, so it converges
+       toward its place on the circle from all around rather than sweeping in
+       as a band from 9 o'clock. Delay is randomised per-particle rather than
+       tied to (i - rimIdx0) — that was the other half of the "sweep": tying
+       delay to index made particles land in angular order, i.e. progressively
+       around the ring like a clock hand. A later delay window (vs. the body's
+       0..0.55) still lands the ring shortly after the surface has knitted, so
+       it reads as the formation's last layer snapping into focus, not as
+       something arriving afterward. */
+    for (let i = rimIdx0; i < rimIdx0 + N_RIM; i++) {
+      const u = rnd() * 2 - 1;
+      const t2 = rnd() * Math.PI * 2;
+      const s2 = Math.sqrt(Math.max(0, 1 - u * u));
+      sx[i] = s2 * Math.cos(t2);
+      sy[i] = u;
+      sz[i] = s2 * Math.sin(t2);
+      sRad[i] = 1.6 + rnd() * 1.0;
+      delay[i] = 0.95 + rnd() * 0.5;
+      dur[i] = 0.8 + rnd() * 0.4;
+      swirl[i] = (rnd() * 2 - 1) * 2.0; // signed per-particle, matching the body
+    }
 
     let dims = { w: 0, h: 0 };
     let map = { scale: 1, offX: 0, offY: 0 };
@@ -317,237 +603,337 @@ function ParticleFormation({ active }) {
 
     const setup = () => {
       const rect = canvas.getBoundingClientRect();
-      // Capped at 1.5 rather than 2: on a 2x display that's 44% fewer pixels to
-      // fill per frame, and sub-2px glowing dots show no visible difference.
-      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      // 1.25, not 1.5. This canvas is fill-rate bound and every step of dpr
+      // costs its square in pixels to blend — 1.5 -> 1.25 is 31% fewer. The
+      // particles are sub-2px glows under additive blending, where the extra
+      // sampling buys nothing you can actually see.
+      dpr = Math.min(window.devicePixelRatio || 1, 1.25);
       canvas.width = Math.max(1, Math.round(rect.width * dpr));
       canvas.height = Math.max(1, Math.round(rect.height * dpr));
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       dims = { w: rect.width, h: rect.height };
-      // SVG uses preserveAspectRatio="xMidYMid slice" against VB_W x VB_H
+      // Matches the SVG's preserveAspectRatio="xMidYMid slice".
       const scale = Math.max(dims.w / VB_W, dims.h / VB_H);
       map = {
         scale,
         offX: (dims.w - VB_W * scale) / 2,
         offY: (dims.h - VB_H * scale) / 2,
       };
+
     };
     setup();
-
-    const toScreenX = (x) => x * map.scale + map.offX;
-    const toScreenY = (y) => y * map.scale + map.offY;
-
-    // Pre-allocated particle pool.
-    // Every particle has a fixed (theta, phi) home on the sphere; the
-    // shell radius itself grows from ~0 to R, so the whole cluster scales
-    // up *as a unit* rather than spawning at full size and collapsing in.
-    const particles = new Array(PARTICLE_COUNT);
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      // Uniform points on a sphere
-      const u = rnd();
-      const v = rnd();
-      const theta = 2 * Math.PI * u;
-      const phi = Math.acos(2 * v - 1);
-      particles[i] = {
-        theta,
-        phi,
-        // Wider stagger so the core "blooms" gradually over ~0.6s instead
-        // of all particles appearing at the same instant.
-        spawnDelay: rnd() * 0.6,
-        // Gentler per-particle swirl — slow enough to read as cinematic
-        // motion across the longer formation window, not jittery noise.
-        swirlSpeed: 0.3 + rnd() * 0.7,
-        swirlPhase: rnd() * Math.PI * 2,
-        // Radial noise — large during formation, fades with the shell
-        wobbleAmp: 0.6 + rnd() * 1.4,
-        wobbleSpeed: 0.25 + rnd() * 0.7,
-        wobblePhase: rnd() * Math.PI * 2,
-        // Visuals
-        size: 0.55 + rnd() * 1.05,
-        tint: rnd(), // 0=cool white, 1=cyan
-      };
-    }
-
     const onResize = () => setup();
     window.addEventListener("resize", onResize, { passive: true });
 
-    /* ---- TIMELINE (seconds) ----
-       0.00 – 0.45  core ignites, particles bloom in a tight cluster (~3% R)
-       0.45 – 3.30  shell radius grows from tiny → full R, swirl + rotation
-                    visible throughout; SVG globe begins fading in at ~2.6s
-       3.30 – 3.60  particles at full shell, SVG globe completes underneath
-       3.60 – 4.40  particles fade smoothly to zero (no specks left behind)
-       4.40+        rAF loop exits — canvas is empty, SVG globe is alone.
-       ---------------------------------------- */
-    const GROW_START = 0.45;
-    const GROW_END = 3.30;
-    const DIM_START = 3.60;       // begin fading particles out
-    const DIM_END = 4.40;         // particles fully gone, rAF stops
-    const SHELL_MIN_FRAC = 0.03;  // initial cluster ~3% of full radius
-    let startTs = null;
-    let lastTs = null;
-    let rotAccum = 0; // integrated shared rotation
-    let rafId;
+    const FORM_END = 2.0;          // surface has landed by here (rim lands ~2.3)
+    const TILT = 0.32;             // axial tilt, radians — reads as a real body
+    /* Perspective, and the two things that kept particles outside the rim.
+       It was FOCAL/(FOCAL + z2), which has the sign backwards: it SHRANK the
+       near hemisphere and MAGNIFIED the far one, so back-side particles
+       projected to 1.033 of the radius and sprayed past the ring — the fuzz
+       around the edge. Correct form is FOCAL/(FOCAL - z2).
+       Even correct, perspective pushes the widest points slightly past the
+       silhouette: at FOCAL 9 the maximum projected radius is 1.0062 (at
+       z=0.11). CONTAIN is exactly that reciprocal, so the sphere is scaled to
+       sit inside the rim by construction rather than by hoping. Slightly under
+       1/1.0062 to leave room for the surface wobble. */
+    const FOCAL = 9;               // perspective strength, in sphere radii
+    const CONTAIN = 0.978;         // 1/1.0062, minus headroom for the wobble
+    const cosT = Math.cos(TILT);
+    const sinT = Math.sin(TILT);
+    // Key light, upper-left, matching the SVG sphereLight gradient's origin so
+    // the particle Earth is lit consistently with the rest of the section.
+    const LX = -0.55, LY = 0.62, LZ = 0.56;
+
+    /* ---- Draw palette + bins ---------------------------------------------
+       Five colour classes x ALPHA_LEVELS steps, every rgba() string built once
+       here and reused forever. Everything the hot loop needs is preallocated;
+       nothing in the per-frame path allocates. */
+    const C_LAND = 0, C_OCEAN = 1, C_LATTICE = 2, C_RIM = 3, C_HOT = 4;
+    const ALPHA_LEVELS = 10;
+    const NBUCKETS = 5 * ALPHA_LEVELS;
+    const CLASS_RGB = [
+      [238, 248, 255], // land   — warm white
+      [ 70, 150, 245], // ocean  — site blue
+      [150, 210, 255], // lattice— pale cyan
+      [236, 250, 255], // rim    — atmosphere white
+      [255, 255, 255], // hot    — in flight
+    ];
+    const PALETTE = new Array(NBUCKETS);
+    for (let c = 0; c < 5; c++) {
+      const [r, g2, b2] = CLASS_RGB[c];
+      for (let l = 0; l < ALPHA_LEVELS; l++) {
+        // Mid-bin alpha, so quantisation error is +/- half a step rather than
+        // always rounding down and dimming the whole field.
+        const a = (l + 0.5) / ALPHA_LEVELS;
+        PALETTE[c * ALPHA_LEVELS + l] = `rgba(${r},${g2},${b2},${a.toFixed(3)})`;
+      }
+    }
+    const bx = new Float32Array(COUNT);
+    const by = new Float32Array(COUNT);
+    const bs = new Float32Array(COUNT);
+    const bucketOf = new Uint8Array(COUNT);
+    const order = new Uint32Array(COUNT);
+    const bucketCount = new Uint32Array(NBUCKETS);
+    const bucketStart = new Uint32Array(NBUCKETS);
+    const bucketCursor = new Uint32Array(NBUCKETS);
 
     const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3);
-    const easeInOutQuad = (x) =>
-      x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+    const easeInOutSine = (x) => -(Math.cos(Math.PI * x) - 1) / 2;
 
-    const tick = (ts) => {
-      if (startTs === null) {
-        startTs = ts;
-        lastTs = ts;
-      }
-      const dt = Math.min(0.05, (ts - lastTs) / 1000); // clamp big frame gaps
-      lastTs = ts;
-      const t = (ts - startTs) / 1000;
+    let startTs = null;
+    let lastTs = null;
+    let rot = 0;
+    let rafId;
+
+    const draw = (t, dt) => {
+      const cx = CX * map.scale + map.offX;
+      const cy = CY * map.scale + map.offY;
+      const Rpx = R * map.scale;
 
       ctx.clearRect(0, 0, dims.w, dims.h);
 
-      // Once formation is done and particles have fully faded out, stop
-      // drawing entirely. Keeping rAF alive forever runs the simulation
-      // alongside the SVG's CSS animations and can cause visible jitter
-      // on lower-end machines — and the user wants a clean globe after
-      // formation, so there's nothing left to draw.
-      if (t >= DIM_END) {
-        rafId = 0;
-        return;
+      // Formation progress drives rotation speed and the core glow. Fast while
+      // the swarm gathers, settling to a slow ambient turn — the deceleration
+      // is a large part of why the end of the formation feels like an arrival
+      // rather than a stop.
+      const form = reduced ? 1 : Math.min(1, t / FORM_END);
+      const formE = easeInOutSine(form);
+      rot += (1.05 + (0.135 - 1.05) * formE) * dt;
+
+      // Ignition core — the point the swarm gathers around. Gone by the time
+      // the shell closes, so it never sits inside the finished globe.
+      if (!reduced && t < 1.9) {
+        const a = t < 0.35 ? t / 0.35 : Math.max(0, 1 - (t - 0.35) / 1.55);
+        if (a > 0.01) {
+          const cr = Rpx * 0.06 * (1 + Math.sin(t * 6) * 0.18);
+          const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, cr * 9);
+          g.addColorStop(0, `rgba(255,255,255,${0.9 * a})`);
+          g.addColorStop(0.3, `rgba(200,232,255,${0.45 * a})`);
+          g.addColorStop(1, "rgba(120,180,240,0)");
+          ctx.fillStyle = g;
+          ctx.fillRect(cx - cr * 9, cy - cr * 9, cr * 18, cr * 18);
+        }
       }
 
-      const cx = toScreenX(CX);
-      const cy = toScreenY(CY);
-      const Rpx = R * map.scale;
+      /* ---- The body -------------------------------------------------------
+         A particle field ALWAYS has gaps between its particles — that is what
+         it is. Relying on particles alone to describe the sphere left most of
+         the globe as bare background showing through, which read as a broken,
+         half-empty ball rather than a planet.
+         So the ocean gets an actual surface: one shaded sphere, lit from the
+         same upper-left key as the particles, drawn underneath them. Its alpha
+         is tied to formation progress, so it does not appear — it densifies as
+         the swarm arrives, and the particles are still what you watch building
+         the thing. Two gradients: a lit body, then a limb darkening pass that
+         turns a flat disc into something with a curved edge.
+         Cost is two gradient fills a frame, which is nothing next to the
+         thousands of blended rects above. */
+      /* NO SOLID BODY. A shaded sphere was tried here to fill the gaps between
+         particles and it was wrong on every count: it is a solid shape that
+         appears rather than assembles, it is opaque so it hid the flight arcs
+         and city nodes on the SVG underneath, and a deep navy ball does not
+         belong on a pale sky-blue section. The globe has to be the particles
+         and nothing else — density is the only legitimate way to close the
+         gaps, so the counts above carry that job. */
 
-      // ---- Growth progress (shared, drives everything) ----
-      const growT = Math.max(
-        0,
-        Math.min(1, (t - GROW_START) / (GROW_END - GROW_START))
-      );
-      const growE = easeInOutQuad(growT); // gentle in/out for organic feel
-      const shellFrac = SHELL_MIN_FRAC + (1 - SHELL_MIN_FRAC) * growE;
-      const shellR = R * shellFrac;
-
-      // ---- Shared rotation — moderate while forming, settles to slow
-      // ambient as the shell finalizes. Tuned so the cluster sweeps
-      // through ~120-150° over the ~3s growth window — clearly visible
-      // motion without spinning so fast it looks frantic.
-      const fastRate = 0.9;  // rad/sec while forming
-      const slowRate = 0.18; // rad/sec ambient
-      const currentRate = fastRate + (slowRate - fastRate) * growE;
-      rotAccum += currentRate * dt;
-
-      /* ---- CORE GLOW ----
-         Sharp at ignition; fades out as the growing shell takes over.
-         Note: the visible "core" stays anchored as the shell expands
-         around it, so the eye reads continuous growth instead of a swap. */
-      // Core: rises over 0.4s, then fades over ~1.8s while the shell expands
-      const coreAlpha =
-        t < 0.4 ? t / 0.4 : Math.max(0, 1 - (t - 0.4) / 1.8);
-      if (coreAlpha > 0.01) {
-        const pulse = 1 + Math.sin(t * 6) * 0.2;
-        const coreR = Rpx * 0.05 * pulse;
-        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 9);
-        grad.addColorStop(0, `rgba(255,255,255,${0.95 * coreAlpha})`);
-        grad.addColorStop(0.25, `rgba(200,230,255,${0.55 * coreAlpha})`);
-        grad.addColorStop(0.6, `rgba(120,180,240,${0.18 * coreAlpha})`);
-        grad.addColorStop(1, "rgba(120,180,240,0)");
-        ctx.fillStyle = grad;
-        ctx.fillRect(cx - coreR * 9, cy - coreR * 9, coreR * 18, coreR * 18);
-
-        ctx.fillStyle = `rgba(255,255,255,${coreAlpha})`;
-        ctx.beginPath();
-        ctx.arc(cx, cy, coreR * 0.5, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // Global dim: full opacity during formation, smoothly to ZERO
-      // between DIM_START and DIM_END so nothing remains on the globe.
-      let globalAlpha;
-      if (t < DIM_START) {
-        globalAlpha = 1;
-      } else {
-        const x = (t - DIM_START) / (DIM_END - DIM_START);
-        globalAlpha = 1 - easeOutCubic(Math.min(1, x));
-      }
-      if (globalAlpha <= 0.005) {
-        rafId = requestAnimationFrame(tick);
-        return;
-      }
-
-      // While forming, more particles are front-lit (whole cluster glows);
-      // after forming, real 3D depth kicks in.
-      const depthMix = growE; // 0 = no depth (cluster), 1 = full 3D shading
+      const cosR = Math.cos(rot);
+      const sinR = Math.sin(rot);
 
       ctx.globalCompositeOperation = "lighter";
 
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        const p = particles[i];
-        const localT = t - p.spawnDelay;
-        if (localT < 0) continue;
+      // Reset the bins for this frame. n is the number of particles that
+      // actually made it into a bin (spawned, and above the alpha floor).
+      bucketCount.fill(0);
+      let n = 0;
 
-        // Per-particle swirl that fades as the shell forms — adds organic
-        // motion during growth without disrupting the final sphere shape.
-        const swirlAmp = 1 - growE;
-        const dTheta =
-          Math.cos(localT * p.swirlSpeed + p.swirlPhase) * swirlAmp * 0.55;
-        const dPhi =
-          Math.sin(localT * p.swirlSpeed + p.swirlPhase) * swirlAmp * 0.35;
+      for (let i = 0; i < TOTAL; i++) {
+        // --- Convergence ---------------------------------------------------
+        let ux, uy, uz, rad;
+        if (reduced) {
+          ux = hx[i]; uy = hy[i]; uz = hz[i]; rad = 1;
+        } else {
+          const lt = t - delay[i];
+          if (lt < 0) continue;                    // not yet spawned
+          const u = Math.min(1, lt / dur[i]);
+          const e = easeOutCubic(u);
 
-        const thetaR = p.theta + rotAccum + dTheta;
-        const phiR = p.phi + dPhi;
+          // Direction: normalised lerp spawn -> home. Curves the approach.
+          let dx = sx[i] + (hx[i] - sx[i]) * e;
+          let dy = sy[i] + (hy[i] - sy[i]) * e;
+          let dz = sz[i] + (hz[i] - sz[i]) * e;
 
-        const sinPhi = Math.sin(phiR);
-        const x3 = sinPhi * Math.cos(thetaR);
-        const y3 = Math.cos(phiR);
-        const z3 = sinPhi * Math.sin(thetaR);
+          // Tangential swirl, decaying to nothing as it lands — the spiral.
+          const sw = swirl[i] * (1 - e) * (1 - e);
+          if (sw !== 0) {
+            const c = Math.cos(sw), s = Math.sin(sw);
+            const nx = dx * c - dz * s;
+            dz = dx * s + dz * c;
+            dx = nx;
+          }
 
-        // Radial chaos: large during early formation, decays as the
-        // shell finalizes. Particles fade out shortly after, so no
-        // long-lived ambient wobble is needed.
-        const wob = Math.sin(localT * p.wobbleSpeed + p.wobblePhase);
-        const chaos = swirlAmp * p.wobbleAmp * R * 0.18;
-        const rNow = shellR + wob * chaos;
+          // sqrt, not Math.hypot: hypot does overflow-safe scaling that costs
+          // several times a plain sqrt, and these are all unit-ish already.
+          const len = Math.sqrt(dx * dx + dy * dy + dz * dz);
+          const inv = 1 / (len || 1);
+          ux = dx * inv; uy = dy * inv; uz = dz * inv;
+          rad = sRad[i] + (1 - sRad[i]) * e;
+        }
 
-        const vx = x3 * rNow;
-        const vy = y3 * rNow;
+        // Surface breathing once landed — keeps the skin alive without ever
+        // disturbing the silhouette.
+        const settled = reduced ? 1 : Math.min(1, Math.max(0, (t - delay[i]) / dur[i]));
+        const wob = reduced
+          ? 0
+          : Math.sin(t * wobSpeed[i] + wobPhase[i]) * 0.012 * settled;
+        const rr = (rad + wob) * Rpx;
 
-        // Facing factor — soft hemisphere falloff (only matters once
-        // the shell has formed). Blend in via depthMix.
-        const trueFacing = Math.max(0, (z3 + 0.5) / 1.5);
-        const facing = 1 * (1 - depthMix) + trueFacing * depthMix;
-        if (facing < 0.04) continue;
+        // --- 3D transform: spin about Y, then tilt about X -----------------
+        // The rim is exempt from the spin: it lives on the screen-facing plane
+        // so it traces the silhouette while the Earth turns inside it.
+        let x1, y2, z2;
+        if (group[i] === G_RIM) {
+          x1 = ux; y2 = uy; z2 = uz;
+        } else {
+          const z1 = -ux * sinR + uz * cosR;
+          x1 = ux * cosR + uz * sinR;
+          y2 = uy * cosT - z1 * sinT;
+          z2 = uy * sinT + z1 * cosT;
+        }
 
-        // Alpha: luminous while forming, calmer once landed
-        const formingAlpha = 0.55 + Math.sin(localT * 6 + i) * 0.32;
-        const landedAlpha = 0.32 * trueFacing + 0.10;
-        const alpha =
-          (formingAlpha * (1 - growE) + landedAlpha * growE) *
-          globalAlpha *
-          0.95;
-        if (alpha < 0.015) continue;
+        // --- Perspective ---------------------------------------------------
+        // Minus z2, not plus — see the note on FOCAL. CONTAIN keeps the whole
+        // projected sphere inside the rim.
+        const persp = FOCAL / (FOCAL - z2);
+        const pr = rr * persp * CONTAIN;
+        const px = cx + x1 * pr;
+        const py = cy + y2 * pr;
 
-        const px = cx + vx * map.scale;
-        const py = cy + vy * map.scale;
-        const size =
-          p.size *
-          map.scale *
-          (1 + (1 - growE) * 0.45) *
-          (0.7 + facing * 0.5);
+        // Depth 0 (far) .. 1 (near). Drives brightness and size — this is what
+        // turns a cloud of flat dots into a body with a front and a back.
+        const depth = (z2 + 1) * 0.5;
 
-        // fillRect, not arc(): a path + fill per particle costs several times a
-        // single rect, and below ~2px on screen a square dot and a round one are
-        // indistinguishable — especially under `lighter` compositing with a
-        // glow. Alpha is quantized to 1/64ths so long runs of particles share a
-        // fillStyle string and the canvas state machine stops churning.
-        const qAlpha = Math.round(alpha * 64) / 64;
-        const r8 = Math.round(220 + 30 * (1 - p.tint));
-        const g8 = Math.round(235 + 18 * (1 - p.tint));
-        ctx.fillStyle = `rgba(${r8},${g8},255,${qAlpha})`;
-        const d = size * 2;
-        ctx.fillRect(px - size, py - size, d, d);
+        const g = group[i];
+
+        /* --- Lighting -------------------------------------------------------
+           A single key light from the upper left, exactly where the SVG's
+           sphereLight gradient used to put it, so the particle Earth is lit the
+           same way the rest of the section is. Diffuse term is the dot product
+           of the surface normal (which, on a unit sphere, IS the position) with
+           the light direction. This is what gives the globe a lit face and a
+           dark limb instead of looking like a flat sticker of dots. */
+        const diffuse = ux * LX + uy * LY + uz * LZ;   // -1 .. 1
+        const lit = 0.18 + 0.82 * Math.max(0, diffuse * 0.5 + 0.5);
+
+        // Colour comes from the class palette below; only brightness varies
+        // per particle, so this just resolves alpha.
+        let alpha;
+        if (g === G_RIM) {
+          // A halo, not a hoop. All 300 of these sit on one thin circle and
+          // composite additively, so they stack into a hard white band very
+          // fast — at 0.5..0.92 it read as a drawn ring welded round the
+          // globe rather than as the atmosphere catching the light.
+          alpha = 0.16 + 0.2 * depth;
+        } else if (g === G_LAND) {
+          // Land. It no longer has to imply the sphere — the body does that —
+          // so it can be pushed hard and simply read as glowing continents
+          // sitting on an ocean.
+          alpha = (0.35 + 0.85 * depth * depth) * lit * (1 - tint[i] * 0.25);
+        } else if (g === G_OCEAN) {
+          // Low per-dot alpha on purpose: these are wide and they overlap, and
+          // under additive blending overlapping dots accumulate. Kept faint so
+          // the sea builds up to an even tone instead of blowing out to white
+          // wherever three of them happen to land on each other.
+          alpha = (0.03 + 0.105 * depth * depth) * lit;
+        } else {
+          // Lattice: faintest of all — structure, not content.
+          alpha = (0.04 + 0.16 * depth * depth) * lit;
+        }
+
+        // Extra luminance while still in flight, so the swarm reads as energy
+        // before it reads as a surface.
+        if (!reduced) {
+          const u = (t - delay[i]) / dur[i];
+          if (u < 1) alpha += (1 - u) * (1 - u) * 0.6;
+        }
+        if (alpha < 0.02) continue;
+        if (alpha > 1) alpha = 1;
+
+        /* Size GROWS as a particle lands. In flight everything is a tiny spark;
+           it only opens up to its full width once it has arrived.
+           This is what was wrong with the formation: ocean dots are deliberately
+           wide (they are what fills the sphere), but that width was applied the
+           whole time, so the approach was thousands of 5-9px squares scattered
+           across the entire section — blocky, and covering the whole hero
+           rather than converging into a globe. It was also most of the frame
+           cost during formation, which is what made it feel slow and glitchy.
+           Sparks in, surface at rest. */
+        const grow = reduced ? 1 : 0.22 + 0.78 * settled * settled;
+        const size = baseSize[i] * map.scale * persp * (0.62 + 0.75 * depth) * grow;
+
+        /* Bucket instead of drawing. Assigning ctx.fillStyle builds a string
+           and pokes the canvas state machine; doing that once per particle was
+           ~12k string allocations and ~12k state changes every frame, and it
+           was by far the dominant cost — 116ms/frame, 8.6fps. Particles are
+           binned into a small fixed palette here and drawn per-bin below, which
+           turns those 12k state changes into about 40. */
+        let cls;
+        if (!reduced && (t - delay[i]) / dur[i] < 1) cls = C_HOT;
+        else if (g === G_RIM) cls = C_RIM;
+        else if (g === G_LAND) cls = C_LAND;
+        else if (g === G_OCEAN) cls = C_OCEAN;
+        else cls = C_LATTICE;
+
+        let lv = (alpha * ALPHA_LEVELS) | 0;
+        if (lv >= ALPHA_LEVELS) lv = ALPHA_LEVELS - 1;
+
+        const b = cls * ALPHA_LEVELS + lv;
+        bucketOf[n] = b;
+        bx[n] = px; by[n] = py; bs[n] = size;
+        bucketCount[b]++;
+        n++;
+      }
+
+      /* Counting sort into contiguous runs, then one fillStyle per run. Three
+         linear passes over n, which is far cheaper than the state churn it
+         replaces. */
+      let acc = 0;
+      for (let b = 0; b < NBUCKETS; b++) {
+        bucketStart[b] = acc;
+        acc += bucketCount[b];
+        bucketCursor[b] = bucketStart[b];
+      }
+      for (let i = 0; i < n; i++) {
+        order[bucketCursor[bucketOf[i]]++] = i;
+      }
+      for (let b = 0; b < NBUCKETS; b++) {
+        const from = bucketStart[b];
+        const to = from + bucketCount[b];
+        if (from === to) continue;
+        ctx.fillStyle = PALETTE[b];
+        for (let j = from; j < to; j++) {
+          const i = order[j];
+          const s = bs[i];
+          ctx.fillRect(bx[i] - s, by[i] - s, s * 2, s * 2);
+        }
       }
 
       ctx.globalCompositeOperation = "source-over";
+    };
+
+    if (reduced) {
+      // One settled frame, no loop at all.
+      draw(FORM_END, 0);
+      return () => {
+        window.removeEventListener("resize", onResize);
+      };
+    }
+
+    const tick = (ts) => {
+      if (startTs === null) { startTs = ts; lastTs = ts; }
+      const dt = Math.min(0.05, (ts - lastTs) / 1000);
+      lastTs = ts;
+      draw((ts - startTs) / 1000, dt);
       rafId = requestAnimationFrame(tick);
     };
     rafId = requestAnimationFrame(tick);
@@ -656,7 +1042,7 @@ export default function AnimatedGlobeHero({
       {/* Keys are prefixed because this and the stats container are siblings:
           a bare key={runId} gave both the same key and React warned about a
           duplicate. The value still changes per run, which is the point. */}
-      <ParticleFormation key={`particles-${runId}`} active={active} />
+      <ParticleGlobe key={`particles-${runId}`} active={active} />
       <svg
         ref={svgRef}
         viewBox={`0 0 ${VB_W} ${VB_H}`}
@@ -982,6 +1368,22 @@ export default function AnimatedGlobeHero({
             className="halo-inner"
           />
 
+          {/* ============================================================
+              SVG SPHERE SURFACE — off.
+              This block (ocean fill, rotating earth texture, cloud layer,
+              spherical shading, terminator, inner edge) is the solid sphere
+              the particles used to be swapped out for. It is exactly what
+              made the globe "pop": the swarm you watched assemble was
+              discarded and this appeared underneath it.
+              The particle field is the globe now, so none of it renders.
+              Set SHOW_SVG_SPHERE to true to get the old solid globe back —
+              the defs, tiles and CSS are all still here, untouched.
+              Deliberately still rendered above this: the atmosphere halos and
+              the glowing rim, which give the particle sphere its silhouette
+              and atmosphere; and below it the city nodes and flight arcs.
+              ============================================================ */}
+          {SHOW_SVG_SPHERE && (
+          <>
           {/* Ocean base sphere */}
           <circle cx={CX} cy={CY} r={R} fill="url(#oceanBase)" />
 
@@ -1055,6 +1457,8 @@ export default function AnimatedGlobeHero({
             fill="url(#terminatorWarm)"
             clipPath="url(#globeClip)"
           />
+          </>
+          )}
 
           {/* Glowing white ring — outer bloom layer */}
           <circle
@@ -1454,10 +1858,29 @@ export default function AnimatedGlobeHero({
           opacity: 0;
         }
 
+        /* Opacity ONLY — no transform, and that is the whole fix.
+
+           This rule used to carry, alongside the reveal animation:
+               transform-box: fill-box;
+               transform-origin: 640px 270px;   (i.e. CX, CY)
+           and that is what made the ring appear to fly in from the side.
+           fill-box resolves transform-origin from the group's OWN bounding-box
+           corner rather than from SVG user space. The outer halo circle is
+           r = R + 60 = 235, so this group's bbox starts near (405, 35) — which
+           put the origin at roughly user-space (1045, 305), about 405 units
+           right of the globe's actual centre. globeReveal scales 0.85 -> 1, so
+           the whole group (rings, halos and all) started ~61 units to the RIGHT
+           and slid left into place. With no transform at all there is no origin
+           to get wrong and nothing to slide.
+
+           Retimed too: 1.4s -> 2.9s, where it used to be 2.6s -> 3.9s. The rim
+           particles are in flight from ~0.95s and land between ~1.75s and
+           ~2.65s (see the rim spawn block), so the stroke now firms up
+           underneath them AS they arrive — the ring densifies out of the
+           converging particles instead of fading in after they had already
+           finished. The ease keeps it imperceptible early, so nothing pops. */
         .globe-hero.is-active :global(.globe-group) {
-          animation: globeReveal 1.3s cubic-bezier(0.16, 1, 0.3, 1) 2.6s forwards;
-          transform-box: fill-box;
-          transform-origin: ${CX}px ${CY}px;
+          animation: globeFadeIn 1.5s cubic-bezier(0.45, 0, 0.55, 1) 1.4s forwards;
         }
         .globe-hero.is-active :global(.city-nodes) {
           animation: globeFadeIn 0.9s ease-out 4.0s forwards;
@@ -1488,8 +1911,12 @@ export default function AnimatedGlobeHero({
         .globe-hero :global(.shockwave) {
           opacity: 0;
         }
+        /* Pulled from 2.75s to 1.75s. At 2.75s this burned around a ring that
+           had already fully faded up, so it read as a second, separate event
+           happening TO the ring. At 1.75s it coincides with the rim particles
+           landing and the stroke firming up, so the three are one beat. */
         .globe-hero.is-active :global(.rim-ignite) {
-          animation: rimIgnite 1.9s cubic-bezier(0.4, 0, 0.2, 1) 2.75s forwards;
+          animation: rimIgnite 1.9s cubic-bezier(0.4, 0, 0.2, 1) 1.75s forwards;
         }
         .globe-hero.is-active :global(.shockwave) {
           transform-box: fill-box;

@@ -8,7 +8,7 @@ export default function ShahinExplainer() {
         @media (max-width: 900px) { .shn-exp-grid { grid-template-columns: 1fr; } }
       `}</style>
 
-      <section style={{ paddingTop: 0, paddingBottom: 'clamp(56px,7vw,80px)', paddingLeft: 28, paddingRight: 28, background: '#fff' }}>
+      <section style={{ paddingTop: 'clamp(36px,4vw,56px)', paddingBottom: 'clamp(56px,7vw,80px)', paddingLeft: 28, paddingRight: 28, background: '#fff' }}>
         <div className="shn-exp-grid" style={{ maxWidth: 'var(--w-1180)', margin: '0 auto' }}>
 
           <div data-reveal="left">

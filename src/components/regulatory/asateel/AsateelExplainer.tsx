@@ -9,7 +9,7 @@ export default function AsateelExplainer() {
         @media (max-width: 900px) { .asa-exp-grid > div:first-child { order: 2; } }
       `}</style>
 
-      <section style={{ paddingTop: 0, paddingBottom: 'clamp(56px,7vw,80px)', paddingLeft: 28, paddingRight: 28, background: '#fff' }}>
+      <section style={{ paddingTop: 'clamp(36px,4vw,56px)', paddingBottom: 'clamp(56px,7vw,80px)', paddingLeft: 28, paddingRight: 28, background: '#fff' }}>
         <div className="asa-exp-grid" style={{ maxWidth: 'var(--w-1180)', margin: '0 auto' }}>
 
           <div data-reveal="left">

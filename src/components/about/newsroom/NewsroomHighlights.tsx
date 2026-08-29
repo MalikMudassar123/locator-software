@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import SocialCard from './SocialCard'
 import {
@@ -33,7 +33,7 @@ const SOCIAL: SocialPost[] = (() => {
 })()
 
 /** How long each social post holds before the rail advances itself. */
-const AUTOPLAY_MS = 6000
+const AUTOPLAY_MS = 3000
 
 const TAB_LABEL: Record<string, string> = {
   linkedin: 'LinkedIn',
@@ -198,6 +198,11 @@ export default function NewsroomHighlights() {
   const [lockedNet, setLockedNet] = useState<SocialPost['network'] | null>(null)
   const [paused, setPaused] = useState(false)
 
+  const trackRef = useRef<HTMLDivElement>(null)
+  // True while WE are scrolling the track, so onScroll ignores its own motion.
+  const selfScrollRef = useRef(false)
+  const scrollSyncRef = useRef(0)
+
   const pool = lockedNet ? SOCIAL.filter((p) => p.network === lockedNet) : SOCIAL
   // si is clamped rather than trusted: locking to a platform shrinks the pool,
   // and the old index can easily be past its end.
@@ -215,6 +220,45 @@ export default function NewsroomHighlights() {
     return () => clearInterval(t)
   }, [paused, pool.length, lockedNet])
 
+  // Drive the strip to the active slide whenever the index changes — from the
+  // timer, the arrows, the dots, or a tab switch.
+  useEffect(() => {
+    const track = trackRef.current
+    const slide = track?.children[idx] as HTMLElement | undefined
+    if (!track || !slide) return
+    // Centre it rather than left-align, so an equal sliver of the previous and
+    // next post shows on both sides.
+    const left = slide.offsetLeft - (track.clientWidth - slide.clientWidth) / 2
+    const reduced = typeof window !== 'undefined'
+      && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    // Guard so the programmatic scroll does not feed itself back through
+    // onScroll and fight the index it was told to go to.
+    selfScrollRef.current = true
+    track.scrollTo({ left, behavior: reduced ? 'auto' : 'smooth' })
+    window.clearTimeout(scrollSyncRef.current)
+    scrollSyncRef.current = window.setTimeout(() => { selfScrollRef.current = false }, 600)
+  }, [idx, pool.length, lockedNet])
+
+  // Swiping the strip by hand should move the dots and the tab highlight with
+  // it, so the controls never disagree with what is on screen.
+  const onTrackScroll = () => {
+    if (selfScrollRef.current) return
+    const track = trackRef.current
+    if (!track) return
+    window.clearTimeout(scrollSyncRef.current)
+    scrollSyncRef.current = window.setTimeout(() => {
+      const mid = track.scrollLeft + track.clientWidth / 2
+      let nearest = 0
+      let best = Infinity
+      Array.from(track.children).forEach((c, i) => {
+        const el = c as HTMLElement
+        const d = Math.abs(el.offsetLeft + el.clientWidth / 2 - mid)
+        if (d < best) { best = d; nearest = i }
+      })
+      setSi(nearest)
+    }, 120)
+  }
+
   // Tapping the active platform again releases the lock and returns to the
   // mixed rotation, which is the only way back without a fourth "All" tab.
   const pickNet = (n: SocialPost['network']) => {
@@ -231,8 +275,8 @@ export default function NewsroomHighlights() {
         .nrx { padding: clamp(44px,6vw,72px) 28px; background: #fff; border-top: 1px solid #eef2f8; }
         .nrx-inner {
           max-width: var(--w-1240); margin: 0 auto;
-          display: grid; grid-template-columns: repeat(3, minmax(0,1fr));
-          gap: clamp(20px,3vw,40px);
+          display: grid; grid-template-columns: minmax(0,0.87fr) minmax(0,1.26fr) minmax(0,0.87fr);
+          gap: clamp(26px,3.4vw,46px);
         }
         @media (max-width: 1000px) { .nrx-inner { grid-template-columns: 1fr; gap: 44px; } }
 
@@ -345,29 +389,53 @@ export default function NewsroomHighlights() {
         /* The card itself is SocialCard, the same component the feed uses, so
            the LinkedIn / Instagram / X chrome stays correct per network without
            this file duplicating any of it. */
-        /* One height for every post, so nothing below the card moves when the
-           rotation ticks. The card is absolutely placed inside it, which also
-           means the outgoing and incoming cards occupy the same box rather than
-           stacking for a frame. */
-        /* min-height only — a floor, never a ceiling. The card was previously
-           pinned to this box with inset:0, which forced a fixed height and let
-           taller posts overflow their own card and print over the image. Now
-           short posts are held up by the floor and tall ones simply grow. */
-        .nrx-slot { min-height: clamp(520px, 44vw, 620px); }
+        /* ── The sliding strip ──────────────────────────────────────────────
+           A scroll-snap rail rather than a translated row. The browser owns the
+           easing and the snapping, touch swipe comes free, and overflow-x keeps
+           the peeking neighbours inside this column — they never reach across
+           into Videos or Media.
 
-        /* The swap itself: a short rise-and-fade rather than a hard cut. */
-        @keyframes nrxSlide {
-          from { opacity: 0; transform: translateY(10px); }
-          to   { opacity: 1; transform: none; }
+           Slides are 84% wide, so 8% of the previous and next post shows at
+           each edge. scroll-padding matches that inset, which is what makes a
+           snapped card land centred rather than flush left. */
+        .nrx-track {
+          display: flex;
+          gap: 3%;
+          overflow-x: auto;
+          overscroll-behavior-x: contain;
+          scroll-snap-type: x mandatory;
+          scroll-padding-inline: 8%;
+          padding-inline: 8%;
+          /* The rail is the scroller, so its own scrollbar has to go. */
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+          /* Row of equal-height cards: the tallest post sets the height once,
+             so the strip does not resize as it moves. */
+          align-items: stretch;
         }
-        .nrx-slide { animation: nrxSlide .42s ${EASE} both; }
+        .nrx-track::-webkit-scrollbar { display: none; }
 
-        /* No CSS line-clamp here. Excerpt length is SocialCard's job via the
-           clampAt prop below, which truncates the string itself and keeps the
-           see-more toggle honest. */
+        .nrx-slide {
+          flex: 0 0 84%;
+          scroll-snap-align: center;
+          /* Off-centre posts sit back a little, which is what reads as depth
+             rather than three cards in a row. */
+          opacity: .42;
+          transform: scale(.94);
+          transition: opacity .6s ${EASE}, transform .6s ${EASE};
+        }
+        .nrx-slide.is-on { opacity: 1; transform: none; }
+        .nrx-slide > * { height: 100%; }
+
+        @media (max-width: 1000px) {
+          /* Stacked, the column is far wider, so a tighter slide keeps the
+             neighbours from becoming half-cards. */
+          .nrx-slide { flex-basis: 78%; }
+        }
 
         @media (prefers-reduced-motion: reduce) {
-          .nrx-slide { animation: none; }
+          .nrx-track { scroll-behavior: auto; }
+          .nrx-slide { transition: none; }
         }
 
         .nrx-tabs {
@@ -441,20 +509,34 @@ export default function NewsroomHighlights() {
             onBlurCapture={() => setPaused(false)}
           >
             <Rail title="Live from Social" pages={pool.length} index={idx} onIndex={setSi}>
-              {/* Fixed-height slot. Posts vary wildly in length — a three-line X
-                  post next to a twelve-line LinkedIn one — and letting the
-                  column resize on every tick was the jolt: the tabs, dots and
-                  everything below them jumped. The slot holds one height and
-                  the card fades in inside it. */}
-              <div className="nrx-slot">
-                {post && (
-                  <div className="nrx-slide" key={post.id}>
+              {/* A real horizontal track, not a swap.
+                  Every post is laid out side by side and the strip scrolls
+                  between them, so neighbours genuinely slide in and out and a
+                  sliver of the previous and next post shows at either edge.
+
+                  Built on scroll-snap rather than a translated flex row: the
+                  browser does the easing, it snaps to whole cards on its own,
+                  and touch swipe works with no extra code. It also clips inside
+                  the column, so the peeking neighbours never reach across into
+                  the Videos or Media columns. */}
+              <div
+                className="nrx-track"
+                ref={trackRef}
+                onScroll={onTrackScroll}
+                role="group"
+                aria-label="Social posts"
+              >
+                {pool.map((p, i) => (
+                  <div
+                    key={p.id}
+                    className={`nrx-slide ${i === idx ? 'is-on' : ''}`}
+                    aria-hidden={i !== idx}
+                  >
                     {/* Shorter than the feed's default 210: this column is about
-                        a third the width, so the same string ran far longer and
-                        was what pushed the card past its box. */}
-                    <SocialCard post={post} clampAt={135} />
+                        a third the width, so the same string ran far longer. */}
+                    <SocialCard post={p} clampAt={135} />
                   </div>
-                )}
+                ))}
               </div>
               <div className="nrx-tabs">
                 {SOCIAL_NETS.map((n) => {

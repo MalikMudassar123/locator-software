@@ -587,9 +587,15 @@ function ParticleGlobe({ active }) {
     const rimIdx0 = k;
     for (let i = 0; i < N_RIM; i++) {
       const a = (i / N_RIM) * Math.PI * 2;
-      setHome(k, Math.cos(a), Math.sin(a), 0);
+      // Scattered across a thin shell rather than pinned to one exact circle.
+      // At radius 1 for all 260, they stacked onto a single hairline and
+      // composited into a hard edge — the "welded hoop" look. Spread over a
+      // shell, with a wider size range, the band gains soft shoulders and
+      // reads as atmosphere instead.
+      const rimR = 1 + (rnd() - 0.3) * 0.075;
+      setHome(k, Math.cos(a) * rimR, Math.sin(a) * rimR, 0);
       group[k] = G_RIM;
-      baseSize[k] = 0.7 + rnd() * 0.45;
+      baseSize[k] = 0.85 + rnd() * 1.35;
       bright[k] = 1;
       tint[k] = rnd() * 0.25;
       k++;
@@ -708,7 +714,8 @@ function ParticleGlobe({ active }) {
       [238, 248, 255], // land   — warm white
       [ 70, 150, 245], // ocean  — site blue
       [150, 210, 255], // lattice— pale cyan
-      [236, 250, 255], // rim    — atmosphere white
+      [138, 205, 255], // rim    — atmosphere blue, not white: a white rim
+                      //          reads as a stroked outline welded to the globe
       [255, 255, 255], // hot    — in flight
     ];
     const PALETTE = new Array(NBUCKETS);
@@ -881,11 +888,13 @@ function ParticleGlobe({ active }) {
         // per particle, so this just resolves alpha.
         let alpha;
         if (g === G_RIM) {
-          // A halo, not a hoop. All 300 of these sit on one thin circle and
-          // composite additively, so they stack into a hard white band very
-          // fast — at 0.5..0.92 it read as a drawn ring welded round the
-          // globe rather than as the atmosphere catching the light.
-          alpha = 0.16 + 0.2 * depth;
+          // A halo, not a hoop. These composite additively, so alpha stacks
+          // fast — at 0.5..0.92 it read as a drawn ring welded round the globe
+          // rather than as atmosphere catching the light. Lower again now that
+          // they are spread across a shell instead of one hairline: the same
+          // light is shared over more particles, so per-particle alpha has to
+          // come down or the band simply thickens into a wider hoop.
+          alpha = 0.10 + 0.13 * depth;
         } else if (g === G_LAND) {
           // Land. It no longer has to imply the sphere — the body does that —
           // so it can be pushed hard and simply read as glowing continents
@@ -1512,26 +1521,32 @@ export default function AnimatedGlobeHero({
           </>
           )}
 
-          {/* Glowing white ring — outer bloom layer */}
+          {/* Atmosphere, not an outline.
+              This pair used to be a white bloom under a 4.5px white stroke at
+              0.92 opacity — that crisp stroke was the hard ring welded round
+              the globe, and no amount of softening the rim PARTICLES could
+              affect it because it is drawn here in SVG, over the top of them.
+              Now: one wide, soft blue bloom, and a second much fainter pass
+              just inside it to give the limb a little more presence. Neither
+              has a hard enough edge to read as a drawn circle. */}
           <circle
             cx={CX}
             cy={CY}
-            r={R + 6}
+            r={R + 5}
             fill="none"
-            stroke="#ffffff"
-            strokeWidth="8"
-            opacity="0.10"
+            stroke="#7ec8ff"
+            strokeWidth="18"
+            opacity="0.30"
             filter="url(#ringGlow)"
           />
-          {/* Glowing white ring — crisp bright stroke */}
           <circle
             cx={CX}
             cy={CY}
-            r={R + 2}
+            r={R + 1}
             fill="none"
-            stroke="#ffffff"
-            strokeWidth="4.5"
-            opacity="0.92"
+            stroke="#a9dcff"
+            strokeWidth="7"
+            opacity="0.26"
             filter="url(#ringGlow)"
           />
           {/* Inner edge darkening for sphere depth */}

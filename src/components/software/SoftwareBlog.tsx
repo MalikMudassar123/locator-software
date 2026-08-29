@@ -22,7 +22,7 @@ const POSTS = [
   {
     category: 'Cost Control',
     catColor: '#0d4fd4',
-    catBg: 'rgba(13,115,227,.1)',
+    catBg: 'rgba(13,79,212,.1)',
     title: 'Reducing idle fuel waste across a growing fleet',
     excerpt: 'Using instant idle alerts and route history to claw back fuel spend before it becomes a costly habit.',
     href: '/blog/reducing-idle-fuel-waste',
@@ -35,7 +35,7 @@ const POSTS = [
   {
     category: 'Operations',
     catColor: '#2f6fed',
-    catBg: 'rgba(6,164,226,.1)',
+    catBg: 'rgba(47,111,237,.1)',
     title: 'A practical guide to geofencing for UAE businesses',
     excerpt: 'Setting virtual zones and POI alerts for offices, depots, and customer sites without overcomplicating the setup.',
     href: '/blog/geofencing-guide-uae',
@@ -115,9 +115,15 @@ export default function SoftwareBlog() {
                     position: 'absolute', top: '14px', left: '14px',
                     fontSize: 'var(--f-10)', fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase' as const,
                     padding: '4px 10px', borderRadius: '999px',
-                    background: 'rgba(255,255,255,.18)', color: '#fff',
-                    backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                    border: '1px solid rgba(255,255,255,.28)',
+                    // Frosted white with the theme blue on it, matching the blog
+                    // cards on the home page. Held at .88 rather than the old
+                    // .18 because this sits on photography: at a low white the
+                    // blue text loses against a light or busy image, and the
+                    // blur alone does not save it.
+                    background: 'rgba(255,255,255,.88)', color: 'rgb(19, 96, 238)',
+                    backdropFilter: 'blur(8px) saturate(120%)', WebkitBackdropFilter: 'blur(8px) saturate(120%)',
+                    border: '1px solid rgba(255,255,255,.7)',
+                    boxShadow: '0 2px 8px rgba(11,18,32,.12)',
                   }}>
                     {post.category}
                   </span>

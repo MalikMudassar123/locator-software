@@ -179,8 +179,13 @@ export default function BlogSection() {
           gap: 7px;
           padding: 6px 14px 6px 10px;
           border-radius: 50px;
-          background: rgba(10,137,221,0.07);
-          border: 1px solid rgba(10,137,221,0.15);
+          /* Tint derived from the theme blue, not the old #0a89dd sky accent —
+             the label text is already rgb(19,96,238), so the two were slightly
+             out of key with each other. Left as a tint rather than made
+             transparent-white: this pill sits on a white section, where white
+             on white would simply vanish. */
+          background: rgba(19,96,238,0.07);
+          border: 1px solid rgba(19,96,238,0.15);
           font-size: 11.5px;
           font-weight: 700;
           color: #1360ee;
@@ -440,13 +445,18 @@ function BlogCard({ post, delay, visible }) {
           font-weight: 700;
           letter-spacing: 0.07em;
           text-transform: uppercase;
-          color: #fff;
-          background: rgba(10,137,221,0.82);
-          backdrop-filter: blur(6px);
-          -webkit-backdrop-filter: blur(6px);
+          color: rgb(19, 96, 238);
+          /* Frosted white rather than a solid blue fill. Held at 0.88 rather
+             than fully transparent because this sits on photography — below
+             about 0.8 the blue text starts losing against a light or busy
+             image, and the blur alone will not save it. */
+          background: rgba(255,255,255,0.88);
+          backdrop-filter: blur(8px) saturate(120%);
+          -webkit-backdrop-filter: blur(8px) saturate(120%);
           border-radius: 50px;
           padding: 4px 11px;
-          border: 1px solid rgba(255,255,255,0.25);
+          border: 1px solid rgba(255,255,255,0.7);
+          box-shadow: 0 2px 8px rgba(11,18,32,0.12);
         }
 
         /* ─────────── BODY ─────────── */

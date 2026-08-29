@@ -37,7 +37,7 @@ const CHANNELS: Channel[] = [
     action: 'Start a chat',
     href: 'https://wa.me/971508746688',
     external: true,
-    from: '#5BF675', to: '#0a3aa0',
+    from: '#5BF675', to: '#128C7E',
     // Official WhatsApp glyph.
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

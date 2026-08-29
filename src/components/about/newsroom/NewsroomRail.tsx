@@ -149,8 +149,8 @@ export default function NewsroomRail() {
         @media (max-width: 820px) { .nrr { position: static; } }
 
         .nrr-card { border: 1px solid #e7ecf6; border-radius: 16px; background: #fff; box-shadow: 0 2px 10px rgba(11,18,32,.03); overflow: hidden; }
-        .nrr-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 18px 12px; }
-        .nrr-head h3 { margin: 0; font-size: var(--f-15-5); font-weight: 800; letter-spacing: -.015em; color: #0b1220; }
+        .nrr-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 17px 18px 12px; }
+        .nrr-head h3 { margin: 0; font-size: var(--f-15-5); font-weight: 800; letter-spacing: -.018em; color: #0b1220; white-space: nowrap; }
 
         .nrr-live-pill {
           display: inline-flex; align-items: center; gap: 6px;
@@ -279,9 +279,9 @@ export default function NewsroomRail() {
         .nrr-src { font-size: var(--f-9-5); font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #97a1b3; }
         .nrr-time { font-size: var(--f-10-5); color: #a7b0c0; white-space: nowrap; }
 
-        .nrr-title { margin: 0 0 2px; font-size: var(--f-13); font-weight: 750; letter-spacing: -.01em; color: #0b1220; line-height: 1.35; }
-        .nrr-body { margin: 0 0 7px; font-size: var(--f-11-5); line-height: 1.5; color: #7a8394; }
-        .nrr-cta { font-size: var(--f-11-5); font-weight: 700; color: #1360ee; }
+        .nrr-title { margin: 0 0 3px; font-size: var(--f-13-5); font-weight: 750; letter-spacing: -.012em; color: #0b1220; line-height: 1.34; }
+        .nrr-body { margin: 0 0 8px; font-size: var(--f-12); line-height: 1.52; color: #7a8394; }
+        .nrr-cta { font-size: var(--f-12-5); font-weight: 700; color: #1360ee; }
         .nrr-item:hover .nrr-cta { text-decoration: underline; }
 
         /* ── Expanded "all updates" list ──
@@ -336,12 +336,12 @@ export default function NewsroomRail() {
 
         /* ── Customer review videos ── */
         .nrr-vid {
-          display: grid; grid-template-columns: 92px minmax(0,1fr); gap: 11px; align-items: center;
-          padding: 8px; border-radius: 12px; text-decoration: none;
+          display: grid; grid-template-columns: 100px minmax(0,1fr); gap: 11px; align-items: center;
+          padding: 10px; border-radius: 12px; text-decoration: none;
           transition: background .18s ${EASE};
         }
         .nrr-vid:hover { background: #f5f8fe; }
-        .nrr-thumb { position: relative; aspect-ratio: 16 / 10; border-radius: 8px; overflow: hidden; background: #0b1220; }
+        .nrr-thumb { position: relative; aspect-ratio: 16 / 11; border-radius: 10px; overflow: hidden; background: #0b1220; }
         .nrr-thumb img { object-fit: cover; opacity: .88; transition: transform .3s ${EASE}, opacity .2s ${EASE}; }
         .nrr-vid:hover .nrr-thumb img { transform: scale(1.06); opacity: 1; }
         .nrr-play {
@@ -356,7 +356,7 @@ export default function NewsroomRail() {
           font-size: var(--f-9-5); font-weight: 700; color: #fff;
           background: rgba(0,0,0,.72); padding: 2px 5px; border-radius: 4px;
         }
-        .nrr-vid-title { margin: 0; font-size: var(--f-12); font-weight: 650; line-height: 1.4; color: #2b3446; }
+        .nrr-vid-title { margin: 0; font-size: var(--f-12-5); font-weight: 700; line-height: 1.4; color: #2b3446; }
       `}</style>
 
       <aside className="nrr">
@@ -454,7 +454,10 @@ export default function NewsroomRail() {
             {REVIEW_VIDEOS.map((v) => (
               <a key={v.id} href={v.href} className="nrr-vid">
                 <div className="nrr-thumb">
-                  <Image src={v.image} alt="" fill sizes="92px" />
+                  {/* Matches the 100px thumb column below; a stale, smaller
+                      hint makes Next serve an undersized source and the still
+                      renders soft. */}
+                  <Image src={v.image} alt="" fill sizes="100px" />
                   <span className="nrr-play"><span>
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5Z" /></svg>
                   </span></span>

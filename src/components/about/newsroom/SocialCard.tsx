@@ -48,11 +48,18 @@ const ACTION_ICON = {
   send: <path d="m22 2-7 20-4-9-9-4 20-7Z" />,
 }
 
-export default function SocialCard({ post }: { post: SocialPost }) {
+/**
+ * `clampAt` lets a narrow host ask for a shorter excerpt. The highlights rail
+ * runs these cards in a ~330px column where the default 210 characters spill
+ * well past the space it has, so it passes a smaller number. Truncating here
+ * rather than with a CSS line-clamp keeps the "see more" toggle meaningful —
+ * a CSS clamp hides text the component still thinks it is showing.
+ */
+export default function SocialCard({ post, clampAt = CLAMP_AT }: { post: SocialPost; clampAt?: number }) {
   const net = NETWORK[post.network]
   const [expanded, setExpanded] = useState(false)
-  const long = post.text.length > CLAMP_AT
-  const shown = long && !expanded ? `${post.text.slice(0, CLAMP_AT).trimEnd()}…` : post.text
+  const long = post.text.length > clampAt
+  const shown = long && !expanded ? `${post.text.slice(0, clampAt).trimEnd()}…` : post.text
 
   return (
     <article className="nsc">

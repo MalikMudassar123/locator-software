@@ -255,6 +255,10 @@
   --w-1200: max(1200px, min(76.92vw, 1740px));
   --w-1240: max(1240px, min(79.49vw, 1798px));
   --w-1280: max(1280px, min(82.05vw, 1856px));
+  /* Same formula as its neighbours: floor px, then px/15.6 as vw, capped at
+     px * 1.45. Added for the newsroom board, which sits a step wider than the
+     1240 container it used to share with the rest of the page. */
+  --w-1320: max(1320px, min(84.62vw, 1914px));
   --w-1440: max(1440px, min(92.31vw, 2088px));
 
 

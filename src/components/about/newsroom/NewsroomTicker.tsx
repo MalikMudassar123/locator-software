@@ -13,10 +13,10 @@ export default function NewsroomTicker() {
         .nrt-live {
           display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0;
           padding-right: 18px; margin-right: 4px;
-          font-size: var(--f-11); font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #1360ee;
+          font-size: var(--f-11); font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #22a06b;
         }
-        .nrt-dot { width: 7px; height: 7px; border-radius: 50%; background: #1360ee; box-shadow: 0 0 0 0 rgba(19,96,238,.55); animation: nrt-pulse 1.9s ease-out infinite; }
-        @keyframes nrt-pulse { 70% { box-shadow: 0 0 0 8px rgba(19,96,238,0); } 100% { box-shadow: 0 0 0 0 rgba(19,96,238,0); } }
+        .nrt-dot { width: 7px; height: 7px; border-radius: 50%; background: #22a06b; box-shadow: 0 0 0 0 rgba(34,160,107,.55); animation: nrt-pulse 1.9s ease-out infinite; }
+        @keyframes nrt-pulse { 70% { box-shadow: 0 0 0 8px rgba(34,160,107,0); } 100% { box-shadow: 0 0 0 0 rgba(34,160,107,0); } }
 
         .nrt-track-wrap {
           flex: 1; overflow: hidden; position: relative;

@@ -127,7 +127,7 @@ export default function NewsroomBoard() {
         /* overflow-x: clip (not hidden) — it contains stray horizontal overflow
            without creating a scroll container, so the sticky rail still works. */
         .nrb { padding: clamp(28px,4vw,44px) 28px clamp(56px,7vw,88px); background: #f7f9fc; scroll-margin-top: 80px; overflow-x: clip; }
-        .nrb-inner { max-width: var(--w-1240); margin: 0 auto; }
+        .nrb-inner { max-width: var(--w-1320); margin: 0 auto; }
 
         /* ── Tab bar ── */
         .nrb-tabs {
@@ -149,10 +149,10 @@ export default function NewsroomBoard() {
         /* ── Two-column shell ── */
         /* Fluid rail so it narrows instead of dropping the moment the viewport
            dips under a desktop width — it only stacks below on real tablets. */
-        .nrb-cols { display: grid; grid-template-columns: minmax(0,1fr) clamp(268px,25vw,328px); gap: clamp(16px,2.4vw,26px); align-items: start; }
+        .nrb-cols { display: grid; grid-template-columns: minmax(0,1fr) clamp(288px,25.5vw,350px); gap: clamp(18px,2.6vw,30px); align-items: start; }
         @media (max-width: 820px) { .nrb-cols { grid-template-columns: 1fr; } }
 
-        .nrb-main { display: flex; flex-direction: column; gap: clamp(18px,2.4vw,26px); min-width: 0; }
+        .nrb-main { display: flex; flex-direction: column; gap: clamp(22px,2.8vw,32px); min-width: 0; }
 
         /* Tab panels mount after ScrollReveal has already scanned the DOM, so
            they animate themselves via a keyed remount rather than [data-reveal]
@@ -168,14 +168,14 @@ export default function NewsroomBoard() {
           transition: transform .22s ${EASE}, box-shadow .22s ${EASE}, border-color .22s ${EASE};
         }
         .nrb-card:hover { transform: translateY(-3px); border-color: #d5e0f5; box-shadow: 0 18px 40px -20px rgba(11,18,32,.35); }
-        .nrb-card-media { position: relative; aspect-ratio: 16 / 10; background: #0b1220; overflow: hidden; }
+        .nrb-card-media { position: relative; aspect-ratio: 16 / 11; background: #0b1220; overflow: hidden; }
         .nrb-card-media img { object-fit: cover; transition: transform .4s ${EASE}; }
         .nrb-card:hover .nrb-card-media img { transform: scale(1.05); }
         /* A contain image is set that way precisely so nothing is cropped — the
            hover zoom would push its edges past the frame and crop it after all,
            so contained cards lift without scaling. */
         .nrb-card:hover .nrb-card-media[data-fit="contain"] img { transform: none; }
-        .nrb-card--lg .nrb-card-media { aspect-ratio: 16 / 8.2; }
+        .nrb-card--lg .nrb-card-media { aspect-ratio: 16 / 8.8; }
 
         .nrb-chip {
           position: absolute; left: 12px; top: 12px; z-index: 2;
@@ -195,12 +195,12 @@ export default function NewsroomBoard() {
           background: rgba(0,0,0,.72); padding: 3px 7px; border-radius: 5px;
         }
 
-        .nrb-card-body { padding: 16px 16px 18px; display: flex; flex-direction: column; flex: 1; }
-        .nrb-card--lg .nrb-card-body { padding: 22px clamp(20px,2.4vw,28px) 26px; }
-        .nrb-card-date { font-size: var(--f-11-5); color: #97a1b3; margin-bottom: 8px; }
-        .nrb-card-title { margin: 0 0 8px; font-size: var(--f-15); font-weight: 780; line-height: 1.32; letter-spacing: -.015em; color: #0b1220; }
+        .nrb-card-body { padding: 20px 20px 22px; display: flex; flex-direction: column; flex: 1; }
+        .nrb-card--lg .nrb-card-body { padding: 26px clamp(24px,2.8vw,34px) 30px; }
+        .nrb-card-date { font-size: var(--f-12); color: #97a1b3; margin-bottom: 9px; }
+        .nrb-card-title { margin: 0 0 10px; font-size: var(--f-16-5); font-weight: 780; line-height: 1.3; letter-spacing: -.018em; color: #0b1220; }
         .nrb-card--lg .nrb-card-title { font-size: max(clamp(20px,2.4vw,30px), min(2.083vw, 43.5px)); line-height: 1.18; letter-spacing: -.025em; }
-        .nrb-card-excerpt { margin: 0 0 14px; font-size: var(--f-12-8); line-height: 1.6; color: #6b7484; flex: 1; }
+        .nrb-card-excerpt { margin: 0 0 16px; font-size: var(--f-13-5); line-height: 1.62; color: #6b7484; flex: 1; }
         .nrb-card--lg .nrb-card-excerpt { font-size: max(clamp(13.5px,1.2vw,15px), min(1.042vw, 21.75px)); line-height: 1.7; max-width: 62ch; }
         /* Social posts run long and vary wildly in length. Scoped rules give
            every social card the same tidy body: a 2-line headline and a 3-line
@@ -218,7 +218,7 @@ export default function NewsroomBoard() {
           min-height: calc(1.6em * 3);
         }
         .nrb-card--social .nrb-card-more { margin-top: auto; }
-        .nrb-card-more { font-size: var(--f-12-5); font-weight: 700; color: #1360ee; }
+        .nrb-card-more { font-size: var(--f-13-5); font-weight: 700; color: #1360ee; }
         .nrb-card:hover .nrb-card-more { text-decoration: underline; }
 
         /* ── Featured (dark treatment, text over the photo) ── */
@@ -226,7 +226,7 @@ export default function NewsroomBoard() {
           position: relative; display: flex; flex-direction: column; justify-content: flex-end;
           text-decoration: none; overflow: hidden;
           border-radius: 18px; border: 1px solid #e7ecf6; background: #0b1220;
-          min-height: clamp(320px,38vw,420px);
+          min-height: clamp(380px,44vw,520px);
           transition: transform .22s ${EASE}, box-shadow .22s ${EASE};
         }
         .nrb-hero-card:hover { transform: translateY(-3px); box-shadow: 0 24px 50px -22px rgba(11,18,32,.5); }
@@ -236,16 +236,20 @@ export default function NewsroomBoard() {
           position: absolute; inset: 0; z-index: 1;
           /* Bottom-up fade now that the text sits at the bottom — dark under
              the type, clear by the top so the photo reads fully above it. */
-          background: linear-gradient(0deg, rgba(6,11,22,.88) 0%, rgba(6,11,22,.62) 32%, rgba(6,11,22,.18) 62%, rgba(6,11,22,.02) 85%);
+          /* Deepened, and the ramp reaches higher than it used to: the content
+             block grew with the larger type, so the old fade was running out
+             before the top of the headline and the excerpt was sitting on bare
+             photo. Still clears well before the top so the image reads whole. */
+          background: linear-gradient(0deg, rgba(6,11,22,.95) 0%, rgba(6,11,22,.86) 26%, rgba(6,11,22,.60) 48%, rgba(6,11,22,.26) 70%, rgba(6,11,22,.04) 90%);
         }
-        .nrb-hero-content { position: relative; z-index: 2; padding: clamp(18px,2.6vw,32px); max-width: 600px; }
+        .nrb-hero-content { position: relative; z-index: 2; padding: clamp(22px,2.9vw,38px); max-width: 660px; }
         .nrb-hero-chip {
-          display: inline-block; font-size: var(--f-9-5); font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
-          color: #fff; background: #1360ee; padding: 5px 10px; border-radius: 6px; margin-bottom: 14px;
+          display: inline-block; font-size: var(--f-10); font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+          color: #fff; background: #1360ee; padding: 5px 11px; border-radius: 6px; margin-bottom: 14px;
         }
-        .nrb-hero-date { display: block; font-size: var(--f-11-5); color: rgba(255,255,255,.7); margin-bottom: 8px; }
+        .nrb-hero-date { display: block; font-size: var(--f-12); color: rgba(255,255,255,.72); margin-bottom: 9px; }
         .nrb-hero-title {
-          margin: 0 0 10px; font-size: clamp(19px, 1.9vw, 27px); font-weight: 800; line-height: 1.2; letter-spacing: -.02em; color: #fff;
+          margin: 0 0 12px; font-size: clamp(21px, 2.1vw, 32px); font-weight: 800; line-height: 1.18; letter-spacing: -.023em; color: #fff;
         }
         /* The exact brand blue, matching every other accent on the site. Note it
            lands around 3.2:1 against the dark photo scrim behind it — carried by
@@ -253,13 +257,13 @@ export default function NewsroomBoard() {
            below. Chosen deliberately over a lighter tint for brand consistency. */
         .nrb-hero-title-accent { color: #1360ee; }
         .nrb-hero-excerpt {
-          margin: 0 0 16px; font-size: clamp(13px, 1vw, 14.5px); line-height: 1.65; color: rgba(255,255,255,.84); max-width: 52ch;
+          margin: 0 0 18px; font-size: clamp(13.5px, 1.05vw, 15.5px); line-height: 1.62; color: rgba(255,255,255,.86); max-width: 54ch;
         }
-        .nrb-hero-more { font-size: var(--f-13); font-weight: 700; color: #1360ee; }
+        .nrb-hero-more { font-size: var(--f-13-5); font-weight: 700; color: #1360ee; }
         .nrb-hero-card:hover .nrb-hero-more { text-decoration: underline; }
 
         /* ── Grids ── */
-        .nrb-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: clamp(14px,1.8vw,20px); }
+        .nrb-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: clamp(18px,2.2vw,26px); }
         /* Breakpoints account for the rail eating ~300px, so they fire earlier
            than the raw viewport width would suggest. */
         @media (max-width: 1100px) { .nrb-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }

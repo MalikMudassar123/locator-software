@@ -50,7 +50,7 @@ const ACTIONS: Action[] = [
     href: `https://wa.me/${siteConfig.whatsapp}`,
     external: true,
     from: '#25D366',
-    to: '#0a3aa0',
+    to: '#128C7E',
     glow: 'rgba(37, 211, 102, 0.45)',
     // Official WhatsApp glyph, same path the contact page uses.
     icon: (

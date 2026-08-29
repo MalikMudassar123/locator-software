@@ -35,11 +35,63 @@ const CY = 270;
 const R = 175; // Globe radius
 
 const DEFAULT_STATS = [
-  { value: "10+", label: "Years of industry experience", side: "left", row: "top" },
-  { value: "20,000+", label: "Devices actively tracked", side: "left", row: "bottom" },
-  { value: "1000+", label: "Happy customers across", side: "right", row: "top" },
-  { value: "1M+", label: "Data points processed daily", side: "right", row: "bottom" },
+  { value: "10+", label: "Years of industry experience", side: "left", row: "top", icon: "award" },
+  { value: "20,000+", label: "Devices actively tracked", side: "left", row: "bottom", icon: "pin" },
+  { value: "1000+", label: "Happy customers across", side: "right", row: "top", icon: "smile" },
+  { value: "1M+", label: "Data points processed daily", side: "right", row: "bottom", icon: "chart" },
 ];
+
+/**
+ * Stat-card glyphs. Stroked rather than filled, at a hairline weight, so they
+ * read as etched into the glass panel instead of sitting on top of it — the
+ * cards are translucent and a solid shape would look pasted on.
+ */
+const STAT_ICONS = {
+  award: (
+    <>
+      <circle cx="12" cy="9" r="5.2" />
+      <path d="M8.6 13.4 7.2 21l4.8-2.4 4.8 2.4-1.4-7.6" />
+    </>
+  ),
+  pin: (
+    <>
+      <path d="M12 21.5s7-6.2 7-11.5a7 7 0 1 0-14 0c0 5.3 7 11.5 7 11.5z" />
+      <circle cx="12" cy="10" r="2.6" />
+    </>
+  ),
+  smile: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M8.4 14.2a4.4 4.4 0 0 0 7.2 0" />
+      <path d="M9.2 9.4h.01M14.8 9.4h.01" />
+    </>
+  ),
+  chart: (
+    <>
+      <path d="M5 20V11" />
+      <path d="M12 20V4" />
+      <path d="M19 20v-6" />
+    </>
+  ),
+};
+
+function StatIcon({ name }) {
+  const glyph = STAT_ICONS[name];
+  if (!glyph) return null;
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {glyph}
+    </svg>
+  );
+}
 
 /**
  * City nodes anchored close to the globe rim — arcs span across
@@ -1792,16 +1844,24 @@ export default function AnimatedGlobeHero({
               }}
             >
               <div className="stat-card__inner">
-                <div className="stat-card__value">
-                  <AnimatedNumber
-                    value={stat.value}
-                    active={active}
-                    delay={(4.2 + i * 0.15) * 1000}
-                  />
+                {stat.icon && (
+                  <span className="stat-card__icon" aria-hidden="true">
+                    <StatIcon name={stat.icon} />
+                  </span>
+                )}
+                <div className="stat-card__text">
+                  <div className="stat-card__value">
+                    <AnimatedNumber
+                      value={stat.value}
+                      active={active}
+                      delay={(4.2 + i * 0.15) * 1000}
+                    />
+                  </div>
+                  <div className="stat-card__label">{stat.label}</div>
                 </div>
-                <div className="stat-card__label">{stat.label}</div>
               </div>
               <span className="stat-card__shimmer" aria-hidden="true" />
+              <span className="stat-card__edge" aria-hidden="true" />
             </div>
           ))}
         </div>
@@ -2014,13 +2074,13 @@ export default function AnimatedGlobeHero({
         }
         .stat-card {
           position: absolute;
-          padding: clamp(9px, 1vw, 14px) clamp(13px, 1.4vw, 20px);
-          min-width: clamp(118px, 13vw, 175px);
-          background: rgba(255, 255, 255, 0.015);
+          padding: clamp(13px, 1.45vw, 20px) clamp(15px, 1.6vw, 22px);
+          min-width: clamp(176px, 18.5vw, 264px);
+          background: rgba(255, 255, 255, 0.045);
           backdrop-filter: blur(5px) saturate(110%);
           -webkit-backdrop-filter: blur(5px) saturate(110%);
-          border: 1px solid rgba(255, 255, 255, 0.07);
-          border-radius: 14px;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          border-radius: 18px;
           color: #ffffff;
           box-shadow:
             0 2px 8px rgba(15, 70, 120, 0.04),
@@ -2029,16 +2089,76 @@ export default function AnimatedGlobeHero({
           transform: translateY(20px) scale(0.96);
           filter: blur(6px);
           pointer-events: auto;
-          overflow: hidden;
+          /* No overflow:hidden here — it used to contain the shimmer sweep, but it
+             also sliced the edge glow off flat at the bottom border. The sweep
+             clips itself instead (see .stat-card__shimmer). */
         }
         .globe-hero.is-active .stat-card {
           animation:
             cardEnter 1.1s cubic-bezier(0.16, 1, 0.3, 1) var(--enter-delay) forwards,
             cardFloat 6s ease-in-out calc(var(--enter-delay) + 1.3s) infinite;
         }
+        /* Icon left, figures right — the card reads as one row rather than a
+           stacked block, which is what gives it the wider, steadier shape. */
         .stat-card__inner {
           position: relative;
           z-index: 2;
+          display: flex;
+          align-items: center;
+          gap: clamp(12px, 1.3vw, 18px);
+        }
+        .stat-card__text { min-width: 0; }
+
+        /* The glyph sits in its own lighter pane, a shade brighter than the card
+           so it separates from it without introducing a second colour. */
+        .stat-card__icon {
+          flex-shrink: 0;
+          display: grid;
+          place-items: center;
+          width: clamp(40px, 4vw, 57px);
+          height: clamp(40px, 4vw, 57px);
+          border-radius: clamp(11px, 1.15vw, 16px);
+          background: rgba(255, 255, 255, 0.07);
+          border: 1px solid rgba(255, 255, 255, 0.16);
+          color: rgba(255, 255, 255, 0.94);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+        }
+        .stat-card__icon svg {
+          width: clamp(19px, 1.9vw, 27px);
+          height: clamp(19px, 1.9vw, 27px);
+        }
+
+        /* Lit underline along the bottom edge. Inset from the corners and faded
+           at both ends so it reads as light catching the panel rather than a
+           drawn border. */
+        .stat-card__edge {
+          position: absolute;
+          left: 7%;
+          right: 7%;
+          bottom: 0;
+          height: 2px;
+          border-radius: 2px;
+          z-index: 3;
+          /* Holds near-full brightness across the middle rather than peaking at
+             a single point, so it reads as a lit edge instead of a highlight
+             dot, then falls off sharply at both ends. */
+          background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(200, 236, 255, 0.55) 14%,
+            rgba(238, 250, 255, 1) 38%,
+            rgba(238, 250, 255, 1) 62%,
+            rgba(200, 236, 255, 0.55) 86%,
+            rgba(255, 255, 255, 0) 100%
+          );
+          /* Three stacked shadows: a tight core, a mid halo and a wide bloom.
+             One large blur alone goes muddy — the layered falloff is what makes
+             it look like light rather than a blurred line. */
+          box-shadow:
+            0 0 6px rgba(214, 244, 255, 0.95),
+            0 0 16px rgba(150, 215, 255, 0.7),
+            0 0 34px rgba(110, 195, 255, 0.45);
+          pointer-events: none;
         }
         .stat-card__value {
           font-size: max(clamp(17px, 1.9vw, 26px), min(1.806vw, 37.7px));
@@ -2055,6 +2175,7 @@ export default function AnimatedGlobeHero({
           letter-spacing: 0.01em;
         }
         .stat-card__shimmer {
+          clip-path: inset(0 round 18px);
           position: absolute;
           inset: 0;
           background: linear-gradient(
@@ -2073,8 +2194,8 @@ export default function AnimatedGlobeHero({
         /* cardEnter / cardFloat / shimmerSweep keyframes live in globals.css */
 
         /* Positioning — closer to globe, tighter to center */
-        .stat-card--left  { left: clamp(8%, 14vw, 20%); }
-        .stat-card--right { right: clamp(8%, 14vw, 20%); }
+        .stat-card--left  { left: clamp(4%, 9.5vw, 14%); }
+        .stat-card--right { right: clamp(4%, 9.5vw, 14%); }
         .stat-card--top.stat-card--left     { top: 40%; }
         .stat-card--bottom.stat-card--left  { top: 71%; }
         .stat-card--top.stat-card--right    { top: 26%; }
@@ -2082,9 +2203,9 @@ export default function AnimatedGlobeHero({
 
         /* ----- Responsive ----- */
         @media (max-width: 1024px) {
-          .stat-card { min-width: 112px; padding: 8px 12px; border-radius: 12px; }
-          .stat-card--left  { left: clamp(6%, 10vw, 15%); }
-          .stat-card--right { right: clamp(6%, 10vw, 15%); }
+          .stat-card { min-width: 140px; padding: 8px 11px; border-radius: 12px; }
+          .stat-card--left  { left: clamp(3%, 7vw, 10%); }
+          .stat-card--right { right: clamp(3%, 7vw, 10%); }
           .stat-card--top.stat-card--left     { top: 37%; }
           .stat-card--bottom.stat-card--left  { top: 68%; }
           .stat-card--top.stat-card--right    { top: 22%; }

@@ -17,8 +17,20 @@ export default function VisionHero() {
           margin-top: -1px;
         }
 
-        .vsh-photo { position: absolute; inset: -60px 0 0 0; z-index: 0; }
-        .vsh-photo img { object-fit: contain; object-position: 35% center; }
+        /* inset:0, not -60px at the top. The box used to start 60px above the
+           section, and since .vsh-hero clips its overflow those 60px of photo
+           were simply cut away before anything else got a say. */
+        .vsh-photo { position: absolute; inset: 0; z-index: 0; }
+        /* cover, not contain. The photo is 3:1 (2173x724) while this box runs
+           nearer 4:1, so contain scaled it down to fit the height and left a
+           band of bare background beside it — the empty strip on the right.
+           cover scales to the width instead, so the photo always spans the full
+           section.
+           Anchored to the top so the remaining vertical trim comes off the
+           BOTTOM — the lower lid — and the brow and the city in the iris stay
+           whole. object-position's X is inert while the crop is vertical; it is
+           kept at 35% so framing still holds if the box ever turns portrait. */
+        .vsh-photo img { object-fit: cover; object-position: 35% top; }
 
         /* Left-to-right scrim — solid section colour over the copy zone only,
            fades fully transparent well before the right edge so there is no

@@ -1,3 +1,103 @@
+'use client'
+
+import { useEffect, useRef, useState } from 'react'
+
+/** The figure the headline settles on. Rendered with thousands separators. */
+const TARGET = 1_000_000
+const COUNT_MS = 1900
+/**
+ * The run starts partway up rather than at zero — a counter climbing from 0 to
+ * a million spends most of its time on numbers that mean nothing, and the early
+ * frames have to jump in huge steps to cover the distance, which is what makes
+ * it look like it is stuttering. Beginning somewhere in this band keeps every
+ * frame a small, smooth increment.
+ */
+const START_MIN = 0.58
+const START_MAX = 0.78
+
+/**
+ * Counts from zero to `target` the first time the element is scrolled into
+ * view, then never again — a stat that re-runs every time it scrolls past
+ * reads as a loading spinner rather than an arrival.
+ *
+ * The tick runs on requestAnimationFrame rather than setInterval so it stays
+ * on the compositor's clock and cannot drift or stack up in a background tab.
+ */
+function useCountUp(target: number, durationMs: number) {
+  const ref = useRef<HTMLDivElement>(null)
+  // Seeded with the final figure, not 0. That is what the server renders and
+  // what a no-JS reader keeps, so the stat is never wrong and never shows a
+  // meaningless zero. The run replaces it on its first frame, while the plate
+  // is still below the fold.
+  const [value, setValue] = useState(target)
+  const rafRef = useRef(0)
+  const startedRef = useRef(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+
+    const reduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+
+    const run = () => {
+      if (startedRef.current) return
+      startedRef.current = true
+
+      // Reduced motion still gets the number — it just arrives rather than
+      // counting. Routed through rAF so nothing sets state synchronously
+      // inside the effect body.
+      if (reduced) {
+        rafRef.current = requestAnimationFrame(() => setValue(target))
+        return
+      }
+
+      // A different, deliberately un-round figure each time, so it reads as a
+      // live number being caught mid-climb rather than a scripted animation
+      // replaying from the same mark.
+      const from = Math.round(target * (START_MIN + Math.random() * (START_MAX - START_MIN)))
+      const t0 = performance.now()
+
+      const tick = (now: number) => {
+        const p = Math.min(1, (now - t0) / durationMs)
+        // easeOutCubic. easeOutExpo was here and covered ~65% of the distance
+        // in its first fifth — at a million that is a jump of hundreds of
+        // thousands between two frames, which is precisely the stutter. Cubic
+        // decelerates gently enough that every frame is a readable step.
+        const eased = 1 - Math.pow(1 - p, 3)
+        setValue(Math.round(from + (target - from) * eased))
+        if (p < 1) rafRef.current = requestAnimationFrame(tick)
+      }
+      rafRef.current = requestAnimationFrame(tick)
+    }
+
+    if (typeof IntersectionObserver === 'undefined') {
+      run()
+      return () => cancelAnimationFrame(rafRef.current)
+    }
+
+    // 0.45 so the plate is genuinely on screen before it starts — at a lower
+    // threshold the count is half over by the time the figure is readable.
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          run()
+          obs.disconnect()
+        }
+      },
+      { threshold: 0.45 },
+    )
+    obs.observe(el)
+    return () => {
+      obs.disconnect()
+      cancelAnimationFrame(rafRef.current)
+    }
+  }, [target, durationMs])
+
+  return { ref, value }
+}
+
 const MILESTONES = [
   { year: 'Today', title: 'A trusted UAE fleet-tech partner', desc: 'Serving businesses across the Emirates with AI-powered IoT tracking and compliance.' },
   { year: '2030', title: 'Regional scale', desc: 'Expanding our connected device network across the region, deepening AI-driven insight.' },
@@ -5,6 +105,8 @@ const MILESTONES = [
 ]
 
 export default function VisionRoadmap() {
+  const { ref: numRef, value } = useCountUp(TARGET, COUNT_MS)
+
   return (
     <>
       <style>{`
@@ -33,6 +135,9 @@ export default function VisionRoadmap() {
           position: relative; z-index: 1;
           font-size: clamp(56px,9vw,112px); font-weight: 800; line-height: 1;
           letter-spacing: -.03em;
+          /* Fixed-width figures. Proportional digits change width as they
+             cycle, which makes a counting number visibly shudder. */
+          font-variant-numeric: tabular-nums;
           background: linear-gradient(105deg, #1360ee 0%, #0d4fd4 46%, #0a3aa0 100%);
           -webkit-background-clip: text; background-clip: text;
           -webkit-text-fill-color: transparent; color: transparent;
@@ -65,7 +170,13 @@ export default function VisionRoadmap() {
               </span>
               By 2035
             </span>
-            <div className="vr-num">1,000,000+</div>
+            {/* aria-label carries the final figure so a screen reader announces
+                the number once, rather than the partial values the count runs
+                through. aria-hidden on the visible text keeps the two from
+                being read out twice. */}
+            <div className="vr-num" ref={numRef} role="img" aria-label="Over 1,000,000 connected IoT devices by 2035">
+              <span aria-hidden="true">{value.toLocaleString('en-US')}+</span>
+            </div>
             <p style={{ position: 'relative', zIndex: 1, margin: '14px auto 0', maxWidth: '480px', fontSize: 'max(clamp(14px,1.4vw,16px), min(1.111vw, 23.2px))', color: '#6e6e73', lineHeight: 1.65 }}>
               Connected IoT devices enabling smarter mobility, safer assets, and more intelligent operations — worldwide.
             </p>

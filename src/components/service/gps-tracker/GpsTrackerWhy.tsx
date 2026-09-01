@@ -29,7 +29,7 @@ const TABS = [
     headline: 'See LOCATOR running live',
     body: 'Book a walkthrough with our team and watch the platform track a real device in real time.',
     stat: { value: '20 min', sub: 'average demo length' },
-    cta: { label: 'Book a free demo', href: '/contact' },
+    cta: { label: 'Book a free demo', href: '/get-a-free-demo' },
     img: { src: '/footer_pages_images/gps-tracker/get-a-free-demo.svg', w: 802, h: 617, alt: 'Live walkthrough demo of the LOCATOR tracking platform' },
   },
   {

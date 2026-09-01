@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import SoftwareNavbar from '@/components/software/SoftwareNavbar'
 
 const clamp = (v: number, a = 0, b = 1) => Math.min(Math.max(v, a), b)
@@ -403,7 +404,7 @@ export default function ServiceHero() {
                 Real-time GPS tracking to manage drivers, routes, and road operations with ease.
               </p>
               <div className="srv-cta-row" style={{ marginTop: 'clamp(10px,1.6vh,18px)' }}>
-                <button className="srv-btn srv-btn-primary">Get a quote</button>
+                <Link href="/get-a-quote" className="srv-btn srv-btn-primary">Get a quote</Link>
                 <button className="srv-btn srv-btn-outline">Explore solutions</button>
               </div>
             </div>

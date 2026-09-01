@@ -246,7 +246,7 @@ export default function AsateelHero() {
               </p>
 
               <div className="asa-cta-row asa-anim" style={{ animationDelay: '.3s' }}>
-                <Link href="/contact" className="asa-btn asa-btn-primary">
+                <Link href="/get-a-quote" className="asa-btn asa-btn-primary">
                   Get a Free Quote
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12h14M13 6l6 6-6 6" />

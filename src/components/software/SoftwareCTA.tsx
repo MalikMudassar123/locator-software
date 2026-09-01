@@ -53,10 +53,10 @@ export default function SoftwareCTA() {
 
           {/* Buttons */}
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/contact" className="cta-btn cta-btn-primary">
+            <Link href="/get-a-quote" className="cta-btn cta-btn-primary">
               Get a quote
             </Link>
-            <Link href="/contact" className="cta-btn cta-btn-ghost">
+            <Link href="/get-a-free-demo" className="cta-btn cta-btn-ghost">
               Book a live demo →
             </Link>
           </div>

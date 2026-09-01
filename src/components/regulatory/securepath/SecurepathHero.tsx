@@ -105,13 +105,13 @@ export default function SecurepathHero() {
               </h1>
               <p className="sph-lead">Try Out SecurePath GPS System from LOCATOR Today</p>
               <div className="sph-ctas">
-                <Link href="/contact" className="sph-btn sph-btn-primary">
+                <Link href="/get-a-quote" className="sph-btn sph-btn-primary">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="4" y="4" width="16" height="16" rx="2" /><path d="M4 10h16M10 4v16" />
                   </svg>
                   Get a Free Quote
                 </Link>
-                <Link href="/contact" className="sph-btn sph-btn-ghost">
+                <Link href="/get-a-free-demo" className="sph-btn sph-btn-ghost">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <polygon points="5 3 19 12 5 21 5 3" />
                   </svg>

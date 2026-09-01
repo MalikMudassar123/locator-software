@@ -123,7 +123,7 @@ export default function GpsTrackerHero() {
 
             <div className="gt-hero-btns" style={{ display: 'flex', gap: '14px', marginTop: '24px', flexWrap: 'wrap' }}>
               <Link href="/get-a-quote" className="gt-btn gt-btn-primary">Get a free quote</Link>
-              <Link href="/contact" className="gt-btn gt-btn-ghost">Get a free demo →</Link>
+              <Link href="/get-a-free-demo" className="gt-btn gt-btn-ghost">Get a free demo →</Link>
             </div>
 
             <div className="gt-hero-stats" style={{ display: 'flex', gap: 'clamp(20px,3vw,36px)', marginTop: '44px', flexWrap: 'wrap' }}>

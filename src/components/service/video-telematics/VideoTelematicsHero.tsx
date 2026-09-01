@@ -100,7 +100,7 @@ export default function VideoTelematicsHero() {
             </p>
 
             <div className="vt-hero-cta-row" style={{ display: 'flex', gap: '14px', marginTop: '28px' }}>
-              <Link href="/contact" className="vt-btn vt-btn-primary">
+              <Link href="/get-a-quote" className="vt-btn vt-btn-primary">
                 <span className="vt-btn-icon">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="4" y="4" width="16" height="16" rx="2" /><path d="M4 10h16M10 4v16" />
@@ -108,7 +108,7 @@ export default function VideoTelematicsHero() {
                 </span>
                 <span className="vt-btn-text">Get a Free Quote for Video Telematics</span>
               </Link>
-              <Link href="/contact" className="vt-btn vt-btn-secondary">
+              <Link href="/get-a-free-demo" className="vt-btn vt-btn-secondary">
                 <span className="vt-btn-icon">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <polygon points="5 3 19 12 5 21 5 3" />

@@ -77,7 +77,7 @@ export default function CarTrackerHero() {
                 </span>
                 Get a free quote
               </Link>
-              <Link href="/contact" className="ct-btn ct-btn-ghost">
+              <Link href="/get-a-free-demo" className="ct-btn ct-btn-ghost">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21" /></svg>
                 Get a free demo
               </Link>

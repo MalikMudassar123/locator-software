@@ -98,10 +98,10 @@ export default function MissionCTA() {
             </p>
 
             <div className="mc-btn-row">
-              <Link href="/contact" className="mc-btn mc-btn-primary">
+              <Link href="/get-a-quote" className="mc-btn mc-btn-primary">
                 Get a quote
               </Link>
-              <Link href="/contact" className="mc-btn mc-btn-ghost">
+              <Link href="/get-a-free-demo" className="mc-btn mc-btn-ghost">
                 Book a live demo →
               </Link>
             </div>

@@ -137,7 +137,7 @@ export default function DeviceDetail({ device }: { device: Device }) {
               )}
 
               <div className="dd-cta-row">
-                <Link href="/contact" className="dd-btn dd-btn-primary">
+                <Link href="/get-a-quote" className="dd-btn dd-btn-primary">
                   Request a quote
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12h14M13 6l6 6-6 6" />

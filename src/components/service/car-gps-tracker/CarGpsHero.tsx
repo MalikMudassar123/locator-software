@@ -56,7 +56,7 @@ export default function CarGpsHero() {
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5" /><path d="M8 11l2.5 2.5L16 8" /></svg>
                 Get a free quote
               </Link>
-              <Link href="/contact" className="cgh-btn cgh-btn-ghost">
+              <Link href="/get-a-free-demo" className="cgh-btn cgh-btn-ghost">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21" /></svg>
                 Get a free demo
               </Link>

@@ -315,8 +315,8 @@ export default function SoftwareHero() {
                 GPS tracking, telematics, tasks, expenses, inspections, maintenance and AI dashcams for your whole fleet, on web and mobile.
               </p>
               <div style={{ display: 'flex', gap: '14px', justifyContent: 'center', marginTop: 'clamp(14px, 2.2vh, 24px)', flexWrap: 'wrap' }}>
-                <button className="sw-btn sw-btn-primary">Get a quote</button>
-                <button className="sw-btn sw-btn-ghost">Get a demo →</button>
+                <Link href="/get-a-quote" className="sw-btn sw-btn-primary">Get a quote</Link>
+                <Link href="/get-a-free-demo" className="sw-btn sw-btn-ghost">Get a demo →</Link>
               </div>
               <p style={{ marginTop: 'clamp(8px,1.4vh,14px)' }}>
                 <Link href="#dashcam" style={{ color: '#1360ee', fontWeight: 700, fontSize: 'var(--f-15)', textDecoration: 'none' }}>

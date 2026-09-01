@@ -11,6 +11,7 @@ const companyLinks = [
   { href: '/about/vision', label: 'Vision' },
   { href: '/about/career', label: 'Careers' },
   { href: '/about/newsroom', label: 'Newsroom' },
+  { href: '/about/newsroom/blog', label: 'Blog' },
 ]
 
 const serviceLinks = [

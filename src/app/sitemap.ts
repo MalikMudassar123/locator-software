@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { siteUrl } from "@/config/site";
 import { DEVICES } from "@/components/service/tracking-devices/devices-data";
 import { JOBS } from "@/components/about/career/jobs-data";
+import { BLOG_POSTS } from "@/components/about/newsroom/blog/blog-index";
 
 // Every live route. Add new entries here as routes are added.
 const ROUTES: { path: string; priority: number }[] = [
@@ -13,6 +14,8 @@ const ROUTES: { path: string; priority: number }[] = [
   { path: "/about/mission", priority: 0.8 },
   { path: "/about/core-values", priority: 0.8 },
   { path: "/about/newsroom", priority: 0.6 },
+  { path: "/about/newsroom/blog", priority: 0.8 },
+  ...BLOG_POSTS.map((p) => ({ path: `/about/newsroom/blog/${p.slug}`, priority: 0.7 })),
   { path: "/about/career", priority: 0.6 },
   ...JOBS.map((j) => ({ path: `/about/career/${j.slug}`, priority: 0.5 })),
   { path: "/software", priority: 0.9 },

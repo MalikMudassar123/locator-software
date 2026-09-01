@@ -10,7 +10,7 @@ const POSTS = [
     img: '/blog/fleet tracking.png',
     imgW: 1600,
     imgH: 1079,
-    href: '/blog/ai-dashcams-collision-rates',
+    href: '/about/newsroom/blog/fleet-tracking-software-real-time-vehicle-management',
   },
   {
     day: '18',
@@ -20,7 +20,7 @@ const POSTS = [
     img: '/blog/Optimized GPS.png',
     imgW: 900,
     imgH: 506,
-    href: '/blog/reducing-idle-fuel-waste',
+    href: '/about/newsroom/blog/the-tracking-edge-optimized-gps-and-field-tools',
   },
 ]
 

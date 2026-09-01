@@ -278,13 +278,21 @@ export default function NewsroomHighlights() {
           display: grid; grid-template-columns: minmax(0,0.87fr) minmax(0,1.26fr) minmax(0,0.87fr);
           gap: clamp(26px,3.4vw,46px);
         }
-        @media (max-width: 1000px) { .nrx-inner { grid-template-columns: 1fr; gap: 44px; } }
+        @media (max-width: 1000px) { .nrx-inner { grid-template-columns: minmax(0,1fr); gap: 44px; } }
 
         /* Grid stretches these to a common height. Making each one a flex
            column lets the stage absorb the slack, which pins all three dot rows
            to the same baseline instead of leaving them wherever their own
-           content happened to end. */
-        .nrx-col { min-width: 0; display: flex; flex-direction: column; }
+           content happened to end.
+           Bordered, padded and lightly shadowed so the three panels read as
+           separate cards rather than one continuous block — same resting
+           treatment as the cards in NewsroomRail. */
+        .nrx-col {
+          min-width: 0; display: flex; flex-direction: column;
+          background: #fff; border: 1px solid #e7ecf6; border-radius: 18px;
+          padding: clamp(18px,2.2vw,26px);
+          box-shadow: 0 2px 10px rgba(11,18,32,.04);
+        }
 
         /* Header rule is the dark 2px line under the title row in the design. */
         .nrx-head {

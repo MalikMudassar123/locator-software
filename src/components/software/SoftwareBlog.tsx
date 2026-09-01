@@ -12,7 +12,7 @@ const POSTS = [
     catBg: 'rgba(19,96,238,.1)',
     title: 'How AI dashcams cut collision rates for commercial fleets',
     excerpt: 'What live driver monitoring and audible alerts mean for day-to-day fleet safety — and how operators measure the ROI.',
-    href: '/blog/ai-dashcams-collision-rates',
+    href: '/about/newsroom/blog',
     img: '/blog/fleet tracking.png',
     readTime: '5 min read',
     date: 'Mar 12, 2025',
@@ -25,7 +25,7 @@ const POSTS = [
     catBg: 'rgba(13,79,212,.1)',
     title: 'Reducing idle fuel waste across a growing fleet',
     excerpt: 'Using instant idle alerts and route history to claw back fuel spend before it becomes a costly habit.',
-    href: '/blog/reducing-idle-fuel-waste',
+    href: '/about/newsroom/blog',
     img: '/blog/Optimized GPS.png',
     readTime: '4 min read',
     date: 'Mar 8, 2025',
@@ -38,7 +38,7 @@ const POSTS = [
     catBg: 'rgba(47,111,237,.1)',
     title: 'A practical guide to geofencing for UAE businesses',
     excerpt: 'Setting virtual zones and POI alerts for offices, depots, and customer sites without overcomplicating the setup.',
-    href: '/blog/geofencing-guide-uae',
+    href: '/about/newsroom/blog',
     img: '/blog/fleet tracking.png',
     readTime: '6 min read',
     date: 'Mar 4, 2025',
@@ -95,7 +95,7 @@ export default function SoftwareBlog() {
               Practical guides on fleet safety, cost control, and operations for UAE businesses.
             </p>
 
-            <Link href="/blog" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: 'var(--f-13)', fontWeight: 700, color: '#1360ee', textDecoration: 'none', padding: '9px 20px', borderRadius: '999px', background: '#eef3ff', border: '1px solid rgba(19,96,238,.18)', whiteSpace: 'nowrap' as const }}>
+            <Link href="/about/newsroom/blog" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: 'var(--f-13)', fontWeight: 700, color: '#1360ee', textDecoration: 'none', padding: '9px 20px', borderRadius: '999px', background: '#eef3ff', border: '1px solid rgba(19,96,238,.18)', whiteSpace: 'nowrap' as const }}>
               All articles →
             </Link>
           </div>

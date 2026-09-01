@@ -14,7 +14,7 @@ const POSTS = [
       "Whether you're managing delivery vans, heavy trucks, or service vehicles, staying in control of operations is crucial. Today's fleet tracking software does far more than just show vehicle locations — it gives you full control of your mobile workforce in real-time.",
     image: "/blog/fleet tracking.png",
     alt: "Fleet Tracking Software",
-    href: "#",
+    href: "/about/newsroom/blog/fleet-tracking-software-real-time-vehicle-management",
   },
   {
     day: "18",
@@ -26,7 +26,7 @@ const POSTS = [
       "Whether you're managing delivery fleets, service vehicles, or mobile field teams, staying in control of operations is key to success. Modern GPS tracking is no longer just about showing vehicle locations — it's about managing your entire field workflow smarter and faster.",
     image: "/blog/Optimized GPS.png",
     alt: "Optimized GPS & Field Tools",
-    href: "#",
+    href: "/about/newsroom/blog/the-tracking-edge-optimized-gps-and-field-tools",
   },
 ];
 

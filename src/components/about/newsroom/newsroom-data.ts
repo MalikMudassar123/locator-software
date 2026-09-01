@@ -1,6 +1,8 @@
 // Single source of truth for the newsroom. Every card the board renders comes
 // from here so the tab filter, the featured slot, and the rail all stay in sync.
 
+import { BLOG_POSTS as MIGRATED_POSTS, blogHref } from './blog/blog-index'
+
 export type NewsCategory =
   | 'product'
   | 'company'
@@ -19,6 +21,8 @@ export type NewsItem = {
   title: string
   excerpt: string
   image: string
+  /** Alt text for the card image. Empty/omitted marks it decorative. */
+  alt?: string
   /** How the image fills its frame. Defaults to 'cover' (crops to fill). Use
    *  'contain' when the source shouldn't be cropped — the frame letterboxes
    *  against its own dark background instead. */
@@ -768,71 +772,17 @@ export const UPCOMING_EVENTS: UpcomingEvent[] = [
   },
 ]
 
-export const BLOG_POSTS: NewsItem[] = [
-  {
-    id: 'b1',
-    category: 'blog',
-    tag: 'Fleet Management',
-    title: 'Fleet Tracking Software: The Smart Way to Manage Vehicles in Real-Time',
-    excerpt:
-      'Modern fleet tracking does far more than show vehicle locations — it gives you full control of your mobile workforce in real time.',
-    image: '/blog/fleet tracking.png',
-    date: 'August 12, 2026',
-    href: '#',
-  },
-  {
-    id: 'b2',
-    category: 'blog',
-    tag: 'GPS Technology',
-    title: 'The Tracking Edge — Optimized GPS & Field Tools',
-    excerpt:
-      'GPS tracking is no longer just about vehicle locations. It is about managing your entire field workflow smarter and faster.',
-    image: '/blog/Optimized GPS.png',
-    date: 'July 18, 2026',
-    href: '#',
-  },
-  {
-    id: 'b3',
-    category: 'blog',
-    tag: 'Cost Control',
-    title: 'Five Fuel Costs Hiding in Plain Sight in Your Fleet Data',
-    excerpt:
-      'Idling, unauthorised trips, and drain events rarely show up on a fuel card statement — but they always show up in telematics.',
-    image: '/tracking_devices/Fuel_Sensor.jpg',
-    date: 'June 28, 2026',
-    href: '#',
-  },
-  {
-    id: 'b4',
-    category: 'blog',
-    tag: 'Compliance',
-    title: 'A Practical Guide to Fleet Compliance in the UAE',
-    excerpt:
-      'What Asateel, SecurePath, and Shahin actually require — and how to stay audit-ready without extra admin.',
-    image: '/newsroom/petroleum-energy-fleet.webp',
-    date: 'June 04, 2026',
-    href: '#',
-  },
-  {
-    id: 'b5',
-    category: 'blog',
-    tag: 'Safety',
-    title: 'Driver Coaching That Drivers Actually Accept',
-    excerpt:
-      'Scores alone change nothing. Here is the feedback loop that moved harsh-braking events down 41% in one fleet.',
-    image: '/newsroom/rental-leasing.webp',
-    date: 'May 19, 2026',
-    href: '#',
-  },
-  {
-    id: 'b6',
-    category: 'blog',
-    tag: 'Operations',
-    title: 'Route Optimisation: Where the Savings Really Come From',
-    excerpt:
-      'Shorter routes are only part of it. The bigger win is fewer failed deliveries and tighter time windows.',
-    image: '/newsroom/route-playback.webp',
-    date: 'April 30, 2026',
-    href: '#',
-  },
-]
+// The Blog tab is fed by the articles migrated from the old locator.ae blog.
+// Mapped here rather than duplicated so the card copy, image and date always
+// match what the article page itself renders.
+export const BLOG_POSTS: NewsItem[] = MIGRATED_POSTS.map((p) => ({
+  id: p.slug,
+  category: 'blog',
+  tag: p.tag,
+  title: p.title,
+  excerpt: p.excerpt,
+  image: p.hero.src,
+  alt: p.hero.alt,
+  date: p.dateLabel,
+  href: blogHref(p.slug),
+}))

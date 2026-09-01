@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import NewsroomRail from './NewsroomRail'
 import SocialCard from './SocialCard'
 import NewsroomWatch from './NewsroomWatch'
@@ -19,6 +20,7 @@ import {
   type NewsItem,
   type SocialPost,
 } from './newsroom-data'
+import { BLOG_BASE } from './blog/blog-index'
 
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
@@ -75,12 +77,15 @@ function renderHeroTitle(title: string) {
 
 function Card({ item, size = 'md' }: { item: NewsItem; size?: 'md' | 'lg' }) {
   const color = CATEGORY_COLOR[item.category]
+  // Real routes (the migrated blog) go through Link so they prefetch and
+  // navigate client-side; placeholder '#' hrefs stay plain anchors.
+  const Shell = item.href.startsWith('/') ? Link : 'a'
   return (
-    <a href={item.href} className={`nrb-card nrb-card--${size}`}>
+    <Shell href={item.href} className={`nrb-card nrb-card--${size}`}>
       <div className="nrb-card-media" data-fit={item.fit ?? 'cover'} style={item.fit === 'contain' && item.imageAspect ? { aspectRatio: item.imageAspect } : undefined}>
         <Image
           src={item.image}
-          alt=""
+          alt={item.alt ?? ''}
           fill
           style={{ objectFit: item.fit ?? 'cover' }}
           sizes={size === 'lg' ? '(max-width: 1040px) 100vw, 700px' : '(max-width: 700px) 100vw, 340px'}
@@ -103,7 +108,7 @@ function Card({ item, size = 'md' }: { item: NewsItem; size?: 'md' | 'lg' }) {
         <p className="nrb-card-excerpt">{item.excerpt}</p>
         <span className="nrb-card-more">Read More →</span>
       </div>
-    </a>
+    </Shell>
   )
 }
 
@@ -364,6 +369,8 @@ export default function NewsroomBoard() {
         }
 
         .nrb-section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .nrb-viewall { font-size: var(--f-13); font-weight: 700; color: #1360ee; text-decoration: none; white-space: nowrap; }
+        .nrb-viewall:hover { text-decoration: underline; }
         .nrb-section-head h2 { margin: 0; font-size: max(clamp(17px,1.9vw,22px), min(1.528vw, 31.9px)); font-weight: 800; letter-spacing: -.02em; color: #0b1220; }
       `}</style>
 
@@ -511,6 +518,15 @@ export default function NewsroomBoard() {
                     </div>
                   </a>
                 ))}
+              </div>
+            )}
+
+            {tab === 'blog' && (
+              <div className="nrb-section-head">
+                <h2>From the Locator blog</h2>
+                <Link href={BLOG_BASE} className="nrb-viewall">
+                  View all articles →
+                </Link>
               </div>
             )}
 

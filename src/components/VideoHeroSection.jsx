@@ -63,6 +63,15 @@ export default function VideoHeroSection({
 
   return (
     <section ref={sectionRef} className={`vhs ${active ? "vhs--active" : ""}`}>
+      {/* Opens the connection to Vimeo's player and thumbnail hosts as soon as
+          this section mounts, well before the viewer clicks play — DNS lookup
+          and TLS handshake are the slowest part of a cold embed load, and
+          doing them ahead of time is what actually shows up as "the video
+          starts faster". React hoists these into <head> on its own. */}
+      <link rel="preconnect" href="https://player.vimeo.com" />
+      <link rel="preconnect" href="https://f.vimeocdn.com" crossOrigin="anonymous" />
+      <link rel="preconnect" href="https://i.vimeocdn.com" />
+
       {/* ── Subtle radial center glow on background ── */}
       <div className="vhs__bg-glow" />
 

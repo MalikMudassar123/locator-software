@@ -29,6 +29,11 @@ export default function ServiceVideo({
 
   return (
     <section style={{ padding: 'clamp(56px,7vw,88px) 28px', background: '#fff' }}>
+      {/* Opens the connection to Vimeo ahead of the click — see VideoHeroSection
+          for why this is what actually speeds up "time to first frame". */}
+      <link rel="preconnect" href="https://player.vimeo.com" />
+      <link rel="preconnect" href="https://f.vimeocdn.com" crossOrigin="anonymous" />
+      <link rel="preconnect" href="https://i.vimeocdn.com" />
       <div style={{ maxWidth: 'var(--w-960)', margin: '0 auto' }}>
         <div data-reveal style={{ textAlign: 'center', maxWidth: '620px', margin: '0 auto clamp(32px,4vw,44px)' }}>
           <span style={{ fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>

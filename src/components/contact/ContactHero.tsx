@@ -8,15 +8,18 @@ export default function ContactHero() {
       <style href="ct-contacthero" precedence="medium">{`
         .cth { background: #fff; }
 
-        /* Photo band — same banner used on the Newsroom hero. Its dark left
-           third is what makes the headline legible without a heavy overlay. */
-        .cth-photo { position: relative; overflow: hidden; height: clamp(300px, 34vw, 440px); }
-        .cth-photo img { object-fit: cover; object-position: 62% center; }
+        /* Photo band. object-fit: contain (not cover) so the banner is
+           always shown in full rather than cropped to fill the band — the
+           background is sampled from the image's own corner colour, so
+           wherever contain letterboxes it reads as part of the artwork
+           rather than a visible bar. */
+        .cth-photo { position: relative; overflow: hidden; height: clamp(300px, 34vw, 440px); background: #01050b; }
+        .cth-photo img { object-fit: contain; }
         .cth-scrim {
           position: absolute; inset: 0; z-index: 1;
           background:
-            linear-gradient(90deg, rgba(4,8,18,.92) 0%, rgba(4,8,18,.78) 34%, rgba(4,8,18,.34) 62%, transparent 88%),
-            linear-gradient(0deg, rgba(4,8,18,.6) 0%, transparent 42%);
+            linear-gradient(90deg, rgba(4,8,18,.5) 0%, rgba(4,8,18,.42) 34%, rgba(4,8,18,.18) 62%, transparent 88%),
+            linear-gradient(0deg, rgba(4,8,18,.32) 0%, transparent 42%);
         }
 
         .cth-body {
@@ -53,12 +56,9 @@ export default function ContactHero() {
         .cth-crumbs a:hover { color: #fff; }
         .cth-crumbs .cur { color: #4d94ff; font-weight: 700; }
 
-        /* On phones the truck sits centre-frame, so pull focus back to the
-           left of the image and let the copy breathe. */
         @media (max-width: 640px) {
           .cth-photo { height: clamp(320px, 78vw, 400px); }
-          .cth-photo img { object-position: 72% center; }
-          .cth-scrim { background: linear-gradient(0deg, rgba(4,8,18,.94) 0%, rgba(4,8,18,.8) 45%, rgba(4,8,18,.55) 100%); }
+          .cth-scrim { background: linear-gradient(0deg, rgba(4,8,18,.52) 0%, rgba(4,8,18,.42) 45%, rgba(4,8,18,.3) 100%); }
           .cth-body { padding: 24px 20px; }
           .cth-lead { max-width: 100%; }
         }
@@ -68,7 +68,13 @@ export default function ContactHero() {
         <SoftwareNavbar />
 
         <div className="cth-photo">
-          <Image src="/Newsroom banner.webp" alt="Contact Locator" fill priority sizes="100vw" />
+          <Image
+            src="/contact/contact-hero-banner.webp"
+            alt="Locator support team assisting fleet customers from a modern operations office"
+            fill
+            priority
+            sizes="100vw"
+          />
           <div className="cth-scrim" />
           <div className="cth-body">
             <div className="cth-content">

@@ -22,16 +22,22 @@ export default function NewsroomHero() {
         .nrh-crumbs svg { color: #b8bcc4; flex-shrink: 0; }
         .nrh-crumbs .cur { color: #8e8e93; }
 
-        /* ── Photo band ── */
-        .nrh-photo { position: relative; overflow: hidden; height: clamp(300px, 38vw, 460px); }
-        .nrh-photo img { object-fit: cover; }
+        /* ── Photo band ──
+           object-fit: contain (not cover) so the banner is always shown in
+           full — cover would crop it to fill the band, which loses part of
+           the globe on wide screens and most of it on tall/narrow ones. The
+           background is sampled from the image's own corner colour, so
+           wherever contain letterboxes it reads as part of the artwork
+           rather than a visible bar. */
+        .nrh-photo { position: relative; overflow: hidden; height: clamp(300px, 38vw, 460px); background: #000b23; }
+        .nrh-photo img { object-fit: contain; }
         /* Layered scrim: strong bottom-up fade so the headline sits on dark
            pixels, plus a left-side wash so text stays legible on bright areas. */
         .nrh-scrim {
           position: absolute; inset: 0; z-index: 1;
           background:
-            linear-gradient(0deg, rgba(4,8,18,.94) 0%, rgba(4,8,18,.82) 32%, rgba(4,8,18,.55) 58%, rgba(4,8,18,.28) 80%, rgba(4,8,18,.1) 100%),
-            linear-gradient(90deg, rgba(4,8,18,.7) 0%, rgba(4,8,18,.35) 40%, transparent 78%);
+            linear-gradient(0deg, rgba(4,8,18,.52) 0%, rgba(4,8,18,.4) 32%, rgba(4,8,18,.26) 58%, rgba(4,8,18,.13) 80%, rgba(4,8,18,.04) 100%),
+            linear-gradient(90deg, rgba(4,8,18,.38) 0%, rgba(4,8,18,.16) 40%, transparent 78%);
         }
 
         .nrh-photo-body {
@@ -97,7 +103,13 @@ export default function NewsroomHero() {
         </div>
 
         <div className="nrh-photo" data-reveal>
-          <Image src="/Newsroom banner.webp" alt="Locator Newsroom" fill priority sizes="100vw" />
+          <Image
+            src="/newsroom/newsroom-hero-banner.webp"
+            alt="Illuminated global network map centred on the UAE and the Middle East, representing Locator's connected fleet intelligence"
+            fill
+            priority
+            sizes="100vw"
+          />
           <div className="nrh-scrim" />
           <div className="nrh-photo-body">
             <div className="nrh-content">

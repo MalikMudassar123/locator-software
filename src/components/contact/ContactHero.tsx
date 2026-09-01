@@ -8,13 +8,12 @@ export default function ContactHero() {
       <style href="ct-contacthero" precedence="medium">{`
         .cth { background: #fff; }
 
-        /* Photo band. object-fit: contain (not cover) so the banner is
-           always shown in full rather than cropped to fill the band — the
-           background is sampled from the image's own corner colour, so
-           wherever contain letterboxes it reads as part of the artwork
-           rather than a visible bar. */
+        /* Photo band. object-fit: cover fills the band edge-to-edge at every
+           viewport width — object-position biases the crop toward the agent
+           at the desk (right two-thirds of the source image), the visual
+           focal point, rather than centring on empty floor/ceiling. */
         .cth-photo { position: relative; overflow: hidden; height: clamp(300px, 34vw, 440px); background: #01050b; }
-        .cth-photo img { object-fit: contain; }
+        .cth-photo img { object-fit: cover; object-position: 66% center; }
         .cth-scrim {
           position: absolute; inset: 0; z-index: 1;
           background:
@@ -27,7 +26,7 @@ export default function ContactHero() {
           display: flex; flex-direction: column; justify-content: center;
           max-width: var(--w-1280); margin: 0 auto; padding: clamp(24px,3vw,40px) 28px;
         }
-        .cth-content { max-width: min(560px, 92vw); }
+        .cth-content { max-width: min(660px, 100%); }
 
         .cth-eyebrow {
           display: block;
@@ -36,14 +35,14 @@ export default function ContactHero() {
         }
 
         .cth-title {
-          margin: 0; font-size: max(clamp(34px,5.4vw,60px), min(4.167vw, 87px)); font-weight: 800;
-          line-height: 1.05; letter-spacing: -.03em; color: #fff;
-          text-shadow: 0 2px 4px rgba(0,0,0,.4), 0 10px 36px rgba(0,0,0,.35);
+          margin: 0; font-size: clamp(28px, calc(2.5vw + 16px), 46px); font-weight: 800;
+          line-height: 1.16; letter-spacing: -.022em; color: #ffffff;
+          text-shadow: 0 2px 24px rgba(0,0,0,.4);
         }
 
         .cth-lead {
-          margin: clamp(12px,1.6vw,18px) 0 0; max-width: 44ch;
-          font-size: max(clamp(14px,1.2vw,16px), min(1.111vw, 23.2px)); line-height: 1.7; color: rgba(255,255,255,.82);
+          margin: clamp(14px,1.6vw,18px) 0 0; max-width: 48ch;
+          font-size: clamp(15px, 1.05vw, 17px); line-height: 1.72; color: rgba(255,255,255,.8);
         }
 
         /* Breadcrumb sits inside the banner, under the copy. */

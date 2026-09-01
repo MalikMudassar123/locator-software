@@ -23,14 +23,13 @@ export default function NewsroomHero() {
         .nrh-crumbs .cur { color: #8e8e93; }
 
         /* ── Photo band ──
-           object-fit: contain (not cover) so the banner is always shown in
-           full — cover would crop it to fill the band, which loses part of
-           the globe on wide screens and most of it on tall/narrow ones. The
-           background is sampled from the image's own corner colour, so
-           wherever contain letterboxes it reads as part of the artwork
-           rather than a visible bar. */
+           object-fit: cover so the band is always filled edge-to-edge with no
+           letterbox gaps at any viewport width. object-position is biased
+           toward the globe (right two-thirds of the source image), which is
+           the visual focal point, so a narrow crop keeps it in frame instead
+           of centring on the empty dark space to its left. */
         .nrh-photo { position: relative; overflow: hidden; height: clamp(300px, 38vw, 460px); background: #000b23; }
-        .nrh-photo img { object-fit: contain; }
+        .nrh-photo img { object-fit: cover; object-position: 68% center; }
         /* Layered scrim: strong bottom-up fade so the headline sits on dark
            pixels, plus a left-side wash so text stays legible on bright areas. */
         .nrh-scrim {
@@ -45,7 +44,7 @@ export default function NewsroomHero() {
           display: flex; align-items: flex-end;
           max-width: var(--w-1280); margin: 0 auto; padding: 0 28px clamp(26px,4vw,46px);
         }
-        .nrh-content { max-width: min(760px, 90vw); }
+        .nrh-content { max-width: min(660px, 100%); }
 
         .nrh-eyebrow {
           display: inline-flex; align-items: center; gap: 12px;
@@ -56,12 +55,13 @@ export default function NewsroomHero() {
         .nrh-eyebrow i { display: block; width: 34px; height: 3px; background: #9ec2ff; border-radius: 2px; }
 
         .nrh-title {
-          margin: 0; font-size: max(clamp(30px,4.6vw,56px), min(3.889vw, 81.2px)); font-weight: 800;
-          line-height: 1.08; letter-spacing: -.02em; color: #fff; max-width: 20ch;
-          text-shadow: 0 2px 4px rgba(0,0,0,.45), 0 8px 34px rgba(0,0,0,.4);
+          margin: 0; font-size: clamp(28px, calc(2.5vw + 16px), 46px); font-weight: 800;
+          line-height: 1.16; letter-spacing: -.022em; color: #ffffff;
+          text-shadow: 0 2px 24px rgba(0,0,0,.4);
         }
+        .nrh-title-accent { color: #1360ee; }
 
-        .nrh-lead { margin: 16px 0 0; max-width: 60ch; font-size: max(clamp(14px,1.25vw,16.5px), min(1.146vw, 23.93px)); line-height: 1.72; color: rgba(255,255,255,.86); }
+        .nrh-lead { margin: clamp(14px,1.6vw,18px) 0 0; max-width: 48ch; font-size: clamp(15px, 1.05vw, 17px); line-height: 1.72; color: rgba(255,255,255,.8); }
 
         .nrh-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: clamp(22px,3vw,30px); }
         .nrh-btn {
@@ -114,7 +114,7 @@ export default function NewsroomHero() {
           <div className="nrh-photo-body">
             <div className="nrh-content">
               <span className="nrh-eyebrow"><i />Newsroom</span>
-              <h1 className="nrh-title">Stay updated with everything Locator</h1>
+              <h1 className="nrh-title">Stay updated with everything <span className="nrh-title-accent">Locator</span></h1>
               <p className="nrh-lead">
                 Discover the latest product updates, company news, customer stories, events,
                 videos, and live updates from Locator — all in one place.

@@ -275,30 +275,37 @@ export default function ServiceHero() {
           50%      { opacity: .9; }
         }
 
-        /* Dashcam-views banner is the section's own full-width background.
-           Unlike the previous truck photo, the content that matters here —
-           the fanned camera-view thumbnails — sits right at the image's left
-           and right edges, so a cover-fit would crop exactly the part that
-           makes this image worth using. contain keeps the whole banner in
-           frame at every width instead; the photo's own near-white backdrop
-           matches the section's background, so the letterboxed space above
-           and below it reads as part of the page rather than a visible bar. */
-        .srv-pin-wrap { position: relative; background: #ffffff; padding-top: 64px; }
+        /* Truck banner is the section's own full-width, edge-to-edge
+           background (cover, never letterboxed) rather than a floating
+           card. The box is tall enough that cover's height-matched scale
+           keeps the truck's own reflection/floor clear of the copy above
+           it — bottom-anchored so the truck stays low and the copy block
+           at the top never overlaps it. */
+        .srv-pin-wrap { position: relative; background: #ffffff; }
         .srv-pin {
           position: relative;
-          /* aspect-ratio matches the banner's own 1774x887 shape, so on any
-             screen wide enough that width/2 already clears the floor below,
-             the box is exactly the photo's shape — contain then has nothing
-             left to letterbox on any edge, top, bottom, left or right. The
-             min-height floor only takes over on narrow screens, where the
-             copy needs more room than a strict 2:1 box would give it. */
-          aspect-ratio: 1774 / 887;
-          min-height: clamp(440px, 50vw, 560px);
+          min-height: clamp(800px, 102vh, 1000px);
           display: flex; flex-direction: column;
           overflow: hidden; isolation: isolate; background: #ffffff;
         }
         .srv-hero-bg {
           position: absolute; inset: 0; z-index: 0;
+        }
+        /* The artwork is a wide ~2:1 studio shot. On desktop the banner box is
+           wide enough that a cover-fit only trims a little off the sides.
+           Below ~900px the box turns portrait-ish, where cover would scale
+           the photo ~4x and crop away most of its width — the truck balloons
+           and gets sliced. A contain-fit there keeps the whole truck in
+           frame; the photo's own near-white backdrop blends into the section,
+           so the spare space above it doesn't read as a letterbox bar. */
+        /* Desktop's cover-fit stays an inline style so it is exactly what it
+           was; !important is what lets the narrow-screen override beat it. */
+        @media (max-width: 900px) {
+          .srv-hero-img { object-fit: contain !important; }
+        }
+        .srv-hero-scrim {
+          position: absolute; inset: 0; z-index: 1; pointer-events: none;
+          background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,.9) 20%, rgba(255,255,255,0) 42%);
         }
         .srv-hero-body {
           position: relative; z-index: 2;
@@ -306,6 +313,16 @@ export default function ServiceHero() {
           display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
           gap: clamp(8px, 1.2vh, 18px);
           padding: 0 24px clamp(40px, 8vh, 80px);
+        }
+        /* Once the image switches to a contain-fit it only occupies a short
+           band at the bottom, so the tall desktop box would leave a big empty
+           gap between the copy and the truck. These heights keep the two
+           tight together. */
+        @media (max-width: 900px) {
+          .srv-pin { min-height: clamp(540px, 74vh, 680px); }
+        }
+        @media (max-width: 640px) {
+          .srv-pin { min-height: clamp(480px, 66vh, 600px); }
         }
         .srv-copy { text-align: center; max-width: var(--w-1120); width: 100%; margin-top: clamp(28px, 3.2vh, 48px); }
         /* The negative pull-up above is tuned for desktop's taller banner —
@@ -361,15 +378,16 @@ export default function ServiceHero() {
         <div className="srv-pin">
           <div className="srv-hero-bg" aria-hidden="true">
             <Image
-              src="/service_page/fleet-dashcam-multi-camera-views-hero-bg.webp"
+              src="/ChatGPT Image Aug 25, 2026, 10_25_07 PM.webp"
               alt=""
               fill
               priority
               sizes="100vw"
               className="srv-hero-img"
-              style={{ objectFit: 'contain', objectPosition: 'center center' }}
+              style={{ objectFit: 'cover', objectPosition: 'center bottom' }}
             />
           </div>
+          <div className="srv-hero-scrim" aria-hidden="true" />
 
           <SoftwareNavbar />
 

@@ -323,7 +323,7 @@ export default function ServiceHero() {
         @media (max-width: 640px) {
           .srv-pin { min-height: clamp(480px, 66vh, 600px); }
         }
-        .srv-copy { text-align: center; max-width: var(--w-1120); width: 100%; margin-top: clamp(-24px, -2.4vh, -10px); }
+        .srv-copy { text-align: center; max-width: var(--w-1120); width: 100%; margin-top: clamp(28px, 3.2vh, 48px); }
         /* The negative pull-up above is tuned for desktop's taller banner —
            on a short, narrow viewport it's enough to tuck the heading under
            the fixed navbar, so mobile gets its own clear (positive) offset. */

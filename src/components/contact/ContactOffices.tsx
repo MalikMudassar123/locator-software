@@ -23,8 +23,8 @@ const OFFICES: Office[] = [
     city: 'Dubai',
     emirate: 'Emirate of Dubai',
     badge: 'Head Office',
-    img: '/service_page/Travel & Tourism.webp',
-    imgAlt: 'Locator Dubai — Sheikh Zayed Road and the Downtown skyline',
+    img: '/contact/dubai-office.webp',
+    imgAlt: 'Locator Dubai — Sheikh Zayed Road and the Downtown skyline at sunset',
     address: 'Sheikh Zayed Road, Trade Centre,\nTrade Centre 1, Dubai, United Arab Emirates',
     phone: '+971 4 354 7766',
     phoneHref: 'tel:+97143547766',
@@ -37,14 +37,14 @@ const OFFICES: Office[] = [
     city: 'Abu Dhabi',
     emirate: 'Emirate of Abu Dhabi',
     badge: 'Regional Office',
-    img: '/industries/cover.webp',
-    imgAlt: 'Locator Abu Dhabi — industrial and logistics corridor',
-    address: 'Capital Mall, Mohammed Bin Zayed City,\nAbu Dhabi, United Arab Emirates',
+    img: '/contact/abu-dhabi-office.webp',
+    imgAlt: 'Locator Abu Dhabi — Mazyad Mall office building in Mohammed Bin Zayed City',
+    address: 'Mazyad Mall, Mohammed Bin Zayed City,\nAbu Dhabi, United Arab Emirates',
     phone: '+971 52 675 1880',
     phoneHref: 'tel:+971526751880',
     email: 'info@locator.ae',
     hours: 'Mon – Sat · 9:00 AM – 6:00 PM',
-    maps: 'https://maps.google.com/?q=Capital+Mall+Mohammed+Bin+Zayed+City+Abu+Dhabi',
+    maps: 'https://maps.google.com/?q=Mazyad+Mall+Mohammed+Bin+Zayed+City+Abu+Dhabi',
   },
 ]
 
@@ -129,18 +129,21 @@ export default function ContactOffices() {
         }
         .cto-card:hover { transform: translateY(-5px); border-color: #cfdcf6; box-shadow: 0 44px 80px -40px rgba(19,96,238,.5); }
 
-        /* ── Photo header: the city itself, with the identity overlaid on it ── */
-        .cto-media { position: relative; aspect-ratio: 16 / 9; min-height: 210px; overflow: hidden; }
+        /* ── Photo header: the city itself, with the identity overlaid on it.
+           aspect-ratio matches the office photos' own 1676x938 shape (not a
+           generic 16:9) and object-fit is contain, so the full frame always
+           shows — no min-height floor either, since that would force a taller
+           box than the photo and crop it to fill the gap. */
+        .cto-media { position: relative; aspect-ratio: 1676 / 938; overflow: hidden; background: #0b1220; }
         .cto-media img {
-          object-fit: cover;
-          transform: scale(1.03);
+          object-fit: contain;
           transition: transform .7s ${EASE};
         }
         .cto-card:hover .cto-media img { transform: scale(1.09); }
         .cto-media-scrim {
           position: absolute; inset: 0; z-index: 1;
           background:
-            linear-gradient(0deg, rgba(4,8,18,.9) 0%, rgba(4,8,18,.55) 34%, rgba(4,8,18,.12) 66%, rgba(4,8,18,.28) 100%);
+            linear-gradient(0deg, rgba(4,8,18,.32) 0%, rgba(4,8,18,.18) 34%, rgba(4,8,18,.03) 66%, rgba(4,8,18,.09) 100%);
         }
 
         .cto-n {

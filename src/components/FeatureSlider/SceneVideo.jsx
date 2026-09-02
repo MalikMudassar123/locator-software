@@ -385,7 +385,7 @@ export default forwardRef(function SceneVideo(_props, ref) {
         <div style={{ height: 34, background: '#1e293b', borderBottom: '1px solid #334155', display: 'flex', alignItems: 'center', padding: '0 12px', gap: 6 }}>
           {[0,1,2].map(i => <div key={i} style={{ width: 9, height: 9, borderRadius: '50%', background: ['#f87171','#fbbf24','#4ade80'][i] }}/>)}
           <div style={{ flex: 1, height: 19, borderRadius: 4, background: '#334155', margin: '0 10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontSize: 8.5, color: '#64748b' }}>pro.mylocatorplus.com/video</span>
+            <span style={{ fontSize: 8.5, color: '#64748b' }}>mylocatorplus.com/video</span>
           </div>
         </div>
 

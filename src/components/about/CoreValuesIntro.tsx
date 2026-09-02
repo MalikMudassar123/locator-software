@@ -8,8 +8,8 @@ export default function CoreValuesIntro() {
           <span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} />
         </span>
         <h2 style={{ margin: 0, fontSize: 'max(clamp(26px,3.2vw,38px), min(2.5vw, 52px))', fontWeight: 800, lineHeight: 1.18, letterSpacing: '-.02em', color: '#1d1d1f' }}>
-          The principles behind every product we ship and{' '}
-          <span style={{ color: '#1360ee' }}>every relationship we build</span>
+          What We{' '}
+          <span style={{ color: '#1360ee' }}>Stand For</span>
         </h2>
         <div style={{ margin: '24px auto', height: '4px', width: '80px', borderRadius: '999px', background: 'linear-gradient(90deg,#1360ee,#0d4fd4)' }} />
         <p style={{ margin: 0, fontSize: 'max(clamp(15px,1.5vw,17px), min(1.181vw, 24.65px))', lineHeight: 1.8, color: '#52525e' }}>

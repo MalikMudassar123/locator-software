@@ -101,7 +101,7 @@ export default function VideoTelematicsShowcase() {
                 {['#ff5f57', '#febc2e', '#28c840'].map(c => (
                   <span key={c} style={{ width: 9, height: 9, borderRadius: '50%', background: c, display: 'inline-block' }} />
                 ))}
-                <span style={{ marginLeft: 8, fontSize: 'var(--f-11)', color: '#94a3b8' }}>pro.mylocatorplus.com/video</span>
+                <span style={{ marginLeft: 8, fontSize: 'var(--f-11)', color: '#94a3b8' }}>mylocatorplus.com/video</span>
               </div>
               <Image
                 src="/block 1/video teleframe.webp"

@@ -21,7 +21,7 @@
 export const WINDOW_DOT_COLORS = ['#c3ccd9', '#d2d9e3', '#e0e5ed'];
 
 export default function BrowserChrome({
-  url = 'https://pro.mylocatorplus.com/',
+  url = 'https://mylocatorplus.com/',
   variant = 'browser',
 }) {
   const isApp = variant === 'app';

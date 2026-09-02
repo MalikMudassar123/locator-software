@@ -281,7 +281,7 @@ export default function AboutPillarHero({
                   CORE <span className="cv-accent">VALUE</span>
                 </h1>
                 <p className="cv-desc">
-                  The principles that guide how we innovate, work, and grow together.
+                  Built on principles that put people, trust, and long-term partnerships first..
                 </p>
                 {/* A shared system of values shapes how we build, collaborate, and deliver better outcomes for every customer, partner, and team member. */}
 

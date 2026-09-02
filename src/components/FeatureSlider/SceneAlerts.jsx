@@ -364,7 +364,7 @@ export default forwardRef(function SceneAlerts(_props, ref) {
         <div style={{ height: 33, background: '#f9fafb', borderBottom: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', padding: '0 12px', gap: 6 }}>
           {[0,1,2].map(i => <div key={i} style={{ width: 9, height: 9, borderRadius: '50%', background: ['#f87171','#fbbf24','#4ade80'][i] }}/>)}
           <div style={{ flex: 1, height: 18, borderRadius: 4, background: '#f3f4f6', margin: '0 10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontSize: 8.5, color: '#9ca3af' }}>pro.mylocatorplus.com/alerts</span>
+            <span style={{ fontSize: 8.5, color: '#9ca3af' }}>mylocatorplus.com/alerts</span>
           </div>
         </div>
 

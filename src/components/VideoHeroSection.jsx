@@ -29,8 +29,8 @@ import {
  */
 
 export default function VideoHeroSection({
-  headline = "Real-Time Visibility. Total Control.",
-  subline = "Track. Manage. Optimize Grow faster with better efficiency and lower costs.",
+  headline = "All your Vehicles, Assets & Staffs on One Software",
+  subline = "Take control of your whole operation with LOCATOR GPS Tracking",
   poster = LOCATOR_VIDEO_POSTER,
 }) {
   const sectionRef = useRef(null);

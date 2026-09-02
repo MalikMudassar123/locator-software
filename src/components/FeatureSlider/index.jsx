@@ -367,7 +367,7 @@ function BrowserBar() {
         {WINDOW_DOT_COLORS.map(c=><div key={c} style={{ width:11,height:11,borderRadius:'50%',background:c }}/>)}
       </div>
       <div style={{ flex:1, height:18, background:'#fff', borderRadius:9, display:'flex', alignItems:'center', justifyContent:'center', maxWidth:'62%', margin:'0 auto' }}>
-        <span style={{ fontSize:9, color:'rgb(100, 116, 141)', fontWeight:600 }}>https://pro.mylocatorplus.com/</span>
+        <span style={{ fontSize:9, color:'rgb(100, 116, 141)', fontWeight:600 }}>https://mylocatorplus.com/</span>
       </div>
     </div>
   );

@@ -131,9 +131,7 @@ const textSections = [
   {
     eyebrow: 'Video Telematics',
     headline: 'Enhance Fleet Visibility with Video Telematics',
-    body: 'Live HD video insights to monitor drivers, road conditions, and on-road operations with ease.',
-    subHeadline: 'AI-Powered Fleet Dash Cameras & MDVR Safety',
-    subBody: 'Real-time driver monitoring, cargo surveillance, and multi-camera recording for trucks, taxis, buses, and commercial',
+    body: 'Live HD video insights to monitor drivers, road conditions, and on-road operations with ease — real-time driver monitoring, cargo surveillance, and multi-camera recording for trucks, taxis, buses, and commercial fleets.',
     features: videoFeatures,
     cols: 2,
   },

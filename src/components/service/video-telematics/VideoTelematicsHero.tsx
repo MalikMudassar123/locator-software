@@ -56,7 +56,11 @@ export default function VideoTelematicsHero() {
            reliable contrast for plain text at every width. A soft white
            text-shadow lifts each line off the busy background without
            putting a visible card or box behind it. */
-        .vt-copy { text-align: center; max-width: var(--w-1120); width: 100%; margin-top: clamp(28px, 3.2vh, 48px); }
+        /* A reading measure, not a container — so a flat pixel cap rather than
+           a --w-* token. The banner's fanned thumbnails crowd in from both
+           edges, and at container width the headline ran right into them; 760px
+           keeps every line inside the clear centre of the photo. */
+        .vt-copy { text-align: center; max-width: 760px; width: 100%; margin-top: clamp(28px, 3.2vh, 48px); }
         .vt-copy-glow {
           text-shadow:
             0 1px 2px #fff, 0 0 8px #fff, 0 0 16px #fff,
@@ -112,10 +116,10 @@ export default function VideoTelematicsHero() {
                 <span style={{ display: 'block', marginBottom: '6px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
                 Video Telematics
               </p>
-              <h1 className="vt-copy-glow" style={{ fontSize: 'max(clamp(21px,2.5vw,28px), min(1.944vw, 40.6px))', fontWeight: 800, lineHeight: 1.18, letterSpacing: '-.015em', color: '#1d1d1f', maxWidth: '34ch', margin: '0 auto' }}>
+              <h1 className="vt-copy-glow" style={{ fontSize: 'max(clamp(21px,2.5vw,28px), min(1.944vw, 40.6px))', fontWeight: 800, lineHeight: 1.18, letterSpacing: '-.015em', color: '#1d1d1f', maxWidth: '24ch', margin: '0 auto' }}>
                 AI-Powered Fleet Dash Cameras &amp; MDVR Safety Systems
               </h1>
-              <p className="vt-copy-glow" style={{ maxWidth: '560px', margin: 'clamp(6px,1vh,10px) auto 0', fontSize: 'max(clamp(13px,1.35vw,16px), min(1.111vw, 23.2px))', lineHeight: 1.5, color: '#3a3a3c' }}>
+              <p className="vt-copy-glow" style={{ maxWidth: '480px', margin: 'clamp(6px,1vh,10px) auto 0', fontSize: 'max(clamp(13px,1.35vw,16px), min(1.111vw, 23.2px))', lineHeight: 1.5, color: '#3a3a3c' }}>
                 Real-time driver monitoring, cargo surveillance, and multi-camera recording for trucks, taxis, buses, and commercial fleets.
               </p>
               <div className="vt-cta-row" style={{ marginTop: 'clamp(10px,1.6vh,18px)' }}>

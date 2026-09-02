@@ -14,7 +14,7 @@ import {
  * Pixel-perfect recreation of the reference design:
  *  • Floating lavender-blue decorative blocks with soft glow and depth
  *  • Layered 3-D composition (blocks go both behind AND in front of video)
- *  • Large centered video player with dark overlay (YouTube embed, mounted
+ *  • Large centered video player with dark overlay (Vimeo embed, mounted
  *    on click — see src/components/locator-video.ts for the shared source)
  *  • Frosted-glass play button with hover states
  *  • Sparkle / star detail at bottom-right of video
@@ -36,6 +36,7 @@ export default function VideoHeroSection({
   const sectionRef = useRef(null);
   const [active, setActive] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const [ready, setReady] = useState(false);
 
   // Scroll-triggered reveal
   useEffect(() => {
@@ -57,7 +58,7 @@ export default function VideoHeroSection({
   }, []);
 
   // Mounting the iframe IS starting playback — the embed autoplays, and from
-  // then on YouTube owns transport, so there is no pause branch to mirror and
+  // then on Vimeo owns transport, so there is no pause branch to mirror and
   // no play() promise to catch. This is a one-way switch by design.
   const handlePlay = () => setPlaying(true);
 
@@ -102,28 +103,37 @@ export default function VideoHeroSection({
           <div className="vhs__video-glow" />
 
           <div className="vhs__video-card" onClick={playing ? undefined : handlePlay}>
-            {/* Before play: the film's own still, framed by this section's
-                overlay and frosted button. After the click the YouTube player
-                takes the frame and brings its own controls, so the overlay and
-                button below unmount rather than sitting on top of it. */}
-            {playing ? (
+            {/* The still stays mounted for the whole life of the card rather
+                than being swapped out on click. Vimeo's iframe paints nothing
+                until its player document boots, and with the still removed
+                that second or so read as an empty pane with the section's own
+                background and floating blocks showing through it. Leaving the
+                (already-decoded) image underneath means the frame the viewer
+                sees while the embed loads is the film's own — it fades out
+                only once the player has loaded over the top of it. */}
+            <img
+              className={`vhs__video vhs__poster${ready ? " vhs__poster--hidden" : ""}`}
+              src={poster}
+              alt=""
+            />
+
+            {playing && (
               <iframe
-                className="vhs__video"
+                className="vhs__video vhs__frame"
                 src={locatorVideoEmbed()}
                 title={LOCATOR_VIDEO_TITLE}
                 allow={LOCATOR_VIDEO_ALLOW}
                 allowFullScreen
+                onLoad={() => setReady(true)}
                 style={{ border: 0 }}
               />
-            ) : (
-              <img className="vhs__video" src={poster} alt="" />
             )}
 
             {/* Overlay and button belong to the poster state only. Once the
-                embed is mounted they would sit over YouTube's own controls and
+                embed is mounted they would sit over Vimeo's own controls and
                 swallow clicks meant for it, so both leave the tree entirely
                 rather than being hidden with a class. The pause icon went with
-                them — transport is YouTube's job now. */}
+                them — transport is Vimeo's job now. */}
             {!playing && (
               <>
                 {/* Dark cinematic overlay */}
@@ -404,6 +414,10 @@ export default function VideoHeroSection({
           aspect-ratio: 16 / 9;
           border-radius: var(--video-radius);
           overflow: hidden;
+          /* Last line of defence behind the frame: the player's own letterbox
+             colour, so no part of the light section background can show
+             through the embed at any point during its load. */
+          background: #0b1220;
           cursor: pointer;
           opacity: 0;
           transform: translateY(32px) scale(0.97);
@@ -446,6 +460,25 @@ export default function VideoHeroSection({
           object-fit: cover;
           display: block;
           border-radius: var(--video-radius);
+        }
+
+        /* The still is never the click target — the card itself carries the
+           handler — so it stays out of the way of the player's controls even
+           while it is still on screen. The delay on the fade covers the gap
+           between the iframe's load event and Vimeo painting its first frame. */
+        .vhs__poster {
+          z-index: 1;
+          opacity: 1;
+          pointer-events: none;
+          transition: opacity 0.45s ease 0.25s;
+        }
+        .vhs__poster--hidden {
+          opacity: 0;
+        }
+
+        /* The embed, stacked over the still it replaces. */
+        .vhs__frame {
+          z-index: 2;
         }
 
         /* ── Cinematic dark overlay ──────────────────────────────────── */

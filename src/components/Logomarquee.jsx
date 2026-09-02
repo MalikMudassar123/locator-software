@@ -165,6 +165,7 @@ export default function LogoMarquee({ speed1 = 92, speed2 = 102, speed3 = 112 })
       {/* Section heading */}
       <div className="lm__header">
         <p className="lm__eyebrow">Trusted by industry leaders</p>
+        <h2 className="lm__title">The companies you use, use LOCATOR</h2>
       </div>
 
       <div className="lm__inner" ref={innerRef}>
@@ -239,6 +240,15 @@ export default function LogoMarquee({ speed1 = 92, speed2 = 102, speed3 = 112 })
           text-transform: uppercase;
           color: #94a3b8;
           margin: 0;
+        }
+
+        .lm__title {
+          margin: clamp(10px, 1.1vw, 16px) 0 0;
+          font-size: clamp(20px, 2.2vw, 32px);
+          font-weight: 800;
+          line-height: 1.18;
+          letter-spacing: -0.02em;
+          color: #1360ee;
         }
 
         /* Edge fade mask */

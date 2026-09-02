@@ -1,10 +1,10 @@
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
 const STATS = [
-  { value: '10+',      label: 'Years in business',   tone: 'blue'   as const },
-  { value: '1,000+',   label: 'Happy customers',     tone: 'light'  as const },
-  { value: '20,000+',  label: 'Tracked devices',     tone: 'light'  as const },
-  { value: '1,000,000+', label: 'Data points daily', tone: 'orange' as const },
+  { value: '15+',      label: 'Years in business',   tone: 'blue'   as const },
+  { value: '6,000+',   label: 'Happy customers',     tone: 'light'  as const },
+  { value: '60,000+',  label: 'Tracked devices',     tone: 'light'  as const },
+  { value: '25M+', label: 'Data points daily', tone: 'orange' as const },
 ]
 
 const TONE_STYLE = {

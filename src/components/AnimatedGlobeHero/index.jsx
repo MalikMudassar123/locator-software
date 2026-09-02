@@ -35,10 +35,10 @@ const CY = 270;
 const R = 175; // Globe radius
 
 const DEFAULT_STATS = [
-  { value: "10+", label: "Years of industry experience", side: "left", row: "top", icon: "award" },
-  { value: "20,000+", label: "Devices actively tracked", side: "left", row: "bottom", icon: "pin" },
-  { value: "1000+", label: "Happy customers across", side: "right", row: "top", icon: "smile" },
-  { value: "1M+", label: "Data points processed daily", side: "right", row: "bottom", icon: "chart" },
+  { value: "15+", label: "Years of industry experience", side: "left", row: "top", icon: "award" },
+  { value: "60,000+", label: "Devices actively tracked", side: "left", row: "bottom", icon: "pin" },
+  { value: "6000+", label: "Happy customers across", side: "right", row: "top", icon: "smile" },
+  { value: "25M+", label: "Data points processed daily", side: "right", row: "bottom", icon: "chart" },
 ];
 
 /**

@@ -11,9 +11,9 @@ const CHECKLIST = [
 ]
 
 const STATS = [
-  { value: '10',     label: 'Years in Business' },
-  { value: '1,000',  label: 'Happy Customers' },
-  { value: '20,000', label: 'Tracked Devices' },
+  { value: '15',     label: 'Years in Business' },
+  { value: '6,000',  label: 'Happy Customers' },
+  { value: '60,000', label: 'Tracked Devices' },
 ]
 
 function LaptopMock() {

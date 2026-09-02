@@ -35,7 +35,7 @@ const DEFAULT_FEATURES = [
     icon: "pin",
     title: "GPS Asset Tracking",
     description:
-      "LOCATOR Task Manager digitizes field and road operations by dispatching tasks to staff via mobile app, with real-time CRM/ERP integration to eliminate duplicate work and improve efficiency.",
+      "LOCATOR's IoT GPS asset tracking helps UAE businesses monitor cargo containers, refrigerated trailers, yachts, and rental fleets with live location, movement history, and geofence alerts — reducing asset loss and resolving claims faster.",
     preview: "map",
     previewImage: "/real time/map.webp",
     href: "/service/smart-iot#gps-asset-tracking",

@@ -366,8 +366,6 @@ export default function ServiceIndustries() {
   return (
     <>
       <style>{`
-        .ind-strip { overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
-        .ind-strip::-webkit-scrollbar { display: none; }
 
         /* Hidden scroll-snap anchors — one full-viewport stop per industry.
            scroll-snap-stop: always forces the browser to halt on every one. */
@@ -490,42 +488,6 @@ export default function ServiceIndustries() {
           zIndex: 1,
         }}>
 
-          {/* Top bar */}
-          <div style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: '0 clamp(24px,5vw,64px)',
-            height: '54px', flexShrink: 0,
-            borderBottom: '1px solid rgba(0,0,0,.06)',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <span style={{
-                fontSize: 'var(--f-10-5)', fontWeight: 700, letterSpacing: '.1em',
-                color: BLUE, textTransform: 'uppercase',
-              }}>
-                Industries
-              </span>
-              <div className="ind-strip" style={{ display: 'flex', gap: '5px', maxWidth: '210px' }}>
-                {INDUSTRIES.map((_, i) => (
-                  <div key={i} style={{
-                    width: i === displayIdx ? '16px' : '5px',
-                    height: '5px', borderRadius: '999px', flexShrink: 0,
-                    background: i <= displayIdx ? BLUE : 'rgba(15,23,42,.14)',
-                    transition: `width .4s ${EASE}, background .4s ${EASE}`,
-                  }} />
-                ))}
-              </div>
-            </div>
-
-            <div style={{
-              fontSize: 'var(--f-13)', fontWeight: 700,
-              color: '#a1a1a6', letterSpacing: '.04em',
-              fontVariantNumeric: 'tabular-nums',
-            }}>
-              <span style={{ color: BLUE, fontSize: 'var(--f-15)' }}>{ind.num}</span>
-              <span style={{ margin: '0 4px' }}>/</span>
-              {String(N).padStart(2, '0')}
-            </div>
-          </div>
 
           {/* Body */}
           <div

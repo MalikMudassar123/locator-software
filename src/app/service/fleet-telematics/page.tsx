@@ -17,9 +17,9 @@ const ServiceFAQ = dynamic(() => import('@/components/service/ServiceFAQ'))
 
 // Numbers section — same animated globe used on the landing page.
 const SERVICE_STATS = [
-  { value: '10+',    label: 'Years of fleet expertise',  side: 'left',  row: 'top',    icon: 'award' },
-  { value: '5,000+', label: 'Vehicles tracked daily',    side: 'left',  row: 'bottom', icon: 'pin' },
-  { value: '500+',   label: 'UAE businesses served',     side: 'right', row: 'top',    icon: 'smile' },
+  { value: '15+',    label: 'Years of fleet expertise',  side: 'left',  row: 'top',    icon: 'award' },
+  { value: '60,000+', label: 'Vehicles tracked daily',    side: 'left',  row: 'bottom', icon: 'pin' },
+  { value: '6,000+',   label: 'UAE businesses served',     side: 'right', row: 'top',    icon: 'smile' },
   { value: '99.9%',  label: 'Tracking network uptime',   side: 'right', row: 'bottom', icon: 'chart' },
 ]
 

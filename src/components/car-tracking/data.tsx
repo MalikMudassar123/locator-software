@@ -59,9 +59,9 @@ export const OUTCOMES: string[] = [
 ]
 
 export const STATS = [
-  { value: 10, suffix: '+', label: 'Years in business across the UAE' },
-  { value: 1000, suffix: '+', label: 'Happy customers on the platform' },
-  { value: 20000, suffix: '+', label: 'Devices tracked and supported' },
+  { value: 15, suffix: '+', label: 'Years in business across the UAE' },
+  { value: 6000, suffix: '+', label: 'Happy customers on the platform' },
+  { value: 60000, suffix: '+', label: 'Devices tracked and supported' },
 ]
 
 export type Reason = { title: string; desc: string; icon: ReactNode }

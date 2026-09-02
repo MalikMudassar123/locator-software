@@ -7,7 +7,7 @@ const EASE = 'cubic-bezier(.22,.61,.36,1)'
 const SERVICES = [
   {
     num: '01',
-    label: 'Tracking',
+    label: 'GPS Tracking',
     title: 'GPS Vehicle Tracking',
     body: 'Gain real-time visibility of vehicles with accurate location tracking, trip history, geofencing, and intelligent alerts.',
     accent: '#1360ee',
@@ -19,7 +19,7 @@ const SERVICES = [
   },
   {
     num: '02',
-    label: 'Management',
+    label: 'Fleet Telematics',
     title: 'Fleet Management',
     body: 'Improve fleet utilization, operational efficiency, maintenance planning, and overall business performance.',
     accent: '#1360ee',
@@ -31,7 +31,7 @@ const SERVICES = [
   },
   {
     num: '03',
-    label: 'Video',
+    label: 'Video Telematics',
     title: 'AI Dashcams & Video Telematics',
     body: 'Enhance driver safety and operational visibility through AI-powered cameras and intelligent event detection.',
     accent: '#1360ee',
@@ -43,7 +43,7 @@ const SERVICES = [
   },
   {
     num: '04',
-    label: 'Fuel',
+    label: 'Fuel Management',
     title: 'Fuel Monitoring',
     body: 'Track fuel consumption, identify inefficiencies, and reduce operational costs through advanced fuel analytics.',
     accent: '#1360ee',
@@ -55,7 +55,7 @@ const SERVICES = [
   },
   {
     num: '05',
-    label: 'Assets',
+    label: 'Asset Monitoring',
     title: 'Asset Tracking',
     body: 'Monitor valuable assets, equipment, and machinery with reliable real-time location intelligence.',
     accent: '#1360ee',
@@ -67,7 +67,7 @@ const SERVICES = [
   },
   {
     num: '06',
-    label: 'IoT',
+    label: 'Smart IoT',
     title: 'IoT Solutions',
     body: 'Connect vehicles, assets, sensors, and field operations through intelligent IoT technologies.',
     accent: '#1360ee',

@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import Scene1Icons     from './Scene1Icons';
 import Scene4Pricing   from './Scene4Pricing';
@@ -39,7 +39,7 @@ const fleetFeatures = [
       </svg>
     ),
     title: 'Dynamic Fleet Dashboard',
-    desc: 'Central dashboard for trip insights, vehicle status, performance',
+    desc: 'Central dashboard for trip insights, vehicle status, performance overview.',
   },
   {
     // Ringing bell — body, clapper, and a sound arc either side. Replaces a coffee
@@ -88,7 +88,7 @@ const videoFeatures = [
       </svg>
     ),
     title: 'Live HD Video',
-    desc: 'Stream real-time HD road and driver footage to improve driver behavior, retrieve video on-demand, and enforce safer driving across',
+    desc: 'Stream real-time HD road and driver footage to improve driver behavior, retrieve video on-demand, and enforce safer driving across your fleet.',
   },
   {
     icon: (
@@ -108,7 +108,7 @@ const videoFeatures = [
       </svg>
     ),
     title: 'Operational Efficiency',
-    desc: 'AI driver monitoring detects drowsiness and distraction (yawning, eye closure, phone use, looking away), helping managers take',
+    desc: 'AI driver monitoring detects drowsiness and distraction (yawning, eye closure, phone use, looking away), helping managers take proactive safety actions.',
   },
   {
     icon: (
@@ -117,7 +117,7 @@ const videoFeatures = [
       </svg>
     ),
     title: 'Cost Savings',
-    desc: 'Cut costs from accidents, insurance claims, vehicle damage, and fraud disputes with undeniable recorded proof that protects your',
+    desc: 'Cut costs from accidents, insurance claims, vehicle damage, and fraud disputes with undeniable recorded proof that protects your business.',
   },
 ];
 
@@ -145,18 +145,29 @@ const SceneComponents = [Scene1Icons, Scene4Pricing];
 // each resolves to exactly the number it replaces up to ~1550px and grows past it,
 // so the card scales with the column instead of staying 14px wide-screen text.
 function FeatureCard({ icon, title, desc }) {
+  // Collapsed by default (2-line clamp, same look as before) — a click reveals
+  // the rest of the sentence instead of leaving it cut off behind the "…".
+  const [expanded, setExpanded] = useState(false);
+
   return (
-    <div style={{
-      background: '#ffffff',
-      border: '1px solid #e8edf3',
-      borderRadius: 18,
-      padding: 'var(--sc-16) var(--sc-18)',
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 'var(--sc-13)',
-      minHeight: 0,
-    }}>
+    <div
+      onClick={() => setExpanded((v) => !v)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setExpanded((v) => !v); } }}
+      style={{
+        background: '#ffffff',
+        border: '1px solid #e8edf3',
+        borderRadius: 18,
+        padding: 'var(--sc-16) var(--sc-18)',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 'var(--sc-13)',
+        minHeight: 0,
+        cursor: expanded ? 'default' : 'pointer',
+      }}
+    >
       <div style={{
         flexShrink: 0,
         width: 'var(--sc-42)',
@@ -175,10 +186,12 @@ function FeatureCard({ icon, title, desc }) {
           color: '#8090bc',
           lineHeight: 1.5,
           margin: 0,
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
+          ...(expanded ? null : {
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+          }),
         }}>{desc}</p>
       </div>
     </div>

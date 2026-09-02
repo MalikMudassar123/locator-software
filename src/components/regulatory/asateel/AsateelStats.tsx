@@ -29,10 +29,10 @@ const REASONS = [
 ]
 
 const STATS = [
-  { value: '10+', label: 'Years in Business', bg: '#1360ee', color: '#fff' },
-  { value: '1,000+', label: 'Happy Customers', bg: '#fff', color: '#1360ee' },
-  { value: '20,000+', label: 'Tracked Devices', bg: '#fff', color: '#1360ee' },
-  { value: '1,000,000+', label: 'Data points Daily', bg: '#f15a24', color: '#fff' },
+  { value: '15+', label: 'Years in Business', bg: '#1360ee', color: '#fff' },
+  { value: '6,000+', label: 'Happy Customers', bg: '#fff', color: '#1360ee' },
+  { value: '60,000+', label: 'Tracked Devices', bg: '#fff', color: '#1360ee' },
+  { value: '25M+', label: 'Data points Daily', bg: '#f15a24', color: '#fff' },
 ]
 
 export default function AsateelStats() {

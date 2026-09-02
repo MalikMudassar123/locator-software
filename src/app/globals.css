@@ -1538,7 +1538,7 @@ h6 {
      crossfaded. Centred, every one of them sits on the same line. */
   justify-content: center;
   opacity: 0;
-  animation-duration: 12s;
+  animation-duration: 24s;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
 }

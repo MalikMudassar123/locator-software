@@ -28,7 +28,7 @@ export default function AboutPillarNav({ current }: { current: string }) {
       <section style={{ padding: '0 28px clamp(56px,7vw,88px)', background: '#f7f9fc' }}>
         <div style={{ maxWidth: 'var(--w-1120)', margin: '0 auto' }}>
           <p data-reveal style={{ margin: '0 0 20px', fontSize: 'var(--f-12)', fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: '#9a9aa2' }}>
-            EEEEEEExplore more about Locator
+            Explore more about Locator
           </p>
           <div className="apn-grid">
             {others.map((p, i) => (

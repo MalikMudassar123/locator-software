@@ -6,10 +6,10 @@ import { Briefcase, Users, Truck, Database, type LucideIcon } from 'lucide-react
 const EASE = 'cubic-bezier(.22,.61,.36,1)'
 
 const STATS: { target: number; suffix: string; label: string; desc: string; icon: LucideIcon }[] = [
-  { target: 10, suffix: '+', label: 'Years of Industry Experience', desc: 'Delivering trusted fleet telematics and IoT solutions.', icon: Briefcase },
-  { target: 1000, suffix: '+', label: 'Businesses Empowered', desc: 'Helping organizations optimize fleet operations across the UAE.', icon: Users },
-  { target: 20000, suffix: '+', label: 'Connected Vehicles & Assets', desc: 'Monitored through our intelligent GPS and IoT platform.', icon: Truck },
-  { target: 1, suffix: 'M+', label: 'Data Points Processed Daily', desc: 'Turning real-time operational data into actionable insights.', icon: Database },
+  { target: 15, suffix: '+', label: 'Years of Industry Experience', desc: 'Delivering trusted fleet telematics and IoT solutions.', icon: Briefcase },
+  { target: 6000, suffix: '+', label: 'Businesses Empowered', desc: 'Helping organizations optimize fleet operations across the UAE.', icon: Users },
+  { target: 60000, suffix: '+', label: 'Connected Vehicles & Assets', desc: 'Monitored through our intelligent GPS and IoT platform.', icon: Truck },
+  { target: 25, suffix: 'M+', label: 'Data Points Processed Daily', desc: 'Turning real-time operational data into actionable insights.', icon: Database },
 ]
 
 function formatValue(n: number, target: number) {

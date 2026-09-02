@@ -73,10 +73,12 @@ export default function ModulesSection() {
         .pm-text { text-align: left; }
         /* Small kicker label — the heading below carries the visual weight, not this. */
         .pm-tag {
-          display: block;
+          display: inline-flex; align-items: center; gap: 10px;
           font-size: var(--f-12); font-weight: 600; letter-spacing: .14em;
           color: #1360ee; text-transform: uppercase; margin-bottom: 10px;
         }
+        .pm-tag-rule { width: 22px; height: 1px; background: currentColor; opacity: .38; }
+        .pm-tag-num { font-weight: 700; letter-spacing: .1em; font-variant-numeric: tabular-nums; }
         .pm-h2 { margin: 0; font-size: max(clamp(27px,3.6vw,40px), min(2.778vw, 58px)); font-weight: 600; line-height: 1.15; letter-spacing: -.02em; color: rgb(72, 75, 76); }
         .pm-lead { margin: 20px 0 0; font-size: max(clamp(14px,1.45vw,16px), min(1.111vw, 23.2px)); font-weight: 400; line-height: 1.7; color: #6e6e73; max-width: 46ch; }
         .pm-suited-label { margin: 26px 0 0; font-size: var(--f-11); font-weight: 500; letter-spacing: .08em; color: #8a8a8f; text-transform: uppercase; }
@@ -104,7 +106,11 @@ export default function ModulesSection() {
             <section key={mod.h2} id={mod.slug} className="pm-sec">
               <div className={`pm-grid${flip ? ' flip' : ''}`}>
                 <div className="pm-text" data-reveal={flip ? 'right' : 'left'}>
-                  <span className="pm-tag">MODULE</span>
+                  <span className="pm-tag">
+                    MODULE
+                    <i className="pm-tag-rule" aria-hidden="true" />
+                    <b className="pm-tag-num">{String(idx + 1).padStart(2, '0')}</b>
+                  </span>
                   <h2 className="pm-h2">{mod.h2} {mod.h2Accent}</h2>
                   {mod.leads.map((p, i) => <p key={i} className="pm-lead">{p}</p>)}
                   <p className="pm-suited-label">{mod.suitedLabel}</p>

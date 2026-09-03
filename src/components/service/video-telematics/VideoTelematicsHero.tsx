@@ -117,10 +117,13 @@ export default function VideoTelematicsHero() {
               <h1 className="vt-copy-glow" style={{ fontSize: 'max(clamp(21px,2.5vw,28px), min(1.944vw, 40.6px))', fontWeight: 800, lineHeight: 1.18, letterSpacing: '-.015em', color: '#1d1d1f', maxWidth: '24ch', margin: '0 auto' }}>
                 AI-Powered Fleet Dash Cameras &amp; MDVR Safety Systems
               </h1>
-              <p className="vt-copy-glow" style={{ maxWidth: '480px', margin: 'clamp(6px,1vh,10px) auto 0', fontSize: 'max(clamp(13px,1.35vw,16px), min(1.111vw, 23.2px))', lineHeight: 1.5, color: '#3a3a3c' }}>
+              {/* 720px (not 480px) is what lets this sentence set as two lines
+                  rather than three at desktop widths, and balance keeps the two
+                  close to equal instead of a long line over a stub. */}
+              <p className="vt-copy-glow" style={{ maxWidth: '720px', textWrap: 'balance', margin: 'clamp(6px,1vh,10px) auto 0', fontSize: 'max(clamp(13px,1.35vw,16px), min(1.111vw, 23.2px))', lineHeight: 1.5, color: '#3a3a3c' }}>
                 Real-time driver monitoring, cargo surveillance, and multi-camera recording for trucks, taxis, buses, and commercial fleets.
               </p>
-              <div className="vt-cta-row" style={{ marginTop: 'clamp(10px,1.6vh,18px)' }}>
+              <div className="vt-cta-row" style={{ marginTop: 'clamp(18px,2.8vh,30px)' }}>
                 <Link href="/get-a-quote" className="vt-btn vt-btn-primary">Get a free quote</Link>
                 <Link href="/get-a-free-demo" className="vt-btn vt-btn-outline">Get a demo</Link>
               </div>

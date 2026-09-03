@@ -1,8 +1,18 @@
 import type { Metadata } from 'next'
+import dynamic from 'next/dynamic'
 import ScrollReveal from '@/components/software/ScrollReveal'
 import IndustriesHero from '@/components/industries/IndustriesHero'
 import IndustriesGrid from '@/components/industries/IndustriesGrid'
+import ServiceWhyChoose from '@/components/service/ServiceWhyChoose'
+import WhoWeAreNumbers from '@/components/about/who-we-are/WhoWeAreNumbers'
+import SoftwareBlog from '@/components/software/SoftwareBlog'
+import SoftwareCTA from '@/components/software/SoftwareCTA'
 import Footer from '@/components/layouts/Footer'
+
+// Same trailing sections the industry detail pages already use (Why Locator,
+// Numbers, Blog, FAQ, CTA) — reused here rather than duplicated, so the
+// listing page isn't just a grid dropping straight into the footer.
+const ServiceFAQ = dynamic(() => import('@/components/service/ServiceFAQ'))
 
 export const metadata: Metadata = {
   title: 'Industries We Serve',
@@ -23,6 +33,11 @@ export default function IndustriesPage() {
       <ScrollReveal />
       <IndustriesHero />
       <IndustriesGrid />
+      <ServiceWhyChoose />
+      <WhoWeAreNumbers />
+      <SoftwareBlog tag={['Fleet Management', 'Fleet Tracking', 'GPS Tracking']} />
+      <ServiceFAQ />
+      <SoftwareCTA />
       <Footer />
     </main>
   )

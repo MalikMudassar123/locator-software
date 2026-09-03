@@ -508,6 +508,16 @@ export default function Navbar() {
                   </span>
                 </span>
               </span>
+              {/* Arrow from the reference. Outside the roll window on purpose —
+                  it sits still while the label rolls. */}
+              <svg
+                aria-hidden="true"
+                width="1.05em" height="1.05em" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
+                style={{ marginLeft: '0.55em', flexShrink: 0 }}
+              >
+                <path d="M4.5 12h14M13 6l5.5 6-5.5 6" />
+              </svg>
               <span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>
                 Get a Quote
               </span>

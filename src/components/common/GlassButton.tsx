@@ -38,7 +38,7 @@ export default function GlassButton({
   children = 'Get a Quote',
   className = '',
   sheenSpeed = '5.6s',
-  traceSpeed = '4.8s',
+  traceSpeed = '3.6s',
   beatSpeed = '2.4s',
   intensity = 1,
   ...props
@@ -54,10 +54,6 @@ export default function GlassButton({
       } as React.CSSProperties}
       {...props}
     >
-      {/* Under the label deliberately — a gleam that crosses the type itself is
-          what makes a button read as a skeleton loader. The two rim hairlines
-          are the button's own ::before/::after and sit above this. */}
-      <span className="glass-btn__sheen" aria-hidden="true" />
       {/* Light travelling the rim. A real element rather than a third pseudo:
           ::before is the top-left specular and ::after is the cyan filament,
           both already spoken for. The span carries the band mask; the child is

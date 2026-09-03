@@ -3451,7 +3451,7 @@ h6 {
   /* Not a factor or multiple of --ai-sheen-speed. Share one and the rim lap and
      the face sweep sync up within a few cycles, and two lights arriving together
      on a beat is the difference between a lit object and a blinking one. */
-  --ai-trace-speed: 4.8s;
+  --ai-trace-speed: 3.6s;
   /* Now that the pulse runs continuously the period has to stretch a little:
      the same 2.2s felt brisk with a pause in it and restless without one. 2.4s
      is the width where the rise still has some snap but the button never looks
@@ -3536,12 +3536,10 @@ h6 {
        a domed button look like two colours stacked. */
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.42) 0%,
-      rgba(255, 255, 255, 0.26) 20%,
-      rgba(255, 255, 255, 0.09) 43%,
+      rgba(255, 255, 255, 0) 0%,
       rgba(255, 255, 255, 0) 49%,
-      rgba(4, 18, 74, 0.05) 76%,
-      rgba(4, 18, 74, 0.12) 100%
+      rgba(4, 18, 74, 0.04) 76%,
+      rgba(4, 18, 74, 0.11) 100%
     ),
     /* Face colour from commit a376d0a — same three hues, same 135deg, now down
        to roughly half opacity. This is the number that decides whether the thing
@@ -3552,9 +3550,9 @@ h6 {
        #60a5fa would go washy if it thinned as far. */
     linear-gradient(
       135deg,
-      rgba(37, 99, 235, 0.26) 0%,
-      rgba(59, 130, 246, 0.29) 55%,
-      rgba(96, 165, 250, 0.32) 100%
+      rgba(37, 99, 235, 0.03) 0%,
+      rgba(59, 130, 246, 0.035) 55%,
+      rgba(96, 165, 250, 0.05) 100%
     );
 
   /* The other half of the glass, and it has to scale WITH the alpha. A thin tint
@@ -3572,8 +3570,8 @@ h6 {
      back the contrast that the transparency spent, without putting any opacity
      back into the face. Lower it before raising the alpha if the text ever
      reads thin; that keeps the glass and fixes the legibility. */
-  backdrop-filter: blur(22px) saturate(1.85) brightness(0.92);
-  -webkit-backdrop-filter: blur(22px) saturate(1.85) brightness(0.92);
+  backdrop-filter: blur(11px) saturate(1.45) brightness(0.89);
+  -webkit-backdrop-filter: blur(11px) saturate(1.45) brightness(0.89);
 
   /* EVERY LENGTH BELOW IS SCALED FOR A ~48px BUTTON, not for the reference.
      This is the thing that was actually washing the face out. The reference
@@ -3582,21 +3580,16 @@ h6 {
      the gradient as a pale haze. Read the reference's effects as FRACTIONS of
      its height and they come out roughly a quarter of what was here. */
   box-shadow:
-    /* All-round haze. The reference glows into the page on every side, not only
-       under the light source — a lit pane spills everywhere and is merely
-       BRIGHTEST where the source is. The directional pair below still does the
-       brightest-at-the-right-cap job; this is the ambient bed under it. */
-    0 0 16px rgba(90, 195, 255, calc(0.32 * var(--ai-intensity))),
-    /* Cyan bloom, offset down-right — offsetting rather than spreading evenly is
-       what puts the light source at the right cap, as in the reference. */
-    7px 5px 18px -6px rgba(34, 205, 248, calc(0.9 * var(--ai-intensity))),
-    3px 2px 8px -2px rgba(56, 211, 248, calc(0.7 * var(--ai-intensity))),
+    /* No glow layers here at all. Every attempt to put the shine in a shadow
+       ends as a halo on the PAGE around the button; the shine belongs on the
+       border, which is ::after's job below. What is left in this list is only
+       depth (the two dark drops) and boundary (the hairlines). */
     /* Two shadows under the pill, not one. A single soft shadow reads as a
        sticker hovering; the tight dark one directly beneath is what puts the
        object ON a surface, and the wide dim one is the ambient occlusion around
        it. Depth comes from having both scales present, not from more blur. */
-    0 2px 3px -1px rgba(12, 34, 110, 0.35),
-    0 7px 16px -7px rgba(18, 52, 150, 0.6),
+    0 2px 3px -1px rgba(12, 34, 110, 0.22),
+    0 7px 16px -7px rgba(18, 52, 150, 0.4),
     /* Doming, the inset half. VERTICAL, not diagonal: the light is above, so the
        crown is lit across its whole width and the sill is shaded across its
        whole width. The previous pair was offset to the corners, which is why the
@@ -3610,20 +3603,20 @@ h6 {
        CONTINUOUS — the ::before and ::after above are partial specular
        highlights, which is a different thing and cannot describe a pane's
        boundary on their own. */
-    0 0 0 1px rgba(170, 232, 255, 0.46),
+    0 0 0 1px rgba(170, 232, 255, 0.58),
     /* THE GLASS EDGE, in two steps. This pairing is what sells thickness in the
        reference: a bright line hard against the boundary, then a much fainter
        band a couple of pixels inside it. One line alone gives a sticker with a
        stroke; the second line is the far face of the pane seen through the near
        one, and the eye reads the gap between them as depth.
        Order matters — the 1px is listed first so it paints on top of the 3px. */
-    inset 0 0 0 1px rgba(255, 255, 255, 0.58),
-    inset 0 0 0 3px rgba(255, 255, 255, 0.12),
-    /* Light caught in the body of the pane, just inside the edge. Carries more
-       of the button now: with the fill this thin, the edge and the light in it
-       ARE the object — the tint is barely doing any work. */
-    inset 0 0 14px -2px rgba(180, 230, 255, 0.3),
-    inset 0 4px 7px -4px rgba(255, 255, 255, 0.85),
+    inset 0 0 0 1px rgba(186, 238, 255, 0.62),
+    /* The bottom-left arc of the rim, lit. An inset offset RIGHT and UP puts
+       its band against the left and bottom inner edges; the heavy negative
+       spread keeps it hard against the boundary so it stays a shine along the
+       border and never bleeds onto the face. */
+    inset 7px -7px 7px -8px rgba(240, 253, 255, 0.95),
+    inset 4px -4px 12px -6px rgba(150, 230, 255, 0.55),
     /* Kept lightening as the tint thinned. Over a near-clear fill a heavy navy
        inset stops reading as the underside of a curve and starts reading as
        dirt trapped in it. */
@@ -3724,7 +3717,7 @@ h6 {
      white blob rather than as a lit edge. */
   padding: 1.5px;
   background: radial-gradient(
-    ellipse 52% 210% at 100% 66%,
+    ellipse 46% 190% at 3% 78%,
     /* A white core, not a cyan one. The reference's filament is blown out to
        near-white where it crosses the cap and only resolves to cyan as it falls
        away along the bottom edge — a cyan-all-through line reads as a coloured
@@ -3746,9 +3739,8 @@ h6 {
      It is kept narrower and dimmer than the mid pass for that reason — the wide
      haze belongs on the page, where the box-shadow puts it. */
   filter:
-    drop-shadow(0 0 1.5px rgba(190, 245, 255, calc(0.95 * var(--ai-intensity))))
-    drop-shadow(0 0 4px rgba(56, 211, 248, calc(0.85 * var(--ai-intensity))))
-    drop-shadow(0 0 8px rgba(56, 211, 248, calc(0.38 * var(--ai-intensity))));
+    drop-shadow(0 0 1.5px rgba(210, 250, 255, calc(1 * var(--ai-intensity))))
+    drop-shadow(0 0 4px rgba(56, 211, 248, calc(0.9 * var(--ai-intensity))));
 }
 
 /* Light travelling the rim.
@@ -3878,6 +3870,41 @@ h6 {
       drop-shadow(0 0 5px rgba(120, 215, 250, calc(0.4 * var(--ai-intensity))));
     animation: glassBtnTraceRun var(--ai-trace-speed) linear infinite;
   }
+
+  /* A second streak, half a lap behind, so there is light moving at two points
+     on the rim instead of one. A pseudo-element rather than another span: its
+     reference box for offset-path is .glass-btn__trace's border box, which is
+     inset:0 on the button — the same path the head runs, for free.
+
+     Offset by a NEGATIVE delay of half the period rather than by shifting the
+     keyframes past 100%: offset-distance percentages clamp, so a 50%->150%
+     animation would stall at the end of the lap. A negative delay simply starts
+     the same animation already half-run.
+
+     Dimmer and shorter than the head — two lights of equal weight read as a
+     border switching on and off, not as reflections travelling. */
+  .glass-btn__trace::before {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 8px;
+    offset-path: border-box;
+    offset-rotate: auto;
+    offset-anchor: 50% 50%;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(160, 225, 255, 0.12) 44%,
+      rgba(215, 246, 255, 0.5) 80%,
+      rgba(255, 255, 255, 0.88) 93%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    filter:
+      blur(0.6px)
+      drop-shadow(0 0 2px rgba(190, 235, 255, calc(0.55 * var(--ai-intensity))));
+    animation: glassBtnTraceRun var(--ai-trace-speed) linear infinite;
+    animation-delay: calc(var(--ai-trace-speed) / -2);
+  }
 }
 
 @keyframes glassBtnTraceRun {
@@ -3885,53 +3912,19 @@ h6 {
   to   { offset-distance: 100%; }
 }
 
-/* Specular sweep. Not in the reference, which is a still, but requested, and it
-   is the only motion on the control. It changes nothing about the resting
-   appearance: ~2.4s of travel against ~3.2s of stillness, so the button is a
-   static reproduction of the reference for most of every cycle. Delete this
-   rule and the span in GlassButton.tsx to remove it entirely. */
-.glass-btn__sheen {
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  width: 42%;
-  height: 100%;
-  pointer-events: none;
-  opacity: 0;
-  background: linear-gradient(
-    100deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.08) 28%,
-    rgba(255, 255, 255, 0.3) 44%,
-    rgba(255, 255, 255, 0.78) 51%,
-    rgba(255, 255, 255, 0.26) 58%,
-    rgba(255, 255, 255, 0.06) 76%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  filter: blur(0.5px);
-  /* Sweep and fade split across two animations on one period. The fade needs
-     hold points partway through; on a shared timeline those would chop the
-     travel into three separately-eased segments and turn a glide into a
-     stutter. Split, each interpolates once. */
-  animation:
-    glassBtnSheenSweep var(--ai-sheen-speed) cubic-bezier(0.45, 0, 0.25, 1) infinite,
-    glassBtnSheenFade var(--ai-sheen-speed) ease-in-out infinite;
+/* The rim lights pick up under the pointer — the one interactive tell on a
+   button whose resting state is otherwise a still.
+
+   animation-duration on the CHILDREN, not --ai-trace-speed on :hover: that
+   variable is written as an inline style by GlassButton.tsx, and an inline
+   custom property beats any stylesheet rule, hover included. The streaks carry
+   no inline style, so setting their duration directly is the one place this
+   can be done without !important. */
+.glass-btn:hover .glass-btn__trace-head,
+.glass-btn:hover .glass-btn__trace::before {
+  animation-duration: 1.9s;
 }
 
-/* Starts and ends fully clear of the pill: the band is 42% wide and skewed, so
-   it has to clear its own corners before the fade lets go, or the sweep appears
-   to begin mid-face. */
-@keyframes glassBtnSheenSweep {
-  0%, 56% { transform: translateX(-180%) skewX(-18deg); }
-  100%    { transform: translateX(420%) skewX(-18deg); }
-}
-@keyframes glassBtnSheenFade {
-  0%, 56% { opacity: 0; }
-  66%     { opacity: var(--ai-intensity); }
-  86%     { opacity: var(--ai-intensity); }
-  100%    { opacity: 0; }
-}
 
 .glass-btn__text {
   position: relative;
@@ -3976,29 +3969,23 @@ h6 {
    differ from the resting state. */
 .glass-btn:hover {
   box-shadow:
-    0 0 22px rgba(90, 195, 255, calc(0.42 * var(--ai-intensity))),
-    12px 9px 28px -7px rgba(34, 205, 248, calc(1 * var(--ai-intensity))),
-    4px 4px 11px -3px rgba(34, 205, 248, calc(0.7 * var(--ai-intensity))),
-    0 0 0 1px rgba(170, 232, 255, 0.44),
+    0 2px 3px -1px rgba(12, 34, 110, 0.35),
     0 12px 26px -12px rgba(18, 52, 150, 0.62),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.46),
-    inset 0 0 0 3px rgba(255, 255, 255, 0.09),
-    inset 0 0 12px -2px rgba(180, 230, 255, 0.28),
-    inset 0 4px 7px -4px rgba(255, 255, 255, 0.8),
-    inset 0 -5px 9px -5px rgba(4, 16, 70, 0.34),
+    0 0 0 1px rgba(170, 232, 255, 0.66),
+    inset 0 0 0 1px rgba(186, 238, 255, 0.7),
+    inset 7px -7px 7px -8px rgba(240, 253, 255, 1),
+    inset 4px -4px 12px -6px rgba(150, 230, 255, 0.7),
+    inset 0 -5px 9px -5px rgba(4, 16, 70, 0.24),
     inset -3px -3px 10px -9px rgba(6, 22, 88, 0.32);
 }
 .glass-btn:active {
   box-shadow:
-    0 0 12px rgba(90, 195, 255, calc(0.26 * var(--ai-intensity))),
-    6px 5px 16px -8px rgba(34, 205, 248, calc(0.7 * var(--ai-intensity))),
-    0 0 0 1px rgba(170, 232, 255, 0.3),
     0 4px 12px -8px rgba(18, 52, 150, 0.5),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.34),
-    inset 0 0 0 3px rgba(255, 255, 255, 0.06),
-    inset 0 0 8px -2px rgba(180, 230, 255, 0.18),
-    inset 0 3px 6px -4px rgba(255, 255, 255, 0.6),
-    inset 0 -5px 9px -5px rgba(4, 16, 70, 0.34),
+    0 0 0 1px rgba(170, 232, 255, 0.42),
+    inset 0 0 0 1px rgba(186, 238, 255, 0.46),
+    inset 7px -7px 7px -8px rgba(240, 253, 255, 0.7),
+    inset 4px -4px 12px -6px rgba(150, 230, 255, 0.4),
+    inset 0 -5px 9px -5px rgba(4, 16, 70, 0.24),
     inset -3px -3px 10px -9px rgba(6, 22, 88, 0.32);
 }
 
@@ -4041,25 +4028,70 @@ h6 {
    conventional drop shadow instead of the ambient bed. The sheen sweep and the
    two rim hairlines are untouched: they are painted on the button's own box,
    not the backdrop, so they read the same regardless of what is behind it. */
+/* On the white bar the glass skin has nothing to be glass ABOUT: there is no
+   hero behind it to show through, and the backdrop-filter's brightness(0.89)
+   was darkening plain white into grey under the pill. So this variant is not a
+   dimmer glass — it is a different material: a solid brand-blue pill.
+
+   Ramp runs light at the top-left to deep at the bottom-right, and it starts at
+   #2b7bff rather than #1360ee. Beginning ON the brand colour left nowhere for
+   the gradient to go but darker, which is what made it read heavy; starting a
+   step above it puts the brand blue in the middle of the ramp where the eye
+   reads it as the button's colour, and the ends become shading. */
 .glass-btn--onlight {
-  background: linear-gradient(135deg, #1360ee 0%, #0d4fd4 100%);
+  background: linear-gradient(135deg, #2f80ff 0%, #1a68f0 48%, #0f57e0 100%);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
+  /* Two scales and nothing wider. The old 24px spread at 0.45 was a coloured
+     haze sitting on the white bar around the button — on a light ground a big
+     soft glow reads as smudge, where on the hero it read as light. A tight
+     contact shadow plus one short lift is what a solid control needs. */
   box-shadow:
-    0 10px 24px -8px rgba(19, 96, 238, 0.45),
-    0 2px 6px -2px rgba(19, 96, 238, 0.3),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.35);
+    0 1px 2px rgba(13, 42, 120, 0.16),
+    0 5px 14px -6px rgba(19, 96, 238, 0.5),
+    /* Top edge catching the room light, and a hairline round the whole pill so
+       the shape stays crisp against white. Both are thin on purpose. */
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  transition: box-shadow 0.28s cubic-bezier(0.22, 0.61, 0.36, 1),
+              background 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .glass-btn--onlight:hover {
+  background: linear-gradient(135deg, #3a89ff 0%, #2170f5 48%, #1360ee 100%);
   box-shadow:
-    0 14px 30px -8px rgba(19, 96, 238, 0.55),
-    0 3px 8px -2px rgba(19, 96, 238, 0.35),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+    0 1px 2px rgba(13, 42, 120, 0.18),
+    0 9px 20px -6px rgba(19, 96, 238, 0.55),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.36),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.16);
 }
 .glass-btn--onlight:active {
   box-shadow:
-    0 6px 16px -8px rgba(19, 96, 238, 0.4),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.25);
+    0 1px 2px rgba(13, 42, 120, 0.2),
+    0 3px 8px -5px rgba(19, 96, 238, 0.45),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* The glass rims are wrong on an opaque pill — a cyan filament and a white
+   specular describe a transparent pane catching a light, and on a solid button
+   they read as fringing on the edge. The travelling streaks stay: a soft
+   highlight crossing the rim is the one bit of life this variant keeps, and it
+   is dimmed here because it is white on blue rather than white on a photo. */
+.glass-btn--onlight::before,
+.glass-btn--onlight::after {
+  opacity: 0;
+}
+.glass-btn--onlight .glass-btn__trace-head,
+.glass-btn--onlight .glass-btn__trace::before {
+  opacity: 0.55;
+  filter: blur(0.6px);
+}
+
+/* No breathing on the white bar either. The pulse is legible over the hero,
+   where the button is one bright object on a photograph; against a flat white
+   toolbar the same 3.2% scale reads as a control that will not settle. */
+.glass-btn--onlight {
+  animation: none;
 }
 
 /* Full-width variant for the mobile drawer. Same skin, same radius, same type:
@@ -4079,17 +4111,12 @@ h6 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  /* Nothing to pause: the button IS the reference when the sweep is not
-     running, so it is removed rather than frozen mid-face as a stripe. */
-  .glass-btn__sheen {
-    animation: none;
-    opacity: 0;
-  }
   /* Same reasoning for the rim lap — a blade stopped mid-circuit is a bright
      arc welded to one side of the pill, which is worse than no effect at all.
      The two static rims are the resting state. */
   .glass-btn__trace,
-  .glass-btn__trace-head {
+  .glass-btn__trace-head,
+  .glass-btn__trace::before {
     animation: none;
     opacity: 0;
   }

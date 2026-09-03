@@ -45,7 +45,7 @@ const ALERTS: Alert[] = [
     id: 'nodding',
     num: '04',
     title: 'Nodding\nOff',
-    image: '/service_page/ai-dashcam-alerts-dashboard.webp',
+    image: '/service_page/ai-alert-nodding-off.png',
     imageW: 1672,
     imageH: 941,
   },

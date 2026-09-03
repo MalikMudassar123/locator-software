@@ -18,18 +18,23 @@ const fleetFeatures = [
     desc: 'Track vehicles live, monitor drivers, improve road team',
   },
   {
-    // Ringing bell — the bell itself plus radiating lines, so it reads as an alert
-    // going off rather than as a static notification glyph.
+    // Clock with a bell badged onto it: the clock is the idle DURATION the card
+    // is about, the bell is what that duration triggers. Two objects rather than
+    // one alarm clock, because an alarm clock's ears read as decoration at 22px
+    // while a whole bell is unmistakable.
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
         stroke="#374151" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        {/* Group is scaled, so stroke-width is pre-divided to land back on 1.5. */}
-        <g transform="translate(4.05 4.5) scale(0.66)">
-          <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" strokeWidth="2.27"/>
-          <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" strokeWidth="2.27"/>
+        {/* Clock, up and to the left to leave the badge corner clear */}
+        <circle cx="10" cy="9.7" r="6.9"/>
+        <path d="M10 5.9v4l2.7 1.7"/>
+        {/* Bell, filled with the icon tile's own colour so it cuts out of the
+            clock behind it instead of tangling with its outline. Group is
+            scaled, so stroke-width is pre-divided to land back on 1.5. */}
+        <g transform="translate(11.9 11.6) scale(0.5)" fill="#f1f5f9">
+          <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9z" strokeWidth="3"/>
+          <path d="M10.3 20.6a1.94 1.94 0 0 0 3.4 0" strokeWidth="3" fill="none"/>
         </g>
-        {/* Sound radiating either side */}
-        <path d="M4.9 8.7 2.9 7.9M5.4 6.3 3.9 4.8M19.1 8.7l2-.8M18.6 6.3l1.5-1.5"/>
       </svg>
     ),
     title: 'Instant Idle Alerts',
@@ -73,16 +78,31 @@ const fleetFeatures = [
     desc: 'Get unauthorized movement alerts. Secure your fleet after hours.',
   },
   {
+    // Proper map pins: a solid teardrop with a hole punched through it, which is
+    // the shape everyone reads as "location". The hole is a second subpath on the
+    // SAME path with fill-rule evenodd — a separate white circle on top would only
+    // work over a known background, and these tiles are not always the same colour.
+    // Both pins are 8px across on the 24px grid so the hole survives the downscale
+    // to 22px; the outlined versions tried earlier did not.
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        {/* Route: right, up, right — rounded corners, so it turns like a road */}
+        <path d="M5.9 20.5h4.6q3.4 0 3.4-3.4v-2.7q0-3.4 3.4-3.4h0.8"
+          stroke="#374151" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
         {/* Trip start */}
-        <path d="M8.4 15.2c0 2.2-2.9 4.4-2.9 4.4s-2.9-2.2-2.9-4.4a2.9 2.9 0 0 1 5.8 0z" stroke="#374151" strokeWidth="1.5" strokeLinejoin="round"/>
-        <circle cx="5.5" cy="15.2" r="1.05" stroke="#374151" strokeWidth="1.3"/>
-        {/* Route travelled */}
-        <path d="M5.5 19.6h4.6q4.5 0 4.5-4.5v-1.8" stroke="#374151" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path
+          fillRule="evenodd"
+          fill="#374151"
+          d="M9.9 14.4c0 3-4 6.1-4 6.1s-4-3.1-4-6.1a4 4 0 0 1 8 0z
+             M5.9 12.7a1.7 1.7 0 1 0 0 3.4 1.7 1.7 0 1 0 0-3.4z"
+        />
         {/* Destination */}
-        <path d="M18.5 7.4c0 2.9-3.9 5.9-3.9 5.9s-3.9-3-3.9-5.9a3.9 3.9 0 0 1 7.8 0z" stroke="#374151" strokeWidth="1.5" strokeLinejoin="round"/>
-        <circle cx="14.6" cy="7.4" r="1.45" stroke="#374151" strokeWidth="1.4"/>
+        <path
+          fillRule="evenodd"
+          fill="#374151"
+          d="M22.1 4.9c0 3-4 6.1-4 6.1s-4-3.1-4-6.1a4 4 0 0 1 8 0z
+             M18.1 3.2a1.7 1.7 0 1 0 0 3.4 1.7 1.7 0 1 0 0-3.4z"
+        />
       </svg>
     ),
     title: 'Daily Route History',

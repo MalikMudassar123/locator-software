@@ -60,7 +60,7 @@ export default function VideoTelematicsHero() {
            a --w-* token. The banner's fanned thumbnails crowd in from both
            edges, and at container width the headline ran right into them; 760px
            keeps every line inside the clear centre of the photo. */
-        .vt-copy { text-align: center; max-width: 760px; width: 100%; margin-top: clamp(28px, 3.2vh, 48px); }
+        .vt-copy { text-align: center; max-width: 760px; width: 100%; margin-top: clamp(56px, 7vh, 104px); }
         .vt-copy-glow {
           text-shadow:
             0 1px 2px #fff, 0 0 8px #fff, 0 0 16px #fff,
@@ -70,7 +70,7 @@ export default function VideoTelematicsHero() {
            on a short, narrow viewport it's enough to tuck the heading under
            the fixed navbar, so mobile gets its own clear (positive) offset. */
         @media (max-width: 640px) {
-          .vt-copy { margin-top: clamp(18px, 4vh, 32px); }
+          .vt-copy { margin-top: clamp(40px, 8vh, 64px); }
         }
         @media (prefers-reduced-motion: no-preference) {
           .vt-copy { animation: vtHeroRise .9s cubic-bezier(.22,.61,.36,1) .05s both; }
@@ -99,7 +99,7 @@ export default function VideoTelematicsHero() {
         <div className="vt-pin">
           <div className="vt-hero-bg" aria-hidden="true">
             <Image
-              src="/service_page/fleet-dashcam-multi-camera-views-hero-bg.webp"
+              src="/service_page/dashcam-footage-frames-hero-bg.webp"
               alt=""
               fill
               priority

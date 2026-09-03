@@ -2106,7 +2106,7 @@ export default function AnimatedGlobeHero({
           pointer-events: auto;
           /* No overflow:hidden here — it used to contain the shimmer sweep, but it
              also sliced the edge glow off flat at the bottom border. The sweep
-             clips itself instead (see .stat-card__shimmer). */
+             is clipped by its own frame instead (see .stat-card__shimmer). */
         }
         .globe-hero.is-active .stat-card {
           animation:
@@ -2189,8 +2189,27 @@ export default function AnimatedGlobeHero({
           margin-top: 4px;
           letter-spacing: 0.01em;
         }
+        /* The sweep needs a frame that clips it and a band that moves inside that
+           frame — they cannot be the same element. clip-path is applied in the
+           element's own coordinate space and is then carried along by transform,
+           so a clipped element that translates takes its clip with it: the band
+           slid out past the card edge still fully visible, which is exactly what
+           was leaking either side of every card.
+
+           So the span is now the frame — inset:0, overflow:hidden, the card's own
+           radius — and its ::before is the band that travels. Clipping the frame
+           is safe where clipping .stat-card was not: the frame carries no glow to
+           slice off, which is why overflow:hidden was removed from the card. */
         .stat-card__shimmer {
-          clip-path: inset(0 round 18px);
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+          border-radius: 18px;
+          pointer-events: none;
+          z-index: 1;
+        }
+        .stat-card__shimmer::before {
+          content: '';
           position: absolute;
           inset: 0;
           background: linear-gradient(
@@ -2200,10 +2219,8 @@ export default function AnimatedGlobeHero({
             transparent 65%
           );
           transform: translateX(-100%);
-          pointer-events: none;
-          z-index: 1;
         }
-        .globe-hero.is-active .stat-card__shimmer {
+        .globe-hero.is-active .stat-card__shimmer::before {
           animation: shimmerSweep 9s ease-in-out calc(var(--enter-delay) + 2s) infinite;
         }
         /* cardEnter / cardFloat / shimmerSweep keyframes live in globals.css */
@@ -2219,6 +2236,7 @@ export default function AnimatedGlobeHero({
         /* ----- Responsive ----- */
         @media (max-width: 1024px) {
           .stat-card { min-width: 140px; padding: 8px 11px; border-radius: 12px; }
+          .stat-card__shimmer { border-radius: 12px; }
           .stat-card--left  { left: clamp(3%, 7vw, 10%); }
           .stat-card--right { right: clamp(3%, 7vw, 10%); }
           .stat-card--top.stat-card--left     { top: 37%; }
@@ -2229,6 +2247,7 @@ export default function AnimatedGlobeHero({
         @media (max-width: 768px) {
           .globe-hero { aspect-ratio: 4 / 3; }
           .stat-card { min-width: 100px; padding: 7px 10px; border-radius: 10px; }
+          .stat-card__shimmer { border-radius: 10px; }
           .stat-card__value { font-size: var(--f-15); }
           .stat-card__label { font-size: var(--f-9-5); }
           .stat-card--top.stat-card--left     { top: 8%;  left: 3%; }

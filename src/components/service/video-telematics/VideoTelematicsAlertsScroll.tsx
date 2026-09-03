@@ -53,7 +53,7 @@ const ALERTS: Alert[] = [
     id: 'droopy-eyes',
     num: '05',
     title: 'Droopy\nEyes',
-    image: '/service_page/ai-dashcam-alerts-dashboard.webp',
+    image: '/service_page/ai-alert-droopy-eyes.png',
     imageW: 1672,
     imageH: 941,
   },

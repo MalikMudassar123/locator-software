@@ -58,7 +58,13 @@ export default async function IndustryDetailPage({
       <IndustryBlocks industry={industry} />
       <ServiceWhyChoose />
       <WhoWeAreNumbers />
-      <ServiceVideo />
+      <ServiceVideo
+        eyebrow=""
+        title="All your Vehicles, Assets & Staffs on One Software"
+        titleColor="#1360ee"
+        headingMaxWidth="none"
+        lead="Take control of your whole operation with LOCATOR GPS Tracking"
+      />
       <SoftwareBlog tag={['Fleet Management', 'Fleet Tracking', 'GPS Tracking']} />
       <ServiceFAQ />
       <SoftwareCTA />

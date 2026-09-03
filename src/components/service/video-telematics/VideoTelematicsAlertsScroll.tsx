@@ -37,7 +37,7 @@ const ALERTS: Alert[] = [
     id: 'smoking',
     num: '03',
     title: 'Smoking\nin the Cabin',
-    image: '/service_page/ai-dashcam-alerts-dashboard.webp',
+    image: '/service_page/ai-alert-smoking.png',
     imageW: 1672,
     imageH: 941,
   },

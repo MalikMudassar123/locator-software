@@ -7,7 +7,7 @@ const EASE = 'cubic-bezier(.22,.61,.36,1)'
 const SERVICES = [
   {
     num: '01',
-    label: 'GPS Tracking',
+    label: 'Real Time Tracking',
     title: 'GPS Vehicle Tracking',
     body: 'Gain real-time visibility of vehicles with accurate location tracking, trip history, geofencing, and intelligent alerts.',
     accent: '#1360ee',

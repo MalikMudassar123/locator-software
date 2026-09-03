@@ -18,12 +18,18 @@ const fleetFeatures = [
     desc: 'Track vehicles live, monitor drivers, improve road team',
   },
   {
+    // Ringing bell — the bell itself plus radiating lines, so it reads as an alert
+    // going off rather than as a static notification glyph.
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <rect x="2" y="7" width="20" height="13" rx="2" stroke="#374151" strokeWidth="1.5"/>
-        <path d="M7 7V5a2 2 0 014 0v2M13 7V5a2 2 0 014 0v2" stroke="#374151" strokeWidth="1.5" strokeLinecap="round"/>
-        <circle cx="12" cy="13.5" r="1.5" stroke="#374151" strokeWidth="1.2"/>
-        <path d="M12 15v2" stroke="#374151" strokeWidth="1.2" strokeLinecap="round"/>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+        stroke="#374151" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        {/* Group is scaled, so stroke-width is pre-divided to land back on 1.5. */}
+        <g transform="translate(4.05 4.5) scale(0.66)">
+          <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" strokeWidth="2.27"/>
+          <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" strokeWidth="2.27"/>
+        </g>
+        {/* Sound radiating either side */}
+        <path d="M4.9 8.7 2.9 7.9M5.4 6.3 3.9 4.8M19.1 8.7l2-.8M18.6 6.3l1.5-1.5"/>
       </svg>
     ),
     title: 'Instant Idle Alerts',
@@ -42,16 +48,25 @@ const fleetFeatures = [
     desc: 'Central dashboard for trip insights, vehicle status, performance overview.',
   },
   {
-    // Ringing bell — body, clapper, and a sound arc either side. Replaces a coffee
-    // mug (cup, handle and steam) that presumably stood for "after hours" but read
-    // as a break rather than as an alarm going off.
+    // Vehicle with a warning triangle. Replaces a ringing bell, which said "alert"
+    // but not what the alert is about — this one names the subject too.
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
         stroke="#374151" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M6 8a6 6 0 0112 0c0 7 3 9 3 9H3s3-2 3-9"/>
-        <path d="M10.3 21a1.94 1.94 0 003.4 0"/>
-        <path d="M4 2C2.8 3.7 2 5.7 2 8"/>
-        <path d="M22 8c0-2.3-.8-4.3-2-6"/>
+        {/* Vehicle. Group is scaled, so each stroke-width is pre-divided by the
+            scale to land back on the 1.5 the sibling icons use. */}
+        <g transform="translate(-0.6 3.2) scale(0.76)">
+          <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" strokeWidth="2"/>
+          <circle cx="7" cy="17" r="2" strokeWidth="2"/>
+          <circle cx="17" cy="17" r="2" strokeWidth="2"/>
+        </g>
+        {/* Alert, filled with the icon tile's own colour so it cuts out of the
+            vehicle behind it instead of tangling with its lines. */}
+        <g transform="translate(8.34 5.84) scale(0.64)" fill="#f1f5f9">
+          <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" strokeWidth="2.35"/>
+          <path d="M12 9.5v4.2" strokeWidth="2.35"/>
+          <path d="M12 17.4h.01" strokeWidth="2.35"/>
+        </g>
       </svg>
     ),
     title: 'After-Hours Vehicle Alerts',
@@ -60,9 +75,14 @@ const fleetFeatures = [
   {
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <path d="M3 6h18M3 12h12M3 18h8" stroke="#374151" strokeWidth="1.5" strokeLinecap="round"/>
-        <circle cx="19" cy="17" r="3" stroke="#374151" strokeWidth="1.5"/>
-        <path d="M19 15.5v1.5l1 0.5" stroke="#374151" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+        {/* Trip start */}
+        <path d="M8.4 15.2c0 2.2-2.9 4.4-2.9 4.4s-2.9-2.2-2.9-4.4a2.9 2.9 0 0 1 5.8 0z" stroke="#374151" strokeWidth="1.5" strokeLinejoin="round"/>
+        <circle cx="5.5" cy="15.2" r="1.05" stroke="#374151" strokeWidth="1.3"/>
+        {/* Route travelled */}
+        <path d="M5.5 19.6h4.6q4.5 0 4.5-4.5v-1.8" stroke="#374151" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        {/* Destination */}
+        <path d="M18.5 7.4c0 2.9-3.9 5.9-3.9 5.9s-3.9-3-3.9-5.9a3.9 3.9 0 0 1 7.8 0z" stroke="#374151" strokeWidth="1.5" strokeLinejoin="round"/>
+        <circle cx="14.6" cy="7.4" r="1.45" stroke="#374151" strokeWidth="1.4"/>
       </svg>
     ),
     title: 'Daily Route History',

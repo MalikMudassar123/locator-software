@@ -68,8 +68,8 @@ export default function ContactHero() {
 
         <div className="cth-photo">
           <Image
-            src="/contact/contact-hero-banner.webp"
-            alt="Locator support team assisting fleet customers from a modern operations office"
+            src="/contact/contact-office-hero-banner.webp"
+            alt="Modern glass-walled office meeting room where the Locator team meets with fleet customers"
             fill
             priority
             sizes="100vw"

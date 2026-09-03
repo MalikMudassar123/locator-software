@@ -24,6 +24,10 @@ export default function ShahinExplainer() {
               </svg>
             </div>
 
+            <h2 style={{ margin: '0 0 18px', fontSize: 'max(clamp(22px,2.8vw,30px), min(2.083vw, 43.5px))', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-.02em', color: '#1360ee' }}>
+              SHAHIN GPS Tracking &amp; Its Importance
+            </h2>
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <p style={{ margin: 0, fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.8, color: '#6e6e73' }}>
                 In Dubai, the <a href="#" style={{ color: '#1360ee', fontWeight: 600, textDecoration: 'none' }}>Security Industry Regulatory Agency (SIRA)</a> has implemented a mandatory regulation named as <strong style={{ color: '#1d1d1f' }}>SHAHIN</strong> where all trucks carrying cargo that are registered in Dubai and at any port (under the Dubai Port Authority, danata, ek, skycargo, etc.). Vehicles that fall under this category must have a registered GPS device installed with a certification.

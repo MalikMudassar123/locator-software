@@ -9,46 +9,50 @@ export default function TrackingDevicesHero() {
     <>
       <style>{`
         /*
-         * Hero layout mirrors SmartIotHero exactly:
-         *   - section: position:relative, flex column, explicit min-height
-         *   - .td-photo: position:absolute; inset:0  → true full-bleed bg
-         *   - .td-scrim: inset:0 gradient → text legibility
-         *   - .td-navwrap z-index:3 / .td-body z-index:2 / .td-photo z-index:0
-         *
-         * Image is landscape (~16:5). Using object-position: left top so the
-         * important top-left of the image is never cropped. Only the far
-         * bottom-right gets trimmed on short viewports — that area is empty
-         * studio floor, so the trim is invisible.
+         * Banner is dark navy (connected IoT/security glass-cube render), not
+         * the pale studio shot this hero used to carry — so the treatment
+         * flips to a dark scrim + white text, the same pairing SmartIotHero
+         * uses for its own dark banner, instead of the old white-scrim/dark-
+         * text pair built for a light image.
          */
         .td-hero {
           position: relative;
           overflow: hidden;
-          /* #dde8f0 matches the image's own pale blue-grey studio background
-             so if contain leaves any edge gap it's completely invisible */
-          background: #dde8f0;
+          background: #060b16;
           display: flex;
           flex-direction: column;
-          /* Drive height from viewport width at the image's own ~3:1 ratio.
-             This means the section is always exactly as tall as the image
-             at full width — no zoom, no crop, ever. */
-          min-height: clamp(480px, 34vw, 660px);
+          /* Height tracks the banner's own 3:1 (2172x724) the same way the
+             SHAHIN hero does, plus the 64px navbar strip above it. With the
+             photo box then exactly width/3, cover has nothing to trim
+             vertically — the whole frame shows, top edge included. A flat
+             max-height cap here is what previously made the box wider than
+             3:1 on large monitors, and cover paid for that by cutting the
+             top and bottom off the image. */
+          min-height: calc(64px + clamp(320px, 33.34vw, 1100px));
         }
 
-        .td-photo { position: absolute; inset: 0; z-index: 0; }
+        /* Photo starts below the navbar rather than behind it: spanning the
+           full section put the top of the image underneath the fixed white
+           bar, which read exactly like a crop. */
+        .td-photo { position: absolute; top: 64px; left: 0; right: 0; bottom: 0; z-index: 0; }
+        /* cover, not contain: contain letterboxed a dark band under the image
+           whenever the copy pushed the section past the banner's ratio. The
+           box now matches the image's shape, so cover fills every edge with
+           nothing cropped; where copy does force it taller, the trim comes
+           off the left, which is empty dark space the scrim already covers. */
         .td-photo img {
-          object-fit: contain;
-          object-position: center;
-          filter: saturate(0.95) contrast(1.02);
+          object-fit: cover;
+          object-position: 100% center;
         }
 
-        /* Subtle glass/whitening scrim so the background stays visible without overpowering text */
+        /* Dark left-to-right scrim so text stays legible over the banner */
         .td-scrim {
-          position: absolute; inset: 0; z-index: 1; pointer-events: none;
+          position: absolute; top: 64px; left: 0; right: 0; bottom: 0; z-index: 1; pointer-events: none;
           background: linear-gradient(90deg,
-            rgba(255,255,255,.72) 0%,
-            rgba(255,255,255,.48) 28%,
-            rgba(255,255,255,.18) 52%,
-            rgba(255,255,255,0)   72%
+            rgba(2,6,14,.82) 0%,
+            rgba(2,6,14,.62) 30%,
+            rgba(2,6,14,.2)  56%,
+            rgba(2,6,14,0)   74%
           );
         }
 
@@ -60,49 +64,43 @@ export default function TrackingDevicesHero() {
           padding: clamp(20px,3vw,36px) 28px clamp(40px,5vw,60px);
         }
         .td-inner { max-width: var(--w-1280); width: 100%; margin: 0 auto; }
-        /* Content column — same width as SmartIotHero's .si-content */
         .td-content { max-width: min(560px, 100%); }
 
         @keyframes tdRise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
         @media (prefers-reduced-motion: no-preference) { .td-anim { opacity: 0; animation: tdRise .8s ${EASE} forwards; } }
 
-        /* Back breadcrumb */
         .td-back {
           display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px;
-          color: #5a6478; font-size: var(--f-13); font-weight: 600;
+          color: rgba(255,255,255,.7); font-size: var(--f-13); font-weight: 600;
           text-decoration: none; transition: color .18s ease, gap .18s ease;
         }
-        .td-back:hover { color: #1360ee; gap: 9px; }
+        .td-back:hover { color: #fff; gap: 9px; }
 
-        /* Eyebrow */
         .td-eyebrow {
           display: block;
           font-size: max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px));
           font-weight: 800; letter-spacing: .04em;
-          color: #1360ee; text-transform: uppercase; margin-bottom: 16px;
+          color: #5b9fff; text-transform: uppercase; margin-bottom: 16px;
         }
         .td-eyebrow-bar {
           display: block; width: 34px; height: 3px;
           background: #1360ee; border-radius: 2px; margin-bottom: 12px;
         }
 
-        /* Heading — dark text, image is light */
         .td-h1 {
           margin: 0;
           font-size: clamp(28px, calc(2.5vw + 16px), 46px);
           font-weight: 800; line-height: 1.14; letter-spacing: -.024em;
-          color: #0b1220;
+          color: #ffffff;
         }
-        .td-h1 em { font-style: normal; color: #1360ee; }
+        .td-h1 em { font-style: normal; color: #5b9fff; }
 
-        /* Lead */
         .td-lead {
           margin: clamp(14px,1.6vw,18px) 0 0; max-width: 48ch;
           font-size: clamp(15px, 1.05vw, 17px);
-          line-height: 1.72; color: #3a4459;
+          line-height: 1.72; color: rgba(255,255,255,.75);
         }
 
-        /* CTAs */
         .td-cta-row { display: flex; gap: 14px; margin-top: clamp(22px,2.6vw,32px); flex-wrap: wrap; }
         .td-btn {
           font-family: inherit; font-size: var(--f-14); font-weight: 700; cursor: pointer;
@@ -112,66 +110,43 @@ export default function TrackingDevicesHero() {
         }
         .td-btn svg { transition: transform .18s ${EASE}; flex-shrink: 0; }
         .td-btn:hover svg { transform: translateX(3px); }
-        .td-btn-primary { background: #1360ee; color: #fff; box-shadow: 0 10px 24px rgba(19,96,238,.28); }
-        .td-btn-primary:hover { background: #0d4fd4; transform: translateY(-1px); box-shadow: 0 12px 30px rgba(19,96,238,.4); }
+        .td-btn-primary { background: #1360ee; color: #fff; box-shadow: 0 10px 24px rgba(19,96,238,.4); }
+        .td-btn-primary:hover { background: #0d4fd4; transform: translateY(-1px); box-shadow: 0 12px 30px rgba(19,96,238,.55); }
         .td-btn-ghost {
-          background: rgba(255,255,255,.78); color: #0b1220;
-          border-color: rgba(19,96,238,.25);
+          background: rgba(255,255,255,.12); color: #fff;
+          border-color: rgba(255,255,255,.3);
           -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
         }
-        .td-btn-ghost:hover { border-color: #1360ee; color: #1360ee; transform: translateY(-1px); background: rgba(255,255,255,.92); }
+        .td-btn-ghost:hover { border-color: rgba(255,255,255,.7); background: rgba(255,255,255,.2); transform: translateY(-1px); }
 
-        /* Tablet */
         @media (max-width: 1024px) {
           .td-scrim { background: linear-gradient(90deg,
-            rgba(255,255,255,.92) 0%,
-            rgba(255,255,255,.80) 34%,
-            rgba(255,255,255,.18) 62%,
-            rgba(255,255,255,0)   78%
+            rgba(2,6,14,.9) 0%,
+            rgba(2,6,14,.74) 38%,
+            rgba(2,6,14,.22) 64%,
+            rgba(2,6,14,0)   80%
           ); }
           .td-content { max-width: min(480px, 100%); }
         }
 
-        /* Mobile — full-width background with content overlaid, matching WhoWeAreHero pattern */
+        /* Mobile: contain-fit on a narrow-but-tall box renders the wide
+           banner as a thin strip through the middle of the section — below
+           this width the photo becomes a normal, fixed-height block of its
+           own instead (filled edge-to-edge via cover), with the copy flowing
+           below it rather than layered on top. CSS "order" reflows the
+           nav/photo/body stack without touching the DOM. */
         @media (max-width: 768px) {
-          .td-hero {
-            position: relative;
-            min-height: clamp(600px, 95vh, 750px);
-            padding-top: 80px;
-            background-image: url('/service_page/tracking device mobile.webp');
-            background-size: contain;
-            background-position: center calc(15% + 40px);
-            background-repeat: no-repeat;
-            background-color: #dde8f0;
-            display: flex;
-            flex-direction: column;
-            width: 100vw;
-            margin-left: calc(50% - 50vw);
+          .td-hero { min-height: auto; }
+          .td-navwrap { order: 1; }
+          .td-photo {
+            order: 2;
+            position: relative; inset: auto;
+            height: clamp(200px, 56vw, 300px);
           }
-          .td-photo { display: none; }
-          /* Subtle gradient behind text for readability */
-          .td-scrim {
-            display: block;
-            background: linear-gradient(
-              180deg,
-              rgba(255,255,255,0) 0%,
-              rgba(255,255,255,0) 45%,
-              rgba(255,255,255,.88) 70%,
-              rgba(255,255,255,.96) 100%
-            );
-          }
-          .td-navwrap { position: relative; z-index: 10; }
-          .td-body {
-            position: relative;
-            flex: 1;
-            display: flex;
-            align-items: flex-end;
-            padding: clamp(140px,28vw,220px) 22px clamp(36px,8vw,52px);
-            z-index: 5;
-            background: none;
-          }
+          .td-photo img { object-fit: cover; object-position: 68% center; }
+          .td-scrim { display: none; }
+          .td-body { order: 3; padding: clamp(28px,6vw,40px) 22px clamp(36px,8vw,52px); background: #060b16; }
           .td-content { max-width: 100%; }
-          .td-btn { padding: 13px 20px; }
         }
 
         @media (max-width: 420px) {
@@ -179,38 +154,13 @@ export default function TrackingDevicesHero() {
           .td-cta-row { flex-direction: column; }
           .td-btn { justify-content: center; }
         }
-
-        /* Keep the stat row visually part of the hero image instead of a detached gray block */
-        .td-stats-band {
-          background: transparent;
-          border-top: none;
-        }
-        .td-stats {
-          display: grid; grid-template-columns: repeat(3, 1fr);
-          max-width: var(--w-1280); margin: 0 auto; padding: 0 28px 18px;
-          background: transparent;
-        }
-        @media (max-width: 700px) { .td-stats { grid-template-columns: 1fr; } }
-        .td-stat {
-          padding: clamp(24px,3vw,34px) clamp(20px,2.4vw,32px);
-          border-left: 1px solid rgba(18, 35, 58, 0.06);
-          background: rgba(255,255,255,0.08);
-        }
-        .td-stat:first-child { border-left: none; padding-left: 0; }
-        @media (max-width: 700px) {
-          .td-stat { border-left: none; border-top: 1px solid rgba(18, 35, 58, 0.06); padding-left: 0; }
-          .td-stat:first-child { border-top: none; }
-        }
-        .td-stat-n { font-size: max(clamp(26px,3vw,38px), min(2.639vw,55.1px)); font-weight: 800; letter-spacing: -.03em; color: #1d1d1f; line-height: 1; }
-        .td-stat-l { margin-top: 10px; font-size: var(--f-13); line-height: 1.5; color: #6e6e73; font-weight: 600; max-width: 26ch; }
       `}</style>
 
       <section className="td-hero">
 
-        {/* Full-bleed background — positioned to show complete view */}
         <div className="td-photo" aria-hidden="true">
           <Image
-            src="/service_page/devices second banner.webp"
+            src="/service_page/tracking-devices-hero-banner.webp"
             alt=""
             fill
             priority
@@ -219,12 +169,10 @@ export default function TrackingDevicesHero() {
         </div>
         <div className="td-scrim" aria-hidden="true" />
 
-        {/* Navbar — on top of everything */}
         <div className="td-navwrap">
           <SoftwareNavbar />
         </div>
 
-        {/* Copy — left-aligned, same structure as SmartIotHero */}
         <div className="td-body">
           <div className="td-inner">
             <div className="td-content">

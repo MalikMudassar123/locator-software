@@ -1,30 +1,27 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { BLOG_POSTS, blogHref } from '@/components/about/newsroom/blog/blog-index'
 
-const POSTS = [
-  {
-    day: '12',
-    month: 'Aug',
-    title: 'Fleet Tracking Software: The Smart Way to Manage Vehicles in Real-Time',
-    excerpt: "Whether you're managing delivery vans, heavy trucks, or service vehicles, staying in control of operations is crucial. Today's fleet tracking software does far more than just show vehicle locations — it gives you full control of your mobile workforce in real-time.",
-    img: '/blog/fleet tracking.png',
-    imgW: 1600,
-    imgH: 1079,
-    href: '/about/newsroom/blog/fleet-tracking-software-real-time-vehicle-management',
-  },
-  {
-    day: '18',
-    month: 'July',
-    title: 'The Tracking Edge – Optimized GPS & Field Tools',
-    excerpt: "Whether you're managing delivery fleets, service vehicles, or mobile field teams, staying in control of operations is key to success. Modern GPS tracking is no longer just about showing vehicle locations — it's about managing your entire field workflow smarter and faster.",
-    img: '/blog/Optimized GPS.png',
-    imgW: 900,
-    imgH: 506,
-    href: '/about/newsroom/blog/the-tracking-edge-optimized-gps-and-field-tools',
-  },
-]
+const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-export default function RegulatoryBlogFeed() {
+/**
+ * Every regulatory page (ASATEEL, SHAHIN, SecurePath, SecurePath Premium) used
+ * to render the exact same two hardcoded posts regardless of topic. `tag`
+ * pulls posts that actually match the page's subject instead — falling back
+ * to the most recent posts overall if nothing in the index carries that tag
+ * yet, so the section never renders empty while more topic-tagged content is
+ * still being written.
+ */
+export default function RegulatoryBlogFeed({ tag, limit = 2 }: { tag?: string | string[]; limit?: number } = {}) {
+  const tags = tag ? (Array.isArray(tag) ? tag : [tag]) : []
+  const matched = tags.length
+    ? BLOG_POSTS.filter(p => tags.includes(p.tag))
+    : []
+  const posts = (matched.length ? matched : BLOG_POSTS)
+    .slice()
+    .sort((a, b) => (a.date < b.date ? 1 : -1))
+    .slice(0, limit)
+
   return (
     <>
       <style>{`
@@ -75,28 +72,31 @@ export default function RegulatoryBlogFeed() {
           </div>
 
           <div className="rbf-grid" data-reveal>
-            {POSTS.map((p, i) => (
-              <Link key={p.title} href={p.href} className="rbf-card" data-reveal data-reveal-delay={String(i * 90)} style={{ textDecoration: 'none' }}>
-                <div className="rbf-media">
-                  <span className="rbf-date">
-                    <span className="rbf-date-day">{p.day}</span>
-                    <span className="rbf-date-month">{p.month}</span>
-                  </span>
-                  <div className="rbf-img-wrap">
-                    <Image src={p.img} alt={p.title} width={p.imgW} height={p.imgH} style={{ width: '100%', height: 'auto', display: 'block' }} />
+            {posts.map((p, i) => {
+              const d = new Date(p.date)
+              return (
+                <Link key={p.slug} href={blogHref(p.slug)} className="rbf-card" data-reveal data-reveal-delay={String(i * 90)} style={{ textDecoration: 'none' }}>
+                  <div className="rbf-media">
+                    <span className="rbf-date">
+                      <span className="rbf-date-day">{String(d.getDate()).padStart(2, '0')}</span>
+                      <span className="rbf-date-month">{MONTH_SHORT[d.getMonth()]}</span>
+                    </span>
+                    <div className="rbf-img-wrap">
+                      <Image src={p.hero.src} alt={p.hero.alt} width={p.hero.width} height={p.hero.height} style={{ width: '100%', height: 'auto', display: 'block' }} />
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <h3 style={{ margin: '0 0 10px', fontSize: 'var(--f-16-5)', fontWeight: 700, lineHeight: 1.35, color: '#1d1d1f' }}>
-                    {p.title}
-                  </h3>
-                  <p style={{ margin: '0 0 14px', fontSize: 'var(--f-13-5)', lineHeight: 1.7, color: '#6e6e73' }}>
-                    {p.excerpt}
-                  </p>
-                  <span className="rbf-read">Read More</span>
-                </div>
-              </Link>
-            ))}
+                  <div>
+                    <h3 style={{ margin: '0 0 10px', fontSize: 'var(--f-16-5)', fontWeight: 700, lineHeight: 1.35, color: '#1d1d1f' }}>
+                      {p.title}
+                    </h3>
+                    <p style={{ margin: '0 0 14px', fontSize: 'var(--f-13-5)', lineHeight: 1.7, color: '#6e6e73' }}>
+                      {p.excerpt}
+                    </p>
+                    <span className="rbf-read">Read More</span>
+                  </div>
+                </Link>
+              )
+            })}
           </div>
 
         </div>

@@ -5,6 +5,7 @@ import ScrollReveal from '@/components/software/ScrollReveal'
 import IndustryHero from '@/components/industries/IndustryHero'
 import IndustryBlocks from '@/components/industries/IndustryBlocks'
 import ServiceWhyChoose from '@/components/service/ServiceWhyChoose'
+import WhoWeAreNumbers from '@/components/about/who-we-are/WhoWeAreNumbers'
 import ServiceVideo from '@/components/service/ServiceVideo'
 import SoftwareBlog from '@/components/software/SoftwareBlog'
 import SoftwareCTA from '@/components/software/SoftwareCTA'
@@ -56,8 +57,9 @@ export default async function IndustryDetailPage({
       <IndustryHero industry={industry} />
       <IndustryBlocks industry={industry} />
       <ServiceWhyChoose />
+      <WhoWeAreNumbers />
       <ServiceVideo />
-      <SoftwareBlog />
+      <SoftwareBlog tag={['Fleet Management', 'Fleet Tracking', 'GPS Tracking']} />
       <ServiceFAQ />
       <SoftwareCTA />
       <Footer />

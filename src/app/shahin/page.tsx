@@ -35,7 +35,7 @@ export default function ShahinPage() {
       <ShahinFAQ />
       <ShahinConclusion />
       <ShahinVideo />
-      <RegulatoryBlogFeed />
+      <RegulatoryBlogFeed tag={['Fleet Management', 'Fleet Tracking']} />
       <Footer />
     </main>
   )

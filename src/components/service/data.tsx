@@ -9,7 +9,7 @@ export type ServicePage = {
 }
 
 // Every page carries the same accent: the site's blue, #1360ee. This drives
-// ServicePillarHero's nav tabs, active-tab colour, icon chip and eyebrow — a
+// ServiceModuleTabs' nav tabs, active-tab colour, icon chip and eyebrow — a
 // per-page hue there turned the tab strip into a colour chart and made sibling
 // services look like unrelated products, same reasoning as ABOUT_PAGES.
 export const SERVICE_PAGES: ServicePage[] = [

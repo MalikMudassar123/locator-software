@@ -53,7 +53,7 @@ export default function GpsTrackingSystemPage() {
       />
       <ServiceVideo />
       <ServiceUseCases />
-      <SoftwareBlog />
+      <SoftwareBlog tag="GPS Tracking" />
       <SoftwareCTA />
       <Footer />
     </main>

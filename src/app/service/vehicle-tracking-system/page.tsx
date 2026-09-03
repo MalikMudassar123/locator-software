@@ -47,7 +47,7 @@ export default function VehicleTrackingSystemPage() {
         lead="A short look at how live tracking, fuel data and alerts keep UAE fleets under control."
       />
       <TrackingUseCases />
-      <SoftwareBlog />
+      <SoftwareBlog tag={['GPS Tracking', 'Vehicle Maintenance']} />
       <ServiceFAQ />
       <SoftwareCTA />
       <Footer />

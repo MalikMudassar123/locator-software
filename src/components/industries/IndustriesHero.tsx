@@ -72,7 +72,7 @@ export default function IndustriesHero() {
           <div className="ih-scrim" />
           <div className="ih-photo-body">
             <div className="ih-content">
-              <h1 className="ih-title">All Industries</h1>
+              <h1 className="ih-title">Industries</h1>
               <p className="ih-lead">
                 The world we live in today is connected. Inspired by the businesses we work with every day,
                 we share how Locator&rsquo;s GPS tracking, video telematics, and IoT platform support fleets

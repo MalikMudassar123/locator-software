@@ -49,7 +49,7 @@ export default function CarTrackingSystemPage() {
         lead="A short look at how live tracking, alerts and reporting keep UAE vehicles accounted for."
       />
       <TrackingUseCases />
-      <SoftwareBlog />
+      <SoftwareBlog tag="Car Tracking" />
       <ServiceFAQ />
       <SoftwareCTA />
       <Footer />

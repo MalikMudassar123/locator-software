@@ -4,8 +4,11 @@ import SecurepathHero from '@/components/regulatory/securepath/SecurepathHero'
 import SecurepathExplainer from '@/components/regulatory/securepath/SecurepathExplainer'
 import SecurepathBenefits from '@/components/regulatory/securepath/SecurepathBenefits'
 import SecurepathProcess from '@/components/regulatory/securepath/SecurepathProcess'
+import ServiceWhyChoose from '@/components/service/ServiceWhyChoose'
+import WhoWeAreNumbers from '@/components/about/who-we-are/WhoWeAreNumbers'
 import SecurepathFAQ from '@/components/regulatory/securepath/SecurepathFAQ'
 import SecurepathConclusion from '@/components/regulatory/securepath/SecurepathConclusion'
+import RegulatoryBlogFeed from '@/components/regulatory/RegulatoryBlogFeed'
 import Footer from '@/components/layouts/Footer'
 
 export const metadata: Metadata = {
@@ -30,8 +33,11 @@ export default function SecurepathPage() {
       <SecurepathExplainer />
       <SecurepathBenefits />
       <SecurepathProcess />
+      <ServiceWhyChoose />
+      <WhoWeAreNumbers />
       <SecurepathFAQ />
       <SecurepathConclusion />
+      <RegulatoryBlogFeed tag={['GPS Tracking', 'Fleet Management']} />
       <Footer />
     </main>
   )

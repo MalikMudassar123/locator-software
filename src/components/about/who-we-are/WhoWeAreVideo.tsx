@@ -1,14 +1,21 @@
 'use client'
 
 import { useState } from 'react'
-
-const YOUTUBE_ID = 'hwqB52vVUig' // "LOCATOR - Effective Vehicle Tracking System." — LOCATOR Media
+import {
+  LOCATOR_VIDEO_ALLOW,
+  LOCATOR_VIDEO_POSTER,
+  LOCATOR_VIDEO_TITLE,
+  locatorVideoEmbed,
+} from '@/components/locator-video'
 
 export default function WhoWeAreVideo() {
   const [playing, setPlaying] = useState(false)
 
   return (
     <section style={{ padding: 'clamp(56px,7vw,92px) 28px', background: '#f7f9fc' }}>
+      <link rel="preconnect" href="https://player.vimeo.com" />
+      <link rel="preconnect" href="https://f.vimeocdn.com" crossOrigin="anonymous" />
+      <link rel="preconnect" href="https://i.vimeocdn.com" />
       <div style={{ maxWidth: 'var(--w-900)', margin: '0 auto' }}>
         <div data-reveal style={{ textAlign: 'center', maxWidth: '620px', margin: '0 auto clamp(36px,5vw,48px)' }}>
           <span style={{ display: 'block', fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', marginBottom: '16px' }}>
@@ -30,20 +37,20 @@ export default function WhoWeAreVideo() {
         }}>
           {playing ? (
             <iframe
-              src={`https://www.youtube.com/embed/${YOUTUBE_ID}?autoplay=1`}
-              title="LOCATOR - Effective Vehicle Tracking System"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              src={locatorVideoEmbed()}
+              title={LOCATOR_VIDEO_TITLE}
+              allow={LOCATOR_VIDEO_ALLOW}
               allowFullScreen
               style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0 }}
             />
           ) : (
             <button
               onClick={() => setPlaying(true)}
-              aria-label="Play video: LOCATOR - Effective Vehicle Tracking System"
+              aria-label={`Play video: ${LOCATOR_VIDEO_TITLE}`}
               style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none', cursor: 'pointer', background: 'none', padding: 0 }}
             >
               <img
-                src={`https://i.ytimg.com/vi/${YOUTUBE_ID}/maxresdefault.jpg`}
+                src={LOCATOR_VIDEO_POSTER}
                 alt=""
                 style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
               />

@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import ScrollReveal from '@/components/software/ScrollReveal'
-import ServicePillarHero from '@/components/service/ServicePillarHero'
+import TaskManagerHero from '@/components/service/task-manager/TaskManagerHero'
 import ServiceTaskManager from '@/components/service/ServiceTaskManager'
+import ServiceModuleTabs from '@/components/service/ServiceModuleTabs'
 import Footer from '@/components/layouts/Footer'
 
 export const metadata: Metadata = {
@@ -15,12 +16,9 @@ export default function TaskManagerPage() {
   return (
     <main style={{ background: '#ffffff', minHeight: '100vh' }}>
       <ScrollReveal />
-      <ServicePillarHero
-        slug="task-manager"
-        title="Task Manager"
-        lead="Assign, track, and complete field jobs in real time — keeping your team and your customers in sync."
-      />
+      <TaskManagerHero />
       <ServiceTaskManager />
+      <ServiceModuleTabs active="task-manager" />
       <Footer />
     </main>
   )

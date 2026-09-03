@@ -49,7 +49,7 @@ export default function FleetTelematicsPage() {
       <ServiceVideo />
       <ServiceWhyChoose />
       <DashcamShowcase />
-      <SoftwareBlog />
+      <SoftwareBlog tag={['Fleet Tracking', 'Fleet Management']} />
       <ServiceFAQ />
       <SoftwareCTA />
       <Footer />

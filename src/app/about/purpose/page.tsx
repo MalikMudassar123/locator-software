@@ -43,7 +43,7 @@ export default function WhoWeArePage() {
       {/* <WhoWeAreVideo /> */}
       <WhoWeAreFAQ />
       <AboutPillarNav current="purpose" />
-      <SoftwareBlog />
+      <SoftwareBlog /> {/* No single topic — About page shows the most recent posts overall */}
       <Footer />
     </main>
   )

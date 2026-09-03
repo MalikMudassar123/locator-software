@@ -19,16 +19,20 @@ export default function VideoTelematicsHero() {
            own near-white backdrop matches the section's background, so the
            letterboxed space above and below it reads as part of the page
            rather than a visible bar. */
-        .vt-pin-wrap { position: relative; background: #ffffff; padding-top: 64px; }
+        /* No padding-top here — SoftwareNavbar (rendered inside .vt-pin below)
+           already reserves its own 64px of flow space via its internal spacer.
+           Adding it again here double-counted the navbar offset and pushed the
+           centered copy down, off-center toward the bottom of the banner. */
+        .vt-pin-wrap { position: relative; background: #ffffff; }
         .vt-pin {
           position: relative;
-          /* aspect-ratio matches the banner's own 1774x887 shape, so on any
+          /* aspect-ratio matches the banner's own 1756x895 shape, so on any
              screen wide enough that width/2 already clears the floor below,
              the box is exactly the photo's shape — contain then has nothing
              left to letterbox on any edge, top, bottom, left or right. The
              min-height floor only takes over on narrow screens, where the
              copy needs more room than a strict 2:1 box would give it. */
-          aspect-ratio: 1774 / 887;
+          aspect-ratio: 1756 / 895;
           min-height: clamp(440px, 50vw, 560px);
           display: flex; flex-direction: column;
           overflow: hidden; isolation: isolate; background: #ffffff;
@@ -48,9 +52,9 @@ export default function VideoTelematicsHero() {
         .vt-hero-body {
           position: relative; z-index: 2;
           flex: 1 1 auto; min-height: 0;
-          display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+          display: flex; flex-direction: column; align-items: center; justify-content: center;
           gap: clamp(8px, 1.2vh, 18px);
-          padding: 0 24px clamp(40px, 8vh, 80px);
+          padding: clamp(24px, 5vh, 56px) 24px;
         }
         /* The copy sits over the fanned camera thumbnails, which don't leave
            reliable contrast for plain text at every width. A soft white
@@ -60,17 +64,11 @@ export default function VideoTelematicsHero() {
            a --w-* token. The banner's fanned thumbnails crowd in from both
            edges, and at container width the headline ran right into them; 760px
            keeps every line inside the clear centre of the photo. */
-        .vt-copy { text-align: center; max-width: 760px; width: 100%; margin-top: clamp(56px, 7vh, 104px); }
+        .vt-copy { text-align: center; max-width: 760px; width: 100%; }
         .vt-copy-glow {
           text-shadow:
             0 1px 2px #fff, 0 0 8px #fff, 0 0 16px #fff,
             0 0 28px #fff, 0 0 44px #fff, 0 0 64px #fff;
-        }
-        /* The negative pull-up above is tuned for desktop's taller banner —
-           on a short, narrow viewport it's enough to tuck the heading under
-           the fixed navbar, so mobile gets its own clear (positive) offset. */
-        @media (max-width: 640px) {
-          .vt-copy { margin-top: clamp(40px, 8vh, 64px); }
         }
         @media (prefers-reduced-motion: no-preference) {
           .vt-copy { animation: vtHeroRise .9s cubic-bezier(.22,.61,.36,1) .05s both; }
@@ -99,7 +97,7 @@ export default function VideoTelematicsHero() {
         <div className="vt-pin">
           <div className="vt-hero-bg" aria-hidden="true">
             <Image
-              src="/service_page/dashcam-footage-frames-hero-bg.webp"
+              src="/service_page/dashcam-hero-banner.webp"
               alt=""
               fill
               priority

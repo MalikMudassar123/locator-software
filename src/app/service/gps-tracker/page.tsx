@@ -50,7 +50,7 @@ export default function GpsTrackerPage() {
       <ServiceUseCases />
       <ServiceVideo />
       <DeviceCarousel />
-      <SoftwareBlog />
+      <SoftwareBlog tag="GPS Tracking" />
       <SoftwareCTA />
       <Footer />
     </main>

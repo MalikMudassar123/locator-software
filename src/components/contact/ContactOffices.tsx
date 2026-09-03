@@ -25,7 +25,7 @@ const OFFICES: Office[] = [
     badge: 'Head Office',
     img: '/contact/dubai-office.webp',
     imgAlt: 'Locator Dubai — Sheikh Zayed Road and the Downtown skyline at sunset',
-    address: 'Sheikh Zayed Road, Trade Centre,\nTrade Centre 1, Dubai, United Arab Emirates',
+    address: 'City Tower 2, Sheikh Zayed Road, Trade Centre,\nTrade Centre 1, Dubai, United Arab Emirates',
     phone: '+971 4 354 7766',
     phoneHref: 'tel:+97143547766',
     email: 'info@locator.ae',

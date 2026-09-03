@@ -4,7 +4,8 @@ import AsateelHero from '@/components/regulatory/asateel/AsateelHero'
 import AsateelExplainer from '@/components/regulatory/asateel/AsateelExplainer'
 import AsateelSteps from '@/components/regulatory/asateel/AsateelSteps'
 import AsateelInstallation from '@/components/regulatory/asateel/AsateelInstallation'
-import AsateelStats from '@/components/regulatory/asateel/AsateelStats'
+import ServiceWhyChoose from '@/components/service/ServiceWhyChoose'
+import WhoWeAreNumbers from '@/components/about/who-we-are/WhoWeAreNumbers'
 import AsateelHireUsNow from '@/components/regulatory/asateel/AsateelHireUsNow'
 import AsateelVideo from '@/components/regulatory/asateel/AsateelVideo'
 import RegulatoryBlogFeed from '@/components/regulatory/RegulatoryBlogFeed'
@@ -32,10 +33,11 @@ export default function AsateelCertifiedObuPage() {
       <AsateelExplainer />
       <AsateelSteps />
       <AsateelInstallation />
-      <AsateelStats />
+      <ServiceWhyChoose />
+      <WhoWeAreNumbers />
       <AsateelHireUsNow />
       <AsateelVideo />
-      <RegulatoryBlogFeed />
+      <RegulatoryBlogFeed tag="ASATEEL Compliance" />
       <Footer />
     </main>
   )

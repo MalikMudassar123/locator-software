@@ -1,53 +1,33 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { BLOG_POSTS, blogHref } from '@/components/about/newsroom/blog/blog-index'
 
 // Category chip and author-avatar colours are all the site's own blues rather
-// than blue/orange/purple — this component is shared across 10 routes,
+// than blue/orange/purple — this component is shared across ~10 routes,
 // including all four industry detail pages, so 3 unrelated hues here read as a
 // colour chart everywhere it appears.
-const POSTS = [
-  {
-    category: 'Fleet Safety',
-    catColor: '#1360ee',
-    catBg: 'rgba(19,96,238,.1)',
-    title: 'How AI dashcams cut collision rates for commercial fleets',
-    excerpt: 'What live driver monitoring and audible alerts mean for day-to-day fleet safety — and how operators measure the ROI.',
-    href: '/about/newsroom/blog',
-    img: '/blog/fleet tracking.png',
-    readTime: '5 min read',
-    date: 'Mar 12, 2025',
-    author: 'SK',
-    authorBg: '#1360ee',
-  },
-  {
-    category: 'Cost Control',
-    catColor: '#0d4fd4',
-    catBg: 'rgba(13,79,212,.1)',
-    title: 'Reducing idle fuel waste across a growing fleet',
-    excerpt: 'Using instant idle alerts and route history to claw back fuel spend before it becomes a costly habit.',
-    href: '/about/newsroom/blog',
-    img: '/blog/Optimized GPS.png',
-    readTime: '4 min read',
-    date: 'Mar 8, 2025',
-    author: 'RM',
-    authorBg: '#0d4fd4',
-  },
-  {
-    category: 'Operations',
-    catColor: '#2f6fed',
-    catBg: 'rgba(47,111,237,.1)',
-    title: 'A practical guide to geofencing for UAE businesses',
-    excerpt: 'Setting virtual zones and POI alerts for offices, depots, and customer sites without overcomplicating the setup.',
-    href: '/about/newsroom/blog',
-    img: '/blog/fleet tracking.png',
-    readTime: '6 min read',
-    date: 'Mar 4, 2025',
-    author: 'OA',
-    authorBg: '#2f6fed',
-  },
+const ACCENTS = [
+  { color: '#1360ee', bg: 'rgba(19,96,238,.1)' },
+  { color: '#0d4fd4', bg: 'rgba(13,79,212,.1)' },
+  { color: '#2f6fed', bg: 'rgba(47,111,237,.1)' },
 ]
 
-export default function SoftwareBlog() {
+/**
+ * Used across every service, product, and industry page. `tag` pulls posts
+ * that actually match that page's topic out of the real blog index instead
+ * of the same three hardcoded (and non-existent — they linked to the blog
+ * listing, not an article) placeholder posts every route used to show.
+ * Falls back to the most recent posts overall if nothing in the index
+ * carries the given tag(s) yet.
+ */
+export default function SoftwareBlog({ tag, limit = 3 }: { tag?: string | string[]; limit?: number } = {}) {
+  const tags = tag ? (Array.isArray(tag) ? tag : [tag]) : []
+  const matched = tags.length ? BLOG_POSTS.filter(p => tags.includes(p.tag)) : []
+  const posts = (matched.length ? matched : BLOG_POSTS)
+    .slice()
+    .sort((a, b) => (a.date < b.date ? 1 : -1))
+    .slice(0, limit)
+
   return (
     <>
       <style>{`
@@ -65,8 +45,9 @@ export default function SoftwareBlog() {
         .bc-img { transition: transform .5s cubic-bezier(.22,.61,.36,1) !important; }
         .bc-cta { transition: gap .18s cubic-bezier(.22,.61,.36,1); }
         .bc:hover .bc-cta { gap: 8px; }
-        @media (max-width: 860px) { .bc-grid { grid-template-columns: 1fr 1fr !important; } }
-        @media (max-width: 540px) { .bc-grid { grid-template-columns: 1fr !important; } }
+        .bc-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+        @media (max-width: 860px) { .bc-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 540px) { .bc-grid { grid-template-columns: 1fr; } }
       `}</style>
 
       <section id="blogs" style={{ padding: 'clamp(56px,7vw,80px) 28px', background: '#f5f6fa' }}>
@@ -101,77 +82,75 @@ export default function SoftwareBlog() {
           </div>
 
           {/* 3-col grid */}
-          <div className="bc-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '20px' }}>
-            {POSTS.map((post, i) => (
-              <Link key={i} href={post.href} className="bc" data-reveal data-reveal-delay={`${i * 110}`}>
+          <div className="bc-grid">
+            {posts.map((post, i) => {
+              const accent = ACCENTS[i % ACCENTS.length]
+              return (
+                <Link key={post.slug} href={blogHref(post.slug)} className="bc" data-reveal data-reveal-delay={`${i * 110}`}>
 
-                {/* Image with overlay */}
-                <div style={{ position: 'relative', height: '200px', overflow: 'hidden', flexShrink: 0, background: '#dde5f0' }}>
-                  <Image src={post.img} alt={post.title} fill className="bc-img" style={{ objectFit: 'cover' }} />
-                  {/* Dark gradient at bottom */}
-                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(8,14,50,.65) 0%, rgba(8,14,50,.15) 40%, transparent 100%)' }} />
-                  {/* Category pill over image */}
-                  <span style={{
-                    position: 'absolute', top: '14px', left: '14px',
-                    fontSize: 'var(--f-10)', fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase' as const,
-                    padding: '4px 10px', borderRadius: '999px',
-                    // Frosted white with the theme blue on it, matching the blog
-                    // cards on the home page. Held at .88 rather than the old
-                    // .18 because this sits on photography: at a low white the
-                    // blue text loses against a light or busy image, and the
-                    // blur alone does not save it.
-                    background: 'rgba(255,255,255,.88)', color: 'rgb(19, 96, 238)',
-                    backdropFilter: 'blur(8px) saturate(120%)', WebkitBackdropFilter: 'blur(8px) saturate(120%)',
-                    border: '1px solid rgba(255,255,255,.7)',
-                    boxShadow: '0 2px 8px rgba(11,18,32,.12)',
-                  }}>
-                    {post.category}
-                  </span>
-                  {/* Read time */}
-                  <span style={{
-                    position: 'absolute', top: '14px', right: '14px',
-                    fontSize: 'var(--f-10)', fontWeight: 600, color: 'rgba(255,255,255,.85)',
-                    background: 'rgba(0,0,0,.28)', backdropFilter: 'blur(6px)',
-                    padding: '4px 10px', borderRadius: '999px',
-                  }}>
-                    {post.readTime}
-                  </span>
-                </div>
-
-                {/* Body */}
-                <div style={{ padding: '22px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                  {/* Color-coded category chip */}
-                  <span style={{
-                    alignSelf: 'flex-start',
-                    fontSize: 'var(--f-10-5)', fontWeight: 700, letterSpacing: '.04em', textTransform: 'uppercase' as const,
-                    padding: '3px 10px', borderRadius: '999px',
-                    background: post.catBg, color: post.catColor,
-                    marginBottom: '12px',
-                  }}>
-                    {post.category}
-                  </span>
-
-                  <h3 style={{ margin: '0 0 10px', fontSize: 'var(--f-16)', fontWeight: 800, letterSpacing: '-.02em', lineHeight: 1.3, color: '#1d1d1f' }}>
-                    {post.title}
-                  </h3>
-
-                  <p style={{ margin: 0, fontSize: 'var(--f-13-5)', lineHeight: 1.6, color: '#6e6e73', flex: 1 }}>
-                    {post.excerpt}
-                  </p>
-
-                  {/* Meta row */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '18px', paddingTop: '16px', borderTop: '1px solid #f0f0f3' }}>
-                    <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: post.authorBg, display: 'grid', placeItems: 'center', fontSize: 'var(--f-10)', fontWeight: 800, color: '#fff', flexShrink: 0 }}>
-                      {post.author}
+                  {/* Image with overlay */}
+                  <div style={{ position: 'relative', height: '200px', overflow: 'hidden', flexShrink: 0, background: '#dde5f0' }}>
+                    <Image src={post.hero.src} alt={post.title} fill className="bc-img" style={{ objectFit: 'cover' }} />
+                    {/* Dark gradient at bottom */}
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(8,14,50,.65) 0%, rgba(8,14,50,.15) 40%, transparent 100%)' }} />
+                    {/* Category pill over image */}
+                    <span style={{
+                      position: 'absolute', top: '14px', left: '14px',
+                      fontSize: 'var(--f-10)', fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase' as const,
+                      padding: '4px 10px', borderRadius: '999px',
+                      background: 'rgba(255,255,255,.88)', color: 'rgb(19, 96, 238)',
+                      backdropFilter: 'blur(8px) saturate(120%)', WebkitBackdropFilter: 'blur(8px) saturate(120%)',
+                      border: '1px solid rgba(255,255,255,.7)',
+                      boxShadow: '0 2px 8px rgba(11,18,32,.12)',
+                    }}>
+                      {post.tag}
                     </span>
-                    <span style={{ fontSize: 'var(--f-11-5)', color: '#a1a1a6', fontWeight: 500 }}>{post.date}</span>
-                    <span className="bc-cta" style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: 'var(--f-12-5)', fontWeight: 700, color: post.catColor }}>
-                      Read <span>→</span>
+                    {/* Read time */}
+                    <span style={{
+                      position: 'absolute', top: '14px', right: '14px',
+                      fontSize: 'var(--f-10)', fontWeight: 600, color: 'rgba(255,255,255,.85)',
+                      background: 'rgba(0,0,0,.28)', backdropFilter: 'blur(6px)',
+                      padding: '4px 10px', borderRadius: '999px',
+                    }}>
+                      {post.readingMinutes} min read
                     </span>
                   </div>
-                </div>
-              </Link>
-            ))}
+
+                  {/* Body */}
+                  <div style={{ padding: '22px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                    {/* Color-coded category chip */}
+                    <span style={{
+                      alignSelf: 'flex-start',
+                      fontSize: 'var(--f-10-5)', fontWeight: 700, letterSpacing: '.04em', textTransform: 'uppercase' as const,
+                      padding: '3px 10px', borderRadius: '999px',
+                      background: accent.bg, color: accent.color,
+                      marginBottom: '12px',
+                    }}>
+                      {post.tag}
+                    </span>
+
+                    <h3 style={{ margin: '0 0 10px', fontSize: 'var(--f-16)', fontWeight: 800, letterSpacing: '-.02em', lineHeight: 1.3, color: '#1d1d1f' }}>
+                      {post.title}
+                    </h3>
+
+                    <p style={{ margin: 0, fontSize: 'var(--f-13-5)', lineHeight: 1.6, color: '#6e6e73', flex: 1 }}>
+                      {post.excerpt}
+                    </p>
+
+                    {/* Meta row */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '18px', paddingTop: '16px', borderTop: '1px solid #f0f0f3' }}>
+                      <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: accent.color, display: 'grid', placeItems: 'center', fontSize: 'var(--f-10)', fontWeight: 800, color: '#fff', flexShrink: 0 }}>
+                        LT
+                      </span>
+                      <span style={{ fontSize: 'var(--f-11-5)', color: '#a1a1a6', fontWeight: 500 }}>{post.dateLabel}</span>
+                      <span className="bc-cta" style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: 'var(--f-12-5)', fontWeight: 700, color: accent.color }}>
+                        Read <span>→</span>
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         </div>
       </section>

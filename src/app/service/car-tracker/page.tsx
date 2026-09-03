@@ -45,7 +45,7 @@ export default function CarTrackerPage() {
       <ServiceVideo />
       <ServiceUseCases />
       <DeviceCarousel />
-      <SoftwareBlog />
+      <SoftwareBlog tag="Car Tracking" />
       <SoftwareCTA />
       <Footer />
     </main>

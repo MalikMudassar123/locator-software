@@ -7,7 +7,7 @@ import VideoTelematicsShowcase from '@/components/service/video-telematics/Video
 import VideoTelematicsIndustries from '@/components/service/video-telematics/VideoTelematicsIndustries'
 import VideoTelematicsFAQ from '@/components/service/video-telematics/VideoTelematicsFAQ'
 import VideoTelematicsVideo from '@/components/service/video-telematics/VideoTelematicsVideo'
-import VideoTelematicsBlog from '@/components/service/video-telematics/VideoTelematicsBlog'
+import SoftwareBlog from '@/components/software/SoftwareBlog'
 import SoftwareCTA from '@/components/software/SoftwareCTA'
 import Footer from '@/components/layouts/Footer'
 
@@ -36,7 +36,7 @@ export default function VideoTelematicsPage() {
       <VideoTelematicsIndustries />
       <VideoTelematicsVideo />
       <VideoTelematicsFAQ />
-      <VideoTelematicsBlog />
+      <SoftwareBlog tag={['Fleet Tracking', 'GPS Tracking']} />
       <SoftwareCTA />
       <Footer />
     </main>

@@ -25,7 +25,7 @@ export default function SoftwarePage() {
       <BenefitsSection />
       <ModulesSection />
       <DashcamShowcase />
-      <SoftwareBlog />
+      <SoftwareBlog tag={['GPS Tracking', 'Fleet Tracking']} />
       <SoftwareFAQ />
       <SoftwareCTA />
       <Footer />

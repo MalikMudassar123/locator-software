@@ -39,7 +39,7 @@ export default function SecurepathPremiumPage() {
       <SecurepathPremiumFAQ />
       <SecurepathPremiumConclusion />
       <SecurepathPremiumVideo />
-      <RegulatoryBlogFeed />
+      <RegulatoryBlogFeed tag={['GPS Tracking', 'Car Tracking']} />
       <Footer />
     </main>
   )

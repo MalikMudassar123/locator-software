@@ -21,65 +21,65 @@ const ALERTS: Alert[] = [
     id: 'yawning',
     num: '01',
     title: 'Frequent\nYawning',
-    image: '/block 1/video teleframe.webp',
-    imageW: 1598,
-    imageH: 984,
+    image: '/service_page/ai-dashcam-alerts-dashboard.webp',
+    imageW: 1672,
+    imageH: 941,
   },
   {
     id: 'seatbelt',
     num: '02',
     title: 'Not Wearing\nSeatbelt',
-    image: '/block 1/video teleframe.webp',
-    imageW: 1598,
-    imageH: 984,
+    image: '/service_page/ai-dashcam-alerts-dashboard.webp',
+    imageW: 1672,
+    imageH: 941,
   },
   {
     id: 'smoking',
     num: '03',
     title: 'Smoking\nin the Cabin',
-    image: '/block 1/video teleframe.webp',
-    imageW: 1598,
-    imageH: 984,
+    image: '/service_page/ai-dashcam-alerts-dashboard.webp',
+    imageW: 1672,
+    imageH: 941,
   },
   {
     id: 'nodding',
     num: '04',
     title: 'Nodding\nOff',
-    image: '/block 1/video teleframe.webp',
-    imageW: 1598,
-    imageH: 984,
+    image: '/service_page/ai-dashcam-alerts-dashboard.webp',
+    imageW: 1672,
+    imageH: 941,
   },
   {
     id: 'droopy-eyes',
     num: '05',
     title: 'Droopy\nEyes',
-    image: '/block 1/video teleframe.webp',
-    imageW: 1598,
-    imageH: 984,
+    image: '/service_page/ai-dashcam-alerts-dashboard.webp',
+    imageW: 1672,
+    imageH: 941,
   },
   {
     id: 'talking',
     num: '06',
     title: 'Talking\n& Distraction',
-    image: '/block 1/video teleframe.webp',
-    imageW: 1598,
-    imageH: 984,
+    image: '/service_page/ai-dashcam-alerts-dashboard.webp',
+    imageW: 1672,
+    imageH: 941,
   },
   {
     id: 'texting',
     num: '07',
     title: 'Texting on\na Phone',
-    image: '/block 1/video teleframe.webp',
-    imageW: 1598,
-    imageH: 984,
+    image: '/service_page/ai-dashcam-alerts-dashboard.webp',
+    imageW: 1672,
+    imageH: 941,
   },
   {
     id: 'looking-away',
     num: '08',
     title: 'Looking\nAway',
-    image: '/block 1/video teleframe.webp',
-    imageW: 1598,
-    imageH: 984,
+    image: '/service_page/ai-dashcam-alerts-dashboard.webp',
+    imageW: 1672,
+    imageH: 941,
   },
 ]
 
@@ -278,11 +278,6 @@ export default function VideoTelematicsAlertsScroll() {
 
         /* ── AI detection HUD over the feed ── */
         .vta-hud { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
-        .vta-hud-c { position: absolute; width: 26px; height: 26px; border: 2px solid ${BLUE}; opacity: .85; }
-        .vta-hud-tl { top: 14px; left: 14px; border-right: 0; border-bottom: 0; border-radius: 6px 0 0 0; }
-        .vta-hud-tr { top: 14px; right: 14px; border-left: 0; border-bottom: 0; border-radius: 0 6px 0 0; }
-        .vta-hud-bl { bottom: 14px; left: 14px; border-right: 0; border-top: 0; border-radius: 0 0 0 6px; }
-        .vta-hud-br { bottom: 14px; right: 14px; border-left: 0; border-top: 0; border-radius: 0 0 6px 0; }
         .vta-hud-tag {
           position: absolute; left: 14px; bottom: 14px;
           display: inline-flex; align-items: center; gap: 8px;
@@ -444,18 +439,14 @@ export default function VideoTelematicsAlertsScroll() {
                   position: 'relative',
                   borderRadius: '20px',
                   overflow: 'hidden',
-                  border: '1px solid #e4e4e8',
                   boxShadow: '0 30px 70px -28px rgba(20,40,90,.24), 0 4px 14px rgba(20,40,90,.06)',
                   background: '#eef3fb',
                 }}>
                   {!loaded[alert.image] && <div className="vta-skeleton" aria-hidden="true" />}
 
-                  {/* AI detection frame — corner brackets + live label. */}
+                  {/* Live label only — the corner-bracket detection frame that
+                      used to sit over the shot has been removed. */}
                   <div className="vta-hud" aria-hidden="true">
-                    <span className="vta-hud-c vta-hud-tl" />
-                    <span className="vta-hud-c vta-hud-tr" />
-                    <span className="vta-hud-c vta-hud-bl" />
-                    <span className="vta-hud-c vta-hud-br" />
                     <span className="vta-hud-tag">
                       <span className="vta-hud-live" />
                       AI Detection · {alert.title.replace('\n', ' ')}

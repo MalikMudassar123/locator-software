@@ -428,6 +428,19 @@ main {
   height: var(--nav-flag);
 }
 
+/* The direct-call link in the bar adds ~150px on the right, which is more than
+   the 1280-1440px band has spare: the links overflow their box and run under the
+   logo and the flag. Tighten the bar's own three measurements across exactly that
+   band — below 1280 the call link is hidden and nothing changes, above 1440 there
+   is already room. */
+@media (min-width: 1280px) and (max-width: 1439.98px) {
+  :root {
+    --nav-pad: 28px;
+    --nav-gap: 16px;
+    --nav-link: 13.5px;
+  }
+}
+
 
 /* ══════════════════════════════════════════════════════
    FEATURE SLIDER — phone overlay

@@ -18,9 +18,21 @@ const PACKED =
 let cache = null;
 export function getLandMask() {
   if (cache) return cache;
+  // `globalThis.Buffer`, NOT a bare `Buffer`. This module is pulled into a
+  // "use client" component, and a bare Buffer identifier makes the bundler treat
+  // it as a Node built-in and inject the whole `buffer` npm shim — ~80KB of
+  // base64-js/ieee754 that shipped in the home page's JS on every visit. Reading
+  // it off globalThis is a plain property lookup the bundler cannot mistake for
+  // an import. Same fallback, same result, none of the weight.
+  //
+  // The fallback is unreachable in practice either way: atob is a global in
+  // every browser this app targets AND in Node >= 16, so the first branch is
+  // what actually runs in both environments. It is kept only so this module
+  // stays usable from a bare script (scripts/build-land-mask.cjs regenerates
+  // PACKED and reads it back).
   const bin = typeof atob === "function"
     ? atob(PACKED)
-    : Buffer.from(PACKED, "base64").toString("binary");
+    : globalThis.Buffer.from(PACKED, "base64").toString("binary");
   const out = new Uint8Array(LAND_W * LAND_H);
   for (let i = 0; i < out.length; i++) {
     out[i] = (bin.charCodeAt(i >> 3) >> (7 - (i & 7))) & 1;

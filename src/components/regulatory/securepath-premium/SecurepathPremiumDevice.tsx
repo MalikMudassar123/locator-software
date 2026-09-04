@@ -29,7 +29,7 @@ export default function SecurepathPremiumDevice() {
 
             <div data-reveal="right">
               <Image
-                src="/regulatory/Secure_path_preimume/SecurePath-Premium-Device-Installation.webp"
+                src="/regulatory/securepath-premium/securepath-premium-device-installation.webp"
                 alt="SecurePath Premium compatible GPS device installation illustration"
                 width={2297}
                 height={1865}

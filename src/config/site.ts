@@ -12,7 +12,7 @@ export const siteConfig = {
   description:
     "LOCATOR delivers GPS fleet tracking, AI video telematics, smart IoT asset monitoring, and RTA-certified solutions across the UAE. Real-time visibility for vehicles, drivers, and business assets.",
   url: siteUrl,
-  ogImage: "/og-image.png",
+  ogImage: "/brand/og-image.png",
   locale: "en_AE",
   phone: "+971508746688",
   phoneDisplay: "050 874 66 88",

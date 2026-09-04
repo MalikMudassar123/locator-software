@@ -330,7 +330,7 @@ export default function HeroSection() {
         }}
       >
         <Image
-          src="/skky.png"
+          src="/home/hero/sky.png"
           alt=""
           width={420}
           height={320}
@@ -358,7 +358,7 @@ export default function HeroSection() {
         }}
       >
         <Image
-          src="/skky.png"
+          src="/home/hero/sky.png"
           alt=""
           width={380}
           height={280}
@@ -424,7 +424,7 @@ export default function HeroSection() {
         }}
       >
         <Image
-          src="/building image.png"
+          src="/home/hero/building.png"
           alt="Dubai Skyline"
           width={590}
           height={334}
@@ -441,7 +441,7 @@ export default function HeroSection() {
       {/* Cloud — hidden on mobile via .hero-cloud-wrap CSS class */}
       <div className="hero-cloud-wrap">
         <Image
-          src="/cloud.svg"
+          src="/home/hero/cloud.svg"
           alt="Cloud"
           width={400}
           height={267}

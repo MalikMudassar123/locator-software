@@ -87,7 +87,7 @@ export default function CarTrackerHero() {
           {/* Visual — real app screens on an amber ambient glow */}
           <div className="ct-hero-viz" style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
             <Image
-              src="/footer_pages_images/car-tracker/hero.png"
+              src="/services/car-tracker/hero.png"
               alt="LOCATOR Car Tracker app — trips view with route playback and live view with vehicle status"
               width={1200}
               height={1215}

@@ -107,7 +107,7 @@ export default function SmartIotHero() {
             position: relative;
             min-height: clamp(600px, 95vh, 750px);
             padding-top: 80px;
-            background-image: url('/service_page/smart-iot mobile.webp');
+            background-image: url('/services/smart-iot/hero-mobile.webp');
             background-size: contain;
             background-position: center calc(15% + 40px);
             background-repeat: no-repeat;
@@ -153,7 +153,7 @@ export default function SmartIotHero() {
         {/* Background image — spans full section height behind navbar + body */}
         <div className="si-photo" aria-hidden="true">
           <Image
-            src="/service_page/smart-iot.webp"
+            src="/services/smart-iot/hero.webp"
             alt=""
             fill
             priority

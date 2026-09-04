@@ -72,7 +72,7 @@ export default function CareerHero() {
             position: relative;
             min-height: clamp(600px, 95vh, 750px);
             padding-top: 80px;
-            background-image: url('/Career/career mobile banner.webp');
+            background-image: url('/career/career-mobile-banner.webp');
             background-size: contain;
             background-position: center calc(15% + 40px);
             background-repeat: no-repeat;
@@ -120,7 +120,7 @@ export default function CareerHero() {
 
       <section className="ch-hero">
         <div className="ch-bg">
-          <Image src="/Career/career page.webp" alt="" fill priority sizes="100vw" />
+          <Image src="/career/career-page.webp" alt="" fill priority sizes="100vw" />
         </div>
         <div className="ch-scrim" />
         <div className="ch-glow" aria-hidden="true" />

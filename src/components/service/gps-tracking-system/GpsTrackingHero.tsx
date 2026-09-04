@@ -81,7 +81,7 @@ export default function GpsTrackingHero() {
           <div className="gts-viz" style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
             <div className="gts-viz-inner" style={{ position: 'relative', width: '100%', maxWidth: '480px' }}>
               <Image
-                src="/footer_pages_images/gps-tracking-system/hero.png"
+                src="/services/gps-tracking-system/hero.png"
                 alt="LOCATOR GPS tracking app screens — live map, dashboard, trip summaries, detailed reports, and login"
                 width={822}
                 height={791}

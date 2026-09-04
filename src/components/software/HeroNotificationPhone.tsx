@@ -209,7 +209,7 @@ export default function HeroNotificationPhone() {
       `}</style>
 
       <Image
-        src="/hero/mobile-dashboard.webp"
+        src="/software/hero-phone/mobile-dashboard.webp"
         alt=""
         fill
         sizes="(max-width: 520px) 72vw, (max-width: 820px) 42vw, 24vw"

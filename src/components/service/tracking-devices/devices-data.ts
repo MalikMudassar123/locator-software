@@ -39,7 +39,7 @@ export const DEVICES: Device[] = [
     tagline: 'GNSS/GSM/Bluetooth tracker with internal antennas and battery',
     body: 'FMB120 is a small and professional tracker with internal high gain GSM and GNSS antennas, which is able to collect device coordinates and other useful data and transfer them via GSM network to server. This device is perfectly suitable for applications where location acquirement of remote objects is needed: fleet management, car rental companies, taxi companies, public transport, logistics companies, personal cars and so on. FMB120 can perform tasks on remote objects, such as monitoring engine status, controlling truck’s door etc.',
     group: 'trackers',
-    image: '/tracking_devices/fmb120.webp',
+    image: '/tracking-devices/fmb120.webp',
     imageW: 600,
     imageH: 600,
     specs: [
@@ -60,7 +60,7 @@ export const DEVICES: Device[] = [
     tagline: 'Small and smart tracker with Bluetooth and internal backup battery',
     body: 'Teltonika FMB920 is a compact and smart tracker with Bluetooth connectivity, internal High Gain GNSS and GSM antennas and integrated backup battery. FMB920 is designed for light vehicles tracking in applications like insurance telematics, rental cars, recovery of stolen cars, public safety services, delivery transport, taxi and much more. Inputs/outputs extend device usage scenarios. Digital input can be used for ignition, door or alarm button status monitoring. Vehicle remote immobilizing may be achieved using FMB920 digital output.',
     group: 'trackers',
-    image: '/tracking_devices/fmb920.webp',
+    image: '/tracking-devices/fmb920.webp',
     imageW: 600,
     imageH: 600,
     specs: [
@@ -82,7 +82,7 @@ export const DEVICES: Device[] = [
     tagline: 'Waterproof IP67 tracker with high capacity Ni-MH battery',
     body: 'Teltonika FMB202 is a SPECIAL waterproof (IP67) tracker with Bluetooth connectivity, internal high gain GNSS and GSM antennas and integrated high capacity backup battery. Device is designed to work longer without power supply. FMB202 with NiMH battery can work up to 2 days in power saving mode. FMB202 is perfectly suitable for agriculture, delivery, refrigerated transport, trailers tracking, security & emergency services and even more. 6–30V power supply makes FMB202 suitable for motorbikes and water transport.',
     group: 'trackers',
-    image: '/tracking_devices/fmb202.webp',
+    image: '/tracking-devices/fmb202.webp',
     imageW: 600,
     imageH: 600,
     specs: [
@@ -104,7 +104,7 @@ export const DEVICES: Device[] = [
     tagline: 'Driver identification and immobilizer key accessory',
     body: 'One of the implemented features for fleet management devices is 1-Wire data protocol, which enables connection of iButton. The iButton device is perfect for any application where AVL data needs to travel along with a person or object identification.',
     group: 'accessories',
-    image: '/tracking_devices/ibutton_.webp',
+    image: '/tracking-devices/ibutton.webp',
     imageW: 600,
     imageH: 600,
     specs: [
@@ -122,7 +122,7 @@ export const DEVICES: Device[] = [
     tagline: 'RFID reader and PVC cards for fleet management devices',
     body: 'RFID reader and PVC Cards for fleet management devices. Driver authorization gives the ability to use a vehicle only for specific RFID card owners and identify which driver is on the road.',
     group: 'accessories',
-    image: '/tracking_devices/RFID_Reader.jpg',
+    image: '/tracking-devices/rfid-reader.jpg',
     imageW: 522,
     imageH: 522,
     specs: [
@@ -140,7 +140,7 @@ export const DEVICES: Device[] = [
     tagline: 'Capacitive fuel level sensor for tanks and vehicles',
     body: 'Coming shortly.',
     group: 'accessories',
-    image: '/tracking_devices/Fuel_Sensor.jpg',
+    image: '/tracking-devices/fuel-sensor.jpg',
     imageW: 600,
     imageH: 600,
     comingSoon: true,
@@ -151,7 +151,7 @@ export const DEVICES: Device[] = [
     tagline: 'Temperature sensor for fleet management devices',
     body: 'One of the implemented features for fleet management devices is 1-Wire data protocol, which enables connection of temperature sensors. It is a perfect accessory for temperature monitoring.',
     group: 'accessories',
-    image: '/tracking_devices/Temperature.webp',
+    image: '/tracking-devices/temperature.webp',
     imageW: 600,
     imageH: 600,
     specs: [
@@ -169,7 +169,7 @@ export const DEVICES: Device[] = [
     tagline: 'Light vehicle CAN adapter',
     body: 'Access to CAN Bus data enables fleet operators to report on a wide range of information. You can effectively identify areas of improvement within their vehicle operation to drive down overheads and minimize environmental impact.',
     group: 'accessories',
-    image: '/tracking_devices/LVCAN.png',
+    image: '/tracking-devices/lvcan.png',
     imageW: 600,
     imageH: 600,
     specs: [
@@ -189,7 +189,7 @@ export const DEVICES: Device[] = [
     tagline: 'Wireless Bluetooth 4.0 LE temperature and humidity sensor',
     body: 'Extend device limits with the new Bluetooth 4.0 LE temperature and humidity sensor. Easy to set up, easy to use — Bluetooth wireless communication technology to monitor the temperature and humidity of your cargo.',
     group: 'accessories',
-    image: '/tracking_devices/Temperature_Humidity_Sensor.png',
+    image: '/tracking-devices/temperature-humidity-sensor.png',
     imageW: 600,
     imageH: 600,
     specs: [

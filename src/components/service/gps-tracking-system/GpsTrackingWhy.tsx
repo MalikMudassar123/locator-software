@@ -26,7 +26,7 @@ function PhoneMock() {
         filter: 'blur(10px)',
       }} />
       <Image
-        src="/footer_pages_images/gps-tracking-system/dashboard.png"
+        src="/services/gps-tracking-system/dashboard.png"
         alt="LOCATOR app dashboard — moving, idling, and stopped vehicle counts with live view, trips, reports, and summary"
         width={592}
         height={1024}

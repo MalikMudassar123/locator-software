@@ -100,7 +100,7 @@ export default function CarTrackerFeatures() {
               filter: 'blur(8px)',
             }} />
             <Image
-              src="/footer_pages_images/car-tracker/best-gps.png"
+              src="/services/car-tracker/best-gps.png"
               alt="LOCATOR fleet dashboard, reports, and map views fanned out of a laptop"
               width={526}
               height={485}

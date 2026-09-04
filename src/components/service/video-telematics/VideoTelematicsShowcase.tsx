@@ -104,7 +104,7 @@ export default function VideoTelematicsShowcase() {
                 <span style={{ marginLeft: 8, fontSize: 'var(--f-11)', color: '#94a3b8' }}>mylocatorplus.com/video</span>
               </div>
               <Image
-                src="/block 1/video teleframe.webp"
+                src="/showcase/video-telematics-dashboard.webp"
                 alt="Live multi-camera fleet dashcam feeds — road and cabin views"
                 width={1598}
                 height={984}

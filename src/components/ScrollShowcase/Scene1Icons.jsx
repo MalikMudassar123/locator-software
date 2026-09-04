@@ -30,7 +30,7 @@ const DT_PERIM = 2 * (DT_W + DT_H);
 
 // Phone — front layer, clipping only the browser's right edge (~19% of its width)
 // so the dashboard's sidebar and map stay readable behind it.
-// 168×370 is the native aspect of /block 1/mobile.webp (1535×3378 → 0.454). Matching
+// 168×370 is the native aspect of /showcase/mobile-app.webp (1535×3378 → 0.454). Matching
 // it exactly means objectFit:cover shows the WHOLE screenshot with nothing cropped —
 // any other ratio silently cuts the bottom rows off. Change width and height together.
 const PHONE_X = 396, PHONE_Y = 125, PHONE_W = 168, PHONE_H = 370, PHONE_R = 24;
@@ -1260,7 +1260,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
             that changes is that the request starts at page load instead of at
             scroll. */}
         <Image
-          src="/block 1/mobile.webp"
+          src="/showcase/mobile-app.webp"
           alt="Mobile app interface"
           fill
           sizes={`${PHONE_W}px`}
@@ -1292,7 +1292,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
         <div style={{ position:'relative', flex:1, background:'#fff' }}>
           {/* The big one — this is the panel that was visibly empty at scrollY 1800. */}
           <Image
-            src="/block 1/werertrttr.webp"
+            src="/showcase/desktop-dashboard.webp"
             alt="Desktop dashboard interface"
             fill
             sizes={`${DT_W}px`}
@@ -1330,7 +1330,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
         }}
       >
         <Image
-          src="/block 1/fdghgyhjhk.webp"
+          src="/showcase/vehicle-hover-popup.webp"
           alt="Vehicle hover popup"
           fill
           sizes="225px"
@@ -1359,7 +1359,7 @@ export default forwardRef(function Scene1Icons(_props, ref) {
         }}
       >
         <Image
-          src="/block 1/map bar.png"
+          src="/showcase/map-satellite-toggle.png"
           alt="Map/Satellite toggle"
           fill
           sizes="110px"

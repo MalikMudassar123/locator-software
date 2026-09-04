@@ -378,7 +378,7 @@ export default function ServiceHero() {
         <div className="srv-pin">
           <div className="srv-hero-bg" aria-hidden="true">
             <Image
-              src="/ChatGPT Image Aug 25, 2026, 10_25_07 PM.webp"
+              src="/services/service-hero.webp"
               alt=""
               fill
               priority

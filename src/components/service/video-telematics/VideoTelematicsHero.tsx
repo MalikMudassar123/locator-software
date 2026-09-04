@@ -97,7 +97,7 @@ export default function VideoTelematicsHero() {
         <div className="vt-pin">
           <div className="vt-hero-bg" aria-hidden="true">
             <Image
-              src="/service_page/dashcam-hero-banner.webp"
+              src="/services/dashcam-hero-banner.webp"
               alt=""
               fill
               priority

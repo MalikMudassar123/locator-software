@@ -75,7 +75,7 @@ export const VOICES: Voice[] = [
     company: 'Safari Mall',
     person: 'Shameem',
     role: 'Transport',
-    logo: '/footer_pages_images/safari.png',
+    logo: '/services/testimonials/safari.png',
     rating: 5,
   },
   {
@@ -84,7 +84,7 @@ export const VOICES: Voice[] = [
     company: 'Med7',
     person: 'Susan',
     role: 'Manager',
-    logo: '/footer_pages_images/med.png',
+    logo: '/services/testimonials/med.png',
     rating: 5,
   },
   {
@@ -93,7 +93,7 @@ export const VOICES: Voice[] = [
     company: 'TAD-BEER',
     person: 'Shahid',
     role: 'IT Manager',
-    logo: '/footer_pages_images/tad.png',
+    logo: '/services/testimonials/tad.png',
     rating: 5,
   },
   {
@@ -102,7 +102,7 @@ export const VOICES: Voice[] = [
     company: 'Blue Rhine',
     person: 'Ahmed',
     role: 'Admin',
-    logo: '/footer_pages_images/blue.png',
+    logo: '/services/testimonials/blue.png',
     rating: 5,
   },
 ]

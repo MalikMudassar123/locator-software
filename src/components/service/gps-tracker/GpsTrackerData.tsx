@@ -66,7 +66,7 @@ export default function GpsTrackerData() {
               filter: 'blur(6px)',
             }} />
             <Image
-              src="/footer_pages_images/gps-tracker/accurate-data.png"
+              src="/services/gps-tracker/accurate-data.png"
               alt="Detailed GPS tracker reports printing out of a mobile device"
               width={1193}
               height={1072}

@@ -21,7 +21,7 @@ type Market = {
 const MARKETS: Market[] = [
   {
     country: 'Dubai',
-    flag: '/uae-flag.svg',
+    flag: '/flags/uae.svg',
     live: true,
     place: 'Sheikh Zayed Road, Trade Centre,\nTrade Centre 1, Dubai, United Arab Emirates',
     phone: '+971 4 354 7766',
@@ -31,7 +31,7 @@ const MARKETS: Market[] = [
   },
   {
     country: 'Abu Dhabi',
-    flag: '/uae-flag.svg',
+    flag: '/flags/uae.svg',
     live: true,
     place: 'Capital Mall, Mohammed Bin Zayed City,\nAbu Dhabi, United Arab Emirates',
     phone: '+971 52 675 1880',

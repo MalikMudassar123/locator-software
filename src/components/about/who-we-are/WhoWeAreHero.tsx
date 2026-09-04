@@ -104,7 +104,7 @@ export default function WhoWeAreHero() {
             position: relative;
             min-height: clamp(600px, 95vh, 750px);
             padding-top: 80px;
-            background-image: url('/About_us/who-we-are/our vision mobile.webp');
+            background-image: url('/about/who-we-are/our-vision-mobile.webp');
             background-size: contain;
             background-position: center calc(15% + 40px);
             background-repeat: no-repeat;
@@ -156,7 +156,7 @@ export default function WhoWeAreHero() {
       <section className="wwa-hero">
         <div className="wwa-photo" aria-hidden="true">
           <Image
-            src="/About_us/who-we-are/hero_about.png"
+            src="/about/who-we-are/hero-about.png"
             alt=""
             fill
             priority
@@ -165,7 +165,7 @@ export default function WhoWeAreHero() {
           />
           <div className="wwa-photo-mobile">
             <Image
-              src="/About_us/who-we-are/our vision mobile.webp"
+              src="/about/who-we-are/our-vision-mobile.webp"
               alt=""
               fill
               priority
@@ -194,7 +194,7 @@ export default function WhoWeAreHero() {
               <div className="wwa-badge wwa-anim" style={{ animationDelay: '.22s' }}>
                 <span className="wwa-badge-label">Part of</span>
                 <Image
-                  src="/About_us/who-we-are/sysnonas.png"
+                  src="/about/who-we-are/sysnonas.png"
                   alt="Synosys"
                   width={90}
                   height={28}

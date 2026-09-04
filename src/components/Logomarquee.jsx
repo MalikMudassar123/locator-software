@@ -36,7 +36,7 @@ const LOGO_DIMS = {
 const ALL_LOGOS = CLIENT_LOGO_NUMBERS.map((n) => {
   const padded = String(n).padStart(2, "0");
   const [width, height] = LOGO_DIMS[padded];
-  return { name: `Client ${padded}`, src: `/client logos/client-${padded}.png`, width, height };
+  return { name: `Client ${padded}`, src: `/clients/client-${padded}.png`, width, height };
 });
 
 /* Split into three rows of roughly equal length */

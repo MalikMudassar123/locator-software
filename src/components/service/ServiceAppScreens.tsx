@@ -42,7 +42,7 @@ export default function ServiceAppScreens({
               <ServiceAppCarousel screens={screens} />
             ) : (
               <Image
-                src="/app-hero.png"
+                src="/services/app-hero.png"
                 alt="LOCATOR mobile app — graphical report, live view, and summary screens"
                 width={1600}
                 height={1244}

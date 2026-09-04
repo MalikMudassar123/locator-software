@@ -43,7 +43,7 @@ export default function WhoWeAreJourney() {
       <section className="wwj-section" data-reveal>
         <div className="wwj-photo" aria-hidden="true">
           <Image
-            src="/About_us/who-we-are/journey-road.png"
+            src="/about/who-we-are/journey-road.png"
             alt=""
             fill
             sizes="(max-width: 860px) 74vw, 1000px"

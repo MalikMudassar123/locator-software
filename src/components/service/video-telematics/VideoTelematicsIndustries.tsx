@@ -12,27 +12,27 @@ const INDUSTRIES = [
   {
     title: 'Transportation & Logistics',
     desc: 'Prevent cargo loss with AI theft detection and HD video proof, speeding claims, reducing fraud disputes, and improving fleet safety across deliveries and loading hubs.',
-    image: '/service_page/Industries we serve/Transportation & Logistics.webp',
+    image: '/services/industries-we-serve/transportation-and-logistics.webp',
   },
   {
     title: 'Warehouse',
     desc: 'Enable 24/7 AI video monitoring for forklifts and machines, preventing equipment damage, boosting operator accountability, and strengthening warehouse incident reporting.',
-    image: '/service_page/Industries we serve/Warehouse.webp',
+    image: '/services/industries-we-serve/warehouse.webp',
   },
   {
     title: 'School Districts',
     desc: 'Protect students and drivers with AI behavior monitoring and stop-arm violation evidence, improving road safety, driver training, and regulatory enforcement.',
-    image: '/service_page/Industries we serve/School Districtse.webp',
+    image: '/services/industries-we-serve/school-districtse.webp',
   },
   {
     title: 'Waste Management',
     desc: 'Resolve complaints faster using real-time HD video and portal retrieval, improving driver coaching, service quality, and customer issue resolution.',
-    image: '/service_page/Industries we serve/Waste Management.webp',
+    image: '/services/industries-we-serve/waste-management.webp',
   },
   {
     title: 'Field Services & Recovery',
     desc: 'Provide premium safety assurance with AI-protected video telematics for high-value vehicle transport, validating service completion and adding customer trust through recorded proof.',
-    image: '/service_page/Industries we serve/Field Services & Recovery Vehicles.webp',
+    image: '/services/industries-we-serve/field-services-and-recovery-vehicles.webp',
   },
 ]
 

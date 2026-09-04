@@ -42,9 +42,9 @@ export default function GpsTrackerPage() {
       <ServiceAppScreens
         lead="Real screens from the LOCATOR mobile app — secure login, the live vehicle view with full trip detail, and every tracked asset pinned on one map."
         screens={[
-          { src: '/footer_pages_images/gps-tracker/home-page.png', alt: 'LOCATOR app login screen', w: 592, h: 1024 },
-          { src: '/footer_pages_images/gps-tracker/live.png', alt: 'LOCATOR app live view showing vehicle status, driver, and location detail', w: 592, h: 1024 },
-          { src: '/footer_pages_images/gps-tracker/poi.png', alt: 'LOCATOR app map view with all tracked vehicles and points of interest', w: 592, h: 1024 },
+          { src: '/services/gps-tracker/home-page.png', alt: 'LOCATOR app login screen', w: 592, h: 1024 },
+          { src: '/services/gps-tracker/live.png', alt: 'LOCATOR app live view showing vehicle status, driver, and location detail', w: 592, h: 1024 },
+          { src: '/services/gps-tracker/poi.png', alt: 'LOCATOR app map view with all tracked vehicles and points of interest', w: 592, h: 1024 },
         ]}
       />
       <ServiceUseCases />

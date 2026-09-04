@@ -21,7 +21,7 @@ const TABS = [
     body: 'Tell us your fleet size and we’ll put together a tailored, no-obligation quote within one business day.',
     stat: { value: '950,104+', sub: 'quotes generated to date' },
     cta: { label: 'Get a free quote', href: '/get-a-quote' },
-    img: { src: '/footer_pages_images/gps-tracker/request-for-a-quote.svg', w: 831, h: 665, alt: 'Requesting a free GPS tracker quote online' },
+    img: { src: '/services/gps-tracker/request-for-a-quote.svg', w: 831, h: 665, alt: 'Requesting a free GPS tracker quote online' },
   },
   {
     key: 'demo',
@@ -30,7 +30,7 @@ const TABS = [
     body: 'Book a walkthrough with our team and watch the platform track a real device in real time.',
     stat: { value: '20 min', sub: 'average demo length' },
     cta: { label: 'Book a free demo', href: '/get-a-free-demo' },
-    img: { src: '/footer_pages_images/gps-tracker/get-a-free-demo.svg', w: 802, h: 617, alt: 'Live walkthrough demo of the LOCATOR tracking platform' },
+    img: { src: '/services/gps-tracker/get-a-free-demo.svg', w: 802, h: 617, alt: 'Live walkthrough demo of the LOCATOR tracking platform' },
   },
   {
     key: 'install',
@@ -39,7 +39,7 @@ const TABS = [
     body: 'Our certified technicians fit and configure every device on-site, so it starts reporting from day one.',
     stat: { value: '48 hrs', sub: 'typical install turnaround' },
     cta: { label: 'Schedule installation', href: '/contact' },
-    img: { src: '/footer_pages_images/gps-tracker/get-installed.svg', w: 803, h: 617, alt: 'Certified technician installing a GPS tracker device on-site' },
+    img: { src: '/services/gps-tracker/get-installed.svg', w: 803, h: 617, alt: 'Certified technician installing a GPS tracker device on-site' },
   },
   {
     key: 'monitor',
@@ -48,7 +48,7 @@ const TABS = [
     body: 'Once installed, your fleet appears instantly on the platform — live location, alerts, and reports from minute one.',
     stat: { value: '99.9%', sub: 'tracking network uptime' },
     cta: { label: 'View the platform', href: '/software' },
-    img: { src: '/footer_pages_images/gps-tracker/start-monitoring.svg', w: 803, h: 617, alt: 'Monitoring a live fleet on the LOCATOR dashboard' },
+    img: { src: '/services/gps-tracker/start-monitoring.svg', w: 803, h: 617, alt: 'Monitoring a live fleet on the LOCATOR dashboard' },
   },
 ]
 

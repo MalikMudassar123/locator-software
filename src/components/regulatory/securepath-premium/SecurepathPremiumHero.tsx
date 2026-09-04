@@ -169,7 +169,7 @@ export default function SecurepathPremiumHero() {
       <section className="spp-hero">
         <div className="spp-photo" aria-hidden="true">
           <Image
-            src="/regulatory/Secure_path_preimume/securepath-premium-hero-banner.webp"
+            src="/regulatory/securepath-premium/securepath-premium-hero-banner.webp"
             alt=""
             fill
             priority

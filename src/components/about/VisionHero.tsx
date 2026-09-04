@@ -103,7 +103,7 @@ export default function VisionHero() {
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            background-image: url('/About_us/vision/vision second hero.webp');
+            background-image: url('/about/vision/vision-second-hero.webp');
             background-size: cover;
             background-position: 80% center;
             background-repeat: no-repeat;
@@ -137,7 +137,7 @@ export default function VisionHero() {
         {/* Full-bleed background — anchored to section root, covers every edge */}
         <div className="vsh-photo" aria-hidden="true">
           <Image
-            src="/About_us/vision/vision second hero.webp"
+            src="/about/vision/vision-second-hero.webp"
             alt=""
             fill
             priority

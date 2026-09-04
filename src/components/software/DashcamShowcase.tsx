@@ -14,22 +14,22 @@ const CARDS = [
     desc: 'Stream real-time HD road and driver footage to improve driver behaviour, retrieve video on-demand, and enforce safer driving across your fleet.',
     // A dark AI-camera frame like the other three — the light dashboard-UI
     // screenshot that was here read as a bright slab against the panel.
-    image: '/service_page/Industries we serve/Transportation & Logistics.webp',
+    image: '/services/industries-we-serve/transportation-and-logistics.webp',
   },
   {
     title: 'Collision Prevention',
     desc: 'Analyse incidents with video evidence and deploy AI audible alerts to warn drivers instantly, reducing future collision risks.',
-    image: '/service_page/Industries we serve/Field Services & Recovery Vehicles.webp',
+    image: '/services/industries-we-serve/field-services-and-recovery-vehicles.webp',
   },
   {
     title: 'Driver Monitoring',
     desc: 'AI driver monitoring detects drowsiness and distraction — yawning, eye closure, phone use, looking away — helping managers take proactive safety actions.',
-    image: '/service_page/Industries we serve/School Districtse.webp',
+    image: '/services/industries-we-serve/school-districtse.webp',
   },
   {
     title: 'Cargo & Cost Savings',
     desc: 'Cut costs from accidents, insurance claims, vehicle damage, and fraud disputes with undeniable recorded proof that protects your business.',
-    image: '/service_page/Industries we serve/Warehouse.webp',
+    image: '/services/industries-we-serve/warehouse.webp',
   },
 ]
 

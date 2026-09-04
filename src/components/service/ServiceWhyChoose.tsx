@@ -103,7 +103,7 @@ export default function ServiceWhyChoose() {
             <div className="swc-photo-wrap">
               <div className="swc-photo">
                 <Image
-                  src="/ChatGPT Image Aug 25, 2026, 06_20_30 PM.webp"
+                  src="/services/why-choose.webp"
                   alt="LOCATOR GPS tracking dashboard — live vehicle map and fleet overview"
                   fill
                   sizes="(max-width: 940px) 90vw, 60vw"

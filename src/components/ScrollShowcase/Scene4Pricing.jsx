@@ -1007,7 +1007,7 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
         }}
       >
         <BrowserChrome />
-        {/* Spaces in these src paths are LITERAL, never %20. next/image expects an
+        {/* Keep every path under /public space-free. next/image expects an
             unencoded src and percent-encodes it itself when building the
             /_next/image?url=… request, so a pre-encoded path gets encoded twice —
             % becomes %25, giving %2520, which the optimizer decodes back to the
@@ -1022,7 +1022,7 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
               rel="preload"> in Next 16 (that is the separate `preload` prop), so
               nothing here competes with the first viewport. */}
           <Image
-            src="/block 1/video teleframe.webp"
+            src="/showcase/video-telematics-dashboard.webp"
             alt="Video telematics dashboard"
             fill
             sizes={`${FW}px`}
@@ -1054,7 +1054,7 @@ export default forwardRef(function Scene4Pricing(_props, ref) {
         }}
       >
         <Image
-          src="/block 1/fdghgyhjhk.webp"
+          src="/showcase/vehicle-hover-popup.webp"
           alt="Vehicle hover popup"
           fill
           sizes="250px"

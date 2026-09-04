@@ -179,7 +179,7 @@ export default function GpsTrackerHero() {
                   background: 'radial-gradient(ellipse, rgba(15,23,42,.22), transparent 75%)',
                   filter: 'blur(2px)',
                 }} />
-                <Image src="/footer_pages_images/gps-tracker/gps-tracker-device.png" alt="Teltonika FMM130 and FMB204 GPS tracker devices" width={636} height={626} style={{ width: '100%', height: 'auto', display: 'block', position: 'relative', zIndex: 1, filter: 'drop-shadow(0 18px 20px rgba(15,23,42,.16))' }} priority />
+                <Image src="/services/gps-tracker/gps-tracker-device.png" alt="Teltonika FMM130 and FMB204 GPS tracker devices" width={636} height={626} style={{ width: '100%', height: 'auto', display: 'block', position: 'relative', zIndex: 1, filter: 'drop-shadow(0 18px 20px rgba(15,23,42,.16))' }} priority />
               </div>
 
               {/* "Live" status callout */}

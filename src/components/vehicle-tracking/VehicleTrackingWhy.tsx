@@ -106,7 +106,7 @@ export default function VehicleTrackingWhy() {
           <div className="vtw-visual" data-reveal="right">
             <div className="vtw-frame">
               <Image
-                src="/live-showcase.png"
+                src="/shared/live-showcase.png"
                 alt="The LOCATOR platform showing live vehicle positions and customisable reports"
                 width={1200}
                 height={860}

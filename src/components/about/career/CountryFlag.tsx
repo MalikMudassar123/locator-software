@@ -6,7 +6,7 @@ import Image from 'next/image'
  * explicitly rather than derived from the country name.
  */
 export const COUNTRY_FLAGS: Record<string, string> = {
-  'United Arab Emirates': '/uae-flag.svg',
+  'United Arab Emirates': '/flags/uae.svg',
   'Saudi Arabia': '/flags/saudi-arabia.svg',
   Kuwait: '/flags/kuwait.svg',
   Qatar: '/flags/qatar.svg',

@@ -86,7 +86,7 @@ export default async function BlogArticlePage({
           '@type': 'Organization',
           name: siteConfig.name,
           url: siteUrl,
-          logo: { '@type': 'ImageObject', url: `${siteUrl}/logo.png` },
+          logo: { '@type': 'ImageObject', url: `${siteUrl}/brand/logo.png` },
         },
       },
       {

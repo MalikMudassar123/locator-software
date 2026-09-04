@@ -26,7 +26,7 @@ function LaptopMock() {
         filter: 'blur(10px)',
       }} />
       <Image
-        src="/footer_pages_images/gps-tracking-system/laptop.png"
+        src="/services/gps-tracking-system/laptop.png"
         alt="LOCATOR fleet dashboard, live map, and report screens fanned out of a laptop"
         width={636}
         height={586}

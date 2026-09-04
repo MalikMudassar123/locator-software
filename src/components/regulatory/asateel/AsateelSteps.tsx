@@ -50,7 +50,7 @@ export default function AsateelSteps() {
 
           <div data-reveal="right">
             <Image
-              src="/regulatory/asateel-certified/LOCATOR-ITC.svg"
+              src="/regulatory/asateel-certified/locator-itc.svg"
               alt="Enroll in the ASATEEL platform — city illustration"
               width={403}
               height={256}

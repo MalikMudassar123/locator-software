@@ -257,7 +257,7 @@ export default function SoftwareNavbar() {
           <div className="swn-bar">
             {/* Logo */}
             <Link href="/" className="swn-logo" onMouseEnter={() => setActiveMenu(null)} style={{ display: 'flex', alignItems: 'center', flexShrink: 0, textDecoration: 'none' }}>
-              <Image src="/llooogoo.png" alt="Locator" width={2617} height={911} style={{ width: 'auto', height: 'max(42px, min(1.26vw + 22px, 55px))', objectFit: 'contain' }} priority />
+              <Image src="/brand/logo-wordmark.png" alt="Locator" width={2617} height={911} style={{ width: 'auto', height: 'max(42px, min(1.26vw + 22px, 55px))', objectFit: 'contain' }} priority />
             </Link>
 
             {/* Nav links */}
@@ -313,7 +313,7 @@ export default function SoftwareNavbar() {
 
             {/* Right: flag + CTA + hamburger */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }} onMouseEnter={() => setActiveMenu(null)}>
-              <Image src="/uae-flag.svg" alt="UAE" width={28} height={28} className="swn-flag" style={{ borderRadius: '50%', display: 'block' }} />
+              <Image src="/flags/uae.svg" alt="UAE" width={28} height={28} className="swn-flag" style={{ borderRadius: '50%', display: 'block' }} />
               <button className="swn-cta" onClick={() => router.push('/get-a-quote')}>Get a quote</button>
 
               <button
@@ -380,7 +380,7 @@ export default function SoftwareNavbar() {
           display: 'flex', flexDirection: 'column',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 24px', borderBottom: '1px solid #e3e3e6' }}>
-            <Image src="/llooogoo.png" alt="Locator" width={2617} height={911} style={{ width: 'auto', height: '38px' }} />
+            <Image src="/brand/logo-wordmark.png" alt="Locator" width={2617} height={911} style={{ width: 'auto', height: '38px' }} />
             <button
               onClick={() => setOpen(false)}
               aria-label="Close"

@@ -13,10 +13,10 @@ const EASE = 'cubic-bezier(.22,.61,.36,1)'
  * the headline.
  */
 const PROOF = [
-  { name: 'DB Schenker', src: '/client Logo/DB-SCHENKER.png' },
-  { name: 'GMG', src: '/client Logo/GMG.png' },
-  { name: 'Al Ghazal Transport', src: '/client Logo/al-ghazal-transport.png' },
-  { name: 'Access Hire Middle East', src: '/client Logo/access-hire-middle-east-logo.png' },
+  { name: 'DB Schenker', src: '/clients/db-schenker.png' },
+  { name: 'GMG', src: '/clients/gmg.png' },
+  { name: 'Al Ghazal Transport', src: '/clients/al-ghazal-transport.png' },
+  { name: 'Access Hire Middle East', src: '/clients/access-hire-middle-east-logo.png' },
 ]
 
 /**
@@ -180,7 +180,7 @@ export default function VehicleTrackingHero() {
           {/* ── Isometric city ── */}
           <div className="vth-art vth-anim" style={{ '--d': '240ms' } as React.CSSProperties}>
             <Image
-              src="/footer_pages_images/vehicle-tracking-system/hero.png"
+              src="/services/vehicle-tracking-system/hero.png"
               alt="Cars, trucks, a boat, a scooter and site machinery pinned across a city on one live map"
               width={1000}
               height={963}

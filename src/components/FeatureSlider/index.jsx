@@ -826,7 +826,7 @@ const SceneTaskManager = forwardRef(function SceneTaskManager(_, ref) {
         }}>
           <BrowserBar/>
           <div style={{ position:'relative', flex:1 }}>
-            <Image src="/software images/software images/Task Manager/jkliului.webp"
+            <Image src="/software/modules/task-manager/task-manager.webp"
               alt="Task Manager" fill sizes={`${DT_W}px`}
               style={{ objectFit:'contain', objectPosition:'left top' }}/>
           </div>
@@ -957,7 +957,7 @@ const SceneExpense = forwardRef(function SceneExpense(_, ref) {
               and pushed the card's edge away from where the wireframe ended. */}
           <div style={{ position:'relative', width:'100%', aspectRatio:EXPENSE_AR, overflow:'hidden' }}>
             <Image
-              src="/software images/software images/Expense Manager/main.webp"
+              src="/software/modules/expense-manager/expense-manager.webp"
               alt="Expense Manager"
               width={1800}
               height={1076}
@@ -984,7 +984,7 @@ const SceneExpense = forwardRef(function SceneExpense(_, ref) {
         }}
       >
         <Image
-          src="/software images/software images/Expense Manager/yijlkjlkj.webp"
+          src="/software/modules/expense-manager/expense-manager-mobile.webp"
           alt="Expense Manager mobile"
           width={155}
           height={285}
@@ -1011,7 +1011,7 @@ const SceneExpense = forwardRef(function SceneExpense(_, ref) {
         }}
       >
         <Image
-          src="/software images/software images/Expense Manager/lk;oiio;io.png"
+          src="/software/modules/expense-manager/toll-payment-popup.png"
           alt="Toll payment popup"
           fill sizes="300px"
           style={{ objectFit:'contain', objectPosition:'left top' }}
@@ -1075,7 +1075,7 @@ const SceneInspection = forwardRef(function SceneInspection(_, ref) {
           <BrowserBar/>
           <div style={{ position:'relative', width:'100%', aspectRatio:INSPECTION_AR, overflow:'hidden' }}>
             <Image
-              src="/software images/software images/Inspection/kjiuguy.webp"
+              src="/software/modules/inspection/inspection.webp"
               alt="Inspection"
               width={1800}
               height={822}
@@ -1102,7 +1102,7 @@ const SceneInspection = forwardRef(function SceneInspection(_, ref) {
         }}
       >
         <Image
-          src="/software images/software images/Inspection/hjgjbjkkj.webp"
+          src="/software/modules/inspection/inspection-mobile.webp"
           alt="Inspection mobile"
           width={155}
           height={285}
@@ -1167,7 +1167,7 @@ const SceneFleet = forwardRef(function SceneFleet(_, ref) {
           <BrowserBar/>
           <div style={{ position:'relative', width:'100%', aspectRatio:FLEET_AR, overflow:'hidden' }}>
             <Image
-              src="/software images/software images/Fleet Manager/hyuiuyku.webp"
+              src="/software/modules/fleet-manager/fleet-manager.webp"
               alt="Fleet Manager"
               width={1600}
               height={858}
@@ -1194,7 +1194,7 @@ const SceneFleet = forwardRef(function SceneFleet(_, ref) {
         }}
       >
         <Image
-          src="/software images/software images/Fleet Manager/dsfdgvdfgdf.png"
+          src="/software/modules/fleet-manager/support-agent-popup.png"
           alt="Sarah Support popup"
           fill sizes="320px"
           style={{ objectFit:'contain', objectPosition:'left top' }}

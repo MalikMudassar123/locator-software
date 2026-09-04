@@ -231,7 +231,7 @@ export default function ContactOffices() {
       <div className="cto-inner">
         <div className="cto-head" data-reveal>
           <span className="cto-pill">
-            <Image src="/uae-flag.svg" alt="" width={22} height={22} />
+            <Image src="/flags/uae.svg" alt="" width={22} height={22} />
             Our offices
           </span>
           <h2 className="cto-title"><span>UAE</span></h2>

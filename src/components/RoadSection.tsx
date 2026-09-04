@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 const vehicles = [
   {
     id: 'car',
-    src: '/car.png',
+    src: '/home/road/car.png',
     alt: 'Car',
     width: 72,
     height: 47,
@@ -24,7 +24,7 @@ const vehicles = [
   },
   {
     id: 'bus',
-    src: '/bus.png',
+    src: '/home/road/bus.png',
     alt: 'Bus',
     width: 145,
     height: 85,
@@ -41,7 +41,7 @@ const vehicles = [
   },
   {
     id: 'van',
-    src: '/van.png',
+    src: '/home/road/van.png',
     alt: 'Van',
     width: 105,
     height: 62,
@@ -58,8 +58,8 @@ const vehicles = [
   },
   {
     id: 'yacht',
-    src: '/yatch boat.png',
-    waterSrc: '/water.png',
+    src: '/home/road/yacht-boat.png',
+    waterSrc: '/home/road/water.png',
     alt: 'Yacht',
     width: 106,
     height: 63,
@@ -76,7 +76,7 @@ const vehicles = [
   },
   {
     id: 'generator',
-    src: '/generator.png',
+    src: '/home/road/generator.png',
     alt: 'Generator',
     width: 95,
     height: 95,
@@ -93,7 +93,7 @@ const vehicles = [
   },
   {
     id: 'truck',
-    src: '/track.png',
+    src: '/home/road/track.png',
     alt: 'Truck',
     width: 144,
     height: 86,
@@ -216,7 +216,7 @@ export default function RoadSection() {
       {/* Road surface */}
       <div className="absolute inset-0" style={{ zIndex: 1 }}>
         <Image
-          src="/road.png"
+          src="/home/road/road.png"
           alt="Road"
           fill
           className="object-cover object-top"
@@ -288,7 +288,7 @@ export default function RoadSection() {
             onMouseLeave={() => setHoveredPin(null)}
           >
             <Image
-              src="/bike.png"
+              src="/home/road/bike.png"
               alt="Delivery Scooter"
               width={182}
               height={153}
@@ -387,7 +387,7 @@ export default function RoadSection() {
                 }}
               >
                 <Image
-                  src="/gps-pin.svg"
+                  src="/home/road/gps-pin.svg"
                   alt="Tracker"
                   width={v.pinSize}
                   height={v.pinSize}
@@ -631,7 +631,7 @@ export default function RoadSection() {
               transform: hoveredPin === 'scooter' ? 'scale(1.18) translateY(-4px)' : 'scale(1)',
             }}
           >
-            <Image src="/gps-pin.svg" alt="Tracker" width={60} height={60} />
+            <Image src="/home/road/gps-pin.svg" alt="Tracker" width={60} height={60} />
           </div>
 
           {tooltipsEnabled && hoveredPin === 'scooter' && (

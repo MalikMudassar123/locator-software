@@ -160,7 +160,7 @@ export default function TrackingDevicesHero() {
 
         <div className="td-photo" aria-hidden="true">
           <Image
-            src="/service_page/tracking-devices-hero-banner.webp"
+            src="/services/tracking-devices-hero-banner.webp"
             alt=""
             fill
             priority

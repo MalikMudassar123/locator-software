@@ -11,14 +11,14 @@ const CARDS = [
   {
     tag: 'The Platform',
     title: 'Build the tech behind live fleet command',
-    poster: '/dashboard.png',
-    video: '/software_images/1781720706096317.mp4',
+    poster: '/shared/dashboard.png',
+    video: '/career/team-spotlight-1.mp4',
   },
   {
     tag: 'The Impact',
     title: 'Ship features that move real vehicles, in real time',
-    poster: '/live-showcase.png',
-    video: '/software_images/1781721807787704.mp4',
+    poster: '/shared/live-showcase.png',
+    video: '/career/team-spotlight-2.mp4',
   },
 ]
 
@@ -96,7 +96,7 @@ export default function CareerTeamSpotlight() {
                   <Image src={c.poster} alt="" fill sizes="(max-width: 760px) 100vw, 50vw" style={{ objectFit: 'cover' }} />
                 )}
 
-                <span className="cts-logo"><Image src="/logo.png" alt="LOCATOR" fill sizes="96px" style={{ objectFit: 'contain', objectPosition: 'left' }} /></span>
+                <span className="cts-logo"><Image src="/brand/logo.png" alt="LOCATOR" fill sizes="96px" style={{ objectFit: 'contain', objectPosition: 'left' }} /></span>
 
                 <div className="cts-text">
                   <span className="cts-tag">{c.tag}</span>

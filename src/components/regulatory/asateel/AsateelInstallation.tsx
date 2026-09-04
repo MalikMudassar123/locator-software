@@ -14,7 +14,7 @@ export default function AsateelInstallation() {
 
           <div data-reveal="left">
             <Image
-              src="/regulatory/asateel-certified/GPS-Tracker-Installation.svg"
+              src="/regulatory/asateel-certified/gps-tracker-installation.svg"
               alt="ASATEEL certified OBU installation — technician illustration"
               width={2889}
               height={2881}

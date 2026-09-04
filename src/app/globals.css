@@ -388,7 +388,7 @@ main {
   /* Navbar is `h-16 md:h-20` — Tailwind's md is 768px. */
   --hero-nav-h: 4rem;
 
-  /* Skyline is /building image.png at 590×334 (ratio 0.5661), width-driven and
+  /* Skyline is /home/hero/building.png at 590×334 (ratio 0.5661), width-driven and
      bottom-aligned, so its rendered height is simply width × ratio.
 
      TWIN of .hero-building-wrap's maxWidth in HeroSection.tsx — the expression must

@@ -61,7 +61,7 @@ export default function CarGpsAbout() {
               filter: 'blur(8px)',
             }} />
             <Image
-              src="/footer_pages_images/car-gps-tracker/about-device.png"
+              src="/services/car-gps-tracker/about-device.png"
               alt="Fleet manager receiving LOCATOR alerts for fuel, routes, servicing, and messages"
               width={600}
               height={900}

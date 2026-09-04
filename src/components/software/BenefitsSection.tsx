@@ -22,12 +22,12 @@ const ITEMS = [
 // clips are a slightly narrower 1672x1512 — each is recorded here rather than
 // assumed, since .bf-right--media below sizes itself exactly to whichever is active.
 const VIDEO_MAP: Record<number, { src: string; aspect: string }> = {
-  0: { src: '/software_images/fleet-telematics/live-gps.mp4',              aspect: '1726 / 1512' },
-  1: { src: '/software_images/fleet-telematics/fleet-dashboard.mp4',       aspect: '1726 / 1512' },
-  4: { src: '/software_images/fleet-telematics/daily-route.mp4',           aspect: '1726 / 1512' },
-  6: { src: '/software_images/fleet-telematics/task-manager.mp4',          aspect: '1672 / 1512' },
-  7: { src: '/software_images/fleet-telematics/expense-manager.mp4',       aspect: '1672 / 1512' },
-  9: { src: '/software_images/fleet-telematics/ai-route-optimization.mp4', aspect: '1672 / 1512' },
+  0: { src: '/software/fleet-telematics/live-gps.mp4',              aspect: '1726 / 1512' },
+  1: { src: '/software/fleet-telematics/fleet-dashboard.mp4',       aspect: '1726 / 1512' },
+  4: { src: '/software/fleet-telematics/daily-route.mp4',           aspect: '1726 / 1512' },
+  6: { src: '/software/fleet-telematics/task-manager.mp4',          aspect: '1672 / 1512' },
+  7: { src: '/software/fleet-telematics/expense-manager.mp4',       aspect: '1672 / 1512' },
+  9: { src: '/software/fleet-telematics/ai-route-optimization.mp4', aspect: '1672 / 1512' },
 }
 // Flat list so every video can stay mounted + preloaded (no re-mount flash).
 const VIDEO_LIST = Object.entries(VIDEO_MAP).map(([idx, v]) => ({ idx: Number(idx), ...v }))
@@ -92,10 +92,10 @@ const NOTIF_MAP: Record<number, Notif[]> = {
 // All four are customLayout now: each is the phone mockup underneath its own
 // notification stack, so none of them should size the panel from its own ratio.
 const IMAGE_MAP: Record<number, { src: string; alt: string; w: number; h: number; objectFit?: 'contain' | 'cover'; objectPosition?: string; customLayout?: boolean }> = {
-  2: { src: '/software_images/fleet-telematics/geofence.png',          alt: 'LOCATOR mobile alert for a vehicle idling on site',          w: 1050, h: 1023, customLayout: true },
-  3: { src: '/software_images/fleet-telematics/after-hours.png',       alt: 'LOCATOR mobile alert for a vehicle moving outside office hours', w: 435,  h: 366,  customLayout: true },
-  5: { src: '/software_images/fleet-telematics/service-reminders.png', alt: 'LOCATOR notifications — service and document reminders due', w: 1116, h: 1578, customLayout: true },
-  8: { src: '/software_images/fleet-telematics/idle-alerts.png',       alt: 'LOCATOR live view with geofence and POI zones',              w: 725,  h: 698,  customLayout: true },
+  2: { src: '/software/fleet-telematics/geofence.png',          alt: 'LOCATOR mobile alert for a vehicle idling on site',          w: 1050, h: 1023, customLayout: true },
+  3: { src: '/software/fleet-telematics/after-hours.png',       alt: 'LOCATOR mobile alert for a vehicle moving outside office hours', w: 435,  h: 366,  customLayout: true },
+  5: { src: '/software/fleet-telematics/service-reminders.png', alt: 'LOCATOR notifications — service and document reminders due', w: 1116, h: 1578, customLayout: true },
+  8: { src: '/software/fleet-telematics/idle-alerts.png',       alt: 'LOCATOR live view with geofence and POI zones',              w: 725,  h: 698,  customLayout: true },
 }
 
 type Slot = { index: number; state: 'entering' | 'visible' | 'exiting' }

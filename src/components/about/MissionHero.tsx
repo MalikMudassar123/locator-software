@@ -31,7 +31,7 @@ export default function MissionHero() {
           top: 64px; right: 0; bottom: 0; left: 0;
           z-index: 0;
           pointer-events: none;
-          background-image: url('/About_us/mission/mision.webp');
+          background-image: url('/about/mission/mission.webp');
           background-size: contain;
           background-position: right bottom;
           background-repeat: no-repeat;
@@ -159,7 +159,7 @@ export default function MissionHero() {
              the top) instead of stretching the desktop landscape shot —
              same swap SmartIotHero does for its own mobile background. */
           .msh-photo {
-            background-image: url('/About_us/mission/ChatGPT Image Aug 25, 2026, 12_45_27 AM.webp');
+            background-image: url('/about/mission/mission-hero.webp');
             background-position: center top;
           }
           /* Subtle gradient behind text for readability */

@@ -37,7 +37,7 @@ const DEFAULT_FEATURES = [
     description:
       "LOCATOR's IoT GPS asset tracking helps UAE businesses monitor cargo containers, refrigerated trailers, yachts, and rental fleets with live location, movement history, and geofence alerts — reducing asset loss and resolving claims faster.",
     preview: "map",
-    previewImage: "/real time/map.webp",
+    previewImage: "/real-time/map.webp",
     href: "/service/smart-iot#gps-asset-tracking",
     cta: "Explore GPS Asset Tracking",
   },
@@ -48,7 +48,7 @@ const DEFAULT_FEATURES = [
     description:
       "LOCATOR delivers industrial telematics and IoT equipment tracking with real-time usage, idle monitoring, and service alerts to improve uptime, safety, and job-site control.",
     preview: "telemetry",
-    previewImage: "/real time/graph.webp",
+    previewImage: "/real-time/graph.webp",
     href: "/service/smart-iot#iot-sensors",
     cta: "Explore IoT Sensors",
   },
@@ -59,7 +59,7 @@ const DEFAULT_FEATURES = [
     description:
       "LOCATOR delivers custom IoT sensors with real-time telemetry to monitor temperature, fuel, movement, and equipment health—improving compliance, reliability, and operational efficiency.",
     preview: "excavator",
-    previewImage: "/real time/percentage.webp",
+    previewImage: "/real-time/percentage.webp",
     href: "/service/smart-iot#equipment-machinery",
     cta: "Explore Machinery Monitoring",
   },

@@ -67,7 +67,7 @@ export default function CarGpsHero() {
           <div className="cgh-viz" style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
             <Image
               className="cgh-float"
-              src="/footer_pages_images/car-gps-tracker/hero.png"
+              src="/services/car-gps-tracker/hero.png"
               alt="Route traced across a map with a phone dropping a live location pin"
               width={1200}
               height={1010}

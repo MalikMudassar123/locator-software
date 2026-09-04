@@ -15,7 +15,7 @@ export default function SecurepathPremiumImportance() {
           <div className="spp-imp-grid" style={{ marginBottom: '28px' }}>
             <div data-reveal="left">
               <Image
-                src="/regulatory/Secure_path_preimume/Importance-of-SecurePath-Premium.webp"
+                src="/regulatory/securepath-premium/importance-of-securepath-premium.webp"
                 alt="Importance of SecurePath Premium — fleet monitoring illustration"
                 width={1587}
                 height={1147}

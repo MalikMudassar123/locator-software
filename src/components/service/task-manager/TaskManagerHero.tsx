@@ -147,7 +147,7 @@ export default function TaskManagerHero() {
 
         <div className="tm-photo" aria-hidden="true">
           <Image
-            src="/service_page/task-manager-hero-banner.webp"
+            src="/services/task-manager-hero-banner.webp"
             alt=""
             fill
             priority

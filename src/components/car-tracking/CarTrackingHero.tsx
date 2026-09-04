@@ -182,7 +182,7 @@ export default function CarTrackingHero() {
           {/* ── Live map panel ── */}
           <div className="cts-panel cts-anim" style={{ '--d': '260ms' } as React.CSSProperties}>
             <Image
-              src="/footer_pages_images/car-tracking-system/hero.png"
+              src="/services/car-tracking-system/hero.png"
               alt="A tracked car reporting its live location, speed and ignition status to a phone map"
               width={1200}
               height={1215}

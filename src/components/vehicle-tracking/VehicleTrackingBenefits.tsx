@@ -122,7 +122,7 @@ export default function VehicleTrackingBenefits() {
           <div className="vtb-visual" data-reveal="left" data-reveal-delay={100}>
             <div className="vtb-frame">
               <Image
-                src="/footer_pages_images/vehicle-tracking-system/benefits.png"
+                src="/services/vehicle-tracking-system/benefits.png"
                 alt="A driver at the wheel, surrounded by the reports, timings and location data a tracking system collects"
                 width={1200}
                 height={1300}

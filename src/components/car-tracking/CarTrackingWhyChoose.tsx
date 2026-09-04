@@ -102,7 +102,7 @@ export default function CarTrackingWhyChoose() {
 
             <div className="ctw-art">
               <Image
-                src="/footer_pages_images/car-tracking-system/why-choose.png"
+                src="/services/car-tracking-system/why-choose.png"
                 alt="LOCATOR reports, charts and live map running across laptop and phone"
                 width={1200}
                 height={987}

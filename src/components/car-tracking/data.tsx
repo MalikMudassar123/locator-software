@@ -25,7 +25,7 @@ export const CAPABILITIES: Capability[] = [
     desc:
       'Every vehicle, every driver, every route — live on one map. See where each car is, what it is doing and how it got there, without calling anyone to ask.',
     href: '/service/fleet-telematics',
-    img: '/footer_pages_images/car-tracking-system/real-time-fleet-visibility.png',
+    img: '/services/car-tracking-system/real-time-fleet-visibility.png',
     alt: 'A tracked car reporting its route to a satellite and a live map on screen',
   },
   {
@@ -33,7 +33,7 @@ export const CAPABILITIES: Capability[] = [
     desc:
       'Idling, speeding, after-hours use and unplanned detours are where a fleet quietly leaks money. LOCATOR measures all four, so you can act on the ones that cost most.',
     href: '/benefits-of-gps-tracking',
-    img: '/footer_pages_images/car-tracking-system/reduced-fleet-cost.png',
+    img: '/services/car-tracking-system/reduced-fleet-cost.png',
     alt: 'Fuel pump beside a falling cost chart, reviewed under a magnifier',
   },
   {
@@ -41,7 +41,7 @@ export const CAPABILITIES: Capability[] = [
     desc:
       'Trip histories, fuel, utilisation, driver behaviour and maintenance due — scheduled to your inbox or exported on demand. Decisions backed by the record, not by memory.',
     href: '/software',
-    img: '/footer_pages_images/car-tracking-system/easy-reporting.png',
+    img: '/services/car-tracking-system/easy-reporting.png',
     alt: 'Fleet report panels showing utilisation, fuel and cost breakdowns',
   },
 ]

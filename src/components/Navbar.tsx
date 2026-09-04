@@ -332,7 +332,7 @@ export default function Navbar() {
           >
             <span className="sr-only">Locator</span>
             <Image
-              src="/logo.png"
+              src="/brand/logo.png"
               alt=""
               fill
               sizes="120px"
@@ -340,7 +340,7 @@ export default function Navbar() {
               priority
             />
             <Image
-              src="/logo-blue.png"
+              src="/brand/logo-blue.png"
               alt=""
               fill
               sizes="120px"
@@ -437,7 +437,7 @@ export default function Navbar() {
           {/* Right side */}
           <div className="flex items-center gap-3 shrink-0" onMouseEnter={() => setActiveMenu(null)}>
             <Image
-              src="/uae-flag.svg"
+              src="/flags/uae.svg"
               alt="UAE"
               width={32}
               height={32}
@@ -622,7 +622,7 @@ export default function Navbar() {
             }}
           >
             <Image
-              src="/logo.png"
+              src="/brand/logo.png"
               alt="Locator"
               width={110}
               height={38}
@@ -758,7 +758,7 @@ export default function Navbar() {
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
               <Image
-                src="/uae-flag.svg"
+                src="/flags/uae.svg"
                 alt="UAE"
                 width={28}
                 height={28}

@@ -114,7 +114,7 @@ export default function CarTrackingBenefits() {
           <div className="ctb-visual" data-reveal="left" data-reveal-delay={120}>
             <div className="ctb-frame">
               <Image
-                src="/footer_pages_images/car-tracking-system/how-you-benefit.png"
+                src="/services/car-tracking-system/how-you-benefit.png"
                 alt="LOCATOR fleet map held on a tablet, surrounded by trip, cost and monthly report figures"
                 width={1242}
                 height={828}

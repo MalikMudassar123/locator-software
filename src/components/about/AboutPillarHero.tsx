@@ -213,7 +213,7 @@ export default function AboutPillarHero({
               /* Dedicated mobile crop (portrait, content already framed
                  toward the top) instead of stretching the desktop landscape
                  shot — same swap MissionHero/SmartIotHero do for mobile. */
-              background-image: url('/About_us/core_values/ChatGPT Image Aug 26, 2026, 03_06_26 AM.webp');
+              background-image: url('/about/core-values/core-values-hero.webp');
               /* Bottom-anchored, not top: the hand sits right at this crop's
                  own top edge, and this section's fixed navbar sits over the
                  section's top 64px — a top anchor would put the hand right
@@ -261,7 +261,7 @@ export default function AboutPillarHero({
         <section className="cv-hero">
           <div className="cv-photo" aria-hidden="true">
             <Image
-              src="/About_us/core_values/core values.webp"
+              src="/about/core-values/core-values.webp"
               alt=""
               fill
               priority

@@ -15,11 +15,11 @@ type Phone =
   | { kind: 'notifications'; id: string; cls: string }
 
 const PHONES: Phone[] = [
-  { kind: 'image', id: 'report',    src: '/hero/mobile-graphical-report.webp', alt: 'Locator app — graphical report', cls: 'sw-ph-2' },
-  { kind: 'image', id: 'notifs',    src: '/hero/mobile-notifications.png',     alt: 'Locator app — notifications',    cls: 'sw-ph-1' },
+  { kind: 'image', id: 'report',    src: '/software/hero-phone/mobile-graphical-report.webp', alt: 'Locator app — graphical report', cls: 'sw-ph-2' },
+  { kind: 'image', id: 'notifs',    src: '/software/hero-phone/mobile-notifications.png',     alt: 'Locator app — notifications',    cls: 'sw-ph-1' },
   { kind: 'notifications', id: 'notifications',                                                                       cls: 'sw-ph-0' },
-  { kind: 'image', id: 'summary',   src: '/hero/mobile-summary.webp',          alt: 'Locator app — vehicle summary',  cls: 'sw-ph-1 sw-ph-r' },
-  { kind: 'image', id: 'map',       src: '/hero/mobile-map-view.webp',         alt: 'Locator app — live map view',    cls: 'sw-ph-2 sw-ph-r' },
+  { kind: 'image', id: 'summary',   src: '/software/hero-phone/mobile-summary.webp',          alt: 'Locator app — vehicle summary',  cls: 'sw-ph-1 sw-ph-r' },
+  { kind: 'image', id: 'map',       src: '/software/hero-phone/mobile-map-view.webp',         alt: 'Locator app — live map view',    cls: 'sw-ph-2 sw-ph-r' },
 ]
 
 const clamp = (v: number, a = 0, b = 1) => Math.min(Math.max(v, a), b)
@@ -343,19 +343,19 @@ export default function SoftwareHero() {
               <div className="sw-layer sw-layer-web" ref={webRef} style={{ opacity: 0 }}>
                 <div className={`sw-web-fan ${animateWeb ? 'animate' : ''}`}>
                   <div className="sw-wb sw-wb-l2">
-                    <Image src="/software_images/desktop/software-page-animation-5.png" alt="Locator web — fleet overview" fill sizes="(max-width: 820px) 0px, 24vw" priority loading="eager" />
+                    <Image src="/software/desktop/software-page-animation-5.png" alt="Locator web — fleet overview" fill sizes="(max-width: 820px) 0px, 24vw" priority loading="eager" />
                   </div>
                   <div className="sw-wb sw-wb-l1">
-                    <Image src="/software_images/desktop/software-page-animation-4.png" alt="Locator web — route playback" fill sizes="(max-width: 820px) 32vw, 28vw" priority loading="eager" />
+                    <Image src="/software/desktop/software-page-animation-4.png" alt="Locator web — route playback" fill sizes="(max-width: 820px) 32vw, 28vw" priority loading="eager" />
                   </div>
                   <div className="sw-wb sw-wb-c">
-                    <Image src="/software_images/desktop/software-page-animation-1.png" alt="Locator web — live fleet map with alerts" fill sizes="(max-width: 820px) 92vw, 44vw" priority loading="eager" />
+                    <Image src="/software/desktop/software-page-animation-1.png" alt="Locator web — live fleet map with alerts" fill sizes="(max-width: 820px) 92vw, 44vw" priority loading="eager" />
                   </div>
                   <div className="sw-wb sw-wb-r1">
-                    <Image src="/software_images/desktop/software-page-animation-2.png" alt="Locator web — graphical reports" fill sizes="(max-width: 820px) 32vw, 28vw" priority loading="eager" />
+                    <Image src="/software/desktop/software-page-animation-2.png" alt="Locator web — graphical reports" fill sizes="(max-width: 820px) 32vw, 28vw" priority loading="eager" />
                   </div>
                   <div className="sw-wb sw-wb-r2">
-                    <Image src="/software_images/desktop/software-page-animation-3.png" alt="Locator web — live map" fill sizes="(max-width: 820px) 0px, 24vw" priority loading="eager" />
+                    <Image src="/software/desktop/software-page-animation-3.png" alt="Locator web — live map" fill sizes="(max-width: 820px) 0px, 24vw" priority loading="eager" />
                   </div>
                 </div>
               </div>

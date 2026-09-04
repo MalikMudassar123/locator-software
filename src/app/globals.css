@@ -1303,13 +1303,49 @@ h6 {
   user-select: none !important;
   pointer-events: none !important;
 }
-/* Text cursor over actual text elements */
+/* Text cursor over the row's prose — headline, lead paragraph, sub-copy. */
 .ss-text-panel h2,
 .ss-text-panel h3,
 .ss-text-panel p,
-.ss-text-panel span,
-.ss-feature-grid span,
-.ss-feature-grid p { cursor: text; }
+.ss-text-panel span { cursor: text; }
+
+/* ...but NOT over the feature cards. The grid is a child of .ss-text-panel, so
+   the two selectors above were also matching every card title and description
+   and painting an I-beam over a control the whole surface of which is clickable
+   — expand-in-place on the Fleet row, a link into the service page on the Video
+   row. Both read as "you can type here", which is the bug.
+   `inherit` rather than a flat `pointer` so each card stays the authority on its
+   own cursor: the card element sets pointer, or default once a Fleet card is
+   already expanded, and the copy inside it simply follows. Two classes deep, so
+   this beats the one-class prose rules above regardless of source order.
+   Selection is untouched — the user-select rules further up still apply, so the
+   copy is still selectable and a drag still selects rather than clicks. */
+.ss-text-panel .ss-feature-grid span,
+.ss-text-panel .ss-feature-grid p,
+.ss-text-panel .ss-feature-grid div { cursor: inherit; }
+
+/* Feature cards on a row that has a service page behind it (see the `href` on the
+   Video Telematics section in ScrollShowcase) render as a <Link> wrapping the whole
+   card. Descendants pick this up through the `inherit` rule directly above. */
+.ss-feature-card-link {
+  cursor: pointer;
+  transition: border-color .2s cubic-bezier(.22,.61,.36,1),
+              box-shadow .2s cubic-bezier(.22,.61,.36,1),
+              transform .2s cubic-bezier(.22,.61,.36,1);
+}
+.ss-feature-card-link:hover {
+  border-color: #c3d7fb;
+  box-shadow: 0 12px 26px -18px rgba(19,96,238,.55);
+  transform: translateY(-2px);
+}
+.ss-feature-card-link:focus-visible {
+  outline: 2px solid #1360ee;
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ss-feature-card-link { transition: none; }
+  .ss-feature-card-link:hover { transform: none; }
+}
 
 /* ══════════════════════════════════════════════════════
    FEATURE SLIDER — responsive layout

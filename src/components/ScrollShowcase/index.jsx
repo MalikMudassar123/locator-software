@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
+import Link from 'next/link';
 import Scene1Icons     from './Scene1Icons';
 import Scene4Pricing   from './Scene4Pricing';
 import SkipButton      from '@/components/common/SkipButton';
@@ -174,6 +175,13 @@ const textSections = [
     body: 'Live HD video insights to monitor drivers, road conditions, and on-road operations with ease — real-time driver monitoring, cargo surveillance, and multi-camera recording for trucks, taxis, buses, and commercial fleets.',
     features: videoFeatures,
     cols: 2,
+    // Every card in this row is a link into the full Video Telematics service
+    // page — the cards only have room for a two-line summary, so the click has
+    // somewhere better to go than an in-place expand. The hash lands the reader
+    // on that page's matching "Enhance Fleet Visibility" section (its <section
+    // id>), where the same four features are spelled out in full, rather than at
+    // the top of the route.
+    href: '/service/video-telematics#video-telematics',
   },
 ];
 
@@ -182,30 +190,16 @@ const SceneComponents = [Scene1Icons, Scene4Pricing];
 // Sizes here are the --sc-* step scale from globals.css rather than flat pixels:
 // each resolves to exactly the number it replaces up to ~1550px and grows past it,
 // so the card scales with the column instead of staying 14px wide-screen text.
-function FeatureCard({ icon, title, desc }) {
-  // Collapsed by default (2-line clamp, same look as before) — a click reveals
-  // the rest of the sentence instead of leaving it cut off behind the "…".
+function FeatureCard({ icon, title, desc, href }) {
+  // Collapsed by default (2-line clamp, same look as before) — on a row with no
+  // service page behind it a click reveals the rest of the sentence instead of
+  // leaving it cut off behind the "…". Rows that DO have one (href) skip the
+  // expand entirely and send the reader there, where the copy is complete.
   const [expanded, setExpanded] = useState(false);
+  const isLink = Boolean(href);
 
-  return (
-    <div
-      onClick={() => setExpanded((v) => !v)}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setExpanded((v) => !v); } }}
-      style={{
-        background: '#ffffff',
-        border: '1px solid #e8edf3',
-        borderRadius: 18,
-        padding: 'var(--sc-16) var(--sc-18)',
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 'var(--sc-13)',
-        minHeight: 0,
-        cursor: expanded ? 'default' : 'pointer',
-      }}
-    >
+  const body = (
+    <>
       <div style={{
         flexShrink: 0,
         width: 'var(--sc-42)',
@@ -224,14 +218,46 @@ function FeatureCard({ icon, title, desc }) {
           color: '#8090bc',
           lineHeight: 1.5,
           margin: 0,
-          ...(expanded ? null : {
+          ...(isLink || !expanded ? {
             display: '-webkit-box',
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
-          }),
+          } : null),
         }}>{desc}</p>
       </div>
+    </>
+  );
+
+  const shell = {
+    background: '#ffffff',
+    border: '1px solid #e8edf3',
+    borderRadius: 18,
+    padding: 'var(--sc-16) var(--sc-18)',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 'var(--sc-13)',
+    minHeight: 0,
+  };
+
+  if (isLink) {
+    return (
+      <Link href={href} className="ss-feature-card-link" style={{ ...shell, textDecoration: 'none', color: 'inherit' }}>
+        {body}
+      </Link>
+    );
+  }
+
+  return (
+    <div
+      onClick={() => setExpanded((v) => !v)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setExpanded((v) => !v); } }}
+      style={{ ...shell, cursor: expanded ? 'default' : 'pointer' }}
+    >
+      {body}
     </div>
   );
 }
@@ -361,7 +387,7 @@ export default function ScrollShowcase() {
                 gap: 'var(--sc-13)',
               }}>
                 {s.features.map((f) => (
-                  <FeatureCard key={f.title} icon={f.icon} title={f.title} desc={f.desc} />
+                  <FeatureCard key={f.title} icon={f.icon} title={f.title} desc={f.desc} href={s.href} />
                 ))}
               </div>
             )}

@@ -168,6 +168,12 @@ const textSections = [
     headline: 'Improve Fleet Operations with GPS Tracking & Telematics',
     body: 'Real-time GPS tracking to manage drivers, routes, and road operations with ease.',
     features: fleetFeatures,
+    // Same arrangement as the Video Telematics row below: every card is a link
+    // into the full Fleet Telematics service page. The hash lands the reader on
+    // that page's matching "Improve Fleet Operations" section (its <section id>),
+    // where the same six features are spelled out in full, rather than at the top
+    // of the route.
+    href: '/service/fleet-telematics#fleet-telematics',
   },
   {
     eyebrow: 'Video Telematics',

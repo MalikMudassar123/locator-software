@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import dynamic from 'next/dynamic'
 import ServiceHero from '@/components/service/ServiceHero'
 import BenefitsSection from '@/components/software/BenefitsSection'
+import ServiceFleetShowcase from '@/components/service/ServiceFleetShowcase'
 import ServiceIndustries from '@/components/service/ServiceIndustries'
 import ServiceProcess from '@/components/service/ServiceProcess'
 import AnimatedGlobeHero from '@/components/AnimatedGlobeHero'
@@ -43,6 +44,10 @@ export default function FleetTelematicsPage() {
       <ScrollReveal />
       <ServiceHero />
       <BenefitsSection />
+      {/* Landing target for the Fleet Telematics feature cards on the home page —
+          they link to /service/fleet-telematics#fleet-telematics, where the same
+          six features are spelled out in full. */}
+      <ServiceFleetShowcase />
       <ServiceIndustries />
       <ServiceProcess />
       <AnimatedGlobeHero stats={SERVICE_STATS} />

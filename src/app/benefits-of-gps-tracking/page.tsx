@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
 import ScrollReveal from '@/components/software/ScrollReveal'
 import BenefitsHero from '@/components/benefits/BenefitsHero'
-import BenefitsImpact from '@/components/benefits/BenefitsImpact'
 import BenefitsIndex from '@/components/benefits/BenefitsIndex'
 import BenefitsClosing from '@/components/benefits/BenefitsClosing'
 import SoftwareCTA from '@/components/software/SoftwareCTA'
 import Footer from '@/components/layouts/Footer'
 import { BENEFITS } from '@/components/benefits/data'
+import WhoWeAreNumbers from '@/components/about/who-we-are/WhoWeAreNumbers'
 
 export const metadata: Metadata = {
   title: 'Benefits of GPS Tracking',
@@ -27,7 +27,7 @@ export default function BenefitsOfGpsTrackingPage() {
     <main style={{ background: '#ffffff', minHeight: '100vh' }}>
       <ScrollReveal />
       <BenefitsHero />
-      <BenefitsImpact />
+      <WhoWeAreNumbers />
       <BenefitsIndex />
       <BenefitsClosing />
       <SoftwareCTA />

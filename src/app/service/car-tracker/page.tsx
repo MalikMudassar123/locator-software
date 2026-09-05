@@ -13,6 +13,7 @@ import DeviceCarousel from '@/components/service/tracking-devices/DeviceCarousel
 import SoftwareBlog from '@/components/software/SoftwareBlog'
 import SoftwareCTA from '@/components/software/SoftwareCTA'
 import Footer from '@/components/layouts/Footer'
+import WhoWeAreNumbers from '@/components/about/who-we-are/WhoWeAreNumbers'
 
 export const metadata: Metadata = {
   title: 'Car Tracker — Service',
@@ -34,6 +35,7 @@ export default function CarTrackerPage() {
       <ScrollReveal />
       <CarTrackerHero />
       <LogoMarquee />
+      <WhoWeAreNumbers />
       <CarTrackerStats />
       <ServiceWhyChoose />
       <CarTrackerFeatures />
@@ -42,7 +44,13 @@ export default function CarTrackerPage() {
         heading="What Our Clients Say"
         subheading="Real feedback from UAE businesses using the LOCATOR car tracker app for vehicles, fleets, and drivers."
       />
-      <ServiceVideo />
+      <ServiceVideo
+        eyebrow=""
+        title="All your Vehicles, Assets & Staffs on One Software"
+        titleColor="#1360ee"
+        lead="Take control of your whole operation with LOCATOR GPS Tracking"
+        headingMaxWidth="760px"
+      />
       <ServiceUseCases />
       <DeviceCarousel />
       <SoftwareBlog tag="Car Tracking" />

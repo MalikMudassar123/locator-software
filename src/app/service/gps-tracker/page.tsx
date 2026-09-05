@@ -12,6 +12,7 @@ import DeviceCarousel from '@/components/service/tracking-devices/DeviceCarousel
 import SoftwareBlog from '@/components/software/SoftwareBlog'
 import SoftwareCTA from '@/components/software/SoftwareCTA'
 import Footer from '@/components/layouts/Footer'
+import WhoWeAreNumbers from '@/components/about/who-we-are/WhoWeAreNumbers'
 
 export const metadata: Metadata = {
   title: 'GPS Tracker — Service',
@@ -33,6 +34,7 @@ export default function GpsTrackerPage() {
       <ScrollReveal />
       <GpsTrackerHero />
       <GpsTrackerData />
+      <WhoWeAreNumbers />
       <GpsTrackerWhy />
       <TestimonialCarousel
         testimonials={LOCATOR_TESTIMONIALS}
@@ -48,7 +50,13 @@ export default function GpsTrackerPage() {
         ]}
       />
       <ServiceUseCases />
-      <ServiceVideo />
+      <ServiceVideo
+        eyebrow=""
+        title="All your Vehicles, Assets & Staffs on One Software"
+        titleColor="#1360ee"
+        lead="Take control of your whole operation with LOCATOR GPS Tracking"
+        headingMaxWidth="760px"
+      />
       <DeviceCarousel />
       <SoftwareBlog tag="GPS Tracking" />
       <SoftwareCTA />

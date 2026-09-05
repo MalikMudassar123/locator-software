@@ -59,7 +59,7 @@ export default function GpsTrackerWhy() {
   return (
     <>
       <style>{`
-        .gtw-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(36px,5vw,72px); align-items: center; max-width: 1200px; margin: 0 auto; }
+        .gtw-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(36px,5vw,72px); align-items: center; max-width: var(--w-1200); margin: 0 auto; }
         @media (max-width: 940px) { .gtw-grid { grid-template-columns: 1fr; } }
         .gtw-stat { display: flex; align-items: flex-start; gap: 12px; }
         .gtw-tick {
@@ -83,14 +83,14 @@ export default function GpsTrackerWhy() {
         <div className="gtw-grid">
           {/* Copy + stats */}
           <div data-reveal="left">
-            <span style={{ fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: 'rgba(255,255,255,.85)', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
+            <span style={{ fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: 'rgba(255,255,255,.85)', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
               <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: 'rgba(255,255,255,.5)', borderRadius: '2px' }} /></span>
               Built For Every Fleet
             </span>
-            <h2 style={{ margin: '0 0 16px', fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.3, letterSpacing: '-.015em', color: '#fff' }}>
+            <h2 style={{ margin: '0 0 16px', fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, lineHeight: 1.3, letterSpacing: '-.015em', color: '#fff' }}>
               The complete GPS tracking device for everyone
             </h2>
-            <p style={{ margin: '0 0 28px', fontSize: 'clamp(13.5px,1.25vw,15px)', lineHeight: 1.75, color: 'rgba(255,255,255,.62)', maxWidth: '48ch' }}>
+            <p style={{ margin: '0 0 28px', fontSize: 'max(clamp(13.5px,1.25vw,15px), min(1.042vw, 21.75px))', lineHeight: 1.75, color: 'rgba(255,255,255,.62)', maxWidth: '48ch' }}>
               A reliable, trusted tracking device that puts your business on steroids today. With this
               GPS tracker online, you can:
             </p>
@@ -100,7 +100,7 @@ export default function GpsTrackerWhy() {
                   <span className="gtw-tick">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
                   </span>
-                  <span style={{ fontSize: '14.5px', color: 'rgba(255,255,255,.85)', fontWeight: 600, lineHeight: 1.5 }}>{s}</span>
+                  <span style={{ fontSize: 'var(--f-14-5)', color: 'rgba(255,255,255,.85)', fontWeight: 600, lineHeight: 1.5 }}>{s}</span>
                 </div>
               ))}
             </div>
@@ -140,17 +140,17 @@ export default function GpsTrackerWhy() {
                   style={{ width: '100%', maxWidth: '380px', height: 'auto', display: 'block' }}
                 />
               </div>
-              <h3 style={{ margin: '0 0 10px', fontSize: 'clamp(17px,1.8vw,21px)', fontWeight: 800, color: '#fff', letterSpacing: '-.01em' }}>{tab.headline}</h3>
-              <p style={{ margin: '0 0 26px', fontSize: '14px', lineHeight: 1.7, color: 'rgba(255,255,255,.62)', maxWidth: '42ch' }}>{tab.body}</p>
+              <h3 style={{ margin: '0 0 10px', fontSize: 'max(clamp(17px,1.8vw,21px), min(1.458vw, 30.45px))', fontWeight: 800, color: '#fff', letterSpacing: '-.01em' }}>{tab.headline}</h3>
+              <p style={{ margin: '0 0 26px', fontSize: 'var(--f-14)', lineHeight: 1.7, color: 'rgba(255,255,255,.62)', maxWidth: '42ch' }}>{tab.body}</p>
 
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '18px' }}>
                 <div>
-                  <div style={{ fontSize: '26px', fontWeight: 800, color: '#fff', letterSpacing: '-.01em' }}>{tab.stat.value}</div>
-                  <div style={{ fontSize: '12px', color: 'rgba(255,255,255,.5)', marginTop: '2px' }}>{tab.stat.sub}</div>
+                  <div style={{ fontSize: 'var(--f-26)', fontWeight: 800, color: '#fff', letterSpacing: '-.01em' }}>{tab.stat.value}</div>
+                  <div style={{ fontSize: 'var(--f-12)', color: 'rgba(255,255,255,.5)', marginTop: '2px' }}>{tab.stat.sub}</div>
                 </div>
                 <Link href={tab.cta.href} style={{
                   display: 'inline-flex', alignItems: 'center', gap: '7px',
-                  background: '#1360ee', color: '#fff', fontSize: '13.5px', fontWeight: 700,
+                  background: '#1360ee', color: '#fff', fontSize: 'var(--f-13-5)', fontWeight: 700,
                   padding: '12px 20px', borderRadius: '999px', textDecoration: 'none',
                   transition: `background .2s ${EASE}, transform .2s ${EASE}`,
                 }}>

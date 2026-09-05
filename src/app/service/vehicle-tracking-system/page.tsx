@@ -13,6 +13,7 @@ import SoftwareCTA from '@/components/software/SoftwareCTA'
 import Footer from '@/components/layouts/Footer'
 import { FEATURES, WHY_POINTS, BENEFIT_POINTS } from '@/components/vehicle-tracking/data'
 import { VOICES } from '@/components/tracking/data'
+import WhoWeAreNumbers from '@/components/about/who-we-are/WhoWeAreNumbers'
 
 // Below-the-fold and self-contained, so its client JS goes in its own chunk.
 // SSR stays on — the HTML is still server-rendered, so there is no pop-in.
@@ -38,13 +39,16 @@ export default function VehicleTrackingSystemPage() {
       <ScrollReveal />
       <VehicleTrackingHero />
       <VehicleTrackingFeatures />
+      <WhoWeAreNumbers />
       <VehicleTrackingWhy />
       <TrackingVoices />
       <VehicleTrackingBenefits />
       <ServiceVideo
-        eyebrow="See it in action"
-        title="Watch the LOCATOR vehicle tracking system at work"
-        lead="A short look at how live tracking, fuel data and alerts keep UAE fleets under control."
+        eyebrow=""
+        title="All your Vehicles, Assets & Staffs on One Software"
+        titleColor="#1360ee"
+        lead="Take control of your whole operation with LOCATOR GPS Tracking"
+        headingMaxWidth="760px"
       />
       <TrackingUseCases />
       <SoftwareBlog tag={['GPS Tracking', 'Vehicle Maintenance']} />

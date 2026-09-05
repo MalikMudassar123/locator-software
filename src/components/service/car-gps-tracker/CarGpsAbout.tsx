@@ -14,7 +14,7 @@ export default function CarGpsAbout() {
   return (
     <>
       <style>{`
-        .cga-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(36px,5vw,72px); align-items: center; max-width: 1160px; margin: 0 auto; }
+        .cga-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(36px,5vw,72px); align-items: center; max-width: var(--w-1160); margin: 0 auto; }
         @media (max-width: 900px) { .cga-grid { grid-template-columns: 1fr; } .cga-grid > div:last-child { order: -1; } }
         .cga-item { display: flex; align-items: flex-start; gap: 12px; }
         .cga-check {
@@ -29,14 +29,14 @@ export default function CarGpsAbout() {
         <div className="cga-grid">
           {/* Copy */}
           <div data-reveal="left">
-            <span style={{ fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
+            <span style={{ fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
               <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
               The Device
             </span>
-            <h2 style={{ margin: '0 0 16px', fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.25, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+            <h2 style={{ margin: '0 0 16px', fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, lineHeight: 1.25, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               About our Car GPS Tracker device
             </h2>
-            <p style={{ margin: '0 0 28px', fontSize: 'clamp(13.5px,1.25vw,15px)', lineHeight: 1.8, color: '#5a6472', maxWidth: '48ch' }}>
+            <p style={{ margin: '0 0 28px', fontSize: 'max(clamp(13.5px,1.25vw,15px), min(1.042vw, 21.75px))', lineHeight: 1.8, color: '#6e6e73', maxWidth: '48ch' }}>
               LOCATOR is the best vehicle GPS tracker, with next-generation features to ensure visibility of
               your fleet in any location. Imagine the possibility of:
             </p>
@@ -47,7 +47,7 @@ export default function CarGpsAbout() {
                   <span className="cga-check">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
                   </span>
-                  <span style={{ fontSize: '14.5px', color: '#3a3a3c', fontWeight: 600, lineHeight: 1.5 }}>{item}</span>
+                  <span style={{ fontSize: 'var(--f-14-5)', color: '#3a3a3c', fontWeight: 600, lineHeight: 1.5 }}>{item}</span>
                 </div>
               ))}
             </div>

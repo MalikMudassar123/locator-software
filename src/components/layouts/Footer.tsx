@@ -4,8 +4,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
 
-// "About" is the section label for this column (rendered as a heading by
-// FooterCol's `lead`), not one of its links.
 const companyLinks = [
   { href: '/about/purpose', label: 'Who We Are' },
   { href: '/about/vision', label: 'Vision' },
@@ -166,7 +164,7 @@ export default function Footer() {
           </div>
 
           {/* ── Company ── */}
-          <FooterCol title="Company" lead="About" links={companyLinks} />
+          <FooterCol title="Company" links={companyLinks} />
 
           {/* ── Services ── */}
           <FooterCol title="Services" links={serviceLinks} split />

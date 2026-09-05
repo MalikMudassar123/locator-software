@@ -41,7 +41,7 @@ export default function GpsTrackingLaptop() {
   return (
     <>
       <style>{`
-        .gtl-grid { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: clamp(32px,5vw,64px); align-items: center; max-width: 1160px; margin: 0 auto; }
+        .gtl-grid { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: clamp(32px,5vw,64px); align-items: center; max-width: var(--w-1160); margin: 0 auto; }
         @media (max-width: 900px) { .gtl-grid { grid-template-columns: 1fr; } }
         .gtl-check { width: 20px; height: 20px; border-radius: 6px; flex-shrink: 0; background: #eef3ff; color: #1360ee; display: grid; place-items: center; transition: transform .2s ${EASE}, background .2s ${EASE}; }
         .gtl-item:hover .gtl-check { background: #1360ee; color: #fff; transform: scale(1.08); }
@@ -57,14 +57,14 @@ export default function GpsTrackingLaptop() {
 
           {/* Copy */}
           <div data-reveal="right">
-            <span style={{ fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
+            <span style={{ fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
               <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
               Built To Keep Watch
             </span>
-            <h2 style={{ margin: '0 0 16px', fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.25, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+            <h2 style={{ margin: '0 0 16px', fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, lineHeight: 1.25, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               The best GPS tracking system for UAE
             </h2>
-            <p style={{ margin: '0 0 24px', fontSize: 'clamp(13.5px,1.25vw,15px)', lineHeight: 1.8, color: '#5a6472', maxWidth: '48ch' }}>
+            <p style={{ margin: '0 0 24px', fontSize: 'max(clamp(13.5px,1.25vw,15px), min(1.042vw, 21.75px))', lineHeight: 1.8, color: '#6e6e73', maxWidth: '48ch' }}>
               LOCATOR makes monitoring your vehicles a complete walk in the park. Thanks to its innovative
               features, the process stays seamless and accurate. For instance, you&apos;ll receive alerts on:
             </p>
@@ -75,7 +75,7 @@ export default function GpsTrackingLaptop() {
                   <span className="gtl-check">
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
                   </span>
-                  <span style={{ fontSize: '14px', color: '#3a3a3c', fontWeight: 600, lineHeight: 1.5 }}>{item}</span>
+                  <span style={{ fontSize: 'var(--f-14)', color: '#3a3a3c', fontWeight: 600, lineHeight: 1.5 }}>{item}</span>
                 </div>
               ))}
             </div>
@@ -83,11 +83,11 @@ export default function GpsTrackingLaptop() {
             <div className="gtl-stats">
               {STATS.map(s => (
                 <div key={s.label}>
-                  <div style={{ fontSize: 'clamp(20px,2.2vw,26px)', fontWeight: 800, letterSpacing: '-.01em' }}>
+                  <div style={{ fontSize: 'max(clamp(20px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, letterSpacing: '-.01em' }}>
                     <span style={{ color: '#f2600a' }}>{s.value}</span>
                     <span style={{ color: '#1360ee' }}>+</span>
                   </div>
-                  <div style={{ fontSize: '12px', color: '#8a93a2', fontWeight: 600, marginTop: '2px' }}>{s.label}</div>
+                  <div style={{ fontSize: 'var(--f-12)', color: '#8a93a2', fontWeight: 600, marginTop: '2px' }}>{s.label}</div>
                 </div>
               ))}
             </div>

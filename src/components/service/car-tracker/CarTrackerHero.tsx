@@ -20,7 +20,7 @@ export default function CarTrackerHero() {
         .ct-hero { position: relative; overflow: hidden; isolation: isolate; background: linear-gradient(135deg, #1a6bf0 0%, #0d4fd4 100%); }
         .ct-hero-grid {
           position: relative; z-index: 1;
-          max-width: 1200px; margin: 0 auto;
+          max-width: var(--w-1200); margin: 0 auto;
           padding: clamp(28px,5vh,56px) 28px clamp(88px,11vh,120px);
           display: grid; grid-template-columns: 1.1fr 1fr;
           gap: clamp(28px,5vw,56px); align-items: center;
@@ -61,11 +61,11 @@ export default function CarTrackerHero() {
         <div className="ct-hero-grid">
           {/* Copy */}
           <div className="ct-hero-copy ct-hero-copy-align" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-            <h1 style={{ margin: 0, fontSize: 'clamp(28px,4vw,46px)', fontWeight: 400, lineHeight: 1.22, letterSpacing: '-.015em', color: 'rgba(255,255,255,.92)', maxWidth: '15ch' }}>
+            <h1 style={{ margin: 0, fontSize: 'max(clamp(28px,4vw,46px), min(3.194vw, 66.7px))', fontWeight: 400, lineHeight: 1.22, letterSpacing: '-.015em', color: 'rgba(255,255,255,.92)', maxWidth: '15ch' }}>
               Try out our revolutionary <strong style={{ fontWeight: 800, color: '#fff' }}>Car Tracker App</strong> today
             </h1>
 
-            <p style={{ margin: '18px 0 0', fontSize: 'clamp(14px,1.35vw,16.5px)', lineHeight: 1.65, color: 'rgba(255,255,255,.78)', maxWidth: '42ch' }}>
+            <p style={{ margin: '18px 0 0', fontSize: 'max(clamp(14px,1.35vw,16.5px), min(1.146vw, 23.93px))', lineHeight: 1.65, color: 'rgba(255,255,255,.78)', maxWidth: '42ch' }}>
               You are guaranteed optimum performance from your vehicles with our car tracker — live location,
               driver behaviour, and fleet health, all in one app.
             </p>

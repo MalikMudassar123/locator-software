@@ -40,7 +40,7 @@ export default function ServiceUseCases() {
           font-size: 64px; font-weight: 900; line-height: 1; color: rgba(255,255,255,.22);
           font-family: Georgia, serif; margin-bottom: -12px;
         }
-        .suc-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; max-width: 1120px; margin: clamp(40px,5vw,56px) auto 0; }
+        .suc-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; max-width: var(--w-1120); margin: clamp(40px,5vw,56px) auto 0; }
         @media (max-width: 820px) { .suc-cards { grid-template-columns: 1fr; } }
         .suc-card {
           background: #fff; border: 1px solid #e7ebf3; border-radius: 20px;
@@ -59,12 +59,12 @@ export default function ServiceUseCases() {
       `}</style>
 
       <section style={{ padding: 'clamp(24px,4vw,40px) 28px clamp(56px,7vw,88px)', background: '#fff' }}>
-        <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
+        <div style={{ maxWidth: 'var(--w-1120)', margin: '0 auto' }}>
 
           {/* Quote banner */}
           <div className="suc-wrap" data-reveal="zoom">
             <span className="suc-quote-mark">&ldquo;</span>
-            <p style={{ margin: '0 auto', maxWidth: '640px', fontSize: 'clamp(16px,2vw,21px)', fontWeight: 600, lineHeight: 1.6, color: '#fff' }}>
+            <p style={{ margin: '0 auto', maxWidth: '640px', fontSize: 'max(clamp(16px,2vw,21px), min(1.458vw, 30.45px))', fontWeight: 600, lineHeight: 1.6, color: '#fff' }}>
               Most companies struggle to effectively utilize their vehicles and field staff. We built a software
               tool that helps them manage and control their fleet, so their company can start growing again and
               increase revenue.
@@ -79,8 +79,8 @@ export default function ServiceUseCases() {
                   <Image src={u.img} alt={u.alt} width={302} height={228} sizes="(max-width: 820px) 92vw, 360px" />
                 </div>
                 <div className="suc-body">
-                  <h3 style={{ margin: '0 0 8px', fontSize: '16px', fontWeight: 800, color: '#1d1d1f', letterSpacing: '-.01em' }}>{u.title}</h3>
-                  <p style={{ margin: 0, fontSize: '13.5px', lineHeight: 1.65, color: '#6e6e73' }}>{u.desc}</p>
+                  <h3 style={{ margin: '0 0 8px', fontSize: 'var(--f-16)', fontWeight: 800, color: '#1d1d1f', letterSpacing: '-.01em' }}>{u.title}</h3>
+                  <p style={{ margin: 0, fontSize: 'var(--f-13-5)', lineHeight: 1.65, color: '#6e6e73' }}>{u.desc}</p>
                   <span className="suc-link">Read details →</span>
                 </div>
               </Link>

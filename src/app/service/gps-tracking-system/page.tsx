@@ -12,6 +12,7 @@ import ServiceUseCases from '@/components/service/ServiceUseCases'
 import SoftwareBlog from '@/components/software/SoftwareBlog'
 import SoftwareCTA from '@/components/software/SoftwareCTA'
 import Footer from '@/components/layouts/Footer'
+import WhoWeAreNumbers from '@/components/about/who-we-are/WhoWeAreNumbers'
 
 export const metadata: Metadata = {
   title: 'GPS Tracking System for Vehicles | UAE — Locator',
@@ -39,6 +40,7 @@ export default function GpsTrackingSystemPage() {
         subheading="Real feedback from UAE businesses using the LOCATOR GPS tracking system for vehicles and fleets."
       />
       <GpsTrackingLaptop />
+      <WhoWeAreNumbers />
       <GpsTrackingWhy />
       <ServiceAppScreens
         eyebrow="The App In Action"
@@ -51,7 +53,13 @@ export default function GpsTrackingSystemPage() {
           { src: '/services/gps-tracking-system/idling-alert.png', alt: 'LOCATOR app idling alert pinned to the vehicle location on the map', w: 592, h: 1024 },
         ]}
       />
-      <ServiceVideo />
+      <ServiceVideo
+        eyebrow=""
+        title="All your Vehicles, Assets & Staffs on One Software"
+        titleColor="#1360ee"
+        lead="Take control of your whole operation with LOCATOR GPS Tracking"
+        headingMaxWidth="760px"
+      />
       <ServiceUseCases />
       <SoftwareBlog tag="GPS Tracking" />
       <SoftwareCTA />

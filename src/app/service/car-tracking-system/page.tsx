@@ -4,7 +4,6 @@ import ScrollReveal from '@/components/software/ScrollReveal'
 import CarTrackingHero from '@/components/car-tracking/CarTrackingHero'
 import CarTrackingOffering from '@/components/car-tracking/CarTrackingOffering'
 import CarTrackingBenefits from '@/components/car-tracking/CarTrackingBenefits'
-import CarTrackingStats from '@/components/car-tracking/CarTrackingStats'
 import CarTrackingWhyChoose from '@/components/car-tracking/CarTrackingWhyChoose'
 import TrackingVoices from '@/components/tracking/TrackingVoices'
 import ServiceVideo from '@/components/service/ServiceVideo'
@@ -14,6 +13,7 @@ import SoftwareCTA from '@/components/software/SoftwareCTA'
 import Footer from '@/components/layouts/Footer'
 import { CAPABILITIES, REASONS } from '@/components/car-tracking/data'
 import { VOICES } from '@/components/tracking/data'
+import WhoWeAreNumbers from '@/components/about/who-we-are/WhoWeAreNumbers'
 
 // Below-the-fold and self-contained, so its client JS goes in its own chunk.
 // SSR stays on — the HTML is still server-rendered, so there is no pop-in.
@@ -40,13 +40,15 @@ export default function CarTrackingSystemPage() {
       <CarTrackingHero />
       <CarTrackingOffering />
       <CarTrackingBenefits />
-      <CarTrackingStats />
+      <WhoWeAreNumbers />
       <CarTrackingWhyChoose />
       <TrackingVoices />
       <ServiceVideo
-        eyebrow="See it in action"
-        title="Watch the LOCATOR car tracking system at work"
-        lead="A short look at how live tracking, alerts and reporting keep UAE vehicles accounted for."
+        eyebrow=""
+        title="All your Vehicles, Assets & Staffs on One Software"
+        titleColor="#1360ee"
+        lead="Take control of your whole operation with LOCATOR GPS Tracking"
+        headingMaxWidth="760px"
       />
       <TrackingUseCases />
       <SoftwareBlog tag="Car Tracking" />

@@ -31,7 +31,7 @@ export default function CarGpsOffers() {
   return (
     <>
       <style>{`
-        .cgo-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; max-width: 1120px; margin: clamp(40px,5vw,56px) auto 0; }
+        .cgo-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; max-width: var(--w-1120); margin: clamp(40px,5vw,56px) auto 0; }
         @media (max-width: 820px) { .cgo-cards { grid-template-columns: 1fr; } }
         .cgo-card {
           background: #fff; border: 1px solid #e7ebf3; border-radius: 20px; overflow: hidden;
@@ -49,14 +49,14 @@ export default function CarGpsOffers() {
 
       <section style={{ padding: 'clamp(56px,7vw,88px) 28px', background: '#fff' }}>
         <div style={{ maxWidth: '760px', margin: '0 auto', textAlign: 'center' }} data-reveal>
-          <span style={{ fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
+          <span style={{ fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
             <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
             What This App Offers
           </span>
-          <h2 style={{ margin: '0 0 16px', fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.25, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+          <h2 style={{ margin: '0 0 16px', fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, lineHeight: 1.25, letterSpacing: '-.015em', color: '#1d1d1f' }}>
             What our Car Tracker app offers
           </h2>
-          <p style={{ margin: 0, fontSize: 'clamp(13.5px,1.25vw,15px)', lineHeight: 1.8, color: '#5a6472' }}>
+          <p style={{ margin: 0, fontSize: 'max(clamp(13.5px,1.25vw,15px), min(1.042vw, 21.75px))', lineHeight: 1.8, color: '#6e6e73' }}>
             LOCATOR is an app that has been developed with one goal in mind — to give you greater control over
             your vehicles and team than ever before. You won&apos;t have to worry about the location of your fleet
             or what your team is being used for, because our Car Tracker app takes care of that.
@@ -70,8 +70,8 @@ export default function CarGpsOffers() {
                 <Image src={o.img} alt={o.alt} width={1143} height={863} sizes="(max-width: 820px) 88vw, 320px" unoptimized />
               </div>
               <div className="cgo-body">
-                <h3 style={{ margin: '0 0 8px', fontSize: '16px', fontWeight: 800, color: '#1d1d1f', letterSpacing: '-.01em' }}>{o.title}</h3>
-                <p style={{ margin: 0, fontSize: '13.5px', lineHeight: 1.65, color: '#6e6e73' }}>{o.desc}</p>
+                <h3 style={{ margin: '0 0 8px', fontSize: 'var(--f-16)', fontWeight: 800, color: '#1d1d1f', letterSpacing: '-.01em' }}>{o.title}</h3>
+                <p style={{ margin: 0, fontSize: 'var(--f-13-5)', lineHeight: 1.65, color: '#6e6e73' }}>{o.desc}</p>
                 <Link href="/contact" className="cgo-link">Read details →</Link>
               </div>
             </div>

@@ -16,8 +16,8 @@ function StoreBadge({ kind }: { kind: 'ios' | 'android' }) {
         )}
       </span>
       <span>
-        <span style={{ display: 'block', fontSize: '9.5px', color: 'rgba(255,255,255,.72)', lineHeight: 1.2 }}>{isIos ? 'Available on the' : 'Android app on'}</span>
-        <span style={{ display: 'block', fontSize: '13.5px', fontWeight: 800, color: '#fff', lineHeight: 1.25 }}>{isIos ? 'App Store' : 'Google Play'}</span>
+        <span style={{ display: 'block', fontSize: 'var(--f-9-5)', color: 'rgba(255,255,255,.72)', lineHeight: 1.2 }}>{isIos ? 'Available on the' : 'Android app on'}</span>
+        <span style={{ display: 'block', fontSize: 'var(--f-13-5)', fontWeight: 800, color: '#fff', lineHeight: 1.25 }}>{isIos ? 'App Store' : 'Google Play'}</span>
       </span>
     </div>
   )
@@ -32,7 +32,7 @@ export default function GpsTrackingHero() {
         @keyframes gtsDrift { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
         .gts-hero { position: relative; overflow: hidden; background: #ffffff; }
         .gts-hero-grid {
-          position: relative; z-index: 1; max-width: 1200px; margin: 0 auto;
+          position: relative; z-index: 1; max-width: var(--w-1200); margin: 0 auto;
           padding: clamp(32px,6vh,64px) 28px clamp(64px,9vh,96px);
           display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(28px,5vw,56px); align-items: start;
         }
@@ -63,10 +63,10 @@ export default function GpsTrackingHero() {
         <div className="gts-hero-grid">
           {/* Copy */}
           <div className="gts-copy gts-copy-align" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-            <h1 style={{ margin: 0, fontSize: 'clamp(24px, calc(1.5vw + 15px), 34px)', fontWeight: 800, lineHeight: 1.22, letterSpacing: '-.02em', color: '#1d1d1f', maxWidth: '480px' }}>
+            <h1 style={{ margin: 0, fontSize: 'max(clamp(24px, calc(1.5vw + 15px), 34px), min(2.361vw, 49.3px))', fontWeight: 800, lineHeight: 1.22, letterSpacing: '-.02em', color: '#1d1d1f', maxWidth: '480px' }}>
               GPS Tracking System for Vehicles | UAE &mdash; <span style={{ color: '#1360ee' }}>Locator</span>
             </h1>
-            <p style={{ margin: '14px 0 0', fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.7, color: '#5a6472', maxWidth: '42ch' }}>
+            <p style={{ margin: '14px 0 0', fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.7, color: '#6e6e73', maxWidth: '42ch' }}>
               Our GPS tracker software makes your life easier when it comes to managing your vehicles and team &mdash;
               live, accurate, and always within reach.
             </p>

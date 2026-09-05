@@ -40,7 +40,7 @@ export default function GpsTrackerHero() {
         .gt-hero { position: relative; overflow: hidden; background: #ffffff; }
         .gt-hero-grid {
           position: relative; z-index: 1;
-          max-width: 1200px; margin: 0 auto;
+          max-width: var(--w-1200); margin: 0 auto;
           padding: clamp(32px,6vh,64px) 28px clamp(64px,9vh,100px);
           display: grid; grid-template-columns: 1.1fr 1fr;
           gap: clamp(28px,5vw,56px); align-items: start;
@@ -107,16 +107,16 @@ export default function GpsTrackerHero() {
         <div className="gt-hero-grid">
           {/* Copy */}
           <div className="gt-hero-copy gt-hero-copy-align" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontWeight: 700, letterSpacing: '.08em', color: '#1360ee', textTransform: 'uppercase', background: '#eef3ff', border: '1px solid #dbe6ff', borderRadius: '999px', padding: '7px 14px', marginBottom: '22px' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: 'var(--f-12)', fontWeight: 700, letterSpacing: '.08em', color: '#1360ee', textTransform: 'uppercase', background: '#eef3ff', border: '1px solid #dbe6ff', borderRadius: '999px', padding: '7px 14px', marginBottom: '22px' }}>
               <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#1360ee', display: 'inline-block' }} />
               Certified Teltonika GPS Hardware
             </span>
 
-            <h1 style={{ margin: 0, fontSize: 'clamp(24px, calc(1.5vw + 15px), 34px)', fontWeight: 800, lineHeight: 1.22, letterSpacing: '-.02em', color: '#1d1d1f', maxWidth: '480px' }}>
+            <h1 style={{ margin: 0, fontSize: 'max(clamp(24px, calc(1.5vw + 15px), 34px), min(2.361vw, 49.3px))', fontWeight: 800, lineHeight: 1.22, letterSpacing: '-.02em', color: '#1d1d1f', maxWidth: '480px' }}>
               The ultimate <span style={{ color: '#1360ee' }}>GPS tracker</span> device for your fleet
             </h1>
 
-            <p style={{ margin: '14px 0 0', fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.7, color: '#5a6472', maxWidth: '46ch' }}>
+            <p style={{ margin: '14px 0 0', fontSize: 'max(clamp(14px,1.25vw,15.5px), min(1.076vw, 22.47px))', lineHeight: 1.7, color: '#6e6e73', maxWidth: '46ch' }}>
               A rugged, plug-and-play tracking device that feeds live location, driver behaviour, and vehicle
               health straight into the LOCATOR platform &mdash; installed, configured, and supported across the UAE.
             </p>
@@ -129,8 +129,8 @@ export default function GpsTrackerHero() {
             <div className="gt-hero-stats" style={{ display: 'flex', gap: 'clamp(20px,3vw,36px)', marginTop: '44px', flexWrap: 'wrap' }}>
               {STATS.map(s => (
                 <div key={s.label}>
-                  <div style={{ fontSize: '22px', fontWeight: 800, color: '#1360ee', letterSpacing: '-.01em' }}>{s.value}</div>
-                  <div style={{ fontSize: '12.5px', color: '#8a93a2', marginTop: '2px', fontWeight: 600 }}>{s.label}</div>
+                  <div style={{ fontSize: 'var(--f-22)', fontWeight: 800, color: '#1360ee', letterSpacing: '-.01em' }}>{s.value}</div>
+                  <div style={{ fontSize: 'var(--f-12-5)', color: '#8a93a2', marginTop: '2px', fontWeight: 600 }}>{s.label}</div>
                 </div>
               ))}
             </div>

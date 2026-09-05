@@ -57,7 +57,7 @@ export default function CarTrackerFeatures() {
   return (
     <>
       <style>{`
-        .ctf-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(36px,5vw,72px); align-items: center; max-width: 1200px; margin: 0 auto; }
+        .ctf-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(36px,5vw,72px); align-items: center; max-width: var(--w-1200); margin: 0 auto; }
         @media (max-width: 940px) { .ctf-grid { grid-template-columns: 1fr; } .ctf-grid > div:last-child { order: -1; } }
         .ctf-items { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 20px; margin-top: 28px; }
         @media (max-width: 560px) { .ctf-items { grid-template-columns: 1fr; } }
@@ -70,11 +70,11 @@ export default function CarTrackerFeatures() {
         <div className="ctf-grid">
           {/* Copy + feature grid */}
           <div data-reveal="left">
-            <span style={{ fontSize: 'clamp(22px,2.8vw,32px)', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
+            <span style={{ fontSize: 'max(clamp(22px,2.8vw,32px), min(2.222vw, 46.4px))', fontWeight: 800, letterSpacing: '.04em', color: '#1360ee', textTransform: 'uppercase', display: 'block', marginBottom: '16px' }}>
               <span style={{ display: 'block', marginBottom: '12px' }}><span style={{ display: 'inline-block', width: '34px', height: '3px', background: '#1360ee', borderRadius: '2px' }} /></span>
               Everything You Need
             </span>
-            <h2 style={{ margin: 0, fontSize: 'clamp(19px,2.2vw,26px)', fontWeight: 800, lineHeight: 1.25, letterSpacing: '-.015em', color: '#1d1d1f' }}>
+            <h2 style={{ margin: 0, fontSize: 'max(clamp(19px,2.2vw,26px), min(1.806vw, 37.7px))', fontWeight: 800, lineHeight: 1.25, letterSpacing: '-.015em', color: '#1d1d1f' }}>
               The best GPS tracker for your vehicles
             </h2>
 
@@ -83,8 +83,8 @@ export default function CarTrackerFeatures() {
                 <div key={f.title} className="ctf-item">
                   <span className="ctf-ic" style={{ background: f.bg, color: f.color }}>{f.icon}</span>
                   <div>
-                    <h3 style={{ margin: '0 0 4px', fontSize: '14.5px', fontWeight: 800, color: '#1d1d1f', letterSpacing: '-.01em' }}>{f.title}</h3>
-                    <p style={{ margin: 0, fontSize: '12.5px', lineHeight: 1.6, color: '#6e6e73' }}>{f.desc}</p>
+                    <h3 style={{ margin: '0 0 4px', fontSize: 'var(--f-14-5)', fontWeight: 800, color: '#1d1d1f', letterSpacing: '-.01em' }}>{f.title}</h3>
+                    <p style={{ margin: 0, fontSize: 'var(--f-12-5)', lineHeight: 1.6, color: '#6e6e73' }}>{f.desc}</p>
                   </div>
                 </div>
               ))}
